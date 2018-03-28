@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" 
+	id="WebApp_ID" 
+	version="3.1"
+>
+  	<display-name>IndiaPF-Server</display-name>
+  	
+  	<session-config>
+    	<session-timeout>30</session-timeout>
+   		<cookie-config>
+   			<name>JSESSIONID</name>
+   		</cookie-config>
+  	</session-config>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+	
+  	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>PageAvailableFilter</filter-name>
+		<filter-class>com.view.http.filter.PageAvailableFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PageAvailableFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>PreAuthenticationFilter</filter-name>
+		<filter-class>com.view.http.filter.PreAuthenticationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PreAuthenticationFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>PostAuthenticationFilter</filter-name>
+		<filter-class>com.view.http.filter.PostAuthenticationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PostAuthenticationFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+
+	<filter>
+	  <filter-name>cors</filter-name>
+	  <filter-class>com.view.http.filter.CORSFilter</filter-class>
+	</filter>
+	  
+	<filter-mapping>
+	  <filter-name>cors</filter-name>
+	  <url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+        <servlet-name>JERSEYRest</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.glassfish.jersey.server.ResourceConfig</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>com.webservices.rest.components</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JERSEYRest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ErrorServlet</servlet-name>
+		<servlet-class>com.view.http.ErrorServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ErrorServlet</servlet-name>
+		<url-pattern>/ErrorHandler</url-pattern>
+	</servlet-mapping>
+	
+	<resource-env-ref>
+	    <resource-env-ref-name>indiaPFDatasource</resource-env-ref-name>
+	    <resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+	</resource-env-ref>
+	
+  	<welcome-file-list>
+	    <welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>

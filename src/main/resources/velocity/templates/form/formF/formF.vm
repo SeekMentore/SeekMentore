@@ -1,0 +1,376 @@
+<html>
+<head>
+<style>
+body {
+	font-family: 'Times New Roman', Times, serif; 
+	font-style: normal;
+	font-size: 12pt;
+	margin: 70px;
+}
+
+table, pre {
+	font-family: 'Times New Roman', Times, serif; 
+	font-style: normal;
+	font-size: 12pt;
+}
+
+
+</style>
+</head>
+
+<body>
+	<p align="center">
+		<strong>(7)</strong><br />
+		<strong>Appendix </strong><br />
+		<strong>FORM "F" </strong><br /><br />
+		<strong>FORM FOR NOMINATION </strong>
+	</p>
+	
+	<p align="justify" style="background-color:white;">
+		To,<br />
+		Head, Human Resources<br />
+		Qualcomm India Private Limited<br />
+		Plot No.125-127,Phase II,EPIP layout,Whitefield,Bangalore-560066
+		<br /><br />
+		Dear Sir,
+		<br /><br />
+		I <span style="border-bottom: 1px solid; display: inline-block; text-align: left;width:150px; font-size:9pt; word-wrap: break-word;">$form.fullName</span> am an employee of QUALCOMM India Private Limited (the "Company"). I hereby nominate the person(s) mentioned hereunder as my nominee to receive the gratuity, payable after my death as also the gratuity standing to my credit in the event of my death before that amount has become payable or having become payable has not been paid.
+		<br /><br />
+		I hereby direct that the gratuity payable shall be paid to the said Nominee(s) in the proportion indicated against their respective names as given below:
+	</p>
+	
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tbody>
+			<tr style="padding: 0px">
+				<td height="80" valign="top" align="left">
+						Sl.No.
+				</td>
+				<td style="margin-top:0px"  valign="top" align="left">
+						Name in full with full Address of Nominee/s (Employee)
+				</td>
+				<td valign="top" align="left">
+						Relationship with the Member
+				</td>
+				<td valign="top" align="left">
+						Age of Nominee/s
+				</td>
+				<td valign="top" align="left">
+						Proportion by which gratuity (total benefits) will be
+						shared by each Nominee
+				</td>
+			</tr>
+			
+			#if ($form.getEmployeeGratuityNomineeDetailsList().size() > 1)
+				#foreach($employeeGratuityNomineeDetails in $form.getEmployeeGratuityNomineeDetailsList())
+					<tr>
+						<td height="100" width="79" valign="top">
+							$foreach.count
+						</td>
+						<td width="157" valign="top">
+							$employeeGratuityNomineeDetails.nameAndAddress
+						</td>
+						<td width="118" valign="top">
+							$employeeGratuityNomineeDetails.relationship
+						</td>
+						<td width="118" valign="top">
+							$employeeGratuityNomineeDetails.age
+						</td>
+						<td width="118" valign="top">
+							$employeeGratuityNomineeDetails.percentage
+						</td>
+					</tr>
+				#end
+			#end
+		</tbody>
+	</table>
+<br />
+<p>
+	I hereby certify that the person(s) mentioned herein above is a member/ are members of my family within the meaning of section 2(h) of the Payment of Gratuity Act, 1972.
+</p>
+<br />
+<br />
+
+#if ($form.familyFlag)
+	<span>
+		<img style="position: relative; top: 60px; left: 200px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+	</span>
+	<p style="padding-top:20px;">
+		I hereby declare that I have a family/ <strike>no family</strike> within the meaning of section 2(h) of the Payment of Gratuity Act, 1972 (Please tick whichever is applicable).
+	</p>
+#else
+	<span>
+		<img style="position: relative; top: 60px; left: 250px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+	</span>
+	<p style="padding-top:20px;">
+		I hereby declare that I have a <strike>family</strike>/ no family within the meaning of section 2(h) of the Payment of Gratuity Act, 1972 (Please tick whichever is applicable).
+	</p>
+#end
+<p>
+	Should I acquire family hereafter the appointment of nominee(s) made hereinabove should be deemed as cancelled.<br/>
+	
+	#if ($form.selfDependents == "Father")
+		<img style="position: relative; top: 20px; left: 45px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			My father/<strike>mother</strike>/<strike>parents</strike> is/are not dependent on me. (Please tick whichever is applicable.)
+		</div>
+	#elseif ($form.selfDependents == "Mother")
+		<img style="position: relative; top: 20px; left: 85px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			My <strike>father</strike>/mother/<strike>parents</strike> is/are not dependent on me. (Please tick whichever is applicable.)
+		</div>
+	#else
+		<img style="position: relative; top: 20px; left: 130px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			My <strike>father</strike>/<strike>mother</strike>/parents is/are not dependent on me. (Please tick whichever is applicable.)	
+		</div>
+	#end
+</p>
+
+<p>
+	#if ($form.husbandDependents == "Father")
+		<img style="position: relative; top: 40px; left: 100px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			<strong>To be filled in by female employees only</strong><br />
+			My husband's father/<strike>mother</strike>/<strike>parents</strike> is/are not dependent on my husband. (Please tick which ever is applicable)
+		</div>
+	#elseif ($form.husbandDependents == "Mother")
+		<img style="position: relative; top: 40px; left: 150px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			<strong>To be filled in by female employees only</strong><br />
+			My husband's <strike>father</strike>/mother/<strike>parents</strike> is/are not dependent on my husband. (Please tick which ever is applicable)
+		</div>
+	#else
+		<img style="position: relative; top: 40px; left: 200px; width: 15px; height: 18px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAtCAYAAAA+7zKnAAABlUlEQVR42tVZW4rDMAx03k/y+AgBX6VX6rn3GtoqSEF13WWhkHoEoSGhMJbHM2PHOcDa931Y15XggOd5Tm3bEhzoxw95729oDaeiKAiR4pRlGRbwruuIqQIHvCzLg9/Cc5yqqoogqVLX9QFcLoxqmuYEDUUVMZwDtGo5jAwGHccBbqQQDzgcz22n+R5GEm23oTouweoIWHo/DANBqYoCR8nkpJav4CF43vc9QWr5siwvwPniqAuzibAKA0EXzePMb3VRCFlUEwpsH0cSVQ55Bvhe+J+2eypoY/vpdz2yKEl5nzTwaZoo5qBXdf1TJThpot2+LC1u2/ZJl04dV7pc7qLzPJ8A/nusFuw5Tz3nSzbU1xuLApEwFS3v/V0Ha//3VRe1jqiDCGfiQbOf2MLU5Ciz+P3s/YbDL7KYmqY/hSrusqUHd9m+13ey+NMxntAtQ44nm1/e2b0+5xkwqpNWsapY4GYLF3NVqIiLEbz06Dl0U+Y/zClAjPcOpawx8UD+cuEky57BOLSSj7g0jiPkd1GXyhHGL0UZJ+xu2nMaAAAAAElFTkSuQmCC" />
+		<div>
+			<strong>To be filled in by female employees only</strong><br />
+			My husband's <strike>father</strike>/<strike>mother</strike>/parents is/are not dependent on my husband. (Please tick which ever is applicable)	
+		</div>
+	#end
+</p>
+<p>
+<strong>
+	To be filled in by any female employee who has excluded her husband from receiving gratuity
+</strong><span style="display: inline-block; padding-left: 265px">$DateTool.format("dd/MM/yyyy", $form.noticeDate)</span><br />
+I have excluded my husband from my family by a notice dated [____] [Please insert the date] to the controlling authority in terms of section 2(h) of the Payment of Gratuity Act, 1972.
+</p>
+<p>
+	I also declare that this appointment of Nominee/s made herein shall have the effect of my revoking the appointment of Nominee/s made by me earlier.
+</p>
+<p>
+	<strong>I GIVE BELOW THE PARTICULARS ABOUT MYSELF:</strong>
+</p>
+<p style="font-size:12pt;">
+	<strong>Full Name:</strong>&#160;<span style="display:inline-block; width:470px; border-bottom: 2px dotted">$form.fullName</span><br />
+	<strong>Sex :</strong>&#160;<span style="display:inline-block; width:270px; border-bottom: 2px dotted">$form.gender</span><br />
+	<strong>Date of appointment:</strong>&#160; $DateTool.format("dd/MM/yyyy", $form.appointmentDate)<br />
+	<strong>Department where employed: </strong>&#160;$form.department<br />
+	<strong>Designation</strong>&#160;$form.designation<br />
+	<strong>Employee Number: </strong>&#160;$form.employeeNumber<br />
+	<strong>Father's Name :</strong>&#160;<span style="display:inline-block; width:445px; border-bottom: 2px dotted">$form.fathersName</span><br />
+	<strong>Husband's Name (For married women):</strong>&#160;<span style="display:inline-block; width:240px; border-bottom: 2px dotted">$form.husbandsName</span><br />
+	<strong>Marital Status :</strong>&#160;<span style="display:inline-block; width:480px; border-bottom: 2.2px dotted">$form.maritalStatus</span>&#160;<strong>whether married, unmarried,widow or widower)</strong><br />
+	<strong>Date of birth :</strong>&#160;<span style="display:inline-block; width:535px; border-bottom: 2px dotted"> $DateTool.format("dd/MM/yyyy", $form.dateOfBirth)</span><br />
+	<strong>Permanent Address:</strong>&#160;<span style="display:inline-block; width:465px; border-bottom: 2.2px dotted"> $form.permanentAddress</span><br />
+	<strong>State: </strong>$form.state<br />
+	<strong>Pincode:</strong>$form.pincode<br />
+	<span style="display:block;padding-top:15px;">
+		<strong>
+			Signed at .......................................................this ...................................................day of........................... 200..........
+		</strong>
+	</span>
+	<table width="100%" style="padding-top:15px; font-size: 12pt;">
+		<tr>
+			<td>
+				<strong>Place</strong>
+			</td>
+			<td align="right">
+				<strong>Signature of Member (Employee)</strong>
+			</td>
+		</tr>
+	</table>
+</p><br />
+
+<p align="center" style="padding-top: 80px;">
+	<strong>DECLARATION BY WITNESS </strong>
+</p>
+<p>
+	<strong>The nomination form has been signed before me</strong>
+</p><br />
+<table cellpadding="15" cellspacing="0" width="70%">
+	<tr>
+		<td></td>
+		<td style="padding-left:50px"><strong>Name</strong></td>
+		<td style="padding-left:50px"><strong>Address</strong></td>
+		<td style="padding-left:50px"><strong>Signature</strong></td>
+		<td style="padding-left:50px"><strong>Date</strong></td>
+	</tr>
+	<tr>
+		<td style="padding-left:0px;padding-bottom:35px;">1.</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td style="padding-left:0px;">2.</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+<div>
+	<p>
+		<strong>Place</strong>
+	</p>
+</div>
+<hr/>
+<p align="center">
+	<strong>CERTIFICATE BY THE EMPLOYER </strong>
+</p>
+<p style="padding-top: 20px;">
+	<strong>
+		Certified that the particulars of the above nomination have been
+		verified and recorded in this establishment.
+	</strong>
+</p>
+<p>
+	<table width="100%" style="padding-top:15px;">
+		<tr><td align="right">
+			<strong>Signature of the authorized person</strong>
+		</td></tr>
+		<tr><td align="right">
+			<strong>Designation: .....................................</strong>
+		</td></tr>
+	</table>
+</p>
+<p>
+	<table width="100%">
+		<tr><td colspan="2">
+			<strong>Place: .............................</strong>
+		</td></tr>
+		<tr>
+			<td>
+				<strong>Date: ...............................</strong>
+			</td>
+			<td align="right">
+				<strong>Name and address of the establishment:</strong>
+			</td>
+		</tr>
+	</table>
+</p>
+<hr/>
+<p>
+	<strong>NOTE:</strong>
+</p>
+<table border="0" width="100%" style="padding-left: 24px;">
+	<tr>
+		<td width="4%" valign="top">
+			<strong>(1)</strong>
+		</td>
+		<td colspan="2" align="justify" style="padding-bottom:15px;">
+			<strong>
+				Where an Employee/Member has a family at the time of appointing a
+				Nominee, the Nomination should be made in favour of members of his
+				family only. Any nomination made by such employee in favour of any
+				other person not belonging to his family shall be invalid.
+			</strong>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<strong>(2)</strong>
+		</td>
+		<td colspan="2" align="justify" style="padding-bottom:15px;">
+			<strong>
+				An appointment of Nominee made by the Member may be changed at any time
+				after giving a written notice to the Trustees of his intention to do
+				so. If the Nominee predeceases the Member (Employee), the interest of
+				the Nominee shall revert to the Member (Employee).
+			</strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" style="padding-top:80px;">
+			
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<strong>(3)</strong>
+		</td>
+		<td colspan="2" align="justify" style="padding-bottom:15px;">
+			<strong>
+				The appointment of Nominee or any change thereof made from time to time
+				shall take effect to the extent it is valid on the date on which it is
+				received by the Trustees.
+			</strong>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<strong>(4)</strong>
+		</td>
+		<td colspan="2" align="justify" style="padding-bottom:15px;">
+			<strong>
+				"Family" in relation to an employee, shall be deemed to consist of :
+			</strong>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<table style="padding-left: 18px; font-size: 11.5pt">
+				<tr>
+					<td valign="top"><strong>(i)</strong></td>
+					<td align="justify">
+						<strong>
+							in the case of a male employee, himself, his wife, his
+							children, whether married or unmarried, his dependent parents, the
+							dependent parents of his wife and the widow and children of his
+							predeceased son, if any;
+						</strong>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top"><strong>(ii)</strong></td>
+					<td align="justify">
+						<strong>
+							in the case of a female employee, herself, her husband, her
+							children, whether married or unmarried, her dependent parents and the
+							dependent parents of her husband and the widow and children of her
+							predeceased son, if any
+						</strong>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<br />
+<p align="justify">
+	<strong>
+		<em>Explanation : </em>
+		Where the personal law of an employee permits the adoption by him of a child, any child lawfully adopted by him shall be deemed to be included in his family, and where a child of an employee has been adopted by another person and such adoption is, under the personal law of the person making such adoption, lawful, such child shall be deemed to be excluded from the family of the employee.
+	</strong>
+</p><br />
+<hr/>
+<p align="center" style="padding-top:15px;">
+	<strong>ACKNOWLEDGEMENT BY EMPLOYEE </strong>
+</p>
+<p>
+	Received the duplicate copy of the Gratuity nomination in Form F filed by me and duly certified by the employer
+</p>
+		<p>
+			<table width="100%">
+				<tr>
+					<td>
+						Date:
+					</td>
+					<td align="right">
+						Signature of the Employee
+					</td>
+				</tr>
+			</table>
+		</p>
+	</body>
+</html>

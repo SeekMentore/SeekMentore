@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------------
+--                                     DATABASE
+									-------------
+---------------------------------------------------------------------------------
+CREATE DATABASE IF NOT EXISTS INDIA_PROVIDENT_FUND;
+USE INDIA_PROVIDENT_FUND;
+
+---------------------------------------------------------------------------------
+--                                     TABLES
+                                    -------------
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Audit Tables
+---------------------------------------------------------------------------------
+CREATE TABLE AUDIT_KEY_LOOKUP(	
+TABLE_NAME VARCHAR(50), 
+KEY_NAME_1 VARCHAR(30), 
+KEY_NAME_2 VARCHAR(30), 
+KEY_NAME_3 VARCHAR(30), 
+KEY_NAME_4 VARCHAR(30),
+PRIMARY KEY (TABLE_NAME));
+
+CREATE TABLE AUDIT_METADATA(	
+TABLE_NAME VARCHAR(30), 
+COLUMN_NAME VARCHAR(30), 
+AUDIT_TYPE VARCHAR(200), 
+AUDIT_CATEGORY VARCHAR(200), 
+FIELD_NAME VARCHAR(500), 
+PRIMARY KEY (TABLE_NAME, COLUMN_NAME, AUDIT_TYPE, AUDIT_CATEGORY));
+
+CREATE TABLE AUDIT_TABLE(	
+TRANSACTION_ID VARCHAR(200) NOT NULL, 
+AUDIT_STAMP DATETIME NOT NULL, 
+AUDIT_USER VARCHAR(200) NOT NULL, 
+TABLE_NAME VARCHAR(50), 
+KEY_VALUE_1 VARCHAR(200), 
+KEY_VALUE_2 VARCHAR(200), 
+KEY_VALUE_3 VARCHAR(200), 
+KEY_VALUE_4 VARCHAR(200), 
+AUDIT_TYPE VARCHAR(200), 
+AUDIT_CATEGORY VARCHAR(200), 
+AUDIT_ACTN VARCHAR(1) NOT NULL, 
+FIELDNAME VARCHAR(30) NOT NULL, 
+OLDVALUE VARCHAR(4000), 
+OLDVALUECLOB TEXT, 
+NEWVALUE VARCHAR(4000), 
+NEWVALUECLOB TEXT,
+CONSTRAINT FK_AUDIT_TABLE_TABLE_NAME FOREIGN KEY (TABLE_NAME) REFERENCES AUDIT_KEY_LOOKUP (TABLE_NAME));
+
+CREATE TABLE AUDIT_TRIGGER_NAME_TABLE(	
+TABLE_NAME VARCHAR(50), 
+MODIFIED_DATE DATETIME NOT NULL, 
+TRIGGER_NAME VARCHAR(500),
+CONSTRAINT FK_AUDIT_TRIGGER_TABLE_NAME FOREIGN KEY (TABLE_NAME) REFERENCES AUDIT_KEY_LOOKUP (TABLE_NAME));

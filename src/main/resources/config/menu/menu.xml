@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+	<pageList id="secured">
+		<page id="form11" url="/rest/form-11" pageAccessType="U,A">
+			<webservice id="getForm" url="/getForm"></webservice>
+			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
+			<webservice id="downloadForm" url="/downloadForm"></webservice>
+		</page>
+		<page id="form2" url="/rest/form-2" pageAccessType="U,A">
+			<webservice id="getForm" url="/getForm"></webservice>
+			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm2"></webservice>
+			<webservice id="downloadForm" url="/downloadForm"></webservice>
+		</page>
+		<page id="formF" url="/rest/form-F" pageAccessType="U,A">
+			<webservice id="getForm" url="/getForm"></webservice>
+			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForFormF"></webservice>
+			<webservice id="downloadForm" url="/downloadForm"></webservice>
+		</page>
+		<page id="admin" url="/rest/admin" pageAccessType="A">
+			<webservice id="downloadReport" url="/downloadReport"></webservice>
+		</page>
+		<page id="commons" url="/rest/commons" pageAccessType="U,A">
+			<webservice id="getCountryList" url="/getCountryList"></webservice>
+			<webservice id="getStateList" url="/getStateList"></webservice>
+			<webservice id="getRelationshipList" url="/getRelationshipList"></webservice>
+			<webservice id="getGenderList" url="/getGenderList"></webservice>
+			<webservice id="getMaritalStatusList" url="/getMaritalStatusList"></webservice>
+			<webservice id="getCategoryList" url="/getCategoryList"></webservice>
+		</page>
+	</pageList>
+	<pageList id="unsecured">
+		<page id="index" url="/">
+		</page>
+		<page id="index" url="/index.html">
+		</page>
+	</pageList>
+</menu>

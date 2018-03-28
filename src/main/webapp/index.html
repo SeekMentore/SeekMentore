@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Seek Mentor</title>
+</head>
+<body>
+<table border="1" align="center" width="50%">
+<tr>
+<th> Form </th>
+<th> Save Data </th>
+<th> Retrieve Data </th>
+<th> Download PDF </th>
+<th> Download Report </th>
+</tr>
+<tr>
+<th> Form 11 </th>
+<th> <button id="saveForm11" >Save Form</button> </th>
+<th> <input type="text" value="" size="10" id="empId11" /><button id="getForm11" >Get Form</button> </th>
+<th> <button id="downloadForm11" >Download</button> </th>
+<th>  </th>
+</tr>
+<tr>
+<th> Form F </th>
+<th> <button id="saveFormF" >Save Form</button> </th>
+<th> <input type="text" value="" size="10" id="empIdF" /><button id="getFormF" >Get Form</button> </th>
+<th> <button id="downloadFormF" >Download</button> </th>
+<th>  </th>
+</tr>
+<tr>
+<th> Form 2 </th>
+<th> <button id="saveForm2" >Save Form</button> </th>
+<th> <input type="text" value="" size="10" id="empId2" /><button id="getForm2" >Get Form</button> </th>
+<th> <button id="downloadForm2" >Download</button> </th>
+<th>  </th>
+</tr>
+<tr>
+<th> Admin </th>
+<th>  </th>
+<th>  </th>
+<th>  </th>
+<th> <input type="text" value="" size="10" id="empIdAdmin" /><button id="downloadReport" >Download</button> </th>
+</tr>
+<tr>
+<th> Commons </th>
+<th> <button id="getCountryList" >Get Country List</button> </th>
+<th> <button id="sendEmail" >Send Email</button> </th>
+<th>  </th>
+<th>  </th>
+</tr>
+</table>
+<form id="downloadFileForm11" 
+	  action="/IndiaPFServer/rest/form-11/downloadForm" 
+	  target="ifrDownload" 
+	  method="post" 
+	  class="noscreen"
+>
+	<input type="text" value="" size="10" name="empId" id="downloadEmpId11" />
+</form>
+<form id="downloadFileFormF" 
+	  action="/IndiaPFServer/rest/form-F/downloadForm" 
+	  target="ifrDownload" 
+	  method="post" 
+	  class="noscreen"
+>
+	<input type="text" value="" size="10" name="empId" id="downloadEmpIdF" />
+</form>
+<form id="downloadFileForm2" 
+	  action="/IndiaPFServer/rest/form-2/downloadForm" 
+	  target="ifrDownload" 
+	  method="post" 
+	  class="noscreen"
+>
+	<input type="text" value="" size="10" name="empId" id="downloadEmpId2" />
+</form>
+<form id="downloadReportAdmin" 
+	  action="/IndiaPFServer/rest/admin/downloadReport" 
+	  target="ifrDownload" 
+	  method="post" 
+	  class="noscreen"
+>
+	<input type="text" value="" size="10" name="empId" id="downloadEmpIdAdmin" />
+</form>
+<!-- iframe used to download the pdf document -->
+<iframe id="ifrDownload" name="ifrDownloadPdf" width="0" height="0"></iframe>
+<div id="responseDiv" ></div>
+<!-- Load all scripts here -->
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/applicationCommon.js"></script>
+</body>
+</html>
