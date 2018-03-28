@@ -6,7 +6,7 @@
 	id="WebApp_ID" 
 	version="3.1"
 >
-  	<display-name>IndiaPF-Server</display-name>
+  	<display-name>Seek Mentore</display-name>
   	
   	<session-config>
     	<session-timeout>30</session-timeout>
@@ -120,7 +120,7 @@
 	</servlet-mapping>
 	
 	<resource-env-ref>
-	    <resource-env-ref-name>indiaPFDatasource</resource-env-ref-name>
+	    <resource-env-ref-name>seekMentoreDatasource</resource-env-ref-name>
 	    <resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
 	</resource-env-ref>
 	

@@ -97,14 +97,14 @@ public class MailUtils implements MailConstants {
 									);
 				mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
 				mimeMessage.setSubject(subject);
-				mimeMessage.setContent(createMimeMultipart1(htmlMessage, attachments));
+				mimeMessage.setContent(createMimeMultipart(htmlMessage, attachments));
 			} 
         };
         getMailService().sendEmail(mimeMessagePreparator);
         LoggerUtils.logOnConsole("Message Send...");
     }
 	
-	private static MimeMultipart createMimeMultipart1 (
+	private static MimeMultipart createMimeMultipart (
 			final String htmlMessage,
 			final List<MailAttachment> attachments 
 	) throws MessagingException {
@@ -138,6 +138,41 @@ public class MailUtils implements MailConstants {
         }
 		return contentMultipart;
 	}
+	
+/*	private static MimeMultipart createMimeMultipart1 (
+			final String htmlMessage,
+			final List<MailAttachment> attachments 
+	) throws MessagingException {
+		// contentPart is the content to be sent. It is divided in bodyContent and attachmentContent
+        final MimeMultipart contentMultipart = new MimeMultipart(MULTIPART_MIXED);
+
+        // Message body in txt and html format
+        final MimeMultipart bodyMultipart = new MimeMultipart(MULTIPART_ALTERNATIVE);
+        
+        // Creates text message, this retains the html content along with the attachments
+        final BodyPart textBodyPart = new MimeBodyPart();
+        textBodyPart.setContent("DUMMY CONTENT PLACE HOLDER", BODYPART_TEXT_HTML);
+        // Creates html message
+        final BodyPart htmlBodyPart = new MimeBodyPart();
+        htmlBodyPart.setContent(htmlMessage, BODYPART_TEXT_HTML);
+        bodyMultipart.addBodyPart(textBodyPart);
+        bodyMultipart.addBodyPart(htmlBodyPart);
+
+        // Wrapper for bodyTxt and bodyHtml
+        final MimeBodyPart contentBodypart = new MimeBodyPart();
+        contentBodypart.setContent(bodyMultipart);
+
+        // At this point, contentPart contains bodyTxt and bodyHtml wrapped in a multipart/alternative
+        contentMultipart.addBodyPart(contentBodypart);
+
+        // Adds attachments to contentPart
+        if (!attachments.isEmpty()) {
+        	for (final MailAttachment mailAttachment : attachments) {
+        		contentMultipart.addBodyPart(mailAttachment.getAttachment());
+    		}
+        }
+		return contentMultipart;
+	}*/
 	
 	public static MailService getMailService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_MAIl_SERVICE, MailService.class);
