@@ -6,7 +6,9 @@
 	<mailConfiguration>
 		<host>smtp.gmail.com</host>
 		<port>25</port>
-		<encryptedUsername>rimngyRXy9ypH8H1hIxf2HwcvxgjgV4goDRFb0RNf9Y=</encryptedUsername>
-		<encryptedPassword>9H/nQntH0HYs92+nIiqU+Q==</encryptedPassword>
+		<!-- <encryptedUsername>rimngyRXy9ypH8H1hIxf2HwcvxgjgV4goDRFb0RNf9Y=</encryptedUsername>
+		<encryptedPassword>9H/nQntH0HYs92+nIiqU+Q==</encryptedPassword> -->
+		<encryptedUsername>0uD6Dq+c6L3+nbDdyNg5fV7lpjaGikp4UWIxbDqKfXXU8JkNDM0riIr/0x06FswL</encryptedUsername>
+		<encryptedPassword>/sN3kl3ny5WntFaWY6+w7w==</encryptedPassword>
 	</mailConfiguration>
 </controlConfiguration>

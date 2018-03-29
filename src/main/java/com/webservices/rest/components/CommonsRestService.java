@@ -58,20 +58,24 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "Form F" + PERIOD + FileConstants.EXTENSION_PDF, 
 											AppContext.getBean(BeanConstants.BEAN_NAME_FORMF_SERVICE, FormFService.class).downloadForm(getLoggedInEmpId(request)),
 											"application/pdf"));
-		MailUtils.sendEmail(null, 
+		MailUtils.sendSimpleMailMessage(null, 
 				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
 				"prm.seekmentore@gmail.com",
 				"partner.seekmentore@gmail.com",
 				"Simple Email Subject", 
 				"Simple Email Body");
-		MailUtils.sendEmailWithAttachments(null, 
-				"mukherjeeshantanu797@gmail.com", 
+		MailUtils.sendMimeMessageEmail(null, 
+				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
+				"prm.seekmentore@gmail.com",
+				"partner.seekmentore@gmail.com",
 				"Attachment Email Subject", 
 				"<html><body><h1>this is html h1</h1><h3>this is html h3</h3></body></html>",
 				attachments);
 		final List<MailAttachment> attachments1 = new LinkedList<MailAttachment>();
-		MailUtils.sendEmailWithAttachments(null, 
-				"mukherjeeshantanu797@gmail.com", 
+		MailUtils.sendMimeMessageEmail(null, 
+				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
+				"prm.seekmentore@gmail.com",
+				"partner.seekmentore@gmail.com",
 				"Without Attachment Email Subject", 
 				"<html><body><h1>Without Attachment this is html h1</h1><h3>Without Attachment this is html h3</h3></body></html>",
 				attachments1);
