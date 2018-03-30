@@ -22,5 +22,11 @@
 			<hrMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</hrMailList>
 			<accountsMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;md.seekmentore@gmail.com;founder.seekmentore@gmail.com</accountsMailList>
 		</importantCompanyMailIdsAndLists>
+		<mailingDuringDevelopmentAndTestingFeatures>
+			<sendOutActualEmails>false</sendOutActualEmails>
+			<showOnConsoleWhatEmailWillBeSent>true</showOnConsoleWhatEmailWillBeSent>
+			<sendOutEmailsButDivertThemToSomeOtherRecipient>false</sendOutEmailsButDivertThemToSomeOtherRecipient>
+			<divertedRecipeintEmailId></divertedRecipeintEmailId>
+		</mailingDuringDevelopmentAndTestingFeatures>
 	</mailConfiguration>
 </controlConfiguration>
