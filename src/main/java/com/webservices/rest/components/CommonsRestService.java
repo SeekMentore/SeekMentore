@@ -60,13 +60,13 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 											"application/pdf"));
 		MailUtils.sendSimpleMailMessage(null, 
 				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"prm.seekmentore@gmail.com",
+				"techlead@shantanumukherjee.com",
 				"partner.seekmentore@gmail.com",
 				"Simple Email Subject", 
 				"Simple Email Body");
 		MailUtils.sendMimeMessageEmail(null, 
 				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"prm.seekmentore@gmail.com",
+				"techlead@shantanumukherjee.com",
 				"partner.seekmentore@gmail.com",
 				"Attachment Email Subject", 
 				"<html><body><h1>this is html h1</h1><h3>this is html h3</h3></body></html>",
@@ -74,7 +74,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		final List<MailAttachment> attachments1 = new LinkedList<MailAttachment>();
 		MailUtils.sendMimeMessageEmail(null, 
 				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"prm.seekmentore@gmail.com",
+				"techlead@shantanumukherjee.com",
 				"partner.seekmentore@gmail.com",
 				"Without Attachment Email Subject", 
 				"<html><body><h1>Without Attachment this is html h1</h1><h3>Without Attachment this is html h3</h3></body></html>",

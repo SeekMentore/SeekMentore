@@ -12,6 +12,7 @@ public class MailConfiguration implements Serializable {
 	private int port;
 	private String encryptedUsername;
 	private String encryptedPassword;
+	private ImportantCompanyMailIdsAndLists importantCompanyMailIdsAndLists;
 	
 	public String getHost() {
 		return host;
@@ -47,5 +48,14 @@ public class MailConfiguration implements Serializable {
 	@XmlElement
 	public void setEncryptedUsername(String encryptedUsername) {
 		this.encryptedUsername = encryptedUsername;
+	}
+
+	public ImportantCompanyMailIdsAndLists getImportantCompanyMailIdsAndLists() {
+		return importantCompanyMailIdsAndLists;
+	}
+
+	@XmlElement
+	public void setImportantCompanyMailIdsAndLists(ImportantCompanyMailIdsAndLists importantCompanyMailIdsAndLists) {
+		this.importantCompanyMailIdsAndLists = importantCompanyMailIdsAndLists;
 	}
 }

@@ -6,9 +6,21 @@
 	<mailConfiguration>
 		<host>smtp.gmail.com</host>
 		<port>25</port>
-		<!-- <encryptedUsername>rimngyRXy9ypH8H1hIxf2HwcvxgjgV4goDRFb0RNf9Y=</encryptedUsername>
-		<encryptedPassword>9H/nQntH0HYs92+nIiqU+Q==</encryptedPassword> -->
-		<encryptedUsername>0uD6Dq+c6L3+nbDdyNg5fV7lpjaGikp4UWIxbDqKfXXU8JkNDM0riIr/0x06FswL</encryptedUsername>
-		<encryptedPassword>/sN3kl3ny5WntFaWY6+w7w==</encryptedPassword>
+		<encryptedUsername>ZqWmzKy0qCwIGkwosOKWvuLyVw+42NoSSA0JHB8lT/8=</encryptedUsername>
+		<encryptedPassword>SaNJ8FltPW+qkTFq2Qx2CPrmsZS29yFvMnxfBQ/Hn+E=</encryptedPassword>
+		<importantCompanyMailIdsAndLists>
+			<prm>prm.seekmentore@gmail.com</prm>
+			<managingPartner>partner.seekmentore@gmail.com</managingPartner>
+			<techlead>techlead.seekmentore@gmail.com</techlead>
+			<managingDirector>md.seekmentore@gmail.com</managingDirector>
+			<founder>founder.seekmentore@gmail.com</founder>
+			<officeAdminId>admin@seekmentore.com</officeAdminId>
+			<supportMailList>support@seekmentore.com</supportMailList>
+			<errorHandlingMailList>techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</errorHandlingMailList>
+			<salesMailList>partner.seekmentore@gmail.com;partner.seekmentore@gmail.com</salesMailList>
+			<financeMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</financeMailList>
+			<hrMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</hrMailList>
+			<accountsMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;md.seekmentore@gmail.com;founder.seekmentore@gmail.com</accountsMailList>
+		</importantCompanyMailIdsAndLists>
 	</mailConfiguration>
 </controlConfiguration>
