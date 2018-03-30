@@ -10,8 +10,8 @@
 --                                     DATABASE
 									-------------
 ---------------------------------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS INDIA_PROVIDENT_FUND;
-USE INDIA_PROVIDENT_FUND;
+CREATE DATABASE IF NOT EXISTS SEEK_MENTORE;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
 --                                     TABLES
