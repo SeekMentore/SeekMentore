@@ -23,9 +23,8 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.CommonsConstants;
 import com.model.mail.MailAttachment;
+import com.service.components.AdminService;
 import com.service.components.CommonsService;
-import com.service.components.Form11Service;
-import com.service.components.FormFService;
 import com.utils.MailUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
@@ -52,12 +51,12 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
     		@Context final HttpServletResponse response
 	) throws Exception {
 		final List<MailAttachment> attachments = new LinkedList<MailAttachment>();
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "Form 11" + PERIOD + FileConstants.EXTENSION_PDF, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_FORM11_SERVICE, Form11Service.class).downloadForm(getLoggedInEmpId(request)),
-											"application/pdf"));
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "Form F" + PERIOD + FileConstants.EXTENSION_PDF, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_FORMF_SERVICE, FormFService.class).downloadForm(getLoggedInEmpId(request)),
-											"application/pdf"));
+		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "FIRST REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
+											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(getLoggedInEmpId(request)),
+											"application/xlsx"));
+		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "SECOND REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
+											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(getLoggedInEmpId(request)),
+											"application/xlsx"));
 		MailUtils.sendSimpleMailMessage(null, 
 				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
 				"techlead@shantanumukherjee.com",

@@ -1,34 +1,9 @@
 ---------------------------------------------------------------------------------
 --                                     SELECT DATABASE
 ---------------------------------------------------------------------------------
-USE INDIA_PROVIDENT_FUND;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
--- Form 2 Tables
+-- Public Pages Tables
 ---------------------------------------------------------------------------------
-DELETE FROM FORM2_EMP_PF_NOM_DTLS;
-DELETE FROM FORM2_WDW_CHLDRN_NOM_DTLS;
-DELETE FROM FORM2_ONLY_WDW_NOM_DTLS;
-DELETE FROM FORM2;
-
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-DELETE FROM FORM11_KYC_DTLS;
-DELETE FROM FORM11;
-
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-DELETE FROM FORMF_EMP_GRTY_NOM_DTLS;
-DELETE FROM FORMF;
-
----------------------------------------------------------------------------------
--- Look Up tables
----------------------------------------------------------------------------------
-DELETE FROM STATE;
-DELETE FROM COUNTRY;
-DELETE FROM MARITAL_STATUS;
-DELETE FROM RELATIONSHIP;
-DELETE FROM CATEGORY;
-DELETE FROM GENDER;
+DELETE FROM BECOME_TUTOR;

@@ -1,34 +1,9 @@
 ---------------------------------------------------------------------------------
 --                                     SELECT DATABASE
 ---------------------------------------------------------------------------------
-USE INDIA_PROVIDENT_FUND;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
--- Form 2 Tables
+-- Public Pages Tables
 ---------------------------------------------------------------------------------
-SELECT * FROM FORM2;
-SELECT * FROM FORM2_EMP_PF_NOM_DTLS;
-SELECT * FROM FORM2_WDW_CHLDRN_NOM_DTLS;
-SELECT * FROM FORM2_ONLY_WDW_NOM_DTLS;
-
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-SELECT * FROM FORM11;
-SELECT * FROM FORM11_KYC_DTLS;
-
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-SELECT * FROM FORMF;
-SELECT * FROM FORMF_EMP_GRTY_NOM_DTLS;
-
----------------------------------------------------------------------------------
--- Look Up tables
----------------------------------------------------------------------------------
-SELECT * FROM COUNTRY;
-SELECT * FROM STATE;
-SELECT * FROM MARITAL_STATUS;
-SELECT * FROM RELATIONSHIP;
-SELECT * FROM CATEGORY;
-SELECT * FROM GENDER;
+SELECT * FROM BECOME_TUTOR;

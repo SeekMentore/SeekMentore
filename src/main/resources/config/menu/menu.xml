@@ -29,9 +29,12 @@
 		</page>
 	</pageList>
 	<pageList id="unsecured">
-		<page id="index" url="/">
-		</page>
-		<page id="index" url="/index.html">
+		<page id="index" url="/"></page>
+		<page id="index" url="/index.html"></page>
+		<page id="publicAccess" url="/rest/form-11" pageAccessType="U,A">
+			<webservice id="getForm" url="/getForm"></webservice>
+			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
+			<webservice id="downloadForm" url="/downloadForm"></webservice>
 		</page>
 	</pageList>
 </menu>

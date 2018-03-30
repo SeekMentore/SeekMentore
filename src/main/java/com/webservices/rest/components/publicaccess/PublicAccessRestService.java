@@ -1,4 +1,4 @@
-package com.webservices.rest.components;
+package com.webservices.rest.components.publicaccess;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.constants.components.AdminConstants;
+import com.constants.components.publicaccess.PublicAccessConstants;
 import com.exception.ApplicationException;
 import com.service.components.AdminService;
 import com.utils.FileUtils;
@@ -25,23 +25,23 @@ import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path(RestPathConstants.REST_SERVICE_PATH_ADMIN) 
-public class AdminRestService extends AbstractRestWebservice implements RestMethodConstants, AdminConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_PUBLIC_ACCESS) 
+public class PublicAccessRestService extends AbstractRestWebservice implements RestMethodConstants, PublicAccessConstants {
 	
-	@Path(REST_METHOD_NAME_DOWNLOAD_REPORT)
+	@Path(REST_METHOD_NAME_APPLY_TO_BECOME_TUTOR)
 	@Produces({MediaType.APPLICATION_JSON})  
 	@POST
     public void downloadReport (
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
-	) throws Exception {
+	) throws Exception {/*
 		final String empId = getLoggedInEmpId(request);
 		if (null != empId && !EMPTY_STRING.equals(empId.trim())) {
 			FileUtils.writeFileToResponse(response, DOWNLOAD_EXCEL_REPORT_NAME + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadReport(empId));
 		}
 		else
 			throw new ApplicationException("EXCEPTION_NO_EMP_ID_IN_REQUEST");
-    }
+    */}
 	
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
