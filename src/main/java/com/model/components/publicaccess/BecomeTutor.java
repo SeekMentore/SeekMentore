@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,7 +24,7 @@ import com.constants.components.publicaccess.BecomeTutorConstants;
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BecomeTutor implements Serializable, BecomeTutorConstants {
+public class BecomeTutor extends PublicApplication implements Serializable, BecomeTutorConstants {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
@@ -77,17 +76,14 @@ public class BecomeTutor implements Serializable, BecomeTutorConstants {
 	@Column(name = "IS_CONTACTED", nullable = false)
 	private String isContacted;
 	
-	@Column(name = "IS_AUTH_VERIFIED", nullable = false)
+	@Column(name = "IS_AUTH_VERIFIED")
 	private String isAuthenticationVerified;
 	
-	@Column(name = "IS_TO_BE_RECONTACTED", nullable = false)
+	@Column(name = "IS_TO_BE_RECONTACTED")
 	private String isToBeRecontacted;
 	
-	@Column(name = "IS_SELECTED", nullable = false)
+	@Column(name = "IS_SELECTED")
 	private String isSelected;
-	
-	@Transient
-	private boolean flag;
 	
 	public BecomeTutor() {}
 	
@@ -272,13 +268,4 @@ public class BecomeTutor implements Serializable, BecomeTutorConstants {
 	public void setIsSelected(String isSelected) {
 		this.isSelected = isSelected;
 	}
-
-	public boolean isFlag() {
-		return flag;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-	
 }

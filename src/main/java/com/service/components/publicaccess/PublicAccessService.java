@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
-import com.model.components.publicaccess.BecomeTutor;
+import com.model.components.publicaccess.PublicApplication;
 
 @Service(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE)
 public class PublicAccessService implements PublicAccessConstants {
@@ -21,7 +21,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	public void init() {}
 	
 	@Transactional
-	public void submitApplicationToBecomeTutor(final BecomeTutor application) {
+	public void submitApplication(final PublicApplication application) {
 		applicationDao.save(application);
 	}
 }
