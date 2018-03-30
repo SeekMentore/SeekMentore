@@ -104,7 +104,7 @@ public class MailUtils implements MailConstants {
 		simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage(toAddressSemicolonSeparated, true));
 		simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage(ccAddressSemicolonSeparated, false));
 		simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage(bccAddressSemicolonSeparated, false));
-		simpleMailMessage.setReplyTo("jigs.kcs@gmail.com");
+		simpleMailMessage.setReplyTo(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSupportMailList());
 		simpleMailMessage.setSubject(subject);
 		simpleMailMessage.setText(message);
         getMailService().sendEmail(simpleMailMessage);
@@ -129,7 +129,7 @@ public class MailUtils implements MailConstants {
 				mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage(toAddressSemicolonSeparated, true));
 				mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage(ccAddressSemicolonSeparated, false));
 				mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage(bccAddressSemicolonSeparated, false));
-				mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage("jigs.kcs@gmail.com;jigyasa.it@gmail.com", true));
+				mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSupportMailList(), true));
 				mimeMessage.setSubject(subject);
 				mimeMessage.setContent(createMimeMultipart(htmlMessage, attachments));
 			} 

@@ -492,6 +492,11 @@
 		    <version>${version.ibatis.core}</version>
 		</dependency>
 		
+		<dependency>
+		    <groupId>com.nexmo</groupId>
+		    <artifactId>client</artifactId>
+		    <version>2.0.1</version>
+		</dependency>
 		
 	</dependencies>
 	
