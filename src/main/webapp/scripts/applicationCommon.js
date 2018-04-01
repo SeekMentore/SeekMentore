@@ -57,18 +57,10 @@ function getApplicationToBecomeTutor() {
 	return form;
 }
 
-$('#getForm11').on('click', function() {
-	callWebservice('/rest/form-11/getForm', $('#empId11').val());
+$('#testEmail').on('click', function() {
+	callWebservice('/rest/publicaccess/testEmail');
 }); 
 
 $('#becomeTutor').on('click', function() {
 	callWebservice('/rest/publicaccess/becomeTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()));
 }); 
-
-$('#getCountryList').on('click', function() {
-	callWebservice('/rest/commons/getCountryList', '');
-}); 
-
-$('#sendEmail').on('click', function() {
-	callWebservice('/rest/commons/getStateList', '');
-});

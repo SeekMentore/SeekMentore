@@ -1,8 +1,6 @@
 package com.webservices.rest.components;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,15 +15,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.CommonsConstants;
-import com.model.mail.MailAttachment;
-import com.service.components.AdminService;
 import com.service.components.CommonsService;
-import com.utils.MailUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -50,34 +44,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
-		final List<MailAttachment> attachments = new LinkedList<MailAttachment>();
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "FIRST REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(getLoggedInEmpId(request)),
-											"application/xlsx"));
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "SECOND REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(getLoggedInEmpId(request)),
-											"application/xlsx"));
-		MailUtils.sendSimpleMailMessage(null, 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"techlead@shantanumukherjee.com",
-				"partner.seekmentore@gmail.com",
-				"Simple Email Subject", 
-				"Simple Email Body");
-		MailUtils.sendMimeMessageEmail(null, 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"techlead@shantanumukherjee.com",
-				"partner.seekmentore@gmail.com",
-				"Attachment Email Subject", 
-				"<html><body><h1>this is html h1</h1><h3>this is html h3</h3></body></html>",
-				attachments);
-		final List<MailAttachment> attachments1 = new LinkedList<MailAttachment>();
-		MailUtils.sendMimeMessageEmail(null, 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"techlead@shantanumukherjee.com",
-				"partner.seekmentore@gmail.com",
-				"Without Attachment Email Subject", 
-				"<html><body><h1>Without Attachment this is html h1</h1><h3>Without Attachment this is html h3</h3></body></html>",
-				attachments1);
+		
     }
 	
 	public CommonsService getCommonsService() {

@@ -28,6 +28,7 @@
 		<page id="index" url="/index.html"></page>
 		<page id="publicAccess" url="/rest/publicaccess">
 			<webservice id="becomeTutor" url="/becomeTutor"></webservice>
+			<webservice id="testEmail" url="/testEmail"></webservice>
 		</page>
 	</pageList>
 </menu>

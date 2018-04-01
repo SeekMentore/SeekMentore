@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
+import com.utils.PrintFormatterUtils;
 
 @Entity
 @Table( name = BecomeTutorConstants.TABLE_NAME, 
@@ -267,5 +268,31 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 
 	public void setIsSelected(String isSelected) {
 		this.isSelected = isSelected;
+	}
+	
+	@Override
+	public String toString() {
+		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
+		becomeTutorApplication.append(PrintFormatterUtils.startATable());
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("TENTATIVE_TUTOR_ID", tentativeTutorId));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("DATE_OF_BIRTH", dateOfBirth));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("CONTACT_NUMBER", contactNumber));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("EMAIL_ID", emailId));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("FIRST_NAME", firstName));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("LAST_NAME", lastName));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("GENDER", gender));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("QUALIFICATION", qualification));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("PRIMARY_PROFESSION", primaryProfession));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("TRANSPOR_TMODE", transportMode));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("TEACHING_EXPERIENCE", teachingExp));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("LOCATIONS", locations));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("PREFERRED_TIME_TO_CALL", preferredTimeToCall));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("ADDITIONAL_DETAILS", additionalDetails));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("IS_CONTACTED", isContacted));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("IS_AUTHENTICATION_VERIFIED", isAuthenticationVerified));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("IS_TO_BE_RECONTACTED", isToBeRecontacted));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("IS_SELECTED", isSelected));
+		becomeTutorApplication.append(PrintFormatterUtils.endATable());
+		return becomeTutorApplication.toString();
 	}
 }

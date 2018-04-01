@@ -9,18 +9,37 @@
 		<encryptedUsername>ZqWmzKy0qCwIGkwosOKWvuLyVw+42NoSSA0JHB8lT/8=</encryptedUsername>
 		<encryptedPassword>SaNJ8FltPW+qkTFq2Qx2CPrmsZS29yFvMnxfBQ/Hn+E=</encryptedPassword>
 		<importantCompanyMailIdsAndLists>
+			<!-- Mail Ids for Sending Mails -->
+			<!-- E Office Administrator -->
+			<officeAdminId>admin@seekmentore.com</officeAdminId>
+			<!-- Support Systems Mail List -->
+			<systemSupportMailList>support@seekmentore.com</systemSupportMailList>
+			<!-- Mail Ids for Receiving Mails -->
+			<systemReplyToAddress>support@seekmentore.com</systemReplyToAddress>
+			<!-- Individual Share Holde Mail Ids -->
 			<prm>prm.seekmentore@gmail.com</prm>
 			<managingPartner>partner.seekmentore@gmail.com</managingPartner>
 			<techlead>techlead.seekmentore@gmail.com</techlead>
 			<managingDirector>md.seekmentore@gmail.com</managingDirector>
 			<founder>founder.seekmentore@gmail.com</founder>
-			<officeAdminId>admin@seekmentore.com</officeAdminId>
-			<supportMailList>support@seekmentore.com</supportMailList>
+			<!-- Customer Registration Support Mail List -->
+			<customerRegistrationSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRegistrationSupportMailList>
+			<!-- Customer Retention Support Mail List -->
+			<customerRetentionSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRetentionSupportMailList>
+			<!-- Customer Registration Support Mail List -->
+			<tutorRegistrationSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRegistrationSupportMailList>
+			<!-- Customer Retention Support Mail List -->
+			<tutorRetentionSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRetentionSupportMailList>
+			<!-- IT Systems Error Handling Mail List -->
 			<errorHandlingMailList>techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</errorHandlingMailList>
-			<salesMailList>partner.seekmentore@gmail.com;partner.seekmentore@gmail.com</salesMailList>
-			<financeMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</financeMailList>
-			<hrMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</hrMailList>
-			<accountsMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;md.seekmentore@gmail.com;founder.seekmentore@gmail.com</accountsMailList>
+			<!-- Sales Department Mail List -->
+			<salesDeptMailList>prm.seekmentore@gmail.com;partner.seekmentore@gmail.com</salesDeptMailList>
+			<!-- Finance Department Mail List -->
+			<financeDeptMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</financeDeptMailList>
+			<!-- HR Department Mail List -->
+			<hrDeptMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</hrDeptMailList>
+			<!-- Accounts Department Mail List -->
+			<accountsDeptMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;md.seekmentore@gmail.com;founder.seekmentore@gmail.com</accountsDeptMailList>
 		</importantCompanyMailIdsAndLists>
 		<mailingDuringDevelopmentAndTestingFeatures>
 			<sendOutActualEmails>false</sendOutActualEmails>

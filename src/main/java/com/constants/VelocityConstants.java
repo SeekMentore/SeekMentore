@@ -11,4 +11,6 @@ public interface VelocityConstants extends ApplicationConstants {
 	String VELOCITY_PROPERTIES_FILE = "velocity/velocity.properties";
 	String UTF_ENCODING = "ISO-8859-1";
 	
+	String VELOCITY_TEMPLATES_FOLDER_PATH = "/velocity/templates";
+	
 }

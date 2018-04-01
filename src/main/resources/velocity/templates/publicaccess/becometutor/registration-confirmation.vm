@@ -1,0 +1,32 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+Your registration was successfull with Seek Mentore. Please wait and someone from Tutor Support team will contact you shortly.
+<br/><br/>
+Thanks & Regards
+Seek Mentore Team
+</body>
+</html>

@@ -1,7 +1,6 @@
 package com.webservices.rest.components.publicaccess;
 
-import java.io.IOException;
-
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -9,7 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import org.json.JSONException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +30,20 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	@Path(REST_METHOD_NAME_APPLY_TO_BECOME_TUTOR)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
-	public void saveOrUpdateForm (
+	public String saveOrUpdateForm (
 			final BecomeTutor application,
 			@Context final HttpServletRequest request
-	) throws IOException, JSONException {
-		getPublicAccessService().submitApplication(application);
+	) throws Exception {
+		return convertObjToJSONString(getPublicAccessService().submitApplication(application), "response");
+	}
+	
+	@Path("testEmail")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public void testEmail (
+			@Context final HttpServletRequest request
+	) throws MessagingException, Exception {
+		getPublicAccessService().testEmail();
 	}
 	
 	public PublicAccessService getPublicAccessService() {

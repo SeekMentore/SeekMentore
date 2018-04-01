@@ -8,17 +8,26 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 	
 	private static final long serialVersionUID = 6693618464803123134L;
 	
+	private String officeAdminId;
+	private String systemSupportMailList;
+
+	private String systemReplyToAddress;
 	private String prm;
 	private String managingPartner;
 	private String techlead;
 	private String managingDirector;
 	private String founder;
-	private String officeAdminId;
-	private String supportMailList;
+	
+	private String customerRegistrationSupportMailList;
+	private String customerRetentionSupportMailList;
+	private String tutorRegistrationSupportMailList;
+	private String tutorRetentionSupportMailList;
+	
 	private String errorHandlingMailList;
-	private String salesMailList;
-	private String financeMailList;
-	private String hrMailList;
+	private String salesDeptMailList;
+	private String financeDeptMailList;
+	private String hrDeptMailList;
+	private String accountsDeptMailList;
 	
 	
 	public String getPrm() {
@@ -75,15 +84,6 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 		this.officeAdminId = officeAdminId;
 	}
 	
-	public String getSupportMailList() {
-		return supportMailList;
-	}
-	
-	@XmlElement
-	public void setSupportMailList(String supportMailList) {
-		this.supportMailList = supportMailList;
-	}
-	
 	public String getErrorHandlingMailList() {
 		return errorHandlingMailList;
 	}
@@ -93,31 +93,94 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 		this.errorHandlingMailList = errorHandlingMailList;
 	}
 	
-	public String getSalesMailList() {
-		return salesMailList;
+	public String getSalesDeptMailList() {
+		return salesDeptMailList;
 	}
-	
+
 	@XmlElement
-	public void setSalesMailList(String salesMailList) {
-		this.salesMailList = salesMailList;
+	public void setSalesDeptMailList(String salesDeptMailList) {
+		this.salesDeptMailList = salesDeptMailList;
 	}
-	
-	public String getFinanceMailList() {
-		return financeMailList;
+
+	public String getFinanceDeptMailList() {
+		return financeDeptMailList;
 	}
-	
+
 	@XmlElement
-	public void setFinanceMailList(String financeMailList) {
-		this.financeMailList = financeMailList;
+	public void setFinanceDeptMailList(String financeDeptMailList) {
+		this.financeDeptMailList = financeDeptMailList;
 	}
-	
-	public String getHrMailList() {
-		return hrMailList;
+
+	public String getHrDeptMailList() {
+		return hrDeptMailList;
 	}
-	
+
 	@XmlElement
-	public void setHrMailList(String hrMailList) {
-		this.hrMailList = hrMailList;
+	public void setHrDeptMailList(String hrDeptMailList) {
+		this.hrDeptMailList = hrDeptMailList;
+	}
+
+	public String getSystemSupportMailList() {
+		return systemSupportMailList;
+	}
+
+	@XmlElement
+	public void setSystemSupportMailList(String systemSupportMailList) {
+		this.systemSupportMailList = systemSupportMailList;
+	}
+
+	public String getCustomerRegistrationSupportMailList() {
+		return customerRegistrationSupportMailList;
+	}
+
+	@XmlElement
+	public void setCustomerRegistrationSupportMailList(String customerRegistrationSupportMailList) {
+		this.customerRegistrationSupportMailList = customerRegistrationSupportMailList;
+	}
+
+	public String getCustomerRetentionSupportMailList() {
+		return customerRetentionSupportMailList;
+	}
+
+	@XmlElement
+	public void setCustomerRetentionSupportMailList(String customerRetentionSupportMailList) {
+		this.customerRetentionSupportMailList = customerRetentionSupportMailList;
+	}
+
+	public String getTutorRegistrationSupportMailList() {
+		return tutorRegistrationSupportMailList;
+	}
+
+	@XmlElement
+	public void setTutorRegistrationSupportMailList(String tutorRegistrationSupportMailList) {
+		this.tutorRegistrationSupportMailList = tutorRegistrationSupportMailList;
+	}
+
+	public String getTutorRetentionSupportMailList() {
+		return tutorRetentionSupportMailList;
+	}
+
+	@XmlElement
+	public void setTutorRetentionSupportMailList(String tutorRetentionSupportMailList) {
+		this.tutorRetentionSupportMailList = tutorRetentionSupportMailList;
+	}
+
+	public String getAccountsDeptMailList() {
+		return accountsDeptMailList;
+	}
+
+	@XmlElement
+	public void setAccountsDeptMailList(String accountsDeptMailList) {
+		this.accountsDeptMailList = accountsDeptMailList;
+	}
+
+	public String getSystemReplyToAddress() {
+		return systemReplyToAddress;
+	}
+
+	@XmlElement
+	public void setSystemReplyToAddress(String systemReplyToAddress) {
+		this.systemReplyToAddress = systemReplyToAddress;
 	}
 	
 }

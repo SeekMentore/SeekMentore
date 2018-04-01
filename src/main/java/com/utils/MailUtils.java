@@ -91,7 +91,7 @@ public class MailUtils implements MailConstants {
 						: fromAddress;
 	}
 	
-	public static void sendSimpleMailMessage (
+	private static void sendingSimpleMailMessage(
 			final String fromAddress,
 			final String toAddressSemicolonSeparated,
 			final String ccAddressSemicolonSeparated,
@@ -104,14 +104,41 @@ public class MailUtils implements MailConstants {
 		simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage(toAddressSemicolonSeparated, true));
 		simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage(ccAddressSemicolonSeparated, false));
 		simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage(bccAddressSemicolonSeparated, false));
-		simpleMailMessage.setReplyTo(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSupportMailList());
+		simpleMailMessage.setReplyTo(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemReplyToAddress());
 		simpleMailMessage.setSubject(subject);
 		simpleMailMessage.setText(message);
         getMailService().sendEmail(simpleMailMessage);
         LoggerUtils.logOnConsole("Message Send...");
+	}
+	
+	public static void sendCustomisedFromAddressSimpleMailMessage (
+			final String fromAddress,
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String message
+	) throws Exception {
+		// TODO this section will alter the From Address than the default address with which the System Mailer Logged in
     }
 	
-	public static void sendMimeMessageEmail (
+	public static void sendSimpleMailMessage (
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String message
+	) throws Exception {
+		sendingSimpleMailMessage(
+				null,
+				toAddressSemicolonSeparated,
+				ccAddressSemicolonSeparated,
+				bccAddressSemicolonSeparated,
+				subject,
+				message);
+    }
+	
+	private static void sendingCustomisedFromAddressMimeMessageEmail (
 			final String fromAddress,
 			final String toAddressSemicolonSeparated,
 			final String ccAddressSemicolonSeparated,
@@ -129,13 +156,43 @@ public class MailUtils implements MailConstants {
 				mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage(toAddressSemicolonSeparated, true));
 				mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage(ccAddressSemicolonSeparated, false));
 				mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage(bccAddressSemicolonSeparated, false));
-				mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSupportMailList(), true));
+				mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemReplyToAddress(), true));
 				mimeMessage.setSubject(subject);
 				mimeMessage.setContent(createMimeMultipart(htmlMessage, attachments));
 			} 
         };
         getMailService().sendEmail(mimeMessagePreparator);
         LoggerUtils.logOnConsole("Message Send...");
+    }
+	
+	public static void sendCustomisedFromAddressMimeMessageEmail (
+			final String fromAddress,
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String htmlMessage,
+			final List<MailAttachment> attachments
+	) throws Exception {
+		// TODO this section will alter the From Address than the default address with which the System Mailer Logged in
+    }
+	
+	public static void sendMimeMessageEmail (
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String htmlMessage,
+			final List<MailAttachment> attachments
+	) throws Exception {
+		MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
+				null, 
+				toAddressSemicolonSeparated, 
+				ccAddressSemicolonSeparated,
+				bccAddressSemicolonSeparated,
+				subject, 
+				htmlMessage,
+				attachments);
     }
 	
 	private static MimeMultipart createMimeMultipart (
@@ -165,7 +222,7 @@ public class MailUtils implements MailConstants {
         contentMultipart.addBodyPart(contentBodypart);
 
         // Adds attachments to contentPart
-        if (!attachments.isEmpty()) {
+        if (null != attachments && !attachments.isEmpty()) {
         	for (final MailAttachment mailAttachment : attachments) {
         		contentMultipart.addBodyPart(mailAttachment.getAttachment());
     		}

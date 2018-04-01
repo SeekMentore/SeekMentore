@@ -1,0 +1,31 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+A new tutor registration request has arrived in the System. Please find below the details.
+<br/>
+$becomeTutorApplication
+</body>
+</html>
