@@ -1,4 +1,4 @@
-var ctxPath = '/SeekMentore';
+var ctxPath = '/seekmentore';
 var output;
 commonErrorHandler = function(error) {
 	output = error;
@@ -37,8 +37,8 @@ function decodeObjectFromJSON(json) {
 function getApplicationToBecomeTutor() {
 	var form = {
 			dateOfBirth 				: new Date(),
-			contactNumber				: '9739936482',
-			emailId 					: 'mukherjeeshantanu797@gmail.com',
+			contactNumber				: $('#contact').val(),
+			emailId 					: $('#email').val(),
 			firstName 					: 'Shantanu',
 			lastName 					: 'Mukherjee',
 			gender 						: 'M',
