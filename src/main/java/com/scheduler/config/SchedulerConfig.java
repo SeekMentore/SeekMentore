@@ -58,7 +58,8 @@ public class SchedulerConfig implements SchedulerConstants {
     
     private Trigger[] getTriggerArray() {
     	final List<Trigger> triggerList = new ArrayList<Trigger>();
-    	triggerList.add(reminderEmailJobTrigger().getObject());
+    	// Add all the triggers here below is an example of ReminderJoB Trigger
+    	//triggerList.add(reminderEmailJobTrigger().getObject());
         return triggerList.toArray(new Trigger[0]);
     }
 
