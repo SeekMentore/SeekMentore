@@ -6,8 +6,6 @@
 	<mailConfiguration>
 		<host>smtp.gmail.com</host>
 		<port>25</port>
-		<encryptedUsername>ZqWmzKy0qCwIGkwosOKWvuLyVw+42NoSSA0JHB8lT/8=</encryptedUsername>
-		<encryptedPassword>SaNJ8FltPW+qkTFq2Qx2CPrmsZS29yFvMnxfBQ/Hn+E=</encryptedPassword>
 		<importantCompanyMailIdsAndLists>
 			<!-- Mail Ids for Sending Mails -->
 			<!-- E Office Administrator -->

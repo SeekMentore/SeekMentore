@@ -34,6 +34,8 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 	
 	private void setJNDIEnvironmentVariables() {
 		this.encyptionKey = environment.getProperty(ENVIRONMENT_VARIABLE_ENCRYPTION_KEY);
+		this.controlConfiguration.getMailConfiguration().setEncryptedUsername(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_USERNAME));
+		this.controlConfiguration.getMailConfiguration().setEncryptedPassword(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD));
 	}
 	
 	public ControlConfiguration getControlConfiguration() {

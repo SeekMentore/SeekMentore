@@ -37,7 +37,6 @@ public class MailConfiguration implements Serializable {
 		return encryptedPassword;
 	}
 	
-	@XmlElement
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
@@ -46,7 +45,6 @@ public class MailConfiguration implements Serializable {
 		return encryptedUsername;
 	}
 
-	@XmlElement
 	public void setEncryptedUsername(String encryptedUsername) {
 		this.encryptedUsername = encryptedUsername;
 	}
