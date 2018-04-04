@@ -18,6 +18,7 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 	private String managingDirector;
 	private String founder;
 	
+	private String querySupportMailList;
 	private String customerRegistrationSupportMailList;
 	private String customerRetentionSupportMailList;
 	private String tutorRegistrationSupportMailList;
@@ -181,6 +182,15 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 	@XmlElement
 	public void setSystemReplyToAddress(String systemReplyToAddress) {
 		this.systemReplyToAddress = systemReplyToAddress;
+	}
+
+	public String getQuerySupportMailList() {
+		return querySupportMailList;
+	}
+
+	@XmlElement
+	public void setQuerySupportMailList(String querySupportMailList) {
+		this.querySupportMailList = querySupportMailList;
 	}
 	
 }

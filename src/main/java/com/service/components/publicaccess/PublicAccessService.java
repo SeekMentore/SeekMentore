@@ -1,30 +1,24 @@
 package com.service.components.publicaccess;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
 import com.model.components.publicaccess.BecomeTutor;
+import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
-import com.model.mail.MailAttachment;
+import com.model.components.publicaccess.SubmitQuery;
 import com.service.JNDIandControlConfigurationLoadService;
-import com.service.components.AdminService;
 import com.utils.MailUtils;
 import com.utils.VelocityUtils;
-import com.utils.context.AppContext;
 
 @Service(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE)
 public class PublicAccessService implements PublicAccessConstants {
@@ -41,22 +35,34 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Transactional
 	public Map<String, Object> submitApplication(final PublicApplication application) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
+		feedRecordForApplication(application);
 		if (application instanceof BecomeTutor) {
-			response.put("UNKNOWN_PUBLIC_PAGE_REFERENCE", false);
-			response.put("PAGE_REFERNCE", "TUTOR_REGISTRATION");
-			final BecomeTutor tutorApplication = (BecomeTutor) application;
-			feedRecordForTutorApplication(tutorApplication);
-			sendNotificationAndConfirmationEmailsToTutor(tutorApplication);
+			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_REGISTRATION);
+			final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
+			sendNotificationAndConfirmationEmailsToTutor(becomeTutorApplication);
+		} else if (application instanceof FindTutor) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_ENQUIRY);
+			final FindTutor findTutorApplication = (FindTutor) application;
+			sendNotificationAndConfirmationEmailsToParentForTutorEnquiry(findTutorApplication);
+		} else if (application instanceof SubmitQuery) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBMIT_QUERY);
+			final SubmitQuery submitQueryApplication = (SubmitQuery) application;
+			sendNotificationAndConfirmationEmailsForQueryEnquiry(submitQueryApplication);
 		} else {
-			response.put("UNKNOWN_PUBLIC_PAGE_REFERENCE", true);
+			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, true);
 		}
 		return response;
 	}
 	
-	private void sendNotificationAndConfirmationEmailsToTutor(final BecomeTutor tutorApplication) throws Exception {
+	private void sendNotificationAndConfirmationEmailsToTutor(final BecomeTutor becomeTutorApplication) throws Exception {
 		// Send Registration notification message to concerned team
 		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, tutorApplication.toString());
+		attributes.put(ADDRESS_NAME_VM_OBJECT, becomeTutorApplication.getFirstName() + WHITESPACE + becomeTutorApplication.getLastName());
+		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication.toString());
+		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
 				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList(), 
 				null,
@@ -66,7 +72,7 @@ public class PublicAccessService implements PublicAccessConstants {
 				null);
 		// Send Registration confirmation message to Tutor on his provided email Id
 		MailUtils.sendMimeMessageEmail( 
-				tutorApplication.getEmailId(), 
+				becomeTutorApplication.getEmailId(), 
 				null,
 				null,
 				SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION, 
@@ -74,38 +80,52 @@ public class PublicAccessService implements PublicAccessConstants {
 				null);
 	}
 	
-	private void feedRecordForTutorApplication(final PublicApplication application) {
-		applicationDao.save(application);
+	private void sendNotificationAndConfirmationEmailsToParentForTutorEnquiry(final FindTutor findTutorApplication) throws Exception {
+		// Send Registration notification message to concerned team
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put(ADDRESS_NAME_VM_OBJECT, findTutorApplication.getName());
+		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication.toString());
+		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		MailUtils.sendMimeMessageEmail( 
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
+				null,
+				null,
+				SUBJECT_TUTOR_ENQUIRY_REQUEST, 
+				VelocityUtils.parseTemplate(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+		// Send Registration confirmation message to Tutor on his provided email Id
+		MailUtils.sendMimeMessageEmail( 
+				findTutorApplication.getEmailId(), 
+				null,
+				null,
+				SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION, 
+				VelocityUtils.parseTemplate(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
 	}
 	
-	public void testEmail() throws IOException, MessagingException, Exception {
-		final List<MailAttachment> attachments = new LinkedList<MailAttachment>();
-		attachments.add(new MailAttachment("FIRST REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(""),
-											"application/xlsx"));
-		attachments.add(new MailAttachment("SECOND REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class).downloadReport(""),
-											"application/xlsx"));
-		MailUtils.sendSimpleMailMessage( 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"jigs.kcs@gmail.com",
-				"partner.seekmentore@gmail.com",
-				"Simple Email Subject", 
-				"Simple Email Body");
+	private void sendNotificationAndConfirmationEmailsForQueryEnquiry(final SubmitQuery submitQueryApplication) throws Exception {
+		// Send Registration notification message to concerned team
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication.toString());
+		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"jigs.kcs@gmail.com",
-				"partner.seekmentore@gmail.com",
-				"Attachment Email Subject", 
-				"<html><body><h1>this is html h1</h1><h3>this is html h3</h3></body></html>",
-				attachments);
-		final List<MailAttachment> attachments1 = new LinkedList<MailAttachment>();
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList(), 
+				null,
+				null,
+				SUBJECT_SUBMIT_QUERY_REQUEST, 
+				VelocityUtils.parseTemplate(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+		// Send Registration confirmation message to Tutor on his provided email Id
 		MailUtils.sendMimeMessageEmail( 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"jigs.kcs@gmail.com",
-				"partner.seekmentore@gmail.com",
-				"Without Attachment Email Subject", 
-				"<html><body><h1>Without Attachment this is html h1</h1><h3>Without Attachment this is html h3</h3></body></html>",
-				attachments1);
+				submitQueryApplication.getEmailId(), 
+				null,
+				null,
+				SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION, 
+				VelocityUtils.parseTemplate(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+	}
+	
+	private void feedRecordForApplication(final PublicApplication application) {
+		applicationDao.save(application);
 	}
 }

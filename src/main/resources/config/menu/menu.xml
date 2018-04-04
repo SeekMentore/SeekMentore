@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	pageAccessType values 
-		G - General Access only Public Rest URL's
+		G - General Access only Public Rest URL's & Commons URL
 		M - Mentor Access
 		P - Professional Team Access
 		A - Admin Access
+		S - Super/all Access
 		D - Development Team Access
 		T - Testing Team Access
  -->
@@ -15,12 +16,10 @@
 			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
 			<webservice id="downloadForm" url="/downloadForm"></webservice>
 		</page> -->
-		<page id="admin" url="/rest/admin" pageAccessType="A">
+		<page id="admin" url="/rest/admin" pageAccessType="A,G">
 			<webservice id="downloadReport" url="/downloadReport"></webservice>
 		</page>
-		<page id="commons" url="/rest/commons" pageAccessType="U,A">
-			<webservice id="getCountryList" url="/getCountryList"></webservice>
-			<webservice id="getStateList" url="/getStateList"></webservice>
+		<page id="commons" url="/rest/commons" pageAccessType="G">
 		</page>
 	</pageList>
 	<pageList id="unsecured">
@@ -28,7 +27,9 @@
 		<page id="index" url="/index.html"></page>
 		<page id="publicAccess" url="/rest/publicaccess">
 			<webservice id="becomeTutor" url="/becomeTutor"></webservice>
-			<webservice id="testEmail" url="/testEmail"></webservice>
+			<webservice id="findTutor" url="/findTutor"></webservice>
+			<webservice id="submitQuery" url="/submitQuery"></webservice>
+			<webservice id="subscribe" url="/subscribe"></webservice>
 		</page>
 	</pageList>
 </menu>

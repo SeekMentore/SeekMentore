@@ -34,11 +34,40 @@ function decodeObjectFromJSON(json) {
 	return null != json ? JSON.parse(json) : null;
 }
 
+function getApplicationToSubmitQuery() {
+	var application = {
+			queryRequestedDate 	: new Date(),
+			queryStatus			: 'New',
+			emailId 			: $('#submitQueryEmail').val(),
+			queryDetails 		: 'This is just a simple query.',
+			isContacted 		: 'N'
+		};
+	return application;
+}
+
+function getApplicationToFindTutor() {
+	var application = {
+			enquiryDate 		: new Date(),
+			enquiryStatus		: 'New',
+			name 				: 'Dummy Parent',
+			contactNumber 		: $('#findTutorContact').val(),
+			emailId 			: $('#findTutorEmail').val(),
+			studentGrade 		: 'MS-7',
+			subjects 			: '12-P;11-C;10-B',
+			preferredTimeToCall : 'T2;T4',
+			additionalDetails 	: 'Nothing much to provide.',
+			isContacted 		: 'N'
+		};
+	return application;
+}
+
 function getApplicationToBecomeTutor() {
 	var form = {
+			applicationDate            	: new Date(),
+			applicationStatus			: 'New',
 			dateOfBirth 				: new Date(),
-			contactNumber				: $('#contact').val(),
-			emailId 					: $('#email').val(),
+			contactNumber				: $('#becomeTutorContact').val(),
+			emailId 					: $('#becomeTutorEmail').val(),
 			firstName 					: 'Shantanu',
 			lastName 					: 'Mukherjee',
 			gender 						: 'M',
@@ -46,19 +75,21 @@ function getApplicationToBecomeTutor() {
 			primaryProfession 			: 'Software Expert',
 			transportMode 				: '4-W',
 			teachingExp 				: '3',
+			subjects					: '12-P;11-C;10-B',
 			locations 					: 'Z1-L2;Z1-L9;Z3-L34',
 			preferredTimeToCall 		: 'T2;T4',
 			additionalDetails 			: 'I am awesome!!!',
-			isContacted 				: 'N',
-			isAuthenticationVerified 	: null,
-			isToBeRecontacted 			: null,
-			isSelected 					: null
+			isContacted 				: 'N'
 		};
 	return form;
 }
 
-$('#testEmail').on('click', function() {
-	callWebservice('/rest/publicaccess/testEmail');
+$('#submitQuery').on('click', function() {
+	callWebservice('/rest/publicaccess/submitQuery', encodeObjectAsJSON(getApplicationToSubmitQuery()));
+}); 
+
+$('#findTutor').on('click', function() {
+	callWebservice('/rest/publicaccess/findTutor', encodeObjectAsJSON(getApplicationToFindTutor()));
 }); 
 
 $('#becomeTutor').on('click', function() {

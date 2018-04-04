@@ -7,3 +7,5 @@ USE SEEK_MENTORE;
 -- Public Pages Tables
 ---------------------------------------------------------------------------------
 DELETE FROM BECOME_TUTOR;
+DELETE FROM FIND_TUTOR;
+DELETE FROM SUBMIT_QUERY;

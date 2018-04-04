@@ -24,9 +24,20 @@ body {
 </style>
 </head>
 <body>
-Your registration was successfull with Seek Mentore. Please wait and someone from Tutor Support team will contact you shortly.
+
+Hello $addressName,
+
 <br/><br/>
+Your registration is successful with "Seek Mentore". 
+<br/>
+Please wait and someone from Tutor Support team will contact you shortly.
+<br/><br/>
+
 Thanks & Regards
+<br/>
 Seek Mentore Team
+<br/>
+Mail to : $supportMailListId
+
 </body>
 </html>

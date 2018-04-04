@@ -7,3 +7,5 @@ USE SEEK_MENTORE;
 -- Public Pages Tables
 ---------------------------------------------------------------------------------
 SELECT * FROM BECOME_TUTOR;
+SELECT * FROM FIND_TUTOR;
+SELECT * FROM SUBMIT_QUERY;

@@ -20,6 +20,8 @@
 			<techlead>techlead.seekmentore@gmail.com</techlead>
 			<managingDirector>md.seekmentore@gmail.com</managingDirector>
 			<founder>founder.seekmentore@gmail.com</founder>
+			<!-- Query Support Mail List -->
+			<querySupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</querySupportMailList>
 			<!-- Customer Registration Support Mail List -->
 			<customerRegistrationSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRegistrationSupportMailList>
 			<!-- Customer Retention Support Mail List -->

@@ -9,6 +9,8 @@ USE SEEK_MENTORE;
 -- Public Pages Tables
 ---------------------------------------------------------------------------------
 DROP TABLE IF EXISTS BECOME_TUTOR;
+DROP TABLE IF EXISTS FIND_TUTOR;
+DROP TABLE IF EXISTS SUBMIT_QUERY;
 
 ---------------------------------------------------------------------------------
 --                                     DATABASE
