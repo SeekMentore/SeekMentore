@@ -10,7 +10,7 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 	
 	private boolean sendOutActualEmails;
 	private boolean showOnConsoleWhatEmailWillBeSent;
-	private boolean sendOutEmailsButDivertThemToSomeOtherRecipient;
+	private boolean sendOutActualEmailsButDivertThemToSomeOtherRecipient;
 	private String divertedRecipeintEmailId;
 	
 	public boolean isSendOutActualEmails() {
@@ -31,15 +31,6 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 		this.showOnConsoleWhatEmailWillBeSent = showOnConsoleWhatEmailWillBeSent;
 	}
 	
-	public boolean isSendOutEmailsButDivertThemToSomeOtherRecipient() {
-		return sendOutEmailsButDivertThemToSomeOtherRecipient;
-	}
-	
-	@XmlElement
-	public void setSendOutEmailsButDivertThemToSomeOtherRecipient(boolean sendOutEmailsButDivertThemToSomeOtherRecipient) {
-		this.sendOutEmailsButDivertThemToSomeOtherRecipient = sendOutEmailsButDivertThemToSomeOtherRecipient;
-	}
-	
 	public String getDivertedRecipeintEmailId() {
 		return divertedRecipeintEmailId;
 	}
@@ -47,6 +38,16 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 	@XmlElement
 	public void setDivertedRecipeintEmailId(String divertedRecipeintEmailId) {
 		this.divertedRecipeintEmailId = divertedRecipeintEmailId;
+	}
+
+	public boolean isSendOutActualEmailsButDivertThemToSomeOtherRecipient() {
+		return sendOutActualEmailsButDivertThemToSomeOtherRecipient;
+	}
+
+	@XmlElement
+	public void setSendOutActualEmailsButDivertThemToSomeOtherRecipient(
+			boolean sendOutActualEmailsButDivertThemToSomeOtherRecipient) {
+		this.sendOutActualEmailsButDivertThemToSomeOtherRecipient = sendOutActualEmailsButDivertThemToSomeOtherRecipient;
 	}
 	
 }

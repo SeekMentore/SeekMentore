@@ -62,6 +62,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS, nullable = false)
 	private String additionalDetails;
 	
+	@Column(name = COLUMN_NAME_SUBSCRIBED_WITH_US, nullable = false)
+	private String subscribedWithUs;
+	
 	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
 	
@@ -471,6 +474,14 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.studentGrade = studentGrade;
 	}
 	
+	public String getSubscribedWithUs() {
+		return subscribedWithUs;
+	}
+
+	public void setSubscribedWithUs(String subscribedWithUs) {
+		this.subscribedWithUs = subscribedWithUs;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
@@ -485,6 +496,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_WITH_US, subscribedWithUs));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));

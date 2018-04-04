@@ -44,8 +44,8 @@
 		<mailingDuringDevelopmentAndTestingFeatures>
 			<sendOutActualEmails>false</sendOutActualEmails>
 			<showOnConsoleWhatEmailWillBeSent>true</showOnConsoleWhatEmailWillBeSent>
-			<sendOutEmailsButDivertThemToSomeOtherRecipient>false</sendOutEmailsButDivertThemToSomeOtherRecipient>
-			<divertedRecipeintEmailId></divertedRecipeintEmailId>
+			<sendOutActualEmailsButDivertThemToSomeOtherRecipient>false</sendOutActualEmailsButDivertThemToSomeOtherRecipient>
+			<divertedRecipeintEmailId>founder.seekmentore@gmail.com</divertedRecipeintEmailId>
 		</mailingDuringDevelopmentAndTestingFeatures>
 	</mailConfiguration>
 </controlConfiguration>

@@ -56,6 +56,7 @@ function getApplicationToFindTutor() {
 			subjects 			: '12-P;11-C;10-B',
 			preferredTimeToCall : 'T2;T4',
 			additionalDetails 	: 'Nothing much to provide.',
+			subscribedWithUs	: 'N',
 			isContacted 		: 'N'
 		};
 	return application;
