@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
+import com.exception.ApplicationException;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
@@ -35,6 +36,13 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Transactional
 	public Map<String, Object> submitApplication(final PublicApplication application) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
+		if (application instanceof BecomeTutor) {
+			final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
+			final BecomeTutor becomeTutorApplicationInDatabase = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = ? OR CONTACT_NUMBER = ?", new Object[] {becomeTutorApplication.getEmailId(), becomeTutorApplication.getContactNumber()}, BecomeTutor.class);
+			if (null != becomeTutorApplicationInDatabase) {
+				throw new ApplicationException("Already exists in database");
+			}
+		}
 		feedRecordForApplication(application);
 		if (application instanceof BecomeTutor) {
 			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);

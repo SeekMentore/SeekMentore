@@ -129,6 +129,70 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.contactedDate = contactedDate;
 	}
 
+	public long getQueryId() {
+		return queryId;
+	}
+
+	public void setQueryId(long queryId) {
+		this.queryId = queryId;
+	}
+
+	public Date getQueryRequestedDate() {
+		return queryRequestedDate;
+	}
+
+	public void setQueryRequestedDate(Date queryRequestedDate) {
+		this.queryRequestedDate = queryRequestedDate;
+	}
+
+	public String getQueryStatus() {
+		return queryStatus;
+	}
+
+	public void setQueryStatus(String queryStatus) {
+		this.queryStatus = queryStatus;
+	}
+
+	public String getQueryDetails() {
+		return queryDetails;
+	}
+
+	public void setQueryDetails(String queryDetails) {
+		this.queryDetails = queryDetails;
+	}
+
+	public String getQueryResponse() {
+		return queryResponse;
+	}
+
+	public void setQueryResponse(String queryResponse) {
+		this.queryResponse = queryResponse;
+	}
+
+	public String getNotAnswered() {
+		return notAnswered;
+	}
+
+	public void setNotAnswered(String notAnswered) {
+		this.notAnswered = notAnswered;
+	}
+
+	public String getNotAnsweredReason() {
+		return notAnsweredReason;
+	}
+
+	public void setNotAnsweredReason(String notAnsweredReason) {
+		this.notAnsweredReason = notAnsweredReason;
+	}
+
+	public String getWhoNotAnswered() {
+		return whoNotAnswered;
+	}
+
+	public void setWhoNotAnswered(String whoNotAnswered) {
+		this.whoNotAnswered = whoNotAnswered;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);

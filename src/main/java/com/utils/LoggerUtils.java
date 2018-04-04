@@ -36,6 +36,9 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logError(final String message) {
+		try {
+			MailUtils.sendErrorMessageEmail(message, null);
+		} catch (Exception e) {}
 		if (isErrorEnabled)
 			LOGGER.error(message);
 	}
@@ -47,12 +50,16 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logFatal(final String message) {
+		try {
+			MailUtils.sendErrorMessageEmail(message, null);
+		} catch (Exception e) {}
 		if (isFatalEnabled)
 			LOGGER.fatal(message);
 	}
 	
 	public static void logFatal(final Throwable exception) {
 		logFatal(ExceptionUtils.generateErrorLog(exception));
-		LOGGER.fatal(exception.getMessage(), exception);
+		if (isFatalEnabled)
+			LOGGER.fatal(exception.getMessage(), exception);
 	}
 }

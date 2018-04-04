@@ -1,6 +1,7 @@
 package com.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.mail.BodyPart;
@@ -191,6 +192,20 @@ public class MailUtils implements MailConstants {
 				ccAddressSemicolonSeparated,
 				bccAddressSemicolonSeparated,
 				subject, 
+				htmlMessage,
+				attachments);
+    }
+	
+	public static void sendErrorMessageEmail (
+			final String htmlMessage,
+			final List<MailAttachment> attachments
+	) throws Exception {
+		MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
+				null, 
+				getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(), 
+				null,
+				null,
+				"Exception occured in " + getJNDIandControlConfigurationLoadService().getServerName() + " Server at " + (new Date()).toString(), 
 				htmlMessage,
 				attachments);
     }

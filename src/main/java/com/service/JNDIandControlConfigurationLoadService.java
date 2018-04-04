@@ -25,6 +25,7 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 	private ControlConfiguration controlConfiguration;
 	
 	private String encyptionKey;
+	private String serverName;
 	
 	@PostConstruct
 	public void parseControlConfigurationFromXML()  throws JAXBException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
@@ -34,6 +35,7 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 	
 	private void setJNDIEnvironmentVariables() {
 		this.encyptionKey = environment.getProperty(ENVIRONMENT_VARIABLE_ENCRYPTION_KEY);
+		this.serverName = environment.getProperty(ENVIRONMENT_VARIABLE_SERVER_NAME);
 		this.controlConfiguration.getMailConfiguration().setEncryptedUsername(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_USERNAME));
 		this.controlConfiguration.getMailConfiguration().setEncryptedPassword(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD));
 	}
@@ -48,5 +50,9 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 
 	public String getEncyptionKey() {
 		return encyptionKey;
+	}
+
+	public String getServerName() {
+		return serverName;
 	}
 }
