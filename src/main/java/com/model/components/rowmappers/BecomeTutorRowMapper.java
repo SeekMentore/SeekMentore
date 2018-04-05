@@ -56,6 +56,7 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setRejectionCount(row.getInt(COLUMN_NAME_REJECTION_COUNT));
 		becomeTutor.setReApplied(row.getString(COLUMN_NAME_RE_APPLIED));
 		becomeTutor.setPreviousApplicationDate(row.getDate(COLUMN_NAME_PREVIOUS_APPLICATION_DATE));
+		becomeTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
 		return becomeTutor;
 	}
 

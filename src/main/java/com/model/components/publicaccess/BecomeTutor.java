@@ -169,6 +169,10 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_PREVIOUS_APPLICATION_DATE, length = 10)
 	private Date previousApplicationDate;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
+	private Date recordLastUpdated;
+	
 	public BecomeTutor() {}
 	
 	public BecomeTutor(
@@ -213,7 +217,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String rejectionRemarks,
 			int rejectionCount,
 			String reApplied,
-			Date previousApplicationDate
+			Date previousApplicationDate,
+			Date recordLastUpdated
 	) {
 		this.applicationDate = applicationDate;
 		this.applicationStatus = applicationStatus;
@@ -257,6 +262,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionCount = rejectionCount;
 		this.reApplied = reApplied;
 		this.previousApplicationDate = previousApplicationDate;
+		this.recordLastUpdated = recordLastUpdated;
 	}
 
 	public long getTentativeTutorId() {
@@ -603,6 +609,14 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.previousApplicationDate = previousApplicationDate;
 	}
 	
+	public Date getRecordLastUpdated() {
+		return recordLastUpdated;
+	}
+
+	public void setRecordLastUpdated(Date recordLastUpdated) {
+		this.recordLastUpdated = recordLastUpdated;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
@@ -650,6 +664,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_COUNT, rejectionCount));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RE_APPLIED, reApplied));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREVIOUS_APPLICATION_DATE, previousApplicationDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
 		becomeTutorApplication.append(PrintFormatterUtils.endATable());
 		return becomeTutorApplication.toString();
 	}

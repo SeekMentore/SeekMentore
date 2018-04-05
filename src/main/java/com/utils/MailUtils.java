@@ -102,7 +102,7 @@ public class MailUtils implements MailConstants {
 				getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(), 
 				null,
 				null,
-				"Exception occured in " + getJNDIandControlConfigurationLoadService().getServerName() + " Server at " + (new Date()).toString(), 
+				SUBJECT_EXCEPTION_OCCURED_IN + getJNDIandControlConfigurationLoadService().getServerName() + SUBJECT_FOR_EXCEPTION_SERVER_AT + (new Date()).toString(), 
 				htmlMessage,
 				attachments);
     }
@@ -113,40 +113,61 @@ public class MailUtils implements MailConstants {
 	 * MimeMails
 	 * 
 	 * Do not modify the code in them
+	 * @throws Exception 
 	 */
 	
-	private static void checkAllMailControlSettingAndReformatMailMessageAccordingly(final Map<String, String> mailParams) {
+	private static Map<String, Object> checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+			final String fromAddress,
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String message
+	) throws Exception {
 		/*
-		 * Check Mail Diversions and Appropriately Set values
+		 * Store the incoming parameters
 		 */
+		final Map<String, Object> mailParams =  new HashMap<String, Object>();
+		mailParams.put(PARAM_FROM_ADDRESS, validateAndGetFromAddress(fromAddress));
+		mailParams.put(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED, toAddressSemicolonSeparated);
+		mailParams.put(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED, ccAddressSemicolonSeparated);
+		mailParams.put(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED, bccAddressSemicolonSeparated);
+		mailParams.put(PARAM_REPLY_TO_ADDRESS, getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemReplyToAddress());
+		mailParams.put(PARAM_SUBJECT, subject);
+		mailParams.put(PARAM_MESSAGE, message);
+		
 		boolean sendEmail = false;
 		final StringBuilder addressInfo =  new StringBuilder(EMPTY_STRING);
-		addressInfo.append("From :").append(mailParams.get("fromAddress")).append(NEW_LINE);
-		addressInfo.append("To :").append(mailParams.get("toAddressSemicolonSeparated")).append(NEW_LINE);
-		addressInfo.append("Cc :").append(mailParams.get("ccAddressSemicolonSeparated")).append(NEW_LINE);
-		addressInfo.append("Bcc :").append(mailParams.get("bccAddressSemicolonSeparated")).append(NEW_LINE);
-		addressInfo.append("Reply To :").append(mailParams.get("replyToAddress")).append(NEW_LINE);
-		addressInfo.append("Subject :").append(mailParams.get("subject"));
-		final String newContent = addressInfo.toString() + NEW_LINE + NEW_LINE + NEW_LINE + mailParams.get("message");
+		addressInfo.append(MAIL_LINE_INFO_FROM).append(mailParams.get(PARAM_FROM_ADDRESS)).append(NEW_LINE).append(LINE_BREAK);
+		addressInfo.append(MAIL_LINE_INFO_TO).append(mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED)).append(NEW_LINE).append(LINE_BREAK);
+		addressInfo.append(MAIL_LINE_INFO_CC).append(mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED)).append(NEW_LINE).append(LINE_BREAK);
+		addressInfo.append(MAIL_LINE_INFO_BCC).append(mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED)).append(NEW_LINE).append(LINE_BREAK);
+		addressInfo.append(MAIL_LINE_INFO_REPLY_TO).append(mailParams.get(PARAM_REPLY_TO_ADDRESS)).append(NEW_LINE).append(LINE_BREAK);
+		addressInfo.append(MAIL_LINE_INFO_SUBJECT).append(mailParams.get(PARAM_SUBJECT));
+		final String newContent = addressInfo.toString() + NEW_LINE + LINE_BREAK + NEW_LINE + LINE_BREAK + NEW_LINE + LINE_BREAK + mailParams.get(PARAM_MESSAGE);
 		
 		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_PROD)) {
-			// If Server is PROD directly send out actual E-mails
+			// If Server is PROD directly send out actual E-mails to actual recipients
 			sendEmail = true;
 		} else if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmails()) {
+			// If Non-Prod Servers check Mail Diversions and Appropriately Set Values
 			if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmailsButDivertThemToSomeOtherRecipient()) {
-				// Reset the values in mailMessage
-				mailParams.put("toAddressSemicolonSeparated", getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().getDivertedRecipeintEmailId());
-				mailParams.put("ccAddressSemicolonSeparated", null);
-				mailParams.put("bccAddressSemicolonSeparated", null);
-				mailParams.put("subject", "Diverted Mail from " + getJNDIandControlConfigurationLoadService().getServerName() + " : " + mailParams.get("subject"));
-				mailParams.put("message", newContent);
+				// Reset the values in Mail Params
+				mailParams.put(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED, getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().getDivertedRecipeintEmailId());
+				mailParams.put(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED, null);
+				mailParams.put(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED, null);
+				mailParams.put(PARAM_SUBJECT, SUBJECT_DIVERTED_MAIL_FROM + getJNDIandControlConfigurationLoadService().getServerName() + WHITESPACE + COLON + WHITESPACE + mailParams.get(PARAM_SUBJECT));
+				mailParams.put(PARAM_MESSAGE, newContent);
 				// Send this email with Diverted settings
 				sendEmail = true;
 			}
-		} else if(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isShowOnConsoleWhatEmailWillBeSent()) {
+		} 
+		// If Console Logger is enabled log it on console
+		if(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isShowOnConsoleWhatEmailWillBeSent()) {
 			LoggerUtils.logOnConsole(newContent);
 		}
-		mailParams.put("sendEmail", String.valueOf(sendEmail));
+		mailParams.put(PARAM_SEND_EMAIL, sendEmail);
+		return mailParams;
 	}
 	
 	private static void sendingSimpleMailMessage(
@@ -157,30 +178,25 @@ public class MailUtils implements MailConstants {
 			final String subject,
 			final String message
 	) throws Exception {
-		final Map<String, String> mailParams =  new HashMap<String, String>();
-		mailParams.put("fromAddress", fromAddress);
-		mailParams.put("toAddressSemicolonSeparated", toAddressSemicolonSeparated);
-		mailParams.put("ccAddressSemicolonSeparated", ccAddressSemicolonSeparated);
-		mailParams.put("bccAddressSemicolonSeparated", bccAddressSemicolonSeparated);
-		mailParams.put("replyToAddress", getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemReplyToAddress());
-		mailParams.put("subject", subject);
-		mailParams.put("message", message);
-		checkAllMailControlSettingAndReformatMailMessageAccordingly(mailParams);
-		
-		/*
-		 * Check Mail Diversions and Appropriately Set values
-		 */
-		if (Boolean.valueOf(mailParams.get("sendEmail"))) {
+		final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+																										fromAddress,
+																										toAddressSemicolonSeparated,
+																										ccAddressSemicolonSeparated,
+																										bccAddressSemicolonSeparated,
+																										subject,
+																										message
+																								);
+		if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
 			final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-			simpleMailMessage.setFrom(validateAndGetFromAddress(mailParams.get("fromAddress")));
-			simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage(mailParams.get("toAddressSemicolonSeparated"), true));
-			simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage(mailParams.get("ccAddressSemicolonSeparated"), false));
-			simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage(mailParams.get("bccAddressSemicolonSeparated"), false));
-			simpleMailMessage.setReplyTo(mailParams.get("replyToAddress"));
-			simpleMailMessage.setSubject(mailParams.get("subject"));
-			simpleMailMessage.setText(mailParams.get("message"));
+			simpleMailMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
+			simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
+			simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
+			simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
+			simpleMailMessage.setReplyTo((String)mailParams.get(PARAM_REPLY_TO_ADDRESS));
+			simpleMailMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
+			simpleMailMessage.setText((String)mailParams.get(PARAM_MESSAGE));
 			getMailService().sendEmail(simpleMailMessage);
-			LoggerUtils.logOnConsole("Message Send...");
+			LoggerUtils.logOnConsole(MESSAGE_SEND);
 		}
 	}
 	
@@ -193,33 +209,28 @@ public class MailUtils implements MailConstants {
 			final String htmlMessage,
 			final List<MailAttachment> attachments
 	) throws Exception {
-		final Map<String, String> mailParams =  new HashMap<String, String>();
-		mailParams.put("fromAddress", fromAddress);
-		mailParams.put("toAddressSemicolonSeparated", toAddressSemicolonSeparated);
-		mailParams.put("ccAddressSemicolonSeparated", ccAddressSemicolonSeparated);
-		mailParams.put("bccAddressSemicolonSeparated", bccAddressSemicolonSeparated);
-		mailParams.put("replyToAddress", getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemReplyToAddress());
-		mailParams.put("subject", subject);
-		mailParams.put("message", htmlMessage);
-		checkAllMailControlSettingAndReformatMailMessageAccordingly(mailParams);
-		
-		/*
-		 * Check Mail Diversions and Appropriately Set values
-		 */
-		if (Boolean.valueOf(mailParams.get("sendEmail"))) {
+		final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+																										fromAddress,
+																										toAddressSemicolonSeparated,
+																										ccAddressSemicolonSeparated,
+																										bccAddressSemicolonSeparated,
+																										subject,
+																										htmlMessage
+																								);
+		if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
 			final MimeMessagePreparator mimeMessagePreparator = new MimeMessagePreparator() {
 				public void prepare(MimeMessage mimeMessage) throws Exception {
-					mimeMessage.setFrom(validateAndGetFromAddress(mailParams.get("fromAddress")));
-					mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage(mailParams.get("toAddressSemicolonSeparated"), true));
-					mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage(mailParams.get("ccAddressSemicolonSeparated"), false));
-					mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage(mailParams.get("bccAddressSemicolonSeparated"), false));
-					mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage(mailParams.get("replyToAddress"), true));
-					mimeMessage.setSubject(mailParams.get("subject"));
-					mimeMessage.setContent(createMimeMultipart(mailParams.get("message"), attachments));
+					mimeMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
+					mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
+					mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
+					mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
+					mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_REPLY_TO_ADDRESS), true));
+					mimeMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
+					mimeMessage.setContent(createMimeMultipart((String)mailParams.get(PARAM_MESSAGE), attachments));
 				} 
 			};
 			getMailService().sendEmail(mimeMessagePreparator);
-			LoggerUtils.logOnConsole("Message Send...");
+			LoggerUtils.logOnConsole(MESSAGE_SEND);
 		}
     }
 	

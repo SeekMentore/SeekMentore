@@ -64,23 +64,20 @@ function getApplicationToFindTutor() {
 
 function getApplicationToBecomeTutor() {
 	var form = {
-			applicationDate            	: new Date(),
-			applicationStatus			: 'New',
+			firstName 					: 'Shantanu',
+			lastName 					: 'Mukherjee',
 			dateOfBirth 				: new Date(),
 			contactNumber				: $('#becomeTutorContact').val(),
 			emailId 					: $('#becomeTutorEmail').val(),
-			firstName 					: 'Shantanu',
-			lastName 					: 'Mukherjee',
 			gender 						: 'M',
 			qualification 				: 'B-Tech',
-			primaryProfession 			: 'Software Expert',
+			primaryProfession 			: 'Software Expert1',
 			transportMode 				: '4-W',
 			teachingExp 				: '3',
 			subjects					: '12-P;11-C;10-B',
 			locations 					: 'Z1-L2;Z1-L9;Z3-L34',
 			preferredTimeToCall 		: 'T2;T4',
-			additionalDetails 			: 'I am awesome!!!',
-			isContacted 				: 'N'
+			additionalDetails 			: 'I am awesome!!!'
 		};
 	return form;
 }

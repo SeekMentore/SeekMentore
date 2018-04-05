@@ -11,6 +11,7 @@ public interface ApplicationConstants {
 	String DOT = ".";
 	String PERIOD = DOT;
 	String NEW_LINE = "\n";
+	String LINE_BREAK = "<BR/>";
 	String SEMI_COLON = ";";
 	String LEFT_SQUARE_BRACKET = "[";
 	String RIGHT_SQUARE_BRACKET = "]";
