@@ -48,8 +48,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Override
-	public boolean doSecurity(final HttpServletRequest request) {
+	public void doSecurity(final HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		return true;
 	}
 }

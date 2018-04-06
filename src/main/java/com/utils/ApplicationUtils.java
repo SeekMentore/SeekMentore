@@ -1,6 +1,7 @@
 package com.utils;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -19,5 +20,9 @@ public class ApplicationUtils implements ApplicationConstants {
 			semiColonSeparatedString.append(arrayElement).append(SEMICOLON);
 		}
 		return semiColonSeparatedString.toString();
+	}
+	
+	public static void appendMessageInMapAttribute(final Map<String, Object> response, final String message, final String attributeName) {
+		response.put(attributeName, (String)response.get(attributeName) + LINE_BREAK + message);
 	}
 }

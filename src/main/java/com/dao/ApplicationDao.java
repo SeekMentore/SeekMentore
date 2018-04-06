@@ -113,7 +113,7 @@ public class ApplicationDao {
 		return jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
     }
 	
-	public < T extends Object > List<T> findAllWithoutParams(final String query, final Object[] params, final Class<T> type) {
-		return jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
+	public < T extends Object > List<T> findAllWithoutParams(final String query, final Class<T> type) {
+		return jdbcTemplate.query(query, new BeanPropertyRowMapper<T>(type));
     }
 }

@@ -18,6 +18,7 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.ApplicationUtils;
 import com.utils.MailUtils;
 import com.utils.VelocityUtils;
 
@@ -62,19 +63,16 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		// Append contact information if Failure occurred
 		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
-			addFailureMessage(response, 
-					FAILURE_CONTACT_INFO_START 
-					+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
-					+ INVERTED_COMMA 
-					+ WHITESPACE 
-					+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
-					+ FAILURE_CONTACT_INFO_END);
+			ApplicationUtils.appendMessageInMapAttribute(response, 
+														FAILURE_CONTACT_INFO_START 
+														+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
+														+ INVERTED_COMMA 
+														+ WHITESPACE 
+														+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
+														+ FAILURE_CONTACT_INFO_END,
+														RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 		}
 		return response;
-	}
-	
-	private void addFailureMessage(final Map<String, Object> response, final String message) {
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, (String)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + message);
 	}
 	
 	private void handleBecomeTutorApplication (
@@ -92,15 +90,17 @@ public class PublicAccessService implements PublicAccessConstants {
 		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = ?", new Object[] {becomeTutorApplication.getContactNumber()}, BecomeTutor.class);
 		if (null != becomeTutorApplicationInDatabaseWithEmailId) {
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-			addFailureMessage(
+			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
-					FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM);
+					FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 		} 
 		if (null != becomeTutorApplicationInDatabaseWithContactNumber) {
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-			addFailureMessage(
+			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
-					FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM);
+					FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 		}
 		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
 			// Fresh Application Status

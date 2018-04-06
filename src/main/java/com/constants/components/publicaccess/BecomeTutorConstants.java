@@ -49,4 +49,17 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_APPLICATION_DATE = "APPLICATION_DATE";
 	String COLUMN_NAME_TENTATIVE_TUTOR_ID = "TENTATIVE_TUTOR_ID";
 	
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS = "Please select valid multiple 'Locations'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE = "Please select a valid 'Transport Mode'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_PRIMARY_PROFESSION = "Please select a valid 'Primary Profession'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_QUALIFICATION = "Please select a valid 'Qualification'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_GENDER = "Please select a valid 'Gender'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_TEACHING_EXPERIENCE = "Please enter a valid 'Teaching Experience'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE = "Please enter a valid 'Contact Number(Mobile)'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME = "Please enter a valid 'Last Name'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME = "Please enter a valid 'First Name'";
+	
 }

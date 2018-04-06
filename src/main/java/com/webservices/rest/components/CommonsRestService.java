@@ -25,8 +25,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Override
-	public boolean doSecurity(final HttpServletRequest request) {
+	public void doSecurity(final HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		return true;
 	}
 }
