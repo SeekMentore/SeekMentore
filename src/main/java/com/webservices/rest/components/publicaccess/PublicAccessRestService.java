@@ -18,7 +18,9 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
+import com.constants.components.publicaccess.FindTutorConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
+import com.constants.components.publicaccess.SubmitQueryConstants;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
@@ -122,13 +124,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					break;
 				}
 				case REST_METHOD_NAME_TO_FIND_TUTOR : {
-					// Method level security
-					this.securityPassed = true;
+					handleFindTutorSecurity();
 					break;
 				}
 				case REST_METHOD_NAME_TO_SUBMIT_QUERY : {
-					// Method level security
-					this.securityPassed = true;
+					handleSubmitQuerySecurity();
 					break;
 				}
 				case REST_METHOD_NAME_TO_SUBSCRIBE : {
@@ -137,6 +137,12 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					break;
 				}
 			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_CAPTCHA_INVALIDATED_PLEASE_SELECT_AGAIN,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
 	}
@@ -225,6 +231,65 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void handleFindTutorSecurity() {
+		final FindTutor findTutorApplication = (FindTutor) this.application;
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePhoneNumber(findTutorApplication.getContactNumber(), 10)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateEmailAddress(findTutorApplication.getEmailId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateNameString(findTutorApplication.getName(), true)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(findTutorApplication.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(findTutorApplication.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(findTutorApplication.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void handleSubmitQuerySecurity() {
+		final SubmitQuery submitQueryApplication = (SubmitQuery) this.application;
+		this.securityPassed = true;
+		if (!ValidationUtils.validateEmailAddress(submitQueryApplication.getEmailId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubmitQueryConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}

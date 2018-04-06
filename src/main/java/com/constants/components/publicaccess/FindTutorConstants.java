@@ -40,4 +40,10 @@ public interface FindTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_ENQUIRY_DATE = "ENQUIRY_DATE";
 	String COLUMN_NAME_ENQUIRY_ID = "ENQUIRY_ID";
 	
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE = "Please enter a valid 'Contact Number(Mobile)'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME = "Please enter a valid 'Last Name'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE = "Please select a valid 'Student Grade'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";
 }

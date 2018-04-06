@@ -14,9 +14,6 @@ import com.utils.context.AppContext;
 
 public class ValidationUtils implements ValidationConstants {
 	
-	private static final String REGEX_FOR_NAME_WITH_SPACES = "^[\\p{L} .'-]+$";
-	private static final String REGEX_FOR_NUMBERS = "\\d{10}";
-
 	public static boolean validatePlainNotNullAndEmptyTextString(final String text) {
 		if (null != text && !EMPTY_STRING.equals(text))
 			return true;

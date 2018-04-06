@@ -62,5 +62,7 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String SUBJECT_SUBMIT_QUERY_REQUEST = "New Query has been requested";
 	String SUBMIT_QUERY_APPLICATION_VM_OBJECT = "submitQueryApplication";
 	String SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION = "Your Query has been registered with " + COMPANY_NAME_IN_QUOTES;
+	
+	String VALIDATION_MESSAGE_CAPTCHA_INVALIDATED_PLEASE_SELECT_AGAIN = "Captcha Invalidated, please select again.";
 
 }

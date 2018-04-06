@@ -37,7 +37,8 @@ function decodeObjectFromJSON(json) {
 function getApplicationToSubmitQuery() {
 	var application = {
 			emailId 			: $('#submitQueryEmail').val(),
-			queryDetails 		: 'This is just a simple query.'
+			queryDetails 		: 'This is just a simple query.',
+			captchaResponse				: 'Dummy Captcha'
 		};
 	return application;
 }
@@ -50,7 +51,8 @@ function getApplicationToFindTutor() {
 			studentGrade 		: 'MS-7',
 			subjects 			: '12-P;11-C;10-B',
 			preferredTimeToCall : 'T2;T4',
-			additionalDetails 	: 'Nothing much to provide.'
+			additionalDetails 	: 'Nothing much to provide.',
+			captchaResponse				: 'Dummy Captcha'
 		};
 	return application;
 }
@@ -70,7 +72,8 @@ function getApplicationToBecomeTutor() {
 			subjects					: '12-P;11-C;10-B',
 			locations 					: 'Z1-L2;Z1-L9;Z3-L34',
 			preferredTimeToCall 		: 'T2;T4',
-			additionalDetails 			: 'I am awesome!!!'
+			additionalDetails 			: 'I am awesome!!!',
+			captchaResponse				: 'Dummy Captcha'
 		};
 	return form;
 }

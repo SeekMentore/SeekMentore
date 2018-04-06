@@ -9,7 +9,7 @@ import com.constants.ApplicationConstants;
 
 public class Test {
 	private static final String VALID_NAME_REGEX_WITH_SPACES = "^[\\p{L} .'-]+$";
-	private static final String REGEX_FOR_NUMBERS = "\\d{10}";
+	private static final String REGEX_FOR_NUMBERS = "\\d{1}";
 	public static boolean isValidEmailAddress(String email) {
 		   boolean result = true;
 		   try {
@@ -59,7 +59,7 @@ public class Test {
 		System.out.println(Test.isValidEmailAddress("prmseek.m#entore@dfsfdgads"));*/
 		
 		/*System.out.println(Test.validateNameString("prmseekmen tore", true));*/
-		System.out.println(Test.validateMobilePhoneNumbers("12345678901"));
+		System.out.println(Test.validateMobilePhoneNumbers("0"));
 	}
 
 }
