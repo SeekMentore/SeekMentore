@@ -47,6 +47,12 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Column(name = COLUMN_NAME_QUERY_DETAILS, nullable = false)
 	private String queryDetails;
 	
+	@Column(name = COLUMN_NAME_REGISTERED_TUTOR, nullable = false)
+	private String registeredTutor;
+	
+	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)
+	private String subscribedCustomer;
+	
 	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
 	
@@ -69,6 +75,10 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Column(name = COLUMN_NAME_WHO_NOT_ANSWERED)
 	private String whoNotAnswered;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
+	private Date recordLastUpdated;
+	
 	public SubmitQuery() {}
 	
 	public SubmitQuery(
@@ -82,7 +92,8 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 			String queryResponse,
 			String notAnswered,
 			String notAnsweredReason,
-			String whoNotAnswered
+			String whoNotAnswered,
+			Date recordLastUpdated
 	) {
 		this.queryRequestedDate = queryRequestedDate;
 		this.queryStatus = queryStatus;
@@ -95,6 +106,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.notAnswered = notAnswered;
 		this.notAnsweredReason = notAnsweredReason;
 		this.whoNotAnswered = whoNotAnswered;
+		this.recordLastUpdated = recordLastUpdated;
 	}
 
 	public String getEmailId() {
@@ -193,6 +205,30 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.whoNotAnswered = whoNotAnswered;
 	}
 	
+	public Date getRecordLastUpdated() {
+		return recordLastUpdated;
+	}
+
+	public void setRecordLastUpdated(Date recordLastUpdated) {
+		this.recordLastUpdated = recordLastUpdated;
+	}
+	
+	public String getRegisteredTutor() {
+		return registeredTutor;
+	}
+
+	public void setRegisteredTutor(String registeredTutor) {
+		this.registeredTutor = registeredTutor;
+	}
+
+	public String getSubscribedCustomer() {
+		return subscribedCustomer;
+	}
+
+	public void setSubscribedCustomer(String subscribedCustomer) {
+		this.subscribedCustomer = subscribedCustomer;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
@@ -202,6 +238,8 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, queryStatus));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, queryDetails));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REGISTERED_TUTOR, registeredTutor));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));
@@ -209,6 +247,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED, notAnswered));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED_REASON, notAnsweredReason));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_NOT_ANSWERED, whoNotAnswered));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
 		submitQueryApplication.append(PrintFormatterUtils.endATable());
 		return submitQueryApplication.toString();
 	}

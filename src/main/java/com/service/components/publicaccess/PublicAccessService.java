@@ -24,10 +24,6 @@ import com.utils.VelocityUtils;
 @Service(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE)
 public class PublicAccessService implements PublicAccessConstants {
 	
-	private static final String RESPONSE_MAP_ATTRIBUTE_SEND_NOTIFICATION_AND_CONFIRMATION = "SEND_NOTIFICATION_AND_CONFIRMATION";
-
-	private static final String RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD = "UPDATE_RECORD";
-
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
@@ -40,37 +36,45 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Transactional
 	public Map<String, Object> submitApplication(final PublicApplication application) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_SEND_NOTIFICATION_AND_CONFIRMATION, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		final Date currentTimestamp = new Date();
 		if (application instanceof BecomeTutor) {
 			handleBecomeTutorApplication(application, response, currentTimestamp);
-		}
-		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD)) {
-			feedRecordForApplication(application);
-		}
-		if (application instanceof BecomeTutor) {
-			if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SEND_NOTIFICATION_AND_CONFIRMATION)) {
-				final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
-				sendNotificationAndConfirmationEmailsToTutor(becomeTutorApplication);
-			}
 		} else if (application instanceof FindTutor) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_ENQUIRY);
-			final FindTutor findTutorApplication = (FindTutor) application;
-			sendNotificationAndConfirmationEmailsToParentForTutorEnquiry(findTutorApplication);
+			handleFindTutorApplication(application, response, currentTimestamp);
 		} else if (application instanceof SubmitQuery) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBMIT_QUERY);
-			final SubmitQuery submitQueryApplication = (SubmitQuery) application;
-			sendNotificationAndConfirmationEmailsForQueryEnquiry(submitQueryApplication);
+			handleSubmitQueryApplication(application, response, currentTimestamp);
 		} else {
 			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, true);
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			return response;
 		}
-		// Remove unnecessary map attributes
-		response.remove(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD);
-		response.remove(RESPONSE_MAP_ATTRIBUTE_SEND_NOTIFICATION_AND_CONFIRMATION);
+		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
+			feedRecordForApplication(application);
+			if (application instanceof BecomeTutor) {
+				sendNotificationAndConfirmationEmailsToTutor((BecomeTutor) application);
+			} else if (application instanceof FindTutor) {
+				sendNotificationAndConfirmationEmailsToParentForTutorEnquiry((FindTutor) application);
+			} else if (application instanceof SubmitQuery) {
+				sendNotificationAndConfirmationEmailsForQueryEnquiry((SubmitQuery) application);
+			} 
+		}
+		// Append contact information if Failure occurred
+		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
+			addFailureMessage(response, 
+					FAILURE_CONTACT_INFO_START 
+					+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
+					+ INVERTED_COMMA 
+					+ WHITESPACE 
+					+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
+					+ FAILURE_CONTACT_INFO_END);
+		}
 		return response;
+	}
+	
+	private void addFailureMessage(final Map<String, Object> response, final String message) {
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, (String)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + message);
 	}
 	
 	private void handleBecomeTutorApplication (
@@ -82,96 +86,27 @@ public class PublicAccessService implements PublicAccessConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_REGISTRATION);
 		final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
 		becomeTutorApplication.setRecordLastUpdated(currentTimestamp);
-		final BecomeTutor becomeTutorApplicationInDatabase = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = ? OR CONTACT_NUMBER = ?", new Object[] {becomeTutorApplication.getEmailId(), becomeTutorApplication.getContactNumber()}, BecomeTutor.class);
-		if (null != becomeTutorApplicationInDatabase) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_SEND_NOTIFICATION_AND_CONFIRMATION, false);
-			becomeTutorApplication.setTentativeTutorId(becomeTutorApplicationInDatabase.getTentativeTutorId());
-			response.put(APPLICATION_STATUS, becomeTutorApplicationInDatabase.getApplicationStatus());
-			if (
-					APPLICATION_STATUS_FRESH.equals(becomeTutorApplicationInDatabase.getApplicationStatus())
-					|| APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED.equals(becomeTutorApplicationInDatabase.getApplicationStatus())
-					|| APPLICATION_STATUS_RE_APPLIED.equals(becomeTutorApplicationInDatabase.getApplicationStatus())
-			) {
-				// Send Application Status New Email and update the records
-				becomeTutorApplication.setApplicationDate(becomeTutorApplicationInDatabase.getApplicationDate());
-				becomeTutorApplication.setApplicationStatus(becomeTutorApplicationInDatabase.getApplicationStatus());
-				becomeTutorApplication.setIsContacted(becomeTutorApplicationInDatabase.getIsContacted());
-				becomeTutorApplication.setWhoContacted(becomeTutorApplicationInDatabase.getWhoContacted());
-				becomeTutorApplication.setContactedDate(becomeTutorApplicationInDatabase.getContactedDate());
-				becomeTutorApplication.setContactedRemarks(becomeTutorApplicationInDatabase.getContactedRemarks());
-				becomeTutorApplication.setIsAuthenticationVerified(becomeTutorApplicationInDatabase.getIsAuthenticationVerified());
-				becomeTutorApplication.setWhoVerified(becomeTutorApplicationInDatabase.getWhoVerified());
-				becomeTutorApplication.setVerificationDate(becomeTutorApplicationInDatabase.getVerificationDate());
-				becomeTutorApplication.setVerificationRemarks(becomeTutorApplicationInDatabase.getVerificationRemarks());
-				becomeTutorApplication.setIsToBeRecontacted(becomeTutorApplicationInDatabase.getIsToBeRecontacted());
-				becomeTutorApplication.setWhoSuggestedForRecontact(becomeTutorApplicationInDatabase.getWhoSuggestedForRecontact());
-				becomeTutorApplication.setSuggestionDate(becomeTutorApplicationInDatabase.getSuggestionDate());
-				becomeTutorApplication.setSuggestionRemarks(becomeTutorApplicationInDatabase.getSuggestionRemarks());
-				becomeTutorApplication.setWhoRecontacted(becomeTutorApplicationInDatabase.getWhoRecontacted());
-				becomeTutorApplication.setRecontactedDate(becomeTutorApplicationInDatabase.getRecontactedDate());
-				becomeTutorApplication.setRecontactedRemarks(becomeTutorApplicationInDatabase.getRecontactedRemarks());
-				becomeTutorApplication.setIsSelected(becomeTutorApplicationInDatabase.getIsSelected());
-				becomeTutorApplication.setWhoSelected(becomeTutorApplicationInDatabase.getWhoSelected());
-				becomeTutorApplication.setSelectionDate(becomeTutorApplicationInDatabase.getSelectionDate());
-				becomeTutorApplication.setSelectionRemarks(becomeTutorApplicationInDatabase.getSelectionRemarks());
-				becomeTutorApplication.setIsRejected(becomeTutorApplicationInDatabase.getIsRejected());
-				becomeTutorApplication.setWhoRejected(becomeTutorApplicationInDatabase.getWhoRejected());
-				becomeTutorApplication.setRejectionDate(becomeTutorApplicationInDatabase.getRejectionDate());
-				becomeTutorApplication.setRejectionRemarks(becomeTutorApplicationInDatabase.getRejectionRemarks());
-				becomeTutorApplication.setRejectionCount(becomeTutorApplicationInDatabase.getRejectionCount());
-				becomeTutorApplication.setReApplied(becomeTutorApplicationInDatabase.getReApplied());
-				becomeTutorApplication.setPreviousApplicationDate(becomeTutorApplicationInDatabase.getApplicationDate());
-			} else if (
-					APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING.equals(becomeTutorApplicationInDatabase.getApplicationStatus())
-					|| APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING.equals(becomeTutorApplicationInDatabase.getApplicationStatus())) {
-				response.put(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD, false);
-				// Send Application status is Verification Pending and cannot update the records
-			} else if (APPLICATION_STATUS_VERIFICATION_SUCCESSFUL.equals(becomeTutorApplicationInDatabase.getApplicationStatus())) {
-				response.put(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD, false);
-				// Send Application status is Verification Successful and cannot update the records
-			} else if (APPLICATION_STATUS_VERIFICATION_FAILED.equals(becomeTutorApplicationInDatabase.getApplicationStatus())) {
-				response.put(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD, false);
-				// Send Application status is Verification Successful and cannot update the records
-			} else if (APPLICATION_STATUS_SELECTED.equals(becomeTutorApplicationInDatabase.getApplicationStatus())) {
-				response.put(RESPONSE_MAP_ATTRIBUTE_UPDATE_RECORD, false);
-				// Send Application status is Selected and cannot update the records
-			} else if (APPLICATION_STATUS_REJECTED.equals(becomeTutorApplicationInDatabase.getApplicationStatus())) {
-				// Send Application status is Renewed and update the records
-				becomeTutorApplication.setApplicationDate(currentTimestamp);
-				becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_RE_APPLIED);
-				becomeTutorApplication.setIsContacted("N");
-				becomeTutorApplication.setWhoContacted(null);
-				becomeTutorApplication.setContactedDate(null);
-				becomeTutorApplication.setContactedRemarks(null);
-				becomeTutorApplication.setIsAuthenticationVerified(becomeTutorApplicationInDatabase.getIsAuthenticationVerified());
-				becomeTutorApplication.setWhoVerified(becomeTutorApplicationInDatabase.getWhoVerified());
-				becomeTutorApplication.setVerificationDate(becomeTutorApplicationInDatabase.getVerificationDate());
-				becomeTutorApplication.setVerificationRemarks(becomeTutorApplicationInDatabase.getVerificationRemarks());
-				becomeTutorApplication.setIsToBeRecontacted(becomeTutorApplicationInDatabase.getIsToBeRecontacted());
-				becomeTutorApplication.setWhoSuggestedForRecontact(becomeTutorApplicationInDatabase.getWhoSuggestedForRecontact());
-				becomeTutorApplication.setSuggestionDate(becomeTutorApplicationInDatabase.getSuggestionDate());
-				becomeTutorApplication.setSuggestionRemarks(becomeTutorApplicationInDatabase.getSuggestionRemarks());
-				becomeTutorApplication.setWhoRecontacted(becomeTutorApplicationInDatabase.getWhoRecontacted());
-				becomeTutorApplication.setRecontactedDate(becomeTutorApplicationInDatabase.getRecontactedDate());
-				becomeTutorApplication.setRecontactedRemarks(becomeTutorApplicationInDatabase.getRecontactedRemarks());
-				becomeTutorApplication.setIsSelected(null);
-				becomeTutorApplication.setWhoSelected(null);
-				becomeTutorApplication.setSelectionDate(null);
-				becomeTutorApplication.setSelectionRemarks(null);
-				becomeTutorApplication.setIsRejected(becomeTutorApplicationInDatabase.getIsRejected());
-				becomeTutorApplication.setWhoRejected(becomeTutorApplicationInDatabase.getWhoRejected());
-				becomeTutorApplication.setRejectionDate(becomeTutorApplicationInDatabase.getRejectionDate());
-				becomeTutorApplication.setRejectionRemarks(becomeTutorApplicationInDatabase.getRejectionRemarks());
-				becomeTutorApplication.setRejectionCount(becomeTutorApplicationInDatabase.getRejectionCount());
-				becomeTutorApplication.setReApplied("Y");
-				becomeTutorApplication.setPreviousApplicationDate(becomeTutorApplicationInDatabase.getApplicationDate());
-			}
-		} else {
+		// Check email Id in system
+		final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = ?", new Object[] {becomeTutorApplication.getEmailId()}, BecomeTutor.class);
+		// Check contact number in system
+		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = ?", new Object[] {becomeTutorApplication.getContactNumber()}, BecomeTutor.class);
+		if (null != becomeTutorApplicationInDatabaseWithEmailId) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			addFailureMessage(
+					response, 
+					FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM);
+		} 
+		if (null != becomeTutorApplicationInDatabaseWithContactNumber) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			addFailureMessage(
+					response, 
+					FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM);
+		}
+		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
 			// Fresh Application Status
-			response.put(APPLICATION_STATUS, APPLICATION_STATUS_FRESH);
 			becomeTutorApplication.setApplicationDate(currentTimestamp);
 			becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
-			becomeTutorApplication.setIsContacted("N");
+			becomeTutorApplication.setIsContacted(NO);
 			becomeTutorApplication.setWhoContacted(null);
 			becomeTutorApplication.setContactedDate(null);
 			becomeTutorApplication.setContactedRemarks(null);
@@ -198,6 +133,85 @@ public class PublicAccessService implements PublicAccessConstants {
 			becomeTutorApplication.setReApplied(null);
 			becomeTutorApplication.setPreviousApplicationDate(null);
 		}
+	}
+	
+	private void handleFindTutorApplication (
+			final PublicApplication application, 
+			final Map<String, Object> response, 
+			final Date currentTimestamp
+	) {
+		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_ENQUIRY);
+		final FindTutor findTutorApplication = (FindTutor) application;
+		findTutorApplication.setRecordLastUpdated(currentTimestamp);
+		// Check email Id in system for Subscribed Customer
+		final FindTutor findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {findTutorApplication.getEmailId()}, FindTutor.class);
+		// Check contact number in system for Subscribed Customer
+		final FindTutor findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {findTutorApplication.getContactNumber()}, FindTutor.class);
+		if (null != findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId || null != findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber) {
+			findTutorApplication.setSubscribedCustomer(YES);
+		} else {
+			findTutorApplication.setSubscribedCustomer(NO);
+		}
+		findTutorApplication.setEnquiryDate(currentTimestamp);
+		findTutorApplication.setEnquiryStatus(APPLICATION_STATUS_FRESH);
+		findTutorApplication.setIsContacted(NO);
+		findTutorApplication.setWhoContacted(null);
+		findTutorApplication.setContactedDate(null);
+		findTutorApplication.setContactedRemarks(null);
+		findTutorApplication.setIsAuthenticationVerified(null);
+		findTutorApplication.setWhoVerified(null);
+		findTutorApplication.setVerificationDate(null);
+		findTutorApplication.setVerificationRemarks(null);
+		findTutorApplication.setIsToBeRecontacted(null);
+		findTutorApplication.setWhoSuggestedForRecontact(null);
+		findTutorApplication.setSuggestionDate(null);
+		findTutorApplication.setSuggestionRemarks(null);
+		findTutorApplication.setWhoRecontacted(null);
+		findTutorApplication.setRecontactedDate(null);
+		findTutorApplication.setRecontactedRemarks(null);
+		findTutorApplication.setIsSelected(null);
+		findTutorApplication.setWhoSelected(null);
+		findTutorApplication.setSelectionDate(null);
+		findTutorApplication.setSelectionRemarks(null);
+		findTutorApplication.setIsRejected(null);
+		findTutorApplication.setWhoRejected(null);
+		findTutorApplication.setRejectionDate(null);
+		findTutorApplication.setRejectionRemarks(null);
+	}
+	
+	private void handleSubmitQueryApplication (
+			final PublicApplication application, 
+			final Map<String, Object> response, 
+			final Date currentTimestamp
+	) {
+		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBMIT_QUERY);
+		final SubmitQuery submitQueryApplication = (SubmitQuery) application;
+		submitQueryApplication.setRecordLastUpdated(currentTimestamp);
+		// Check contact number in system for Registered Tutor
+		final SubmitQuery submitQueryRegisteredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubmitQuery.class);
+		// Check email Id in system for Subscribed Customer
+		final SubmitQuery submitQuerySubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubmitQuery.class);
+		if (null != submitQueryRegisteredTutorInDatabaseWithEmailId) {
+			submitQueryApplication.setRegisteredTutor(YES);
+		} else {
+			submitQueryApplication.setRegisteredTutor(NO);
+		}
+		if (null != submitQuerySubscribedCustomerRegistrationInDatabaseWithEmailId) {
+			submitQueryApplication.setSubscribedCustomer(YES);
+		} else {
+			submitQueryApplication.setSubscribedCustomer(NO);
+		}
+		submitQueryApplication.setQueryRequestedDate(currentTimestamp);
+		submitQueryApplication.setQueryStatus(APPLICATION_STATUS_FRESH);
+		submitQueryApplication.setIsContacted(NO);
+		submitQueryApplication.setWhoContacted(null);
+		submitQueryApplication.setContactedDate(null);
+		submitQueryApplication.setQueryResponse(null);
+		submitQueryApplication.setNotAnswered(null);
+		submitQueryApplication.setNotAnsweredReason(null);
+		submitQueryApplication.setWhoNotAnswered(null);
 	}
 	
 	private void sendNotificationAndConfirmationEmailsToTutor(final BecomeTutor becomeTutorApplication) throws Exception {

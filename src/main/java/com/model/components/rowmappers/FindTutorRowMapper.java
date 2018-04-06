@@ -23,7 +23,7 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		findTutor.setSubjects(row.getString(COLUMN_NAME_SUBJECTS));
 		findTutor.setPreferredTimeToCall(row.getString(COLUMN_NAME_PREFERRED_TIME_TO_CALL));
 		findTutor.setAdditionalDetails(row.getString(COLUMN_NAME_ADDITIONAL_DETAILS));
-		findTutor.setSubscribedWithUs(row.getString(COLUMN_NAME_SUBSCRIBED_WITH_US));
+		findTutor.setSubscribedCustomer(row.getString(COLUMN_NAME_SUBSCRIBED_CUSTOMER));
 		findTutor.setIsContacted(row.getString(COLUMN_NAME_IS_CONTACTED));
 		findTutor.setWhoContacted(row.getString(COLUMN_NAME_WHO_CONTACTED));
 		findTutor.setContactedDate(row.getDate(COLUMN_NAME_CONTACTED_DATE));
@@ -47,6 +47,7 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		findTutor.setWhoRejected(row.getString(COLUMN_NAME_WHO_REJECTED));
 		findTutor.setRejectionDate(row.getDate(COLUMN_NAME_REJECTION_DATE));
 		findTutor.setRejectionRemarks(row.getString(COLUMN_NAME_REJECTION_REMARKS));
+		findTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
 		return findTutor;
 	}
 

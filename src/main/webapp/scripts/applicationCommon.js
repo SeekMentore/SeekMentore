@@ -36,28 +36,21 @@ function decodeObjectFromJSON(json) {
 
 function getApplicationToSubmitQuery() {
 	var application = {
-			queryRequestedDate 	: new Date(),
-			queryStatus			: 'New',
 			emailId 			: $('#submitQueryEmail').val(),
-			queryDetails 		: 'This is just a simple query.',
-			isContacted 		: 'N'
+			queryDetails 		: 'This is just a simple query.'
 		};
 	return application;
 }
 
 function getApplicationToFindTutor() {
 	var application = {
-			enquiryDate 		: new Date(),
-			enquiryStatus		: 'New',
 			name 				: 'Dummy Parent',
 			contactNumber 		: $('#findTutorContact').val(),
 			emailId 			: $('#findTutorEmail').val(),
 			studentGrade 		: 'MS-7',
 			subjects 			: '12-P;11-C;10-B',
 			preferredTimeToCall : 'T2;T4',
-			additionalDetails 	: 'Nothing much to provide.',
-			subscribedWithUs	: 'N',
-			isContacted 		: 'N'
+			additionalDetails 	: 'Nothing much to provide.'
 		};
 	return application;
 }

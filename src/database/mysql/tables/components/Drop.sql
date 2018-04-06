@@ -11,7 +11,8 @@ USE SEEK_MENTORE;
 DROP TABLE IF EXISTS BECOME_TUTOR;
 DROP TABLE IF EXISTS FIND_TUTOR;
 DROP TABLE IF EXISTS SUBMIT_QUERY;
-
+DROP TABLE IF EXISTS SUBSCRIBED_CUSTOMER;
+DROP TABLE IF EXISTS REGISTERED_TUTOR;
 ---------------------------------------------------------------------------------
 --                                     DATABASE
 ---------------------------------------------------------------------------------

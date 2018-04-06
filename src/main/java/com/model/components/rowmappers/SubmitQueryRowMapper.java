@@ -25,6 +25,7 @@ public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQuery
 		submitQuery.setNotAnswered(row.getString(COLUMN_NAME_NOT_ANSWERED));
 		submitQuery.setNotAnsweredReason(row.getString(COLUMN_NAME_NOT_ANSWERED_REASON));
 		submitQuery.setWhoNotAnswered(row.getString(COLUMN_NAME_WHO_NOT_ANSWERED));
+		submitQuery.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
 		return submitQuery;
 	}
 

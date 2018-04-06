@@ -62,8 +62,8 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS, nullable = false)
 	private String additionalDetails;
 	
-	@Column(name = COLUMN_NAME_SUBSCRIBED_WITH_US, nullable = false)
-	private String subscribedWithUs;
+	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)
+	private String subscribedCustomer;
 	
 	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
@@ -140,6 +140,10 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
+	private Date recordLastUpdated;
+	
 	public FindTutor() {}
 	
 	public FindTutor(
@@ -174,7 +178,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 			String isRejected,
 			String whoRejected,
 			Date rejectionDate,
-			String rejectionRemarks
+			String rejectionRemarks,
+			Date recordLastUpdated
+			
 	) {
 		this.enquiryDate = enquiryDate;
 		this.enquiryStatus = enquiryStatus;
@@ -208,6 +214,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.whoRejected = whoRejected;
 		this.rejectionDate = rejectionDate;
 		this.rejectionRemarks = rejectionRemarks;
+		this.recordLastUpdated = recordLastUpdated;
 	}
 
 	public String getContactNumber() {
@@ -474,12 +481,20 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.studentGrade = studentGrade;
 	}
 	
-	public String getSubscribedWithUs() {
-		return subscribedWithUs;
+	public String getSubscribedCustomer() {
+		return subscribedCustomer;
 	}
 
-	public void setSubscribedWithUs(String subscribedWithUs) {
-		this.subscribedWithUs = subscribedWithUs;
+	public void setSubscribedCustomer(String subscribedCustomer) {
+		this.subscribedCustomer = subscribedCustomer;
+	}
+	
+	public Date getRecordLastUpdated() {
+		return recordLastUpdated;
+	}
+
+	public void setRecordLastUpdated(Date recordLastUpdated) {
+		this.recordLastUpdated = recordLastUpdated;
 	}
 
 	@Override
@@ -496,7 +511,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_WITH_US, subscribedWithUs));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));
@@ -520,6 +535,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, whoRejected));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
 		findTutorApplication.append(PrintFormatterUtils.endATable());
 		return findTutorApplication.toString();
 	}
