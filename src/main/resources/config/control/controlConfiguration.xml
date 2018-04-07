@@ -46,9 +46,9 @@
 			<accountsDeptMailList>prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;md.seekmentore@gmail.com;founder.seekmentore@gmail.com</accountsDeptMailList>
 		</importantCompanyMailIdsAndLists>
 		<mailingDuringDevelopmentAndTestingFeatures>
-			<sendOutActualEmails>false</sendOutActualEmails>
-			<showOnConsoleWhatEmailWillBeSent>true</showOnConsoleWhatEmailWillBeSent>
-			<sendOutActualEmailsButDivertThemToSomeOtherRecipient>false</sendOutActualEmailsButDivertThemToSomeOtherRecipient>
+			<sendOutActualEmails>true</sendOutActualEmails>
+			<showOnConsoleWhatEmailWillBeSent>false</showOnConsoleWhatEmailWillBeSent>
+			<sendOutActualEmailsButDivertThemToSomeOtherRecipient>true</sendOutActualEmailsButDivertThemToSomeOtherRecipient>
 			<divertedRecipeintEmailId>founder.seekmentore@gmail.com</divertedRecipeintEmailId>
 		</mailingDuringDevelopmentAndTestingFeatures>
 	</mailConfiguration>

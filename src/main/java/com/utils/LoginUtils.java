@@ -14,30 +14,30 @@ public class LoginUtils implements LoginConstants {
 	
 	public static boolean isNewSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
-		return null == session.getAttribute(SESSION_USER_OBJECT);
+		return null == session.getAttribute(USER_OBJECT);
 	}
 	
 	public static void createNewSession(final HttpServletRequest httpRequest) {
-		final String empId = (String) httpRequest.getHeader("SM_USER");
+		final String empId = (String) httpRequest.getHeader("SEEK_MENTORE_HEADER");
 		if (null == empId || EMPTY_STRING.equals(empId.trim()))
-			throw new ApplicationException("No SM_HEADER present for empId.");
+			throw new ApplicationException("Header not present.");
 		final User user = getLoginService().getUser(empId);
 		if (null == user)
-			throw new ApplicationException(empId + " Is not a valid empId present in SM_HEADER.");
+			throw new ApplicationException(empId + " Is not a valid user.");
 		final HttpSession session = httpRequest.getSession();
-		session.setAttribute(SESSION_USER_OBJECT, user);
+		session.setAttribute(USER_OBJECT, user);
 	}
 	
 	public static void validateExistingSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
-		final User user = (User)session.getAttribute(SESSION_USER_OBJECT);
+		final User user = (User)session.getAttribute(USER_OBJECT);
 		if (null == user.getEmpId() || user.getPageAccessTypes().isEmpty())
 			throw new ApplicationException("Not a valid user in session.");
 	}
 	
 	public static User getUserFromSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
-		return (User)session.getAttribute(SESSION_USER_OBJECT);
+		return (User)session.getAttribute(USER_OBJECT);
 	}
 	
 	public static LoginService getLoginService() {

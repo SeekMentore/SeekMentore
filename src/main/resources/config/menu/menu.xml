@@ -30,6 +30,8 @@
 			<webservice id="findTutor" url="/findTutor"></webservice>
 			<webservice id="submitQuery" url="/submitQuery"></webservice>
 			<webservice id="subscribe" url="/subscribe"></webservice>
+			<webservice id="getDropdownListDataBecomeTutor" url="/getDropdownListDataBecomeTutor"></webservice>
+			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
 		</page>
 	</pageList>
 </menu>

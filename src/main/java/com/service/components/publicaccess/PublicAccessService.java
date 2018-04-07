@@ -2,6 +2,7 @@ package com.service.components.publicaccess;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -11,13 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
+import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.MailUtils;
 import com.utils.VelocityUtils;
@@ -30,6 +34,9 @@ public class PublicAccessService implements PublicAccessConstants {
 	
 	@Autowired
 	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
+	
+	@Autowired
+	private CommonsService commonsService;
 	
 	@PostConstruct
 	public void init() {}
@@ -73,6 +80,24 @@ public class PublicAccessService implements PublicAccessConstants {
 														RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 		}
 		return response;
+	}
+	
+	public Map<String, List<SelectLookup>> getDropdownListData(final String page) {
+		final Map<String, List<SelectLookup>> mapListSelectLookup = new HashMap<String, List<SelectLookup>>();
+		if (PAGE_REFERENCE_TUTOR_REGISTRATION.equals(page)) {
+			mapListSelectLookup.put("genderLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP));
+			mapListSelectLookup.put("qualificationLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP));
+			mapListSelectLookup.put("professionLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP));
+			mapListSelectLookup.put("transportModeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP));
+			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
+			mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
+			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+		} else if (PAGE_REFERENCE_TUTOR_ENQUIRY.equals(page)) {
+			mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
+			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
+			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+		}
+		return mapListSelectLookup;
 	}
 	
 	private void handleBecomeTutorApplication (

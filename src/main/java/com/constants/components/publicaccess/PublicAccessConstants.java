@@ -63,12 +63,11 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String SUBMIT_QUERY_APPLICATION_VM_OBJECT = "submitQueryApplication";
 	String SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION = "Your Query has been registered with " + COMPANY_NAME_IN_QUOTES;
 	
-	String VALIDATION_MESSAGE_CAPTCHA_INVALIDATED_PLEASE_SELECT_AGAIN = "Captcha Invalidated, please select again.";
-	String VALIDATION_MESSAGE_CAPTCHA_CANNOT_BE_LEFT_BKANK_PLEASE_FILL_CAPTCHA = "Captcha cannot be left bkank. Please fill captcha.";
-	String VALIDATION_MESSAGE_INVALID_CAPTCHA_REPONSE_PLEASE_REFILL_CAPTCHA = "Invalid captcha reponse. Please refill Captcha.";
+	String VALIDATION_MESSAGE_CAPTCHA_INVALIDATED_PLEASE_SELECT_AGAIN = "Captcha Invalidated, please click again.";
 	
 	String CAPTCHA_RESPONSE_SUCCESS = "success";
-	String CAPTCHA_PROPERT_SECRET = "secret";
+	String CAPTCHA_PROPERTY_SECRET = "secret";
+	String CAPTCHA_PROPERTY_RESPONSE = "response";
 	String CAPTCHA_PROPERTY_REMOTEIP = "remoteip";
 
 }

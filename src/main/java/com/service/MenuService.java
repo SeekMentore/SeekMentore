@@ -16,7 +16,6 @@ import com.model.menu.Menu;
 import com.model.menu.Page;
 import com.model.menu.PageList;
 import com.model.menu.Webservice;
-import com.utils.AdditionalAccessFunctionUtils;
 import com.utils.ApplicationUtils;
 
 @Service(BeanConstants.BEAN_NAME_MENU_SERVICE)
@@ -42,12 +41,6 @@ public class MenuService implements MenuConstants {
 		private boolean checkAdditionalAccess(final String empId, final Map<String, Object> extraParams) {
 			if (null == this.additionalAccessFunction || EMPTY_STRING.equals(this.additionalAccessFunction.trim()))
 				return true;
-			if (this.additionalAccessFunction.equals("saveAccessForForm11"))
-				return AdditionalAccessFunctionUtils.saveAccessForForm11(empId, extraParams);
-			if (this.additionalAccessFunction.equals("saveAccessForFormF"))
-				return AdditionalAccessFunctionUtils.saveAccessForForm2(empId, extraParams);
-			if (this.additionalAccessFunction.equals("saveAccessForForm2"))
-				return AdditionalAccessFunctionUtils.saveAccessForFormF(empId, extraParams);
 			throw new ApplicationException(EXCEPTION_UNDEFINED_ADDITIONAL_ACCESS_FUNCTION);
 		}
 		
