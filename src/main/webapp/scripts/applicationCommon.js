@@ -13,7 +13,7 @@ commmonSuccessHandler = function(response) {
 	console.log('response', response);
 }
 
-function callWebservice(url, data, success, failure, method, contentType) {
+/*function callWebservice(url, data, success, failure, method, contentType) {
 	$.ajax({
         url			: ctxPath + url,
         type		: ((null != method) ? method : 'POST'),
@@ -23,6 +23,31 @@ function callWebservice(url, data, success, failure, method, contentType) {
         dataType	: 'json',
         success		: ((null != success) ? success : commmonSuccessHandler),
         error		: ((null != failure) ? failure : commonErrorHandler)
+    });
+}*/
+
+function callWebservice(url, data, success, failure, method, contentType) {
+	$.ajax({
+        url			: ctxPath + url,
+        type		: ((null != method) ? method : 'POST'),
+        data		: data,
+        contentType	: ((null != contentType) ? contentType : 'application/json'),
+        cache		: false,
+        dataType	: 'json',
+        success		: function(response) {
+				        	if (null != success) {
+				        		success(response);
+				        	} else {
+				        		commmonSuccessHandler(response);
+				        	}
+        },
+        error		: function(error) {
+				        	if (null != failure) {
+				        		failure(response);
+				        	} else {
+				        		commonErrorHandler(response);
+				        	}
+        }
     });
 }
 
@@ -89,3 +114,15 @@ $('#findTutor').on('click', function() {
 $('#becomeTutor').on('click', function() {
 	callWebservice('/rest/publicaccess/becomeTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()));
 }); 
+
+$('#becomeTutorRecieveData').on('click', function() {
+	callWebservice('/rest/publicaccess/getDropdownListDataBecomeTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()));
+}); 
+
+$('#findTutorRecieveData').on('click', function() {
+	callWebservice('/rest/publicaccess/getDropdownListDataFindTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()), myCustomFunction);
+}); 
+
+function myCustomFunction() {
+	alert(1);
+}

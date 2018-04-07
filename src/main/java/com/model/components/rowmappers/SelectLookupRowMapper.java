@@ -16,6 +16,8 @@ public class SelectLookupRowMapper implements RowMapper<SelectLookup>, SelectLoo
 		selectLookup.setValue(row.getString("VALUE"));
 		selectLookup.setLabel(row.getString("LABEL"));
 		selectLookup.setCategory(row.getString("CATEGORY"));
+		selectLookup.setOrderOfCategory(row.getString("ORDER_OF_CATEGORY"));
+		selectLookup.setOrderInCategory(row.getString("ORDER_IN_CATEGORY"));
 		selectLookup.setDescription(row.getString("DESCRIPTION"));
 		return selectLookup;
 	}

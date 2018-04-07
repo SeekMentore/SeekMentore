@@ -10,12 +10,24 @@ public class SelectLookup implements Serializable, SelectLookupConstants {
 	private String value;
 	private String label;
 	private String category;
+	private String orderOfCategory;
+	private String orderInCategory;
 	private String description;
 	
 	public SelectLookup() {}
 	
 	public SelectLookup (String value) {
 		this.value = value;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof SelectLookup && obj != null && this.value.equals(((SelectLookup)obj).getValue());
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.value.hashCode();
 	}
 	
 	public String getValue() {
@@ -43,13 +55,19 @@ public class SelectLookup implements Serializable, SelectLookupConstants {
 		this.description = description;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof SelectLookup && obj != null && this.value.equals(((SelectLookup)obj).getValue());
+	public String getOrderOfCategory() {
+		return orderOfCategory;
 	}
-	
-	@Override
-	public int hashCode() {
-		return this.value.hashCode();
+
+	public void setOrderOfCategory(String orderOfCategory) {
+		this.orderOfCategory = orderOfCategory;
+	}
+
+	public String getOrderInCategory() {
+		return orderInCategory;
+	}
+
+	public void setOrderInCategory(String orderInCategory) {
+		this.orderInCategory = orderInCategory;
 	}
 }
