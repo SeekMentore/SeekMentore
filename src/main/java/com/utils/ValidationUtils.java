@@ -72,11 +72,13 @@ public class ValidationUtils implements ValidationConstants {
 	}
 	
 	public static boolean validateEmailAddress(final String email) {
-	   try {
-	      new InternetAddress(email).validate();
-	      return true;
-	   } catch (AddressException ex) {}
-	   return false;
+		if (validatePlainNotNullAndEmptyTextString(email)) {
+			try {
+				new InternetAddress(email).validate();
+				return true;
+			} catch (AddressException ex) {}
+		}
+		return false;
 	}
 	
 	public static CommonsService getCommonsService() {

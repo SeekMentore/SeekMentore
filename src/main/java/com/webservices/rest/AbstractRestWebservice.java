@@ -12,5 +12,5 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 	protected String methodName;
 	protected boolean securityPassed = false;
 	
-	protected abstract void doSecurity(final HttpServletRequest request);
+	protected abstract void doSecurity(final HttpServletRequest request) throws Exception;
 }

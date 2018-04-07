@@ -7,6 +7,8 @@ public interface JNDIandControlConfigurationConstants extends ApplicationConstan
 	String ENVIRONMENT_VARIABLE_SERVER_NAME = "serverName";
 	String ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD = "encryptedSupportMailGroupPassword";
 	String ENCRYPTED_SUPPORT_MAIL_GROUP_USERNAME = "encryptedSupportMailGroupUsername";
+	String ENCRYPTED_CAPTCHA_SECRET = "encryptedCaptchaSecret";
 	
 	String SERVER_NAME_PROD = "Prod";
+	String SERVER_NAME_LOCAL = "Local";
 }

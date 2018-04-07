@@ -38,6 +38,7 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 		this.serverName = environment.getProperty(ENVIRONMENT_VARIABLE_SERVER_NAME);
 		this.controlConfiguration.getMailConfiguration().setEncryptedUsername(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_USERNAME));
 		this.controlConfiguration.getMailConfiguration().setEncryptedPassword(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD));
+		this.controlConfiguration.getCaptchaParams().setEncryptedApiSecret(environment.getProperty(ENCRYPTED_CAPTCHA_SECRET));
 	}
 	
 	public ControlConfiguration getControlConfiguration() {

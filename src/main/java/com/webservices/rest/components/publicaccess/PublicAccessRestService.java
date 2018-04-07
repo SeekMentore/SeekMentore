@@ -1,7 +1,9 @@
 package com.webservices.rest.components.publicaccess;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,9 +15,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
+import com.constants.ConnectionConstants;
+import com.constants.JNDIandControlConfigurationConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
+import com.constants.WebServiceConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
@@ -25,9 +30,14 @@ import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.publicaccess.PublicAccessService;
 import com.utils.ApplicationUtils;
+import com.utils.ConnectionUtils;
+import com.utils.JSONUtils;
+import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
+import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -112,12 +122,16 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		return AppContext.getBean(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE, PublicAccessService.class);
 	}
 	
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
+	
 	@Override
-	public void doSecurity (final HttpServletRequest request) {
+	public void doSecurity (final HttpServletRequest request) throws Exception {
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		final String captchaResponse = this.application.getCaptchaResponse();
-		if (verifyCaptcha(captchaResponse)) {
+		if (verifyCaptcha(captchaResponse, request)) {
 			switch(this.methodName) {
 				case REST_METHOD_NAME_TO_BECOME_TUTOR : {
 					handleBecomeTutorSecurity();
@@ -295,11 +309,45 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		}
 	}
 	
-	private boolean verifyCaptcha(final String captchaResponse) {
+	private boolean verifyCaptcha (
+			final String captchaResponse,
+			final HttpServletRequest request
+	) throws Exception {
+		// Not matching captcha if the server is local
+		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL))
+			return true;
 		// Verify captcha response and set values in securityFailureResponse
 		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(captchaResponse)) {
-			return true;
+			final Map<String, String> postParams = new HashMap<String, String>();
+			postParams.put(CAPTCHA_PROPERT_SECRET, SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getCaptchaParams().getEncryptedApiSecret()));
+			postParams.put(REST_MESSAGE_JSON_RESPONSE_NAME, captchaResponse);
+			postParams.put(CAPTCHA_PROPERTY_REMOTEIP, WebServiceUtils.getRemoteIPAddress(request));
+			
+			final Map<String, String> requestProperties = new HashMap<String, String>();
+			requestProperties.put(WebServiceConstants.USER_AGENT, WebServiceUtils.getUserAgent(request));
+			requestProperties.put(WebServiceConstants.ACCEPT_LANGUAGE, getJNDIandControlConfigurationLoadService().getControlConfiguration().getRemoteConnectionAcceptedLanguage());
+			
+			final String jsonResponse = ConnectionUtils.connectToUnsecuredURL(
+												getJNDIandControlConfigurationLoadService().getControlConfiguration().getCaptchaParams().getApiVerifyURL(), 
+												ConnectionConstants.METHOD_NAME_POST, 
+												postParams, 
+												requestProperties);
+			final JsonObject jsonObject = JSONUtils.getJSONObjectFromString(jsonResponse);
+			if (jsonObject.getBoolean(CAPTCHA_RESPONSE_SUCCESS)) {
+				return true;
+			}
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_CAPTCHA_REPONSE_PLEASE_REFILL_CAPTCHA,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+			return false;
 		}
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				VALIDATION_MESSAGE_CAPTCHA_CANNOT_BE_LEFT_BKANK_PLEASE_FILL_CAPTCHA,
+				RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+		this.securityPassed = false;
 		return false;
 	}
 }

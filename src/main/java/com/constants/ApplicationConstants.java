@@ -19,6 +19,8 @@ public interface ApplicationConstants {
 	String FORWARD_SLASH = "/";
 	String BACKWARD_SLASH = "\\";
 	String INVERTED_COMMA = "\"";
+	String ASSIGNMENT_OPERATOR = "=";
+	String AMPERSAND_OPERATOR = "&";
 	
 	String YES = "Y";
 	String NO = "N";
