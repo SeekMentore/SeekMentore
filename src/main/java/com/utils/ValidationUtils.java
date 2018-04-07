@@ -62,13 +62,16 @@ public class ValidationUtils implements ValidationConstants {
 			final String delimiter,
 			final String selectLookUpTable
 	) {
-		final List<SelectLookup> selectLookupList = getCommonsService().getSelectLookupList(selectLookUpTable);
-		for (final String value : delimitedValues.split(delimiter)) {
-			if (!selectLookupList.contains(new SelectLookup(value))) {
-				return false;
+		if (validatePlainNotNullAndEmptyTextString(delimitedValues)) {
+			final List<SelectLookup> selectLookupList = getCommonsService().getSelectLookupList(selectLookUpTable);
+			for (final String value : delimitedValues.split(delimiter)) {
+				if (!selectLookupList.contains(new SelectLookup(value))) {
+					return false;
+				}
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	public static boolean validateEmailAddress(final String email) {
