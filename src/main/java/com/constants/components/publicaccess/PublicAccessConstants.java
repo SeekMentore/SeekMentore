@@ -16,8 +16,7 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String APPLICATION_STATUS_REJECTED = "REJECTED";
 	String APPLICATION_STATUS_RE_APPLIED = "RE_APPLIED";
 	
-	String FAILURE_CONTACT_INFO_END = "/> for more details.";
-	String FAILURE_CONTACT_INFO_START = "Please contact <a href=\"mailto:";
+	String FAILURE_CONTACT_INFO = "If you believe you are receiving this error wrong.<br/>Please contact 'Seek Mentore' Support team from our 'Connect with us' section on home page.";
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
 	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";

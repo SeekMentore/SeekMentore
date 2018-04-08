@@ -71,12 +71,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Append contact information if Failure occurred
 		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
 			ApplicationUtils.appendMessageInMapAttribute(response, 
-														FAILURE_CONTACT_INFO_START 
-														+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
-														+ INVERTED_COMMA 
-														+ WHITESPACE 
-														+ jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList() 
-														+ FAILURE_CONTACT_INFO_END,
+														FAILURE_CONTACT_INFO,
 														RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 		}
 		return response;
