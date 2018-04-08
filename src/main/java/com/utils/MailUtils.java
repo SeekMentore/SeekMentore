@@ -184,26 +184,70 @@ public class MailUtils implements MailConstants {
 			final String subject,
 			final String message
 	) throws Exception {
-		final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
-																										fromAddress,
-																										toAddressSemicolonSeparated,
-																										ccAddressSemicolonSeparated,
-																										bccAddressSemicolonSeparated,
-																										subject,
-																										message
-																								);
-		if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
-			final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-			simpleMailMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
-			simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
-			simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
-			simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
-			simpleMailMessage.setReplyTo((String)mailParams.get(PARAM_REPLY_TO_ADDRESS));
-			simpleMailMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
-			simpleMailMessage.setText((String)mailParams.get(PARAM_MESSAGE));
-			getMailService().sendEmail(simpleMailMessage);
-			LoggerUtils.logOnConsole(MESSAGE_SEND);
+		// Define a new Thread Class for sending Mime Mails
+		class SendSimpleMailMesaageThread implements Runnable {
+			private String fromAddress;
+			private String toAddressSemicolonSeparated;
+			private String ccAddressSemicolonSeparated;
+			private String bccAddressSemicolonSeparated;
+			private String subject;
+			private String message;
+			
+			SendSimpleMailMesaageThread (
+				final String fromAddress,
+				final String toAddressSemicolonSeparated,
+				final String ccAddressSemicolonSeparated,
+				final String bccAddressSemicolonSeparated,
+				final String subject,
+				final String message
+			) {
+				this.fromAddress = fromAddress;
+				this.toAddressSemicolonSeparated = toAddressSemicolonSeparated;
+				this.ccAddressSemicolonSeparated = ccAddressSemicolonSeparated;
+				this.bccAddressSemicolonSeparated = bccAddressSemicolonSeparated;
+				this.subject = subject;
+				this.message = message;
+			}
+
+			@Override
+			public void run() {
+				try {
+					final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+																							fromAddress,
+																							toAddressSemicolonSeparated,
+																							ccAddressSemicolonSeparated,
+																							bccAddressSemicolonSeparated,
+																							subject,
+																							message
+																					);
+					if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
+						final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+						simpleMailMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
+						simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
+						simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
+						simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
+						simpleMailMessage.setReplyTo((String)mailParams.get(PARAM_REPLY_TO_ADDRESS));
+						simpleMailMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
+						simpleMailMessage.setText((String)mailParams.get(PARAM_MESSAGE));
+						getMailService().sendEmail(simpleMailMessage);
+						LoggerUtils.logOnConsole(MESSAGE_SEND);
+					}
+				} catch (Exception e) {
+					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
+				}
+			}
+			
 		}
+		// Create a new thread inside which the email would be send 
+		// So as to not stop the control from returning to UI
+		// And making the mailing a background process
+		new Thread(new SendSimpleMailMesaageThread(
+									fromAddress,
+									toAddressSemicolonSeparated,
+									ccAddressSemicolonSeparated,
+									bccAddressSemicolonSeparated,
+									subject,
+									message)).start();
 	}
 	
 	private static void sendingCustomisedFromAddressMimeMessageEmail (
@@ -215,29 +259,76 @@ public class MailUtils implements MailConstants {
 			final String htmlMessage,
 			final List<MailAttachment> attachments
 	) throws Exception {
-		final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
-																										fromAddress,
-																										toAddressSemicolonSeparated,
-																										ccAddressSemicolonSeparated,
-																										bccAddressSemicolonSeparated,
-																										subject,
-																										htmlMessage
-																								);
-		if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
-			final MimeMessagePreparator mimeMessagePreparator = new MimeMessagePreparator() {
-				public void prepare(MimeMessage mimeMessage) throws Exception {
-					mimeMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
-					mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
-					mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
-					mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
-					mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_REPLY_TO_ADDRESS), true));
-					mimeMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
-					mimeMessage.setContent(createMimeMultipart((String)mailParams.get(PARAM_MESSAGE), attachments));
-				} 
-			};
-			getMailService().sendEmail(mimeMessagePreparator);
-			LoggerUtils.logOnConsole(MESSAGE_SEND);
+		// Define a new Thread Class for sending Mime Mails
+		class SendMimeMesaageThread implements Runnable {
+			private String fromAddress;
+			private String toAddressSemicolonSeparated;
+			private String ccAddressSemicolonSeparated;
+			private String bccAddressSemicolonSeparated;
+			private String subject;
+			private String htmlMessage;
+			private List<MailAttachment> attachments;
+			
+			SendMimeMesaageThread (
+				final String fromAddress,
+				final String toAddressSemicolonSeparated,
+				final String ccAddressSemicolonSeparated,
+				final String bccAddressSemicolonSeparated,
+				final String subject,
+				final String htmlMessage,
+				final List<MailAttachment> attachments
+			) {
+				this.fromAddress = fromAddress;
+				this.toAddressSemicolonSeparated = toAddressSemicolonSeparated;
+				this.ccAddressSemicolonSeparated = ccAddressSemicolonSeparated;
+				this.bccAddressSemicolonSeparated = bccAddressSemicolonSeparated;
+				this.subject = subject;
+				this.htmlMessage = htmlMessage;
+				this.attachments = attachments;
+			}
+
+			@Override
+			public void run() {
+				try {
+					final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+																					fromAddress,
+																					toAddressSemicolonSeparated,
+																					ccAddressSemicolonSeparated,
+																					bccAddressSemicolonSeparated,
+																					subject,
+																					htmlMessage
+																			);
+					if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
+						final MimeMessagePreparator mimeMessagePreparator = new MimeMessagePreparator() {
+							public void prepare(MimeMessage mimeMessage) throws Exception {
+								mimeMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
+								mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
+								mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
+								mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
+								mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_REPLY_TO_ADDRESS), true));
+								mimeMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
+								mimeMessage.setContent(createMimeMultipart((String)mailParams.get(PARAM_MESSAGE), attachments));
+							} 
+						};
+						getMailService().sendEmail(mimeMessagePreparator);
+						LoggerUtils.logOnConsole(MESSAGE_SEND);
+					}
+				} catch (Exception e) {
+					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
+				}
+			}
 		}
+		// Create a new thread inside which the email would be send 
+		// So as to not stop the control from returning to UI
+		// And making the mailing a background process
+		new Thread(new SendMimeMesaageThread(
+								fromAddress,
+								toAddressSemicolonSeparated,
+								ccAddressSemicolonSeparated,
+								bccAddressSemicolonSeparated,
+								subject,
+								htmlMessage,
+								attachments)).start();
     }
 	
 	private static MimeMultipart createMimeMultipart (

@@ -90,13 +90,13 @@ function getApplicationToBecomeTutor() {
 			contactNumber				: $('#becomeTutorContact').val(),
 			emailId 					: $('#becomeTutorEmail').val(),
 			gender 						: 'M',
-			qualification 				: 'B-Tech',
-			primaryProfession 			: 'Software Expert1',
+			qualification 				: 'BTech',
+			primaryProfession 			: 'SE',
 			transportMode 				: '4-W',
 			teachingExp 				: '3',
-			subjects					: '12-P;11-C;10-B',
-			locations 					: 'Z1-L2;Z1-L9;Z3-L34',
-			preferredTimeToCall 		: 'T2;T4',
+			subjects					: 'Phy;Chem;Hindi',
+			locations 					: 'TP;HZ;KP',
+			preferredTimeToCall 		: '8A12P;12P4P',
 			additionalDetails 			: 'I am awesome!!!',
 			captchaResponse				: '03AJIzXZ60W9IDEBdt3fzxhd9-L368LL6CzZxXiZOAvp8vPpyIqfjSgRCHGxiMrvpzHg18NLyr07jH7Yc5v138RZOyVt-GX02RwYpwByjg-IDaztPr5ePrnUBAxmgTn5zm3iVmrTNQb2uUyx6ad-trfTx1beXN-TsP6edqdRo6-OlnGbxj8lMRogHZwXY9Y7Mo-4In_B-q9cPOnPHzCvUVqY9xCsWATLCqgtngYuYn3bW6bd_HKnkcea6lLj9GVTp7_jW430gydB3UKomKDbxiX6JigEiQANdsIC1nCh5c0lv7yRfmpD-dEGkL40KshTTrDX_U4yyjYx-EbIynLIk4T3hFIuFbQsHaVTYlWj_TemeL48Y7S8sO5OPLBR1nkB3Euo4YB-BaZ-F8GShjaEw1te7VQDeU05OoBQ'
 		};
