@@ -1,5 +1,6 @@
 package com.utils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,13 @@ public class ValidationUtils implements ValidationConstants {
 				) 
 				: 
 				false;
+		}
+		return false;
+	}
+	
+	public static boolean validateDate(final Date date) {
+		if (null != date) {
+			return true;
 		}
 		return false;
 	}
