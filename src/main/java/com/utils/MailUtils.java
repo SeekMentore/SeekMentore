@@ -150,15 +150,21 @@ public class MailUtils implements MailConstants {
 			// If Server is PROD directly send out actual E-mails to actual recipients
 			sendEmail = true;
 		} else if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmails()) {
-			// If Non-Prod Servers check Mail Diversions and Appropriately Set Values
-			if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmailsButDivertThemToSomeOtherRecipient()) {
-				// Reset the values in Mail Params
-				mailParams.put(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED, getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().getDivertedRecipeintEmailId());
-				mailParams.put(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED, null);
-				mailParams.put(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED, null);
-				mailParams.put(PARAM_SUBJECT, SUBJECT_DIVERTED_MAIL_FROM + getJNDIandControlConfigurationLoadService().getServerName() + WHITESPACE + COLON + WHITESPACE + mailParams.get(PARAM_SUBJECT));
-				mailParams.put(PARAM_MESSAGE, newContent);
-				// Send this email with Diverted settings
+			if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL)) {
+				if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmailsButDivertThemToSomeOtherRecipient()) {
+					// Reset the values in Mail Params
+					mailParams.put(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED, getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().getDivertedRecipeintEmailId());
+					mailParams.put(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED, null);
+					mailParams.put(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED, null);
+					mailParams.put(PARAM_SUBJECT, SUBJECT_DIVERTED_MAIL_FROM + getJNDIandControlConfigurationLoadService().getServerName() + WHITESPACE + COLON + WHITESPACE + mailParams.get(PARAM_SUBJECT));
+					mailParams.put(PARAM_MESSAGE, newContent);
+					// Send this email with Diverted settings
+					sendEmail = true;
+					// If Server is not local send out email with appended subject
+				} 
+			} else {
+				mailParams.put(PARAM_SUBJECT, getJNDIandControlConfigurationLoadService().getServerName() + WHITESPACE + COLON + WHITESPACE + mailParams.get(PARAM_SUBJECT));
+				// Send this email appended subject
 				sendEmail = true;
 			}
 		} 
