@@ -62,7 +62,6 @@ public class MailConfiguration implements Serializable {
 		return mailingDuringDevelopmentAndTestingFeatures;
 	}
 
-	@XmlElement
 	public void setMailingDuringDevelopmentAndTestingFeatures(MailingDuringDevelopmentAndTestingFeatures mailingDuringDevelopmentAndTestingFeatures) {
 		this.mailingDuringDevelopmentAndTestingFeatures = mailingDuringDevelopmentAndTestingFeatures;
 	}

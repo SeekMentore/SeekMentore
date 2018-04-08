@@ -2,8 +2,6 @@ package com.model.control;
 
 import java.io.Serializable;
 
-import javax.xml.bind.annotation.XmlElement;
-
 public class MailingDuringDevelopmentAndTestingFeatures implements Serializable {
 	
 	private static final long serialVersionUID = 6693618464803123134L;
@@ -17,7 +15,6 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 		return sendOutActualEmails;
 	}
 	
-	@XmlElement
 	public void setSendOutActualEmails(boolean sendOutActualEmails) {
 		this.sendOutActualEmails = sendOutActualEmails;
 	}
@@ -26,7 +23,6 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 		return showOnConsoleWhatEmailWillBeSent;
 	}
 	
-	@XmlElement
 	public void setShowOnConsoleWhatEmailWillBeSent(boolean showOnConsoleWhatEmailWillBeSent) {
 		this.showOnConsoleWhatEmailWillBeSent = showOnConsoleWhatEmailWillBeSent;
 	}
@@ -35,7 +31,6 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 		return divertedRecipeintEmailId;
 	}
 	
-	@XmlElement
 	public void setDivertedRecipeintEmailId(String divertedRecipeintEmailId) {
 		this.divertedRecipeintEmailId = divertedRecipeintEmailId;
 	}
@@ -44,7 +39,6 @@ public class MailingDuringDevelopmentAndTestingFeatures implements Serializable 
 		return sendOutActualEmailsButDivertThemToSomeOtherRecipient;
 	}
 
-	@XmlElement
 	public void setSendOutActualEmailsButDivertThemToSomeOtherRecipient(
 			boolean sendOutActualEmailsButDivertThemToSomeOtherRecipient) {
 		this.sendOutActualEmailsButDivertThemToSomeOtherRecipient = sendOutActualEmailsButDivertThemToSomeOtherRecipient;
