@@ -192,6 +192,8 @@ public class MailUtils implements MailConstants {
 			private String bccAddressSemicolonSeparated;
 			private String subject;
 			private String message;
+			private String replyToAddress;
+			private boolean sendEmail;
 			
 			SendSimpleMailMesaageThread (
 				final String fromAddress,
@@ -220,20 +222,30 @@ public class MailUtils implements MailConstants {
 																							subject,
 																							message
 																					);
-					if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
+					
+					this.sendEmail = (Boolean)mailParams.get(PARAM_SEND_EMAIL);
+					this.fromAddress = (String)mailParams.get(PARAM_FROM_ADDRESS);
+					this.toAddressSemicolonSeparated = (String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED);
+					this.ccAddressSemicolonSeparated = (String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED);
+					this.bccAddressSemicolonSeparated = (String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED);
+					this.replyToAddress = (String)mailParams.get(PARAM_REPLY_TO_ADDRESS);
+					this.subject = (String)mailParams.get(PARAM_SUBJECT);
+					this.message = (String)mailParams.get(PARAM_MESSAGE);
+					
+					if (sendEmail) {
 						final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-						simpleMailMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
-						simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
-						simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
-						simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
-						simpleMailMessage.setReplyTo((String)mailParams.get(PARAM_REPLY_TO_ADDRESS));
-						simpleMailMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
-						simpleMailMessage.setText((String)mailParams.get(PARAM_MESSAGE));
+						simpleMailMessage.setFrom(fromAddress);
+						simpleMailMessage.setTo(getSplittedAddressesForSimpleMailMessage(toAddressSemicolonSeparated, true));
+						simpleMailMessage.setCc(getSplittedAddressesForSimpleMailMessage(ccAddressSemicolonSeparated, false));
+						simpleMailMessage.setBcc(getSplittedAddressesForSimpleMailMessage(bccAddressSemicolonSeparated, false));
+						simpleMailMessage.setReplyTo(replyToAddress);
+						simpleMailMessage.setSubject(subject);
+						simpleMailMessage.setText(message);
 						getMailService().sendEmail(simpleMailMessage);
-						LoggerUtils.logOnConsole(MESSAGE_SEND);
 					}
 				} catch (Exception e) {
-					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
+					this.sendEmail = false;
+					ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
 				}
 			}
 			
@@ -268,6 +280,8 @@ public class MailUtils implements MailConstants {
 			private String subject;
 			private String htmlMessage;
 			private List<MailAttachment> attachments;
+			private String replyToAddress;
+			private boolean sendEmail;
 			
 			SendMimeMesaageThread (
 				final String fromAddress,
@@ -298,23 +312,31 @@ public class MailUtils implements MailConstants {
 																					subject,
 																					htmlMessage
 																			);
-					if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
+					this.sendEmail = (Boolean)mailParams.get(PARAM_SEND_EMAIL);
+					this.fromAddress = (String)mailParams.get(PARAM_FROM_ADDRESS);
+					this.toAddressSemicolonSeparated = (String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED);
+					this.ccAddressSemicolonSeparated = (String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED);
+					this.bccAddressSemicolonSeparated = (String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED);
+					this.replyToAddress = (String)mailParams.get(PARAM_REPLY_TO_ADDRESS);
+					this.subject = (String)mailParams.get(PARAM_SUBJECT);
+					this.htmlMessage = (String)mailParams.get(PARAM_MESSAGE);
+					
+					if (sendEmail) {
 						final MimeMessagePreparator mimeMessagePreparator = new MimeMessagePreparator() {
 							public void prepare(MimeMessage mimeMessage) throws Exception {
-								mimeMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
-								mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
-								mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
-								mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
-								mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_REPLY_TO_ADDRESS), true));
-								mimeMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
-								mimeMessage.setContent(createMimeMultipart((String)mailParams.get(PARAM_MESSAGE), attachments));
+								mimeMessage.setFrom(fromAddress);
+								mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage(toAddressSemicolonSeparated, true));
+								mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage(ccAddressSemicolonSeparated, false));
+								mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage(bccAddressSemicolonSeparated, false));
+								mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage(replyToAddress, true));
+								mimeMessage.setSubject(subject);
+								mimeMessage.setContent(createMimeMultipart(htmlMessage, attachments));
 							} 
 						};
 						getMailService().sendEmail(mimeMessagePreparator);
-						LoggerUtils.logOnConsole(MESSAGE_SEND);
 					}
 				} catch (Exception e) {
-					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
+					ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
 				}
 			}
 		}

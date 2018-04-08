@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,12 @@ public class CommonsService implements CommonsConstants {
 	
 	@PostConstruct
 	public void init() {}
+	
+	@Transactional
+	public void feedErrorRecord(final Timestamp occurredTimestamp, final String requestUri, final String errorText) {
+		applicationDao.updateWithPreparedQueryAndIndividualOrderedParams(
+				"INSERT INTO APP_ERROR_REPORT(OCCURED_AT, REQUEST_URI, ERROR_TRACE) VALUES(?, ?, ?)", new Object[] {occurredTimestamp, requestUri, errorText});
+	}
 	
 	@Transactional
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {

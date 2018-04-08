@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS LOCATIONS_LOOKUP;
 DROP TABLE IF EXISTS PREFERRED_TIME_LOOKUP;
 DROP TABLE IF EXISTS STUDENT_GRADE_LOOKUP;
 DROP TABLE IF EXISTS SUBJECTS_LOOKUP;
+
+DROP TABLE IF EXISTS APP_ERROR_REPORT;
 ---------------------------------------------------------------------------------
 --                                     DATABASE
 ---------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ public class ApplicationException extends RuntimeException {
 	
 	public ApplicationException(final String message) {
         super(message);
-        LoggerUtils.logError(this);
+        LoggerUtils.logErrorFromApplicationExceptionConstructor(this);
     }
 
     public ApplicationException(final Throwable t) {
@@ -18,7 +18,7 @@ public class ApplicationException extends RuntimeException {
         if (t != null) {
         	this.setStackTrace(t.getStackTrace());
         }
-        LoggerUtils.logError(this);
+        LoggerUtils.logErrorFromApplicationExceptionConstructor(this);
     }
 
     public ApplicationException(final String message, final Throwable t) {
@@ -26,13 +26,13 @@ public class ApplicationException extends RuntimeException {
         if (t != null) {
         	this.setStackTrace(t.getStackTrace());
         }
-        LoggerUtils.logError(this);
+        LoggerUtils.logErrorFromApplicationExceptionConstructor(this);
     }
 
     public ApplicationException(final String message, final String errorCode){
     	super(message);
     	this.errorCode = errorCode;
-    	LoggerUtils.logError(this);
+    	LoggerUtils.logErrorFromApplicationExceptionConstructor(this);
     }
 
     public String getErrorCode() {

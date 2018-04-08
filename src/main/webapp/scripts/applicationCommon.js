@@ -43,9 +43,9 @@ function callWebservice(url, data, success, failure, method, contentType) {
         },
         error		: function(error) {
 				        	if (null != failure) {
-				        		failure(response);
+				        		failure(error);
 				        	} else {
-				        		commonErrorHandler(response);
+				        		commonErrorHandler(error);
 				        	}
         }
     });
@@ -73,9 +73,9 @@ function getApplicationToFindTutor() {
 			name 				: 'Dummy Parent',
 			contactNumber 		: $('#findTutorContact').val(),
 			emailId 			: $('#findTutorEmail').val(),
-			studentGrade 		: 'MS-7',
-			subjects 			: '12-P;11-C;10-B',
-			preferredTimeToCall : 'T2;T4',
+			studentGrade 		: 'C6',
+			subjects 			: 'Phy;Chem;Hindi',
+			preferredTimeToCall : '8A12P;12P4P',
 			additionalDetails 	: 'Nothing much to provide.',
 			captchaResponse				: 'Dummy Captcha'
 		};

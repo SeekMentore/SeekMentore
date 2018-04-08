@@ -1,9 +1,15 @@
 package com.utils;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.constants.BeanConstants;
 import com.constants.LoggerConstants;
+import com.service.components.CommonsService;
+import com.utils.context.AppContext;
 
 public class LoggerUtils implements LoggerConstants {
 	
@@ -36,9 +42,6 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logError(final String message) {
-		try {
-			MailUtils.sendErrorMessageEmail(message, null);
-		} catch (Exception e) {}
 		if (isErrorEnabled)
 			LOGGER.error(message);
 	}
@@ -50,9 +53,6 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logFatal(final String message) {
-		try {
-			MailUtils.sendErrorMessageEmail(message, null);
-		} catch (Exception e) {}
 		if (isFatalEnabled)
 			LOGGER.fatal(message);
 	}
@@ -61,5 +61,19 @@ public class LoggerUtils implements LoggerConstants {
 		logFatal(ExceptionUtils.generateErrorLog(exception));
 		if (isFatalEnabled)
 			LOGGER.fatal(exception.getMessage(), exception);
+	}
+	
+	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
+		final Timestamp occurredTimestamp = new Timestamp(new Date().getTime());
+		final String message = ExceptionUtils.generateErrorLog(exception);
+		getCommonsService().feedErrorRecord(occurredTimestamp, "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", message);
+		if (isErrorEnabled)
+			LOGGER.error(message);
+		if (isTraceEnabled)
+			LOGGER.trace(exception.getMessage(), exception);
+	}
+	
+	public static CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 }
