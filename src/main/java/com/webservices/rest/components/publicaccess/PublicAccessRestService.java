@@ -21,10 +21,12 @@ import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
+import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
+import com.model.components.publicaccess.SubscribeWithUs;
 import com.service.components.publicaccess.PublicAccessService;
 import com.utils.ApplicationUtils;
 import com.utils.ValidationUtils;
@@ -101,7 +103,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
 	public String subscribe (
-			final FindTutor application,
+			final SubscribeWithUs application,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_SUBSCRIBE;
@@ -151,6 +153,22 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String getDropdownListDataSubscribeWithUs (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US;
+		this.isReceiveDisplayDataRequest = true;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getPublicAccessService().getDropdownListData(PAGE_REFERENCE_SUBSCRIBE_WITH_US), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
 	@Override
 	public void doSecurity (final HttpServletRequest request) throws Exception {
 		this.securityFailureResponse = new HashMap<String, Object>();
@@ -173,8 +191,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 						break;
 					}
 					case REST_METHOD_NAME_TO_SUBSCRIBE : {
-						// TODO Method level security
-						this.securityPassed = true;
+						handleSubscribeWithUsSecurity();
 						break;
 					}
 				}
@@ -342,6 +359,60 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void handleSubscribeWithUsSecurity() {
+		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) this.application;
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePhoneNumber(subscribeWithUsApplication.getContactNumber(), 10)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateEmailAddress(subscribeWithUsApplication.getEmailId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getFirstName(), false)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getLastName(), false)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(subscribeWithUsApplication.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(subscribeWithUsApplication.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(subscribeWithUsApplication.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}

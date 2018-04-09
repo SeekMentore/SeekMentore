@@ -1,8 +1,8 @@
 package com.constants.components.publicaccess;
 
-public interface FindTutorConstants extends PublicAccessConstants {
+public interface SubscribeWithUsConstants extends PublicAccessConstants {
 	
-	String TABLE_NAME = "FIND_TUTOR";
+	String TABLE_NAME = "SUBSCRIBE_WITH_US";
 	
 	String COLUMN_NAME_RECORD_LAST_UPDATED = "RECORD_LAST_UPDATED";
 	String COLUMN_NAME_REJECTION_REMARKS = "REJECTION_REMARKS";
@@ -35,14 +35,16 @@ public interface FindTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_EMAIL_ID = "EMAIL_ID";
 	String COLUMN_NAME_CONTACT_NUMBER = "CONTACT_NUMBER";
 	String COLUMN_NAME_STUDENT_GRADE = "STUDENT_GRADE";
-	String COLUMN_NAME_NAME = "NAME";
-	String COLUMN_NAME_ENQUIRY_STATUS = "ENQUIRY_STATUS";
-	String COLUMN_NAME_ENQUIRY_DATE = "ENQUIRY_DATE";
-	String COLUMN_NAME_ENQUIRY_ID = "ENQUIRY_ID";
+	String COLUMN_NAME_LAST_NAME = "LAST_NAME";
+	String COLUMN_NAME_FIRST_NAME = "FIRST_NAME";
+	String COLUMN_NAME_APPLICATION_STATUS = "APPLICATION_STATUS";
+	String COLUMN_NAME_APPLICATION_DATE = "APPLICATION_DATE";
+	String COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID = "TENTATIVE_SUBSCRIPTION_ID";
 	
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE = "Please enter a valid 'Contact Number(Mobile)'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
-	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME = "Please enter a valid 'Name'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME = "Please enter a valid 'Last Name'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME = "Please enter a valid 'First Name'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE = "Please select a valid 'Student Grade'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";

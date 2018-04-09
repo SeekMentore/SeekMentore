@@ -20,6 +20,7 @@ import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
+import com.model.components.publicaccess.SubscribeWithUs;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
@@ -51,6 +52,8 @@ public class PublicAccessService implements PublicAccessConstants {
 			handleBecomeTutorApplication(application, response, currentTimestamp);
 		} else if (application instanceof FindTutor) {
 			handleFindTutorApplication(application, response, currentTimestamp);
+		} else if (application instanceof SubscribeWithUs) {
+			handleSubscribeWithUsApplication(application, response, currentTimestamp);
 		} else if (application instanceof SubmitQuery) {
 			handleSubmitQueryApplication(application, response, currentTimestamp);
 		} else {
@@ -64,6 +67,8 @@ public class PublicAccessService implements PublicAccessConstants {
 				sendNotificationAndConfirmationEmailsToTutor((BecomeTutor) application);
 			} else if (application instanceof FindTutor) {
 				sendNotificationAndConfirmationEmailsToParentForTutorEnquiry((FindTutor) application);
+			} else if (application instanceof SubscribeWithUs) {
+				sendNotificationAndConfirmationEmailsToParentForSubscribingWithUs((SubscribeWithUs) application);
 			} else if (application instanceof SubmitQuery) {
 				sendNotificationAndConfirmationEmailsForQueryEnquiry((SubmitQuery) application);
 			} 
@@ -88,6 +93,10 @@ public class PublicAccessService implements PublicAccessConstants {
 			mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
 			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
 		} else if (PAGE_REFERENCE_TUTOR_ENQUIRY.equals(page)) {
+			mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
+			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
+			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+		} else if (PAGE_REFERENCE_SUBSCRIBE_WITH_US.equals(page)) {
 			mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
 			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
 			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
@@ -200,6 +209,51 @@ public class PublicAccessService implements PublicAccessConstants {
 		findTutorApplication.setRejectionRemarks(null);
 	}
 	
+	private void handleSubscribeWithUsApplication (
+			final PublicApplication application, 
+			final Map<String, Object> response, 
+			final Date currentTimestamp
+	) {
+		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBSCRIBE_WITH_US);
+		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) application;
+		subscribeWithUsApplication.setRecordLastUpdated(currentTimestamp);
+		// Check email Id in system for Subscribed Customer
+		final SubscribeWithUs findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {subscribeWithUsApplication.getEmailId()}, SubscribeWithUs.class);
+		// Check contact number in system for Subscribed Customer
+		final SubscribeWithUs findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {subscribeWithUsApplication.getContactNumber()}, SubscribeWithUs.class);
+		if (null != findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId || null != findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber) {
+			subscribeWithUsApplication.setSubscribedCustomer(YES);
+		} else {
+			subscribeWithUsApplication.setSubscribedCustomer(NO);
+		}
+		subscribeWithUsApplication.setApplicationDate(currentTimestamp);
+		subscribeWithUsApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
+		subscribeWithUsApplication.setIsContacted(NO);
+		subscribeWithUsApplication.setWhoContacted(null);
+		subscribeWithUsApplication.setContactedDate(null);
+		subscribeWithUsApplication.setContactedRemarks(null);
+		subscribeWithUsApplication.setIsAuthenticationVerified(null);
+		subscribeWithUsApplication.setWhoVerified(null);
+		subscribeWithUsApplication.setVerificationDate(null);
+		subscribeWithUsApplication.setVerificationRemarks(null);
+		subscribeWithUsApplication.setIsToBeRecontacted(null);
+		subscribeWithUsApplication.setWhoSuggestedForRecontact(null);
+		subscribeWithUsApplication.setSuggestionDate(null);
+		subscribeWithUsApplication.setSuggestionRemarks(null);
+		subscribeWithUsApplication.setWhoRecontacted(null);
+		subscribeWithUsApplication.setRecontactedDate(null);
+		subscribeWithUsApplication.setRecontactedRemarks(null);
+		subscribeWithUsApplication.setIsSelected(null);
+		subscribeWithUsApplication.setWhoSelected(null);
+		subscribeWithUsApplication.setSelectionDate(null);
+		subscribeWithUsApplication.setSelectionRemarks(null);
+		subscribeWithUsApplication.setIsRejected(null);
+		subscribeWithUsApplication.setWhoRejected(null);
+		subscribeWithUsApplication.setRejectionDate(null);
+		subscribeWithUsApplication.setRejectionRemarks(null);
+	}
+	
 	private void handleSubmitQueryApplication (
 			final PublicApplication application, 
 			final Map<String, Object> response, 
@@ -277,6 +331,29 @@ public class PublicAccessService implements PublicAccessConstants {
 				null,
 				SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION, 
 				VelocityUtils.parseTemplate(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+	}
+	
+	private void sendNotificationAndConfirmationEmailsToParentForSubscribingWithUs(final SubscribeWithUs subscribeWithUsApplication) throws Exception {
+		// Send Registration notification message to concerned team
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put(ADDRESS_NAME_VM_OBJECT, subscribeWithUsApplication.getFirstName() + WHITESPACE + subscribeWithUsApplication.getLastName());
+		attributes.put(SUBSCRIBE_WITH_US_APPLICATION_VM_OBJECT, subscribeWithUsApplication.toString());
+		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		MailUtils.sendMimeMessageEmail( 
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
+				null,
+				null,
+				SUBJECT_SUBSCRIBE_WITH_US_REQUEST, 
+				VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+		// Send Registration confirmation message to Tutor on his provided email Id
+		MailUtils.sendMimeMessageEmail( 
+				subscribeWithUsApplication.getEmailId(), 
+				null,
+				null,
+				SUBJECT_SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION, 
+				VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}
 	
