@@ -19,8 +19,10 @@ import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
+import com.model.components.publicaccess.RegisteredTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
+import com.model.components.publicaccess.SubscribedCustomer;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
@@ -219,10 +221,10 @@ public class PublicAccessService implements PublicAccessConstants {
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) application;
 		subscribeWithUsApplication.setRecordLastUpdated(currentTimestamp);
 		// Check email Id in system for Subscribed Customer
-		final SubscribeWithUs findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {subscribeWithUsApplication.getEmailId()}, SubscribeWithUs.class);
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {subscribeWithUsApplication.getEmailId()}, SubscribedCustomer.class);
 		// Check contact number in system for Subscribed Customer
-		final SubscribeWithUs findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {subscribeWithUsApplication.getContactNumber()}, SubscribeWithUs.class);
-		if (null != findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId || null != findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber) {
+		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {subscribeWithUsApplication.getContactNumber()}, SubscribedCustomer.class);
+		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
 			subscribeWithUsApplication.setSubscribedCustomer(YES);
 		} else {
 			subscribeWithUsApplication.setSubscribedCustomer(NO);
@@ -264,15 +266,15 @@ public class PublicAccessService implements PublicAccessConstants {
 		final SubmitQuery submitQueryApplication = (SubmitQuery) application;
 		submitQueryApplication.setRecordLastUpdated(currentTimestamp);
 		// Check contact number in system for Registered Tutor
-		final SubmitQuery submitQueryRegisteredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubmitQuery.class);
+		final RegisteredTutor registeredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, RegisteredTutor.class);
 		// Check email Id in system for Subscribed Customer
-		final SubmitQuery submitQuerySubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubmitQuery.class);
-		if (null != submitQueryRegisteredTutorInDatabaseWithEmailId) {
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubscribedCustomer.class);
+		if (null != registeredTutorInDatabaseWithEmailId) {
 			submitQueryApplication.setRegisteredTutor(YES);
 		} else {
 			submitQueryApplication.setRegisteredTutor(NO);
 		}
-		if (null != submitQuerySubscribedCustomerRegistrationInDatabaseWithEmailId) {
+		if (null != subscribedCustomerInDatabaseWithEmailId) {
 			submitQueryApplication.setSubscribedCustomer(YES);
 		} else {
 			submitQueryApplication.setSubscribedCustomer(NO);

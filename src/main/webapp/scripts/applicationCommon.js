@@ -3,14 +3,10 @@ var output;
 commonErrorHandler = function(error) {
 	output = error;
 	$('#responseDiv').html(encodeObjectAsJSON(output));
-	console.error('error', error);
 }
 commmonSuccessHandler = function(response) {
-	if (null != response) {
-		output = response;
-	}
+	output = response;
 	$('#responseDiv').html(encodeObjectAsJSON(output));
-	console.log('response', response);
 }
 
 /*function callWebservice(url, data, success, failure, method, contentType) {
@@ -63,7 +59,22 @@ function getApplicationToSubmitQuery() {
 	var application = {
 			emailId 			: $('#submitQueryEmail').val(),
 			queryDetails 		: 'This is just a simple query.',
-			captchaResponse				: 'Dummy Captcha'
+			captchaResponse		: 'Dummy Captcha'
+		};
+	return application;
+}
+
+function getApplicationToSubscribeWithUs() {
+	var application = {
+			firstName 			: 'Dummy Parent',
+			lastName 			: 'Dummy Parent',
+			contactNumber 		: $('#subscribeContact').val(),
+			emailId 			: $('#subscribeEmail').val(),
+			studentGrade 		: 'C6',
+			subjects 			: 'Phy;Chem;Hindi',
+			preferredTimeToCall : '8A12P;12P4P'),
+			additionalDetails 	: 'Nothing much to provide.',
+			captchaResponse		: 'Dummy Captcha'
 		};
 	return application;
 }
@@ -74,10 +85,10 @@ function getApplicationToFindTutor() {
 			contactNumber 		: $('#findTutorContact').val(),
 			emailId 			: $('#findTutorEmail').val(),
 			studentGrade 		: 'C6',
-			subjects 			: 'Phy;Chem;Hindi',
+			subjects 			: 'Phy',
 			preferredTimeToCall : '8A12P;12P4P',
 			additionalDetails 	: 'Nothing much to provide.',
-			captchaResponse				: 'Dummy Captcha'
+			captchaResponse		: 'Dummy Captcha'
 		};
 	return application;
 }
@@ -107,6 +118,10 @@ $('#submitQuery').on('click', function() {
 	callWebservice('/rest/publicaccess/submitQuery', encodeObjectAsJSON(getApplicationToSubmitQuery()));
 }); 
 
+$('#subscribe').on('click', function() {
+	callWebservice('/rest/publicaccess/subscribe', encodeObjectAsJSON(getApplicationToSubscribeWithUs()));
+});
+
 $('#findTutor').on('click', function() {
 	callWebservice('/rest/publicaccess/findTutor', encodeObjectAsJSON(getApplicationToFindTutor()));
 }); 
@@ -116,13 +131,13 @@ $('#becomeTutor').on('click', function() {
 }); 
 
 $('#becomeTutorRecieveData').on('click', function() {
-	callWebservice('/rest/publicaccess/getDropdownListDataBecomeTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()));
+	callWebservice('/rest/publicaccess/getDropdownListDataBecomeTutor');
 }); 
 
 $('#findTutorRecieveData').on('click', function() {
-	callWebservice('/rest/publicaccess/getDropdownListDataFindTutor', encodeObjectAsJSON(getApplicationToBecomeTutor()), myCustomFunction);
+	callWebservice('/rest/publicaccess/getDropdownListDataFindTutor');
 }); 
 
-function myCustomFunction() {
-	alert(1);
-}
+$('#subscribeRecieveData').on('click', function() {
+	callWebservice('/rest/publicaccess/getDropdownListDataSubscribeWithUs');
+});
