@@ -154,7 +154,7 @@ RECORD_LAST_UPDATED TIMESTAMP NOT NULL,
 PRIMARY KEY (QUERY_ID));
 
 ---------------------------------------------------------------------------------
--- Core Tables
+-- Core Hold Tables
 ---------------------------------------------------------------------------------
 CREATE TABLE SUBSCRIBED_CUSTOMER(
 CUSTOMER_ID INT NOT NULL AUTO_INCREMENT,
@@ -171,7 +171,7 @@ EMAIL_ID VARCHAR(100) NOT NULL UNIQUE,
 PRIMARY KEY (TUTOR_ID));
 
 ---------------------------------------------------------------------------------
--- Lookup Tables
+-- Core Lookup Tables
 ---------------------------------------------------------------------------------
 CREATE TABLE GENDER_LOOKUP(
 VALUE VARCHAR(100) NOT NULL,
@@ -245,6 +245,9 @@ ORDER_IN_CATEGORY INT NOT NULL,
 DESCRIPTION VARCHAR(500),
 PRIMARY KEY (VALUE));
 
+---------------------------------------------------------------------------------
+-- Core Error Handling Tables
+---------------------------------------------------------------------------------
 CREATE TABLE APP_ERROR_REPORT(
 OCCURED_AT TIMESTAMP NOT NULL,
 REQUEST_URI VARCHAR(100) NOT NULL,
