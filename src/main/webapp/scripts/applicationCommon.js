@@ -9,19 +9,6 @@ commmonSuccessHandler = function(response) {
 	$('#responseDiv').html(encodeObjectAsJSON(output));
 }
 
-/*function callWebservice(url, data, success, failure, method, contentType) {
-	$.ajax({
-        url			: ctxPath + url,
-        type		: ((null != method) ? method : 'POST'),
-        data		: data,
-        contentType	: ((null != contentType) ? contentType : 'application/json'),
-        cache		: false,
-        dataType	: 'json',
-        success		: ((null != success) ? success : commmonSuccessHandler),
-        error		: ((null != failure) ? failure : commonErrorHandler)
-    });
-}*/
-
 function callWebservice(url, data, success, failure, method, contentType) {
 	$.ajax({
         url			: ctxPath + url,
@@ -105,6 +92,7 @@ function getApplicationToBecomeTutor() {
 			primaryProfession 			: 'SE',
 			transportMode 				: '4-W',
 			teachingExp 				: '3',
+			studentGrade 				: 'C6',
 			subjects					: 'Phy;Chem;Hindi',
 			locations 					: 'TP;HZ;KP',
 			preferredTimeToCall 		: '8A12P;12P4P',

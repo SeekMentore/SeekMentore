@@ -72,6 +72,9 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_TEACHING_EXPERIENCE, nullable = false)
 	private int teachingExp;
 	
+	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
+	private String studentGrade;
+	
 	@Column(name = COLUMN_NAME_SUBJECTS, nullable = false)
 	private String subjects;
 	
@@ -188,6 +191,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String primaryProfession,
 			String transportMode,
 			int teachingExp,
+			String studentGrade,
 			String subjects,
 			String locations,
 			String preferredTimeToCall,
@@ -232,6 +236,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.primaryProfession = primaryProfession;
 		this.transportMode = transportMode;
 		this.teachingExp = teachingExp;
+		this.studentGrade = studentGrade;
 		this.subjects = subjects;
 		this.locations = locations;
 		this.preferredTimeToCall = preferredTimeToCall;
@@ -423,6 +428,14 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 
 	public void setApplicationStatus(String applicationStatus) {
 		this.applicationStatus = applicationStatus;
+	}
+	
+	public String getStudentGrade() {
+		return studentGrade;
+	}
+
+	public void setStudentGrade(String studentGrade) {
+		this.studentGrade = studentGrade;
 	}
 
 	public String getSubjects() {
@@ -634,6 +647,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PRIMARY_PROFESSION, primaryProfession));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TRANSPORT_MODE, transportMode));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TEACHING_EXPERIENCE, teachingExp));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, studentGrade));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATIONS, locations));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));

@@ -26,6 +26,7 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setPrimaryProfession(row.getString(COLUMN_NAME_PRIMARY_PROFESSION));
 		becomeTutor.setTransportMode(row.getString(COLUMN_NAME_TRANSPORT_MODE));
 		becomeTutor.setTeachingExp(row.getInt(COLUMN_NAME_TEACHING_EXPERIENCE));
+		becomeTutor.setStudentGrade(row.getString(COLUMN_NAME_STUDENT_GRADE));
 		becomeTutor.setSubjects(row.getString(COLUMN_NAME_SUBJECTS));
 		becomeTutor.setLocations(row.getString(COLUMN_NAME_LOCATIONS));
 		becomeTutor.setPreferredTimeToCall(row.getString(COLUMN_NAME_PREFERRED_TIME_TO_CALL));
