@@ -66,13 +66,13 @@ function getApplicationToSubmitQuery() {
 
 function getApplicationToSubscribeWithUs() {
 	var application = {
-			firstName 			: 'Dummy Parent',
-			lastName 			: 'Dummy Parent',
+			firstName 			: 'First',
+			lastName 			: 'Last',
 			contactNumber 		: $('#subscribeContact').val(),
 			emailId 			: $('#subscribeEmail').val(),
 			studentGrade 		: 'C6',
 			subjects 			: 'Phy;Chem;Hindi',
-			preferredTimeToCall : '8A12P;12P4P'),
+			preferredTimeToCall : '8A12P;12P4P',
 			additionalDetails 	: 'Nothing much to provide.',
 			captchaResponse		: 'Dummy Captcha'
 		};
