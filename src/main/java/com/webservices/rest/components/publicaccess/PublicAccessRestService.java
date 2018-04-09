@@ -215,6 +215,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					this.securityPassed = true;
 					break;
 				}
+				case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US : {
+					// TODO Method level security
+					this.securityPassed = true;
+					break;
+				}
 			}
 		}
 		
