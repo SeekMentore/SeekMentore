@@ -27,6 +27,7 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
+import com.service.components.CommonsService;
 import com.service.components.publicaccess.PublicAccessService;
 import com.utils.ApplicationUtils;
 import com.utils.ValidationUtils;
@@ -121,6 +122,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		return AppContext.getBean(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE, PublicAccessService.class);
 	}
 	
+	public CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
 	@Path(REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_BECOME_TUTOR)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
@@ -167,6 +172,16 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
+	}
+	
+	@Path("test")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String test (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		throw new NullPointerException();
+			//return convertObjToJSONString(getCommonsService().getPedingEmailList(20), REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
 	@Override

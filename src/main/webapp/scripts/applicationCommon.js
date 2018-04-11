@@ -129,3 +129,7 @@ $('#findTutorRecieveData').on('click', function() {
 $('#subscribeRecieveData').on('click', function() {
 	callWebservice('/rest/publicaccess/getDropdownListDataSubscribeWithUs');
 });
+
+$('#test').on('click', function() {
+	callWebservice('/rest/publicaccess/test');
+});

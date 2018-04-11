@@ -1,5 +1,6 @@
 package com.utils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import com.constants.BeanConstants;
 import com.constants.JNDIandControlConfigurationConstants;
 import com.constants.MailConstants;
 import com.exception.ApplicationException;
+import com.model.mail.ApplicationMail;
 import com.model.mail.MailAttachment;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.MailService;
@@ -44,7 +46,18 @@ public class MailUtils implements MailConstants {
 			final String subject,
 			final String message
 	) throws Exception {
-		// TODO this section will alter the From Address than the default address with which the System Mailer Logged in
+		final ApplicationMail mailObject = new ApplicationMail (
+				"SIMPLE_EMAIL",
+				new Timestamp(new Date().getTime()),
+				fromAddress,
+				toAddressSemicolonSeparated,
+				ccAddressSemicolonSeparated,
+				bccAddressSemicolonSeparated,
+				subject,
+				message,
+				null
+			);
+		getMailService().insertIntoMailQueue(mailObject);
     }
 	
 	public static void sendCustomisedFromAddressMimeMessageEmail (
@@ -56,7 +69,18 @@ public class MailUtils implements MailConstants {
 			final String htmlMessage,
 			final List<MailAttachment> attachments
 	) throws Exception {
-		// TODO this section will alter the From Address than the default address with which the System Mailer Logged in
+		final ApplicationMail mailObject = new ApplicationMail (
+				"MIME_EMAIL",
+				new Timestamp(new Date().getTime()),
+				fromAddress,
+				toAddressSemicolonSeparated,
+				ccAddressSemicolonSeparated,
+				bccAddressSemicolonSeparated,
+				subject,
+				htmlMessage,
+				attachments
+			);
+		getMailService().insertIntoMailQueue(mailObject);
     }
 	
 	public static void sendSimpleMailMessage (
@@ -66,13 +90,18 @@ public class MailUtils implements MailConstants {
 			final String subject,
 			final String message
 	) throws Exception {
-		sendingSimpleMailMessage(
+		final ApplicationMail mailObject = new ApplicationMail (
+				"SIMPLE_EMAIL",
+				new Timestamp(new Date().getTime()),
 				null,
 				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
 				bccAddressSemicolonSeparated,
 				subject,
-				message);
+				message,
+				null
+			);
+		getMailService().insertIntoMailQueue(mailObject);
     }
 	
 	public static void sendMimeMessageEmail (
@@ -83,28 +112,36 @@ public class MailUtils implements MailConstants {
 			final String htmlMessage,
 			final List<MailAttachment> attachments
 	) throws Exception {
-		MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
-				null, 
-				toAddressSemicolonSeparated, 
+		final ApplicationMail mailObject = new ApplicationMail (
+				"MIME_EMAIL",
+				new Timestamp(new Date().getTime()),
+				null,
+				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
 				bccAddressSemicolonSeparated,
-				subject, 
+				subject,
 				htmlMessage,
-				attachments);
+				attachments
+			);
+		getMailService().insertIntoMailQueue(mailObject);
     }
 	
 	public static void sendErrorMessageEmail (
 			final String htmlMessage,
 			final List<MailAttachment> attachments
 	) throws Exception {
-		MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
-				null, 
-				getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(), 
-				null,
-				null,
-				SUBJECT_EXCEPTION_OCCURED_IN + getJNDIandControlConfigurationLoadService().getServerName() + SUBJECT_FOR_EXCEPTION_SERVER_AT + (new Date()).toString(), 
-				htmlMessage,
-				attachments);
+		final ApplicationMail mailObject = new ApplicationMail (
+													"MIME_EMAIL",
+													new Timestamp(new Date().getTime()),
+													null,
+													getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(),
+													null,
+													null,
+													SUBJECT_EXCEPTION_OCCURED_IN + getJNDIandControlConfigurationLoadService().getServerName() + SUBJECT_FOR_EXCEPTION_SERVER_AT + (new Date()).toString(),
+													htmlMessage,
+													attachments
+												);
+		getMailService().insertIntoMailQueue(mailObject);
     }
 	
 	/**
@@ -176,6 +213,7 @@ public class MailUtils implements MailConstants {
 		return mailParams;
 	}
 	
+	@SuppressWarnings("unused")
 	private static void sendingSimpleMailMessage(
 			final String fromAddress,
 			final String toAddressSemicolonSeparated,
@@ -262,6 +300,7 @@ public class MailUtils implements MailConstants {
 									message)).start();
 	}
 	
+/*	@SuppressWarnings("unused")
 	private static void sendingCustomisedFromAddressMimeMessageEmail (
 			final String fromAddress,
 			final String toAddressSemicolonSeparated,
@@ -351,7 +390,41 @@ public class MailUtils implements MailConstants {
 								subject,
 								htmlMessage,
 								attachments)).start();
-    }
+    }*/
+	
+	public static void sendingCustomisedFromAddressMimeMessageEmail (
+			final String fromAddress,
+			final String toAddressSemicolonSeparated,
+			final String ccAddressSemicolonSeparated,
+			final String bccAddressSemicolonSeparated,
+			final String subject,
+			final String htmlMessage,
+			final List<MailAttachment> attachments
+	) throws Exception {
+		
+		final Map<String, Object> mailParams = checkAllMailControlSettingAndReformatMailMessageAccordinglyAndLogInDatabase(
+																											fromAddress,
+																											toAddressSemicolonSeparated,
+																											ccAddressSemicolonSeparated,
+																											bccAddressSemicolonSeparated,
+																											subject,
+																											htmlMessage
+																									);
+		if ((Boolean)mailParams.get(PARAM_SEND_EMAIL)) {
+			final MimeMessagePreparator mimeMessagePreparator = new MimeMessagePreparator() {
+				public void prepare(MimeMessage mimeMessage) throws Exception {
+					mimeMessage.setFrom((String)mailParams.get(PARAM_FROM_ADDRESS));
+					mimeMessage.setRecipients(Message.RecipientType.TO, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED), true));
+					mimeMessage.setRecipients(Message.RecipientType.CC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED), false));
+					mimeMessage.setRecipients(Message.RecipientType.BCC, getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED), false));
+					mimeMessage.setReplyTo(getSplittedAddressesForMimeMessage((String)mailParams.get(PARAM_REPLY_TO_ADDRESS), true));
+					mimeMessage.setSubject((String)mailParams.get(PARAM_SUBJECT));
+					mimeMessage.setContent(createMimeMultipart((String)mailParams.get(PARAM_MESSAGE), attachments));
+				} 
+			};
+			getMailService().sendEmail(mimeMessagePreparator);
+		}
+	}
 	
 	private static MimeMultipart createMimeMultipart (
 			final String htmlMessage,

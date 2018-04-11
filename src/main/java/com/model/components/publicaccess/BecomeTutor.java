@@ -84,7 +84,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_PREFERRED_TIME_TO_CALL, nullable = false)
 	private String preferredTimeToCall;
 	
-	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS, nullable = false)
+	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS)
 	private String additionalDetails;
 	
 	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)

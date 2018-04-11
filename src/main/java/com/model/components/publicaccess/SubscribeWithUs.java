@@ -62,7 +62,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_PREFERRED_TIME_TO_CALL, nullable = false)
 	private String preferredTimeToCall;
 	
-	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS, nullable = false)
+	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS)
 	private String additionalDetails;
 	
 	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)

@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.constants.BeanConstants;
 import com.constants.LoggerConstants;
+import com.model.ErrorPacket;
 import com.service.components.CommonsService;
 import com.utils.context.AppContext;
 
@@ -64,11 +65,10 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
-		final Timestamp occurredTimestamp = new Timestamp(new Date().getTime());
-		final String message = ExceptionUtils.generateErrorLog(exception);
-		getCommonsService().feedErrorRecord(occurredTimestamp, "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", message);
+		final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
+		getCommonsService().feedErrorRecord(errorPacket);
 		if (isErrorEnabled)
-			LOGGER.error(message);
+			LOGGER.error(errorPacket.getErrorTrace());
 		if (isTraceEnabled)
 			LOGGER.trace(exception.getMessage(), exception);
 	}

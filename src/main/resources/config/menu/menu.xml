@@ -33,6 +33,7 @@
 			<webservice id="getDropdownListDataBecomeTutor" url="/getDropdownListDataBecomeTutor"></webservice>
 			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
+			<webservice id="test" url="/test"></webservice>
 		</page>
 	</pageList>
 </menu>

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
 import com.constants.MessageConstants;
+import com.model.ErrorPacket;
 import com.service.components.CommonsService;
 import com.utils.ExceptionUtils;
 import com.utils.context.AppContext;
@@ -44,14 +45,14 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	        requestUri = "Unknown";
 	     }
 	
-	     final Timestamp occurredTimestamp = new Timestamp(new Date().getTime());
 	     String errorText = "";
 	     if (throwable == null && statusCode == null) {
 	    	 errorText = "Error information is missing";
 	     } else {
 	    	 errorText = ExceptionUtils.generateErrorLog(throwable);
 	     }
-	     getCommonsService().feedErrorRecord(occurredTimestamp, requestUri, errorText);
+	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri, errorText);
+	     getCommonsService().feedErrorRecord(errorPacket);
 	}
 	
 	public CommonsService getCommonsService() {
