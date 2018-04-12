@@ -27,27 +27,37 @@ public class SchedulerService implements SchedulerConstants {
 	@Autowired
 	private CommonsService commonsService;
 	
+	@Autowired
+	private LockService lockService;
+	
 	public void executeEmailSenderJob(final JobExecutionContext context) {
-		LoggerUtils.logOnConsole("executeEmailSenderJob");
-		final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
-		for (final ApplicationMail mailObj : mailObjList) {
-			try {
-				MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
-													mailObj.getFromAddress(), 
-													mailObj.getToAddress(), 
-													mailObj.getCcAddress(), 
-													mailObj.getBccAddress(), 
-													mailObj.getSubjectContent(), 
-													mailObj.getMessageContent(), 
-													mailObj.getAttachments());
-			} catch (Exception e) {
-				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
-				commonsService.feedErrorRecord(errorPacket);
-				applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = ?, ERROR_DATE = ?, ERROR_TRACE = ? WHERE MAIL_ID = ?", new Object[] {YES, errorPacket.getOccuredAt(), errorPacket.getErrorTrace(), mailObj.getMailId()});
-				continue;
-				// If exception occurred do not update the record as sent
+		final String key = lockService.lockObject("executeEmailSenderJob");
+		if (null != key) {
+			LoggerUtils.logOnConsole("executeEmailSenderJob");
+			final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
+			for (final ApplicationMail mailObj : mailObjList) {
+				try {
+					MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
+							mailObj.getFromAddress(), 
+							mailObj.getToAddress(), 
+							mailObj.getCcAddress(), 
+							mailObj.getBccAddress(), 
+							mailObj.getSubjectContent(), 
+							mailObj.getMessageContent(), 
+							mailObj.getAttachments());
+					// Make the system sleep for 10 seconds after
+					// successfully sending out an email
+					Thread.sleep(20*1000);
+				} catch (Exception e) {
+					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
+					commonsService.feedErrorRecord(errorPacket);
+					applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = ?, ERROR_DATE = ?, ERROR_TRACE = ? WHERE MAIL_ID = ?", new Object[] {YES, errorPacket.getOccuredAt(), errorPacket.getErrorTrace(), mailObj.getMailId()});
+					continue;
+					// If exception occurred do not update the record as sent
+				}
+				applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET MAIL_SENT = ?, SEND_DATE = ? WHERE MAIL_ID = ?", new Object[] {YES, new Timestamp(new Date().getTime()), mailObj.getMailId()});
 			}
-			applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET MAIL_SENT = ?, SEND_DATE = ? WHERE MAIL_ID = ?", new Object[] {YES, new Timestamp(new Date().getTime()), mailObj.getMailId()});
+			lockService.releaseLock("executeEmailSenderJob", key);
 		}
 	}
 }

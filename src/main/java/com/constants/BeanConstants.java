@@ -11,6 +11,7 @@ public interface BeanConstants extends ApplicationConstants {
 	String BEAN_NAME_ADDITIONAL_ACCESS_FUNCTION_SERVICE = "additionalAccessFunctionService";
 	String BEAN_NAME_SCHEDULER_SERVICE = "schedulerService";
 	String BEAN_NAME_MAIl_SERVICE = "mailService";
+	String BEAN_NAME_LOCK_SERVICE = "lockService";
 	// Restricted functional services
 	String BEAN_NAME_ADMIN_SERVICE = "adminService";
 	String BEAN_NAME_COMMONS_SERVICE = "commonsService";
