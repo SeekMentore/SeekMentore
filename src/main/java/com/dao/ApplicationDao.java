@@ -71,6 +71,20 @@ public class ApplicationDao {
         jdbcTemplate.update(query);
     }
 	
+	/*public void updateWithReturningSelectKey(final String query, final Object... params) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(
+			    new PreparedStatementCreator() {
+			        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+			            PreparedStatement ps =
+			                connection.prepareStatement(query, new String[] {"id"});
+			            ps.setString(1, name);
+			            return ps;
+			        }
+			    },
+			    keyHolder);
+	}*/
+	
 	/*
 	 * Use the below query for
 	 * SELECT single record
