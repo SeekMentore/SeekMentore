@@ -174,16 +174,6 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		}
 	}
 	
-	@Path("test")
-	@Consumes({MediaType.APPLICATION_JSON})
-	@POST
-	public String test (
-			@Context final HttpServletRequest request
-	) throws Exception {
-		throw new NullPointerException();
-			//return convertObjToJSONString(getCommonsService().getPedingEmailList(20), REST_MESSAGE_JSON_RESPONSE_NAME);
-	}
-	
 	@Override
 	public void doSecurity (final HttpServletRequest request) throws Exception {
 		this.securityFailureResponse = new HashMap<String, Object>();
