@@ -1,5 +1,7 @@
 package com.webservices.rest.components.publicaccess;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import com.constants.components.publicaccess.FindTutorConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
+import com.model.ErrorPacket;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
@@ -331,6 +334,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_BECOME_TUTOR, becomeTutorApplication.toString());
+		     getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
