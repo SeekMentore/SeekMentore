@@ -21,4 +21,5 @@ public interface SubmitQueryConstants extends PublicAccessConstants {
 	String COLUMN_NAME_QUERY_ID = "QUERY_ID";
 	
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_QUERY = "Please provide some 'Query'";
 }

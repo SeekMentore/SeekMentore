@@ -37,17 +37,27 @@ public class SchedulerService implements SchedulerConstants {
 			final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
 			for (final ApplicationMail mailObj : mailObjList) {
 				try {
-					MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
-							mailObj.getFromAddress(), 
-							mailObj.getToAddress(), 
-							mailObj.getCcAddress(), 
-							mailObj.getBccAddress(), 
-							mailObj.getSubjectContent(), 
-							mailObj.getMessageContent(), 
-							mailObj.getAttachments());
-					// Make the system sleep for 10 seconds after
-					// successfully sending out an email
-					Thread.sleep(20*1000);
+					int retriedCounter = 0;
+					do {
+						try {
+							MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
+									mailObj.getFromAddress(), 
+									mailObj.getToAddress(), 
+									mailObj.getCcAddress(), 
+									mailObj.getBccAddress(), 
+									mailObj.getSubjectContent(), 
+									mailObj.getMessageContent(), 
+									mailObj.getAttachments());
+							// break the loop if mail sending for successful
+							break;
+						} catch (Exception e) {
+							if (retriedCounter == 1) 
+								// throw exception to bigger catch block if the retry counter is hit twice
+								throw new Exception(e);
+						}
+						retriedCounter++;
+						// This condition is just a safety check
+					} while(retriedCounter < 2);
 				} catch (Exception e) {
 					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
 					commonsService.feedErrorRecord(errorPacket);

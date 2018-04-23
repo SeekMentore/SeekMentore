@@ -445,5 +445,12 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(submitQueryApplication.getQueryDetails())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					SubmitQueryConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_QUERY,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 }

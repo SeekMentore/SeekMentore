@@ -25,15 +25,15 @@
 			<managingDirector>md.seekmentore@gmail.com</managingDirector>
 			<founder>founder.seekmentore@gmail.com</founder>
 			<!-- Query Support Mail List -->
-			<querySupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</querySupportMailList>
+			<querySupportMailList>mediapartner.seekmentore@gmail.com;partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</querySupportMailList>
 			<!-- Customer Registration Support Mail List -->
-			<customerRegistrationSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRegistrationSupportMailList>
+			<customerRegistrationSupportMailList>mediapartner.seekmentore@gmail.com;partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRegistrationSupportMailList>
 			<!-- Customer Retention Support Mail List -->
-			<customerRetentionSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRetentionSupportMailList>
+			<customerRetentionSupportMailList>mediapartner.seekmentore@gmail.com;partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</customerRetentionSupportMailList>
 			<!-- Customer Registration Support Mail List -->
-			<tutorRegistrationSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRegistrationSupportMailList>
+			<tutorRegistrationSupportMailList>mediapartner.seekmentore@gmail.com;partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRegistrationSupportMailList>
 			<!-- Customer Retention Support Mail List -->
-			<tutorRetentionSupportMailList>partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRetentionSupportMailList>
+			<tutorRetentionSupportMailList>mediapartner.seekmentore@gmail.com;partner.seekmentore@gmail.com;prm.seekmentore@gmail.com;techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com;md.seekmentore@gmail.com</tutorRetentionSupportMailList>
 			<!-- IT Systems Error Handling Mail List -->
 			<errorHandlingMailList>techlead.seekmentore@gmail.com;founder.seekmentore@gmail.com</errorHandlingMailList>
 			<!-- Sales Department Mail List -->

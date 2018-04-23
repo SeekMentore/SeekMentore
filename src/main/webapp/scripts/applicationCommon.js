@@ -1,4 +1,4 @@
-/*var ctxPath = '/seekmentore';
+var ctxPath = '/seekmentore';
 var output;
 commonErrorHandler = function(error) {
 	output = error;
@@ -57,9 +57,9 @@ function getApplicationToSubscribeWithUs() {
 			lastName 			: 'Last',
 			contactNumber 		: $('#subscribeContact').val(),
 			emailId 			: $('#subscribeEmail').val(),
-			studentGrade 		: 'C6',
-			subjects 			: 'Phy;Chem;Hindi',
-			preferredTimeToCall : '8A12P;12P4P',
+			studentGrade 		: '05;06;07',
+			subjects 			: '01;02;03',
+			preferredTimeToCall : '01;02;03',
 			additionalDetails 	: 'Nothing much to provide.',
 			captchaResponse		: 'Dummy Captcha'
 		};
@@ -71,9 +71,9 @@ function getApplicationToFindTutor() {
 			name 				: 'Dummy Parent',
 			contactNumber 		: $('#findTutorContact').val(),
 			emailId 			: $('#findTutorEmail').val(),
-			studentGrade 		: 'C6',
-			subjects 			: 'Phy',
-			preferredTimeToCall : '8A12P;12P4P',
+			studentGrade 		: '03',
+			subjects 			: '02',
+			preferredTimeToCall : '01;02;03',
 			additionalDetails 	: 'Nothing much to provide.',
 			captchaResponse		: 'Dummy Captcha'
 		};
@@ -87,15 +87,15 @@ function getApplicationToBecomeTutor() {
 			dateOfBirth 				: new Date(),
 			contactNumber				: $('#becomeTutorContact').val(),
 			emailId 					: $('#becomeTutorEmail').val(),
-			gender 						: 'M',
-			qualification 				: 'BTech',
-			primaryProfession 			: 'SE',
-			transportMode 				: '4-W',
+			gender 						: '01',
+			qualification 				: '02',
+			primaryProfession 			: '03',
+			transportMode 				: '01',
 			teachingExp 				: '3',
-			studentGrade 				: 'C6',
-			subjects					: 'Phy;Chem;Hindi',
-			locations 					: 'TP;HZ;KP',
-			preferredTimeToCall 		: '8A12P;12P4P',
+			studentGrade 				: '05;06;07',
+			subjects					: '01;02;03',
+			locations 					: '10;11;12',
+			preferredTimeToCall 		: '01;02;03',
 			additionalDetails 			: 'I am awesome!!!',
 			captchaResponse				: '03AJIzXZ60W9IDEBdt3fzxhd9-L368LL6CzZxXiZOAvp8vPpyIqfjSgRCHGxiMrvpzHg18NLyr07jH7Yc5v138RZOyVt-GX02RwYpwByjg-IDaztPr5ePrnUBAxmgTn5zm3iVmrTNQb2uUyx6ad-trfTx1beXN-TsP6edqdRo6-OlnGbxj8lMRogHZwXY9Y7Mo-4In_B-q9cPOnPHzCvUVqY9xCsWATLCqgtngYuYn3bW6bd_HKnkcea6lLj9GVTp7_jW430gydB3UKomKDbxiX6JigEiQANdsIC1nCh5c0lv7yRfmpD-dEGkL40KshTTrDX_U4yyjYx-EbIynLIk4T3hFIuFbQsHaVTYlWj_TemeL48Y7S8sO5OPLBR1nkB3Euo4YB-BaZ-F8GShjaEw1te7VQDeU05OoBQ'
 		};
@@ -132,4 +132,4 @@ $('#subscribeRecieveData').on('click', function() {
 
 $('#test').on('click', function() {
 	callWebservice('/rest/publicaccess/test');
-});*/
+});
