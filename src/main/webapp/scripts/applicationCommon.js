@@ -1,4 +1,4 @@
-var ctxPath = '/seekmentore';
+/*var ctxPath = '/seekmentore';
 var output;
 commonErrorHandler = function(error) {
 	output = error;
@@ -132,4 +132,4 @@ $('#subscribeRecieveData').on('click', function() {
 
 $('#test').on('click', function() {
 	callWebservice('/rest/publicaccess/test');
-});
+});*/

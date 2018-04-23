@@ -14,7 +14,7 @@ public class EmailSenderJob implements Job, JobConstants {
 	 * Static parameters for Job Configuration
 	 */
 	public static Long START_DELAY = 90*1000L;
-	public static String CRON_EXPRESSION = "0 0/2 * * * ?";
+	public static String CRON_EXPRESSION = "0 0/15 * * * ?";
 	public static String DESCRIPTION = "Email Sender Job";
 	public static String KEY = "EmailSenderJob";
 	
