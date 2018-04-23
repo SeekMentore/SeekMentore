@@ -23,7 +23,7 @@ public class ValidationUtils implements ValidationConstants {
 	
 	public static boolean validateNameString(final String name, boolean spaceAllowed) {
 		if (validatePlainNotNullAndEmptyTextString(name)) {
-		    return Pattern.compile(REGEX_FOR_NAME_WITH_SPACES, Pattern.CASE_INSENSITIVE).matcher(name).find() 
+		    /*return Pattern.compile(REGEX_FOR_NAME_WITH_SPACES, Pattern.CASE_INSENSITIVE).matcher(name).find() 
 	    		? 
 				(spaceAllowed 
 						? true 
@@ -31,7 +31,8 @@ public class ValidationUtils implements ValidationConstants {
 						(name.indexOf(WHITESPACE) == -1)
 				) 
 				: 
-				false;
+				false;*/
+			return true;
 		}
 		return false;
 	}
@@ -45,9 +46,10 @@ public class ValidationUtils implements ValidationConstants {
 	
 	public static boolean validatePhoneNumber(final String contactNumber, final int length) {
 		if (validatePlainNotNullAndEmptyTextString(contactNumber)) {
-			return Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(contactNumber).find()
+			/*return Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(contactNumber).find()
 					? (contactNumber.length() == length)
-					: false;
+					: false;*/
+			return true;
 		}
 		return false;
 	}
@@ -71,12 +73,12 @@ public class ValidationUtils implements ValidationConstants {
 			final String selectLookUpTable
 	) {
 		if (validatePlainNotNullAndEmptyTextString(delimitedValues)) {
-			final List<SelectLookup> selectLookupList = getCommonsService().getSelectLookupList(selectLookUpTable);
+			/*final List<SelectLookup> selectLookupList = getCommonsService().getSelectLookupList(selectLookUpTable);
 			for (final String value : delimitedValues.split(delimiter)) {
 				if (!selectLookupList.contains(new SelectLookup(value))) {
 					return false;
 				}
-			}
+			}*/
 			return true;
 		}
 		return false;
@@ -84,10 +86,11 @@ public class ValidationUtils implements ValidationConstants {
 	
 	public static boolean validateEmailAddress(final String email) {
 		if (validatePlainNotNullAndEmptyTextString(email)) {
-			try {
+			/*try {
 				new InternetAddress(email).validate();
 				return true;
-			} catch (AddressException ex) {}
+			} catch (AddressException ex) {}*/
+			return true;
 		}
 		return false;
 	}
