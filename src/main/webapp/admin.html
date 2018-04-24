@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="w3-container w3-green">
+  <h3>Seek Mentore - Admin</h3> 
+</div>
+<div id="all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr>
+				<th>Non Contacted Tutors</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>NAME</th>
+					<th>EMAIL_ID</th>
+					<th>CONTACT_NUMBER</th>
+				</tr>
+			</thead>
+			<tbody id="become-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="selected-record-div" class="w3-row-padding noscreen">
+  <BR/>
+  <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr>
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="backToAllRecords()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+   <div class="w3-row-padding">
+	    <table align="center" class="all-records">
+	    	<tr>
+	    		<td>APPLICATION_DATE</td>
+	    		<td id="APPLICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>APPLICATION_STATUS</td>
+	    		<td id="APPLICATION_STATUS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>DATE_OF_BIRTH</td>
+	    		<td id="DATE_OF_BIRTH"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>CONTACT_NUMBER</td>
+	    		<td id="CONTACT_NUMBER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>EMAIL_ID</td>
+	    		<td id="EMAIL_ID"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>FIRST_NAME</td>
+	    		<td id="FIRST_NAME"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>LAST_NAME</td>
+	    		<td id="LAST_NAME"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>GENDER</td>
+	    		<td id="GENDER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>QUALIFICATION</td>
+	    		<td id="QUALIFICATION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>PRIMARY_PROFESSION</td>
+	    		<td id="PRIMARY_PROFESSION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>TRANSPORT_MODE</td>
+	    		<td id="TRANSPORT_MODE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>TEACHING_EXP</td>
+	    		<td id="TEACHING_EXP"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>STUDENT_GRADE</td>
+	    		<td id="STUDENT_GRADE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>SUBJECTS</td>
+	    		<td id="SUBJECTS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>LOCATIONS</td>
+	    		<td id="LOCATIONS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>PREFERRED_TIME_TO_CALL</td>
+	    		<td id="PREFERRED_TIME_TO_CALL"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>ADDITIONAL_DETAILS</td>
+	    		<td id="ADDITIONAL_DETAILS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>IS_CONTACTED</td>
+	    		<td id="IS_CONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_CONTACTED</td>
+	    		<td id="WHO_CONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>CONTACTED_DATE</td>
+	    		<td id="CONTACTED_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>CONTACTED_REMARKS</td>
+	    		<td id="CONTACTED_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>IS_AUTH_VERIFIED</td>
+	    		<td id="IS_AUTH_VERIFIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_VERIFIED</td>
+	    		<td id="WHO_VERIFIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>VERIFICATION_DATE</td>
+	    		<td id="VERIFICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>VERIFICATION_REMARKS</td>
+	    		<td id="VERIFICATION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>IS_TO_BE_RECONTACTED</td>
+	    		<td id="IS_TO_BE_RECONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_SUGGESTED_FOR_RECONTACT</td>
+	    		<td id="WHO_SUGGESTED_FOR_RECONTACT"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>SUGGESTION_DATE</td>
+	    		<td id="SUGGESTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>SUGGESTION_REMARKS</td>
+	    		<td id="SUGGESTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_RECONTACTED</td>
+	    		<td id="WHO_RECONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>RECONTACTED_DATE</td>
+	    		<td id="RECONTACTED_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>RECONTACTED_REMARKS</td>
+	    		<td id="RECONTACTED_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>IS_SELECTED</td>
+	    		<td id="IS_SELECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_SELECTED</td>
+	    		<td id="WHO_SELECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>SELECTION_DATE</td>
+	    		<td id="SELECTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>SELECTION_REMARKS</td>
+	    		<td id="SELECTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>IS_REJECTED</td>
+	    		<td id="IS_REJECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>WHO_REJECTED</td>
+	    		<td id="WHO_REJECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>REJECTION_DATE</td>
+	    		<td id="REJECTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>REJECTION_REMARKS</td>
+	    		<td id="REJECTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>REJECTION_COUNT</td>
+	    		<td id="REJECTION_COUNT"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>RE_APPLIED</td>
+	    		<td id="RE_APPLIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>PREVIOUS_APPLICATION_DATE</td>
+	    		<td id="PREVIOUS_APPLICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>RECORD_LAST_UPDATED</td>
+	    		<td id="RECORD_LAST_UPDATED"></td>
+	    	</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr>
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="backToAllRecords()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+</div>
+<BR/>
+<BR/>
+<div id="responseDiv" ></div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/applicationAdmin.js"></script>
+</body>
+</html>

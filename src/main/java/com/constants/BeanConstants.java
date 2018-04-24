@@ -6,6 +6,7 @@ public interface BeanConstants extends ApplicationConstants {
 	String BEAN_NAME_LOGIN_SERVICE = "loginService";
 	String BEAN_NAME_MENU_SERVICE = "menuService";
 	String BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE = "jndiAndControlConfigurationLoadService";
+	String BEAN_NAME_QUERY_MAPPER_SERVICE = "queryMapperService";
 	String BEAN_NAME_CIPHER_SERVICE = "cipherService";
 	String BEAN_NAME_VELOCITY_ENGINE_SERVICE = "velocityEngineService";
 	String BEAN_NAME_ADDITIONAL_ACCESS_FUNCTION_SERVICE = "additionalAccessFunctionService";

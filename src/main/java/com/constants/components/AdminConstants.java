@@ -4,5 +4,6 @@ import com.constants.ApplicationConstants;
 
 public interface AdminConstants extends ApplicationConstants {
 	
-	String DOWNLOAD_EXCEL_REPORT_NAME = "Admin_report";
+	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
+	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 }

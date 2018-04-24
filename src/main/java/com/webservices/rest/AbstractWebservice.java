@@ -12,8 +12,8 @@ import com.utils.LoginUtils;
 
 public abstract class AbstractWebservice {
 	
-	public String getLoggedInEmpId(final HttpServletRequest request) {
-		return LoginUtils.getUserFromSession(request).getEmpId();
+	public String getLoggedInUserId(final HttpServletRequest request) {
+		return LoginUtils.getUserFromSession(request).getUserId();
 	}
 	
 	public User getLoggedInUser(final HttpServletRequest request) {

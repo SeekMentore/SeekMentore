@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.exception.ApplicationException;
+import com.utils.LoggerUtils;
 
 @Repository("applicationDao")
 @EnableTransactionManagement
@@ -64,10 +65,12 @@ public class ApplicationDao {
 	 * INSERT, UPDATE, DELETE
 	 */
 	public void updateWithPreparedQueryAndIndividualOrderedParams(final String query, final Object... params) {
+		LoggerUtils.logOnConsole(query);
         jdbcTemplate.update(query, params);
     }
 	
 	public void updateWithPreparedQueryWithoutParams(final String query) {
+		LoggerUtils.logOnConsole(query);
         jdbcTemplate.update(query);
     }
 	
@@ -90,6 +93,7 @@ public class ApplicationDao {
 	 * SELECT single record
 	 */
 	public <T extends Object> T find(final String query, final Object[] params, final Class<T> type) {
+		LoggerUtils.logOnConsole(query);
 		final List<T> list = jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
 		if (list != null) {
 			if (list.isEmpty()) {
@@ -105,6 +109,7 @@ public class ApplicationDao {
     }
 	
 	public <T extends Object> T findWithoutParams(final String query, final Class<T> type) {
+		LoggerUtils.logOnConsole(query);
 		final List<T> list = jdbcTemplate.query(query, new BeanPropertyRowMapper<T>(type));
 		if (list != null) {
 			if (list.isEmpty()) {
@@ -124,10 +129,12 @@ public class ApplicationDao {
 	 * SELECT multiple records
 	 */
 	public < T extends Object > List<T> findAll(final String query, final Object[] params, final Class<T> type) {
+		LoggerUtils.logOnConsole(query);
 		return jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
     }
 	
 	public < T extends Object > List<T> findAllWithoutParams(final String query, final Class<T> type) {
+		LoggerUtils.logOnConsole(query);
 		return jdbcTemplate.query(query, new BeanPropertyRowMapper<T>(type));
     }
 }

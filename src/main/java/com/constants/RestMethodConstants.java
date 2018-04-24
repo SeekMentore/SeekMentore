@@ -16,4 +16,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_BECOME_TUTOR = "/getDropdownListDataBecomeTutor";
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FIND_TUTOR = "/getDropdownListDataFindTutor";
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US = "/getDropdownListDataSubscribeWithUs";
+	
+	// Admin REST methods
+	String REST_METHOD_NAME_TO_DISPLAY_TUTOR_REGISTRATIONS = "/displayTutorRegistrations";
 }

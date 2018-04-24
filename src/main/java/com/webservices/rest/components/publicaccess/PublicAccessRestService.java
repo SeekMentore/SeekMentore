@@ -337,7 +337,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_BECOME_TUTOR, becomeTutorApplication.toString());
-		     getCommonsService().feedErrorRecord(errorPacket);
+			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
@@ -385,6 +385,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_FIND_TUTOR, findTutorApplication.toString());
+			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
@@ -440,6 +444,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBSCRIBE, subscribeWithUsApplication.toString());
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
 	}
 	
 	private void handleSubmitQuerySecurity() {
@@ -458,6 +466,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					SubmitQueryConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_QUERY,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBMIT_QUERY, submitQueryApplication.toString());
+			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 }

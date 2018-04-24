@@ -50,7 +50,7 @@ public class PostAuthenticationFilter extends AbstractWebservice implements Filt
 			final String pageURL = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 			if (menuService.isPageSecured(pageURL)) {
 				final User user = LoginUtils.getUserFromSession(httpRequest);
-				if (menuService.hasAccessToURL(user.getEmpId(), pageURL, user.getPageAccessTypes(), null)) {
+				if (menuService.hasAccessToURL(user.getUserId(), pageURL, user.getPageAccessTypes(), null)) {
 					chain.doFilter(request, response);
 				} else {
 					throw new ApplicationException("No access to this page.");

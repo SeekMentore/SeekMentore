@@ -16,8 +16,9 @@
 			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
 			<webservice id="downloadForm" url="/downloadForm"></webservice>
 		</page> -->
-		<page id="admin" url="/rest/admin" pageAccessType="A,G">
-			<webservice id="downloadReport" url="/downloadReport"></webservice>
+		<page id="login" url="/admin.html" pageAccessType="A"></page>
+		<page id="admin" url="/rest/admin" pageAccessType="A">
+			<webservice id="displayTutorRegistrations" url="/displayTutorRegistrations"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 		</page>
@@ -35,5 +36,6 @@
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
 			<webservice id="test" url="/test"></webservice>
 		</page>
+		<page id="login" url="/login.html"></page>
 	</pageList>
 </menu>

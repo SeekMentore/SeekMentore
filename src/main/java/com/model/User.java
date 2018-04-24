@@ -8,7 +8,7 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
-	private String empId;
+	private String userId;
 	private String name;
 	private Date dateOfBirth;
 	private Date hireDate;
@@ -18,14 +18,14 @@ public class User implements Serializable {
 	public User() {}
 	
 	public User(
-		String empId,
+		String userId,
 		String name,
 		Date dateOfBirth,
 		Date hireDate,
 		String workLocation,
 		List<String> pageAccessTypes
 	) {
-		this.empId = empId;
+		this.userId = userId;
 		this.name = name;
 		this.dateOfBirth = dateOfBirth;
 		this.hireDate = hireDate;
@@ -33,11 +33,11 @@ public class User implements Serializable {
 		this.pageAccessTypes = pageAccessTypes;
 	}
 	
-	public String getEmpId() {
-		return empId;
+	public String getUserId() {
+		return userId;
 	}
-	public void setEmpId(String empId) {
-		this.empId = empId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getName() {
 		return name;
