@@ -19,7 +19,6 @@ import com.constants.LoginConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.exception.ApplicationException;
 import com.model.Credential;
 import com.model.ErrorPacket;
 import com.model.User;
@@ -57,10 +56,10 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 				LoginUtils.createNewSession(request, user);
 				WebServiceUtils.redirectToPage("/admin.html", request, response);
 			} else {
-				throw new ApplicationException(credential.toString() + " Is not valid  Credentials.");
+				WebServiceUtils.redirectToPage("/login.html?message=INVALID_USER", request, response);
 			}
 		} else {
-			throw new ApplicationException(credential.toString() + " Primary Security Failed.");
+			WebServiceUtils.redirectToPage("/login.html?message=INVALID_DATA", request, response);
 		}
 	}
 	
@@ -75,8 +74,6 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		if (this.securityPassed) {
 			LoginUtils.logoutUserSession(request);
 			WebServiceUtils.redirectToPage("/login.html", request, response);
-		} else {
-			throw new ApplicationException(credential.toString() + " Primary Security Failed.");
 		}
 	}
 	

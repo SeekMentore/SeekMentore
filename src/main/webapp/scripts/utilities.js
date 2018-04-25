@@ -52,8 +52,25 @@ function callWebservice(url, data, success, failure, method, contentType) {
     });
 }
 
+var queryParams = new Object();
+function readGetParameters() {
+	var url = location.href;
+	var queryParamStart = url.indexOf('?');
+	if (queryParamStart != -1) {
+		var paramsString = url.substring(queryParamStart + 1);
+		var paramArray = paramsString.split('&');
+		for (var i = 0; i < paramArray.length; i++) {
+			var paramString = paramArray[i];
+			var paramValueArray = paramString.split('=');
+			queryParams[paramValueArray[0]] = paramValueArray[1];
+		}
+	}
+}
+
 var form = document.getElementById('signout_form');
 function logout() {
 	form.action = ctxPath + '/rest/login/logout';
 	form.submit();
 }
+
+readGetParameters();
