@@ -5,5 +5,5 @@ function authenticate() {
 }
 
 if (queryParams['message'] != null) {
-	alert ('Login failed. Please try again.')
+	alert ('Login failed. Please try again.');
 }
