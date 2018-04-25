@@ -41,5 +41,8 @@
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
 		</page>
+		<page id="commons" url="/rest/commons">
+			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+		</page>
 	</pageList>
 </menu>

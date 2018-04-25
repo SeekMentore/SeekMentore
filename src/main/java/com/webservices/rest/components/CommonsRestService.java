@@ -16,6 +16,7 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.CommonsConstants;
 import com.model.User;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.context.AppContext;
@@ -40,8 +41,25 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
+	@Path(REST_METHOD_NAME_TO_GET_SERVER_INFO)
+	@POST
+	public String getServerInfo (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_GET_SERVER_INFO;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getJNDIandControlConfigurationLoadService().getServerName(), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
 	public CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	 public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 	
 	@Override
@@ -50,6 +68,10 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_TO_GET_USER : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_TO_GET_SERVER_INFO : {
 				this.securityPassed = true;
 				break;
 			}
