@@ -12,6 +12,19 @@ import sun.misc.BASE64Encoder;
 public class SecurityUtil implements SecurityConstants {
 	
 	/**
+	 * encrypt and decrypt methods to be called for data coming or going to UI
+	 */
+    public static String encryptClientSide(final String value) throws Exception {
+    	// @TODO
+        return value;
+    }
+    
+    public static String decryptClientSide(final String value) throws Exception {
+    	// @TODO
+        return value;
+    }
+	
+	/**
 	 * encrypt and decrypt methods to be called from all over the project except from @Configuration annotated class
 	 */
     public static String encrypt(final String value) throws Exception {

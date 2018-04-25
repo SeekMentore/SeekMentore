@@ -12,18 +12,7 @@ import com.utils.context.AppContext;
 
 public class LoginUtils implements LoginConstants {
 	
-	public static boolean isNewSession(final HttpServletRequest httpRequest) {
-		final HttpSession session = httpRequest.getSession();
-		return null == session.getAttribute(USER_OBJECT);
-	}
-	
-	public static void createNewSession(final HttpServletRequest httpRequest) {
-		final String userId = (String) httpRequest.getHeader("SM_HEADER");
-		if (null == userId || EMPTY_STRING.equals(userId.trim()))
-			throw new ApplicationException("SM_HEADER not present.");
-		final User user = getLoginService().getUser(userId);
-		if (null == user)
-			throw new ApplicationException(userId + " Is not a valid user.");
+	public static void createNewSession(final HttpServletRequest httpRequest, final User user) {
 		final HttpSession session = httpRequest.getSession();
 		session.setAttribute(USER_OBJECT, user);
 	}
@@ -31,7 +20,7 @@ public class LoginUtils implements LoginConstants {
 	public static void validateExistingSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
 		final User user = (User)session.getAttribute(USER_OBJECT);
-		if (null == user.getUserId() || user.getPageAccessTypes().isEmpty())
+		if (null == user || null == user.getUserId() || user.getPageAccessTypes().isEmpty())
 			throw new ApplicationException("Not a valid user in session.");
 	}
 	
@@ -40,6 +29,11 @@ public class LoginUtils implements LoginConstants {
 		return (User)session.getAttribute(USER_OBJECT);
 	}
 	
+	public static void logoutUserSession(final HttpServletRequest httpRequest) {
+		final HttpSession session = httpRequest.getSession();
+		session.invalidate();
+	}
+
 	public static LoginService getLoginService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_LOGIN_SERVICE, LoginService.class);
 	}

@@ -19,4 +19,9 @@ public interface RestMethodConstants extends RestParamsConstants {
 	
 	// Admin REST methods
 	String REST_METHOD_NAME_TO_DISPLAY_TUTOR_REGISTRATIONS = "/displayTutorRegistrations";
+	// Login REST methods
+	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
+	String REST_METHOD_NAME_TO_LOGOUT = "/logout";
+	// Commons REST methods
+	String REST_METHOD_NAME_TO_GET_USER = "/getUser";
 }

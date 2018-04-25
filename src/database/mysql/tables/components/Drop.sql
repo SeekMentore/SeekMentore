@@ -29,6 +29,8 @@ DROP TABLE IF EXISTS APP_ERROR_REPORT;
 
 DROP TABLE IF EXISTS MAIL_QUEUE;
 DROP TABLE IF EXISTS MAIL_ATTACHMENTS;
+
+DROP TABLE IF EXISTS EMPLOYEE;
 ---------------------------------------------------------------------------------
 --                                     DATABASE
 ---------------------------------------------------------------------------------

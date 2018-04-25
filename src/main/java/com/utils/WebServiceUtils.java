@@ -1,9 +1,11 @@
 package com.utils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.constants.BeanConstants;
 import com.constants.ConnectionConstants;
@@ -56,6 +58,14 @@ public class WebServiceUtils implements WebServiceConstants {
 																			requestProperties)).getBoolean(PublicAccessConstants.CAPTCHA_RESPONSE_SUCCESS);
 		}
 		return false;
+	}
+	
+	public static void redirectToPage (
+			final String pageURL, 
+			final HttpServletRequest request,
+			final HttpServletResponse response
+	) throws IOException {
+		response.sendRedirect(request.getContextPath() + pageURL);
 	}
 	
 	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {

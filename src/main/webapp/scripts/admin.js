@@ -1,51 +1,9 @@
-var ctxPath = '/seekmentore';
-var output;
-commonErrorHandler = function(error) {
-	output = error;
-	$('#responseDiv').html(encodeObjectAsJSON(output));
-}
-commmonSuccessHandler = function(response) {
-	output = response;
-	$('#responseDiv').html(encodeObjectAsJSON(output));
+var user;
+function showUserInfo(response) {
+	user = response;
+	$('#employee-name').html($('#employee-name').html() + user.name);
 }
 
-function callWebservice(url, data, success, failure, method, contentType) {
-	// Show Pop up loader 
-	if (null != $('#loader-popup-modal')) {
-		$('#loader-popup-modal').removeClass('noscreen');
-	}
-	$.ajax({
-        url			: ctxPath + url,
-        type		: ((null != method) ? method : 'POST'),
-        data		: data,
-        contentType	: ((null != contentType) ? contentType : 'application/json'),
-        cache		: false,
-        dataType	: 'json',
-        success		: function(data) {
-				        	if (null != $('#loader-popup-modal')) {
-								$('#loader-popup-modal').addClass('noscreen');
-							}
-							output = data;
-							var response = decodeObjectFromJSON(data.response)
-				        	if (null != success) {
-				        		success(response);
-				        	} else {
-				        		commmonSuccessHandler(response);
-				        	}
-        },
-        error		: function(error) {
-				        	if (null != $('#loader-popup-modal')) {
-								$('#loader-popup-modal').addClass('noscreen');
-							}
-							output = error;
-				        	if (null != failure) {
-				        		failure(error);
-				        	} else {
-				        		commonErrorHandler(error);
-				        	}
-        }
-    });
-}
 var tutorList;
 var currentIndex;
 function showTutorRecords(response) {
@@ -141,12 +99,5 @@ function showValue(val) {
 	return (null != val) ? (('N' != val) ? val : 'No') : '';
 }
 
-function encodeObjectAsJSON(object) {
-	return null != object ? JSON.stringify(object) : null;
-}
-
-function decodeObjectFromJSON(json) {
-	return null != json ? JSON.parse(json) : null;
-}
-
+callWebservice('/rest/commons/getUser', null, showUserInfo);
 callWebservice('/rest/admin/displayTutorRegistrations', null, showTutorRecords);

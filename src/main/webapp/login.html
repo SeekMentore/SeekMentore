@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Login</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info noscreen">
+	  <div id="employee-name">Welcome - </div>
+	  <div><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr>
+				<th>Please Provide Details</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<form method="POST" id="signin_form">
+			<table align="center" class="all-records">
+		    	<tr>
+		    		<td>User Id</td>
+		    		<td><input type="text" id="user-id" name="user-id" placeholder="User Id"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Password</td>
+		    		<td><input type="password" id="password" name="password" placeholder="Password"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>User Type</td>
+		    		<td>
+		    			<select id="user-type" name="user-type">
+		    				<option value=""></option>
+		    				<option value="Admin">Admin</option>
+		    			</select>
+		    		</td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="2">
+		    			<button 
+							type="button" 
+							onClick="authenticate()"
+							id="signin_submit">
+							Sign in
+						</button> 
+		    		</td>
+		    	</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<BR/>
+<BR/>
+<div id="responseDiv" ></div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/login.js"></script>
+</body>
+</html>

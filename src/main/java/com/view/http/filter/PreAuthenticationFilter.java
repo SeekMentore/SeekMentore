@@ -50,11 +50,7 @@ public class PreAuthenticationFilter extends AbstractWebservice implements Filte
 			final String pageURL = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 			if (menuService.isPageSecured(pageURL)) {
 				try {
-					if (LoginUtils.isNewSession(httpRequest)) {
-						LoginUtils.createNewSession(httpRequest);
-					} else {
-						LoginUtils.validateExistingSession(httpRequest);
-					}
+					LoginUtils.validateExistingSession(httpRequest);
 					chain.doFilter(request, response);
 				} catch (Exception e) {
 					final HttpSession session = httpRequest.getSession();

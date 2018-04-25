@@ -2,6 +2,22 @@
 	display : none !important
 }
 
+.banner {
+	background: #10213a !important;
+}
+
+.company-logo {
+	float: left;
+}
+
+.user-info {
+	float: right;
+}
+
+.banner-separator {
+	clear:both;
+}
+
 table.all-records {
     border-collapse: collapse;
     border-spacing: 0;

@@ -21,6 +21,7 @@
 			<webservice id="displayTutorRegistrations" url="/displayTutorRegistrations"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
+			<webservice id=" getUser" url="/getUser"></webservice>
 		</page>
 	</pageList>
 	<pageList id="unsecured">
@@ -34,8 +35,11 @@
 			<webservice id="getDropdownListDataBecomeTutor" url="/getDropdownListDataBecomeTutor"></webservice>
 			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
-			<webservice id="test" url="/test"></webservice>
 		</page>
 		<page id="login" url="/login.html"></page>
+		<page id="loginRest" url="/rest/login">
+			<webservice id="validateCredential" url="/validateCredential"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
+		</page>
 	</pageList>
 </menu>
