@@ -15,7 +15,7 @@
   </div>
   <div class="user-info noscreen">
 	  <div id="employee-name">Welcome - </div>
-	  <div><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
   </div>
 </div>
 <div class="banner-separator"></div>
@@ -24,38 +24,36 @@
 <div id="all-records-div" class="w3-row-padding">
 	<Br/>
 	<div class="w3-row-padding">
-		<table align="center" class="all-records">
-			<tr>
-				<th>Please Provide Details</th>
+		<table align="center" class="all-records login">
+			<tr class="header-panel">
+				<th>Login Panel</th>
 			</tr>
 		</table>
 	</div>
 	<div class="w3-row-padding">
 		<form method="POST" id="signin_form">
-			<table align="center" class="all-records">
+			<table align="center" class="all-records login">
 		    	<tr>
-		    		<td>User Id</td>
-		    		<td><input type="text" id="user-id" name="user-id" placeholder="User Id"/></td>
+		    		<td><input type="text" id="user-id" class="login-form-element" name="user-id" placeholder="User Id"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td>Password</td>
-		    		<td><input type="password" id="password" name="password" placeholder="Password"/></td>
+		    		<td><input type="password" id="password" class="login-form-element" name="password" placeholder="Password"/></td>
 		    	</tr>
 		    	<tr>
-		    		<td>User Type</td>
 		    		<td>
-		    			<select id="user-type" name="user-type">
-		    				<option value=""></option>
+		    			<select id="user-type" name="user-type" class="login-form-element" >
+		    				<option value="">Select User Type</option>
 		    				<option value="Admin">Admin</option>
 		    			</select>
 		    		</td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="2">
+		    		<td colspan="2" align="center">
 		    			<button 
 							type="button" 
 							onClick="authenticate()"
-							id="signin_submit">
+							id="signin_submit"
+							class="login-form-element submit-button" >
 							Sign in
 						</button> 
 		    		</td>
