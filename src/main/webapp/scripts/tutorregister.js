@@ -1,5 +1,6 @@
 var tutorListMap = new Object();
 tutorListMap.selectedGrid = 'none';
+
 function createTutorNavigatorObject(tutorListResponse) {
 	var obj =	{
 		currentIndex 	: 0,
@@ -100,7 +101,7 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 		html +='</tr>';
 	}
 	$('#'+gridName+'-tutor-records').html(html);
-	$('#'+gridName+'-total-records').html($('#'+gridName+'-total-records').html() + ' ' + tutorNavigatorObject.getRecordCount());
+	$('#'+gridName+'-total-records').html('Total Records = ' + tutorNavigatorObject.getRecordCount());
 }
 
 function previousTutorRecord() {
@@ -203,13 +204,23 @@ function takeAction(button) {
 			tentativeTutorId : tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().tentativeTutorId,
 			remarks : $('#remarks').val()
 	}
+	successMessage = 'Tutor Registration Admin action successfully taken.';
+	callbackAfterCommonSuccess = takeActionAfterSuccessCallback;
 	callWebservice('/rest/admin/takeActionOnRegisteredTutors', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
-callWebservice('/rest/admin/displayNonContactedTutorRegistrations', null, showNonContactedTutorRecords);
-callWebservice('/rest/admin/displayNonVerifiedTutorRegistrations', null, showNonVerifiedTutorRecords);
-callWebservice('/rest/admin/displayVerifiedTutorRegistrations', null, showVerifiedTutorRecords);
-callWebservice('/rest/admin/displayVerificationFailedTutorRegistrations', null, showVerificationFailedTutorRecords);
-callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
-callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
-callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
+var takeActionAfterSuccessCallback = function(response) {
+	$('#remarks').val('');
+	showTutorAllRecordsPage();
+	loadGrids();
+}
+
+function loadGrids() {
+	callWebservice('/rest/admin/displayNonContactedTutorRegistrations', null, showNonContactedTutorRecords);
+	callWebservice('/rest/admin/displayNonVerifiedTutorRegistrations', null, showNonVerifiedTutorRecords);
+	callWebservice('/rest/admin/displayVerifiedTutorRegistrations', null, showVerifiedTutorRecords);
+	callWebservice('/rest/admin/displayVerificationFailedTutorRegistrations', null, showVerificationFailedTutorRecords);
+	callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
+	callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
+	callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
+}

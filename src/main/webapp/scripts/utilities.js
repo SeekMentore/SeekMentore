@@ -1,11 +1,22 @@
 var ctxPath = '/seekmentore';
+var successMessage = '';
+var callbackAfterCommonSuccess = null;
 
 commonErrorHandler = function(error) {
-	$('#responseDiv').html(encodeObjectAsJSON(error));
+	showNotificationModal('Connection lost.<br/>Please check your network connection and refresh the page.', false);
 }
 
 commmonSuccessHandler = function(response) {
-	$('#responseDiv').html(encodeObjectAsJSON(response));
+	var failure = response.FAILURE;
+	if (failure) {
+		showNotificationModal(response.FAILURE_MESSAGE, false);
+		return;
+	}
+	showNotificationModal(successMessage, true);
+	if (null != callbackAfterCommonSuccess) {
+		callbackAfterCommonSuccess(response);
+		callbackAfterCommonSuccess = null;
+	}
 }
 
 function encodeObjectAsJSON(object) {
@@ -71,6 +82,40 @@ var form = document.getElementById('signout_form');
 function logout() {
 	form.action = ctxPath + '/rest/login/logout';
 	form.submit();
+}
+
+function showNotificationModal(message, isSuccess) {
+	$('#notification-popup-modal').removeClass('noscreen');
+	$('#notification-popup-model-content-section').html(message);
+	if (isSuccess) {
+		$('#alert-title').html('Success');
+		
+		$('#alert-title').addClass('successMessage');
+		$('#alert-title').removeClass('failureMessage');
+		
+		$('#notification-popup-model-content-section').addClass('successMessage');
+		$('#notification-popup-model-content-section').removeClass('failureMessage');
+	} else {
+		$('#alert-title').html('Error');
+		
+		$('#alert-title').addClass('failureMessage');
+		$('#alert-title').removeClass('successMessage');
+		
+		$('#notification-popup-model-content-section').addClass('failureMessage');
+		$('#notification-popup-model-content-section').removeClass('successMessage');
+	}
+}
+
+//Configure notification popup modal and register events
+function closeNotificationPopUpModal() {
+	$('#notification-popup-modal').addClass('noscreen');
+}
+
+window.onclick = function(event) {
+	var modal = document.getElementById('notification-popup-modal');
+	if (event.target == modal) {
+		$('#notification-popup-modal').addClass('noscreen');
+	}
 }
 
 readGetParameters();

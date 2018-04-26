@@ -11,6 +11,10 @@ a {
 	height: 5em;
 }
 
+.total-records{
+	text-align: right !important;
+}
+
 .company-logo {
 	float: left;
 	margin-top: .5em;
@@ -50,7 +54,7 @@ table.login {
 tr.header-panel {
 	background-color: #10213a;
 	color: #FFFFFF;
-	font-size: 1.4em;
+	font-size: 1.1em;
 }
 
 .submit-button {
@@ -99,6 +103,99 @@ table.all-records tr:nth-child(even){background-color: #f2f2f2}
 	    overflow: auto; /* Enable scroll if needed */
 	    background-color: rgb(0,0,0); /* Fallback color */
 	    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+	
+	/* Modal Content */
+	.modal-content {
+	    background-color: white;
+	    margin: auto;
+	    padding: 20px;
+	    border: 2px solid #5d5871;
+	    width: 80%;
+	    max-width: 750px;
+	    border-radius: 10px;
+	}
+	
+	/* The Close Button */
+	.close-modal {
+	    color: #FFFFFF;
+	    float: right;
+	    font-size: 28px;
+	    font-weight: bold;
+	    border: 1px Solid #10213a;
+	    background-color: #5d5871;
+	}
+	
+	.close-modal:hover,
+	.close-modal:focus {
+	    color: #FFFFFF;
+	    text-decoration: none;
+	    cursor: pointer;
+	    border: 1px Solid #10213a;
+	    background-color: #10213a;
+	}
+	
+	.close-modal-button {
+	    color: #FFFFFF;
+	    font-size: 28px;
+	    font-weight: bold;
+	    border-radius: 40px;
+	    width: 40%;
+	    text-align: center;
+	    border: 1px Solid #10213a;
+	    background-color: #5d5871;
+	    margin-left: 30%;
+	    height: 1.3em;
+	}
+	
+	.close-modal-button:hover,
+	.close-modal-button:focus {
+	    color: #FFFFFF;
+	    text-decoration: none;
+	    cursor: pointer;
+	    border: 1px Solid #10213a;
+	    background-color: #10213a;
+	}
+	
+	#notification-popup-model-content-section {
+		clear: both;
+		margin-left: 10%;
+	}
+	
+	#alert-title {
+		float: left;
+		font-size: 2em !important;
+	}
+	
+	.modal-line {
+		border-bottom: 1px solid #10213a;
+		clear: both;
+		margin-top: 2.5em;
+	}
+	
+	 .failureMessage {
+		color: red !important;
+		font-size: 1em !important;
+	}
+	
+	.successMessage {
+		color: #5d5871 !important;
+		font-size: 1em !important;
+	}
+	
+	.admin-panel-cards {
+	    height: 5em;
+	    text-align: center;
+	    padding: 2em 2em 7em 2em !important;
+	    font-size: 1vw;
+	    background-color: #419de2;
+	    margin-top: 2em;
+	    border: 0.1em solid #10213a !important;
+	    border-radius: 2em;
+	    cursor: pointer;
+	    color: #FFFFFF;
+	    margin-left: 1em;
+	    width: 30%;
 	}
 
 .loader {

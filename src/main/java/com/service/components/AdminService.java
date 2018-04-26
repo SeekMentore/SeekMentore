@@ -88,7 +88,7 @@ public class AdminService implements AdminConstants{
 		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
 		Object[] params = null;
 		switch(button) {
-			case "contacted" : {
+			case BUTTON_ACTION_CONTACTED : {
 				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
 				params = new Object[3];
 				params[0] = user.getUserId();
@@ -96,7 +96,7 @@ public class AdminService implements AdminConstants{
 				params[2] = tentativeTutorId;
 				break;
 			}
-			case "recontact" : {
+			case BUTTON_ACTION_RECONTACT : {
 				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = ?, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
 				params = new Object[5];
 				params[0] = user.getUserId();
@@ -106,7 +106,7 @@ public class AdminService implements AdminConstants{
 				params[4] = tentativeTutorId;
 				break;
 			}
-			case "reject" : {
+			case BUTTON_ACTION_REJECT : {
 				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_REJECTED = 'Y', WHO_REJECTED = ?, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = ?, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
 				params = new Object[5];
 				params[0] = user.getUserId();
@@ -114,6 +114,39 @@ public class AdminService implements AdminConstants{
 				params[2] = user.getUserId();
 				params[3] = remarks;
 				params[4] = tentativeTutorId;
+				break;
+			}
+			case BUTTON_ACTION_VERIFY:
+			case BUTTON_ACTION_REVERIFY : {
+				query.append("IS_AUTH_VERIFIED = 'Y', WHO_VERIFIED = ?, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[3];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = tentativeTutorId;
+				break;
+			}
+			case BUTTON_ACTION_FAILVERIFY : {
+				query.append("IS_AUTH_VERIFIED = 'N', WHO_VERIFIED = ?, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[3];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = tentativeTutorId;
+				break;
+			}
+			case BUTTON_ACTION_SELECT : {
+				query.append("IS_SELECTED = 'Y', WHO_SELECTED = ?, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[3];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = tentativeTutorId;
+				break;
+			}
+			case BUTTON_ACTION_RECONTACTED : {
+				query.append("IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = ?, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[3];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = tentativeTutorId;
 				break;
 			}
 		}

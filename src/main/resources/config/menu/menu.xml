@@ -16,8 +16,9 @@
 			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
 			<webservice id="downloadForm" url="/downloadForm"></webservice>
 		</page> -->
-		<page id="login" url="/admin.html" pageAccessType="A"></page>
-		<page id="admin" url="/rest/admin" pageAccessType="A">
+		<page id="admin" url="/admin.html" pageAccessType="A"></page>
+		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
+		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
 			<webservice id="displayNonVerifiedTutorRegistrations" url="/displayNonVerifiedTutorRegistrations"></webservice>
 			<webservice id="displayVerifiedTutorRegistrations" url="/displayVerifiedTutorRegistrations"></webservice>
