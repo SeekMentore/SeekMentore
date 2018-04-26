@@ -380,7 +380,7 @@
 	    	</tr>
 		</table>
    </div>
-   <div class="w3-row-padding">
+   <div id="remarks-div" class="w3-row-padding">
 	<table align="center" class="all-records">
 		<tr>
 			<td>
@@ -389,14 +389,13 @@
 		</tr>
 	</table>
    </div>
-   <div class="w3-row-padding">
+   <div id="non_contacted-action-section" class="w3-row-padding action-section">
 	<table align="center" class="all-records">
 		<tr>
 			<td>
 				<button 
 					type="button" 
 					onClick="takeAction('contacted')"
-					id="non_contacted_contacted"
 					class="login-form-element submit-button button-green" >
 					Contacted
 				</button> 
@@ -405,7 +404,6 @@
 				<button 
 					type="button" 
 					onClick="takeAction('recontact')"
-					id="non_contacted_to_be_recontacted"
 					class="login-form-element submit-button" >
 					Re-contact
 				</button> 
@@ -414,7 +412,102 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					id="non_contacted_rejected"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="non_verified-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('verify')"
+					class="login-form-element submit-button button-green" >
+					Verify
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('failverify')"
+					class="login-form-element submit-button button-red" >
+					Fail Verification
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="verified-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('select')"
+					class="login-form-element submit-button button-green" >
+					Select
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="verification_failed-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reverify')"
+					class="login-form-element submit-button button-green" >
+					Re-verify
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="to_be_recontacted-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('recontacted')"
+					class="login-form-element submit-button button-green" >
+					Recontacted
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
 					class="login-form-element submit-button button-red" >
 					Reject
 				</button> 

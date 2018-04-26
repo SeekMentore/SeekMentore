@@ -118,6 +118,7 @@ function getParticularTutorRecord(gridName, recordNumber) {
 
 function hideTutorAllRecordsPage() {
 	$('#selected-record-div').removeClass('noscreen');
+	$('.action-section').addClass('noscreen');
 	$('#non_contacted-all-records-div').addClass('noscreen');
 	$('#non_verified-all-records-div').addClass('noscreen');
 	$('#verified-all-records-div').addClass('noscreen');
@@ -125,6 +126,13 @@ function hideTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').addClass('noscreen');
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
+	$('#'+tutorListMap.selectedGrid+'-action-section').removeClass('noscreen');
+	var obj = document.getElementById(tutorListMap.selectedGrid+'-action-section');
+	if (null != obj) {
+		$('#remarks-div').removeClass('noscreen');
+	} else {
+		$('#remarks-div').addClass('noscreen');
+	}
 }
 
 function showTutorAllRecordsPage() {
