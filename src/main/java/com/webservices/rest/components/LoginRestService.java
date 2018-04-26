@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -39,6 +40,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	private Credential credential;
 	
 	@Path(REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL)
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public void validateCredential (
 			@FormParam("user-id") final String userId,

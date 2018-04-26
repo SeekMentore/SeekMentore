@@ -34,9 +34,9 @@
 		<table align="center" class="all-records">
 			<thead>
 				<tr>
-					<th>NAME</th>
-					<th>EMAIL_ID</th>
-					<th>CONTACT_NUMBER</th>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
 				</tr>
 			</thead>
 			<tbody id="become-tutor-records">
@@ -50,7 +50,7 @@
 	<table align="center" class="all-records">
 		<tr class="header-panel">
 			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
-			<th><a href="javascript:void(0);" onclick="backToAllRecords()">Back to all records</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
 			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
 		</tr>
 	</table>
@@ -58,167 +58,167 @@
    <div class="w3-row-padding">
 	    <table align="center" class="all-records">
 	    	<tr>
-	    		<td>APPLICATION_DATE</td>
+	    		<td>Application Date</td>
 	    		<td id="APPLICATION_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>APPLICATION_STATUS</td>
+	    		<td>Application Status</td>
 	    		<td id="APPLICATION_STATUS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>DATE_OF_BIRTH</td>
+	    		<td>Date of Birth</td>
 	    		<td id="DATE_OF_BIRTH"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>CONTACT_NUMBER</td>
+	    		<td>Contact Number</td>
 	    		<td id="CONTACT_NUMBER"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>EMAIL_ID</td>
+	    		<td>Email Id</td>
 	    		<td id="EMAIL_ID"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>FIRST_NAME</td>
+	    		<td>First Name</td>
 	    		<td id="FIRST_NAME"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>LAST_NAME</td>
+	    		<td>Last Name</td>
 	    		<td id="LAST_NAME"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>GENDER</td>
+	    		<td>Gender</td>
 	    		<td id="GENDER"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>QUALIFICATION</td>
+	    		<td>Qualification</td>
 	    		<td id="QUALIFICATION"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>PRIMARY_PROFESSION</td>
+	    		<td>Primary Profession</td>
 	    		<td id="PRIMARY_PROFESSION"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>TRANSPORT_MODE</td>
+	    		<td>Transport Mode</td>
 	    		<td id="TRANSPORT_MODE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>TEACHING_EXP</td>
+	    		<td>Teaching Experience</td>
 	    		<td id="TEACHING_EXP"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>STUDENT_GRADE</td>
+	    		<td>Student Grade</td>
 	    		<td id="STUDENT_GRADE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>SUBJECTS</td>
+	    		<td>Subjects</td>
 	    		<td id="SUBJECTS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>LOCATIONS</td>
+	    		<td>Locations</td>
 	    		<td id="LOCATIONS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>PREFERRED_TIME_TO_CALL</td>
+	    		<td>Preferred Time To Call</td>
 	    		<td id="PREFERRED_TIME_TO_CALL"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>ADDITIONAL_DETAILS</td>
+	    		<td>Additional Details</td>
 	    		<td id="ADDITIONAL_DETAILS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>IS_CONTACTED</td>
+	    		<td>Is Contacted</td>
 	    		<td id="IS_CONTACTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_CONTACTED</td>
+	    		<td>Who Contacted</td>
 	    		<td id="WHO_CONTACTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>CONTACTED_DATE</td>
+	    		<td>Contacted Date</td>
 	    		<td id="CONTACTED_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>CONTACTED_REMARKS</td>
+	    		<td>Contacted Remarks</td>
 	    		<td id="CONTACTED_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>IS_AUTH_VERIFIED</td>
+	    		<td>Is Authentication Verified</td>
 	    		<td id="IS_AUTH_VERIFIED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_VERIFIED</td>
+	    		<td>Who Verified</td>
 	    		<td id="WHO_VERIFIED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>VERIFICATION_DATE</td>
+	    		<td>Verification Date</td>
 	    		<td id="VERIFICATION_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>VERIFICATION_REMARKS</td>
+	    		<td>Verification Remarks</td>
 	    		<td id="VERIFICATION_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>IS_TO_BE_RECONTACTED</td>
+	    		<td>Is To Be Recontacted</td>
 	    		<td id="IS_TO_BE_RECONTACTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_SUGGESTED_FOR_RECONTACT</td>
+	    		<td>Who Suggested For Re-contact</td>
 	    		<td id="WHO_SUGGESTED_FOR_RECONTACT"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>SUGGESTION_DATE</td>
+	    		<td>Suggestion Date</td>
 	    		<td id="SUGGESTION_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>SUGGESTION_REMARKS</td>
+	    		<td>Suggestion Remarks</td>
 	    		<td id="SUGGESTION_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_RECONTACTED</td>
+	    		<td>Who Recontacted</td>
 	    		<td id="WHO_RECONTACTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>RECONTACTED_DATE</td>
+	    		<td>Recontacted Date</td>
 	    		<td id="RECONTACTED_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>RECONTACTED_REMARKS</td>
+	    		<td>Recontacted Remarks</td>
 	    		<td id="RECONTACTED_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>IS_SELECTED</td>
+	    		<td>Is Selected</td>
 	    		<td id="IS_SELECTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_SELECTED</td>
+	    		<td>Who Selected</td>
 	    		<td id="WHO_SELECTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>SELECTION_DATE</td>
+	    		<td>Selection Date</td>
 	    		<td id="SELECTION_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>SELECTION_REMARKS</td>
+	    		<td>Selection Remarks</td>
 	    		<td id="SELECTION_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>IS_REJECTED</td>
+	    		<td>Is Rejected</td>
 	    		<td id="IS_REJECTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>WHO_REJECTED</td>
+	    		<td>Who Rejected</td>
 	    		<td id="WHO_REJECTED"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>REJECTION_DATE</td>
+	    		<td>Rejection Date</td>
 	    		<td id="REJECTION_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>REJECTION_REMARKS</td>
+	    		<td>Rejection Remarks</td>
 	    		<td id="REJECTION_REMARKS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>REJECTION_COUNT</td>
+	    		<td>Rejection Count</td>
 	    		<td id="REJECTION_COUNT"></td>
 	    	</tr>
 	    	<tr>
@@ -237,9 +237,51 @@
    </div>
    <div class="w3-row-padding">
 	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<textarea rows="4" cols="76" id="remarks" placeholder="Provide reason in case of Rejection or Need for Recontact!!!"></textarea>
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('contacted')"
+					id="non_contacted_contacted"
+					class="login-form-element submit-button button-green" >
+					Contacted
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('recontact')"
+					id="non_contacted_to_be_recontacted"
+					class="login-form-element submit-button" >
+					Re-contact
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					id="non_contacted_rejected"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div class="w3-row-padding">
+	<table align="center" class="all-records">
 		<tr class="header-panel">
 			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
-			<th><a href="javascript:void(0);" onclick="backToAllRecords()">Back to all records</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
 			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
 		</tr>
 	</table>
@@ -258,5 +300,6 @@
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
 <script src="scripts/utilities.js"></script>
 <script src="scripts/admin.js"></script>
+<script src="scripts/tutorregister.js"></script>
 </body>
 </html>

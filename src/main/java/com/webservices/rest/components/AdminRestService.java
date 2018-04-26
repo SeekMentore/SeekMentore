@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -26,19 +27,127 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_ADMIN) 
 public class AdminRestService extends AbstractRestWebservice implements RestMethodConstants, AdminConstants {
 	
-	@Path(REST_METHOD_NAME_TO_DISPLAY_TUTOR_REGISTRATIONS)
+	@Path(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
-	public String displayTutorRegistrations (
+	public String displayNonContactedTutorRegistrations (
 			@Context final HttpServletRequest request
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TO_DISPLAY_TUTOR_REGISTRATIONS;
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayNonVerifiedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerifiedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerificationFailedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayToBeRecontactedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displaySelectedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayRejectedTutorRegistrations (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String takeActionOnRegisteredTutors (
+			@FormParam("gridName") final String gridName,
+			@FormParam("button") final String button,
+			@FormParam("tentativeTutorId") final String tentativeTutorId,
+			@FormParam("remarks") final String remarks,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().takeActionOnRegisteredTutors(gridName, button, tentativeTutorId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
 	public AdminService getAdminService() {
@@ -50,7 +159,35 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_TO_DISPLAY_TUTOR_REGISTRATIONS : {
+			case REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS : {
 				this.securityPassed = true;
 				break;
 			}

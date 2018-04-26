@@ -62,6 +62,14 @@ tr.header-panel {
 	border-radius: 2em;
 }
 
+.button-green {
+	background-color: green !important;
+}
+
+.button-red {
+	background-color: red !important;
+}
+
 table.all-records th, table.all-records td {
     text-align: left;
     padding: 8px;

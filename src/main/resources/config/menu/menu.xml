@@ -18,7 +18,14 @@
 		</page> -->
 		<page id="login" url="/admin.html" pageAccessType="A"></page>
 		<page id="admin" url="/rest/admin" pageAccessType="A">
-			<webservice id="displayTutorRegistrations" url="/displayTutorRegistrations"></webservice>
+			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
+			<webservice id="displayNonVerifiedTutorRegistrations" url="/displayNonVerifiedTutorRegistrations"></webservice>
+			<webservice id="displayVerifiedTutorRegistrations" url="/displayVerifiedTutorRegistrations"></webservice>
+			<webservice id="displayVerificationFailedTutorRegistrations" url="/displayVerificationFailedTutorRegistrations"></webservice>
+			<webservice id="displayToBeRecontactedTutorRegistrations" url="/displayToBeRecontactedTutorRegistrations"></webservice>
+			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
+			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
+			<webservice id="takeActionOnRegisteredTutors" url="/takeActionOnRegisteredTutors"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
@@ -44,5 +51,6 @@
 		<page id="commons" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
 		</page>
+		<page id="login" url="/error.html"></page>
 	</pageList>
 </menu>

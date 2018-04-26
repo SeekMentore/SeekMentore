@@ -1,6 +1,8 @@
 package com.service.components;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -8,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
+import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.dao.ApplicationDao;
+import com.model.User;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 
@@ -25,8 +29,39 @@ public class AdminService implements AdminConstants{
 	@PostConstruct
 	public void init() {}
 	
-	public List<BecomeTutor> displayTutorRegistrations() {
-		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams("SELECT * FROM BECOME_TUTOR WHERE IS_SELECTED IS NULL AND IS_REJECTED IS NULL", BecomeTutor.class);
+	public List<BecomeTutor> displayTutorRegistrations(final String grid) {
+		final StringBuilder query = new StringBuilder("SELECT * FROM BECOME_TUTOR WHERE ");
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'N'");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTH_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTH_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTH_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : {
+				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'");
+				break;
+			}
+		}
+		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), BecomeTutor.class);
 		for (final BecomeTutor registeredTutorObject : registeredTutorList) {
 			registeredTutorObject.setGender(preapreLookupLabelString("GENDER_LOOKUP",registeredTutorObject.getGender(), false));
 			registeredTutorObject.setQualification(preapreLookupLabelString("QUALIFICATION_LOOKUP",registeredTutorObject.getQualification(), false));
@@ -38,6 +73,52 @@ public class AdminService implements AdminConstants{
 			registeredTutorObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", registeredTutorObject.getPreferredTimeToCall(), true));
 		}
 		return registeredTutorList;
+	}
+	
+	public Map<String, Object> takeActionOnRegisteredTutors (
+			final String gridName, 
+			final String button, 
+			final String tentativeTutorId,
+			final String remarks,
+			final User user
+	) {
+		final Map<String, Object> response = new HashMap<String, Object>();
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
+		Object[] params = null;
+		switch(button) {
+			case "contacted" : {
+				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[3];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = tentativeTutorId;
+				break;
+			}
+			case "recontact" : {
+				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = ?, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[5];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = user.getUserId();
+				params[3] = remarks;
+				params[4] = tentativeTutorId;
+				break;
+			}
+			case "reject" : {
+				query.append("IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_REJECTED = 'Y', WHO_REJECTED = ?, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = ?, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
+				params = new Object[5];
+				params[0] = user.getUserId();
+				params[1] = remarks;
+				params[2] = user.getUserId();
+				params[3] = remarks;
+				params[4] = tentativeTutorId;
+				break;
+			}
+		}
+		applicationDao.updateWithPreparedQueryAndIndividualOrderedParams(query.toString(), params);
+		return response;
 	}
 	
 	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect) {

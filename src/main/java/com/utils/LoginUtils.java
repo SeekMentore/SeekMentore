@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import com.constants.BeanConstants;
 import com.constants.LoginConstants;
-import com.exception.ApplicationException;
 import com.model.User;
 import com.service.LoginService;
 import com.utils.context.AppContext;
@@ -17,11 +16,14 @@ public class LoginUtils implements LoginConstants {
 		session.setAttribute(USER_OBJECT, user);
 	}
 	
-	public static void validateExistingSession(final HttpServletRequest httpRequest) {
+	public static boolean validateExistingSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
 		final User user = (User)session.getAttribute(USER_OBJECT);
-		if (null == user || null == user.getUserId() || user.getPageAccessTypes().isEmpty())
-			throw new ApplicationException("Not a valid user in session.");
+		if (null != user && null != user.getUserId() && !EMPTY_STRING.equals(user.getUserId().trim()) && null != user.getPageAccessTypes() && !user.getPageAccessTypes().isEmpty()) {
+			return true;
+		}
+		session.invalidate();
+		return false;
 	}
 	
 	public static User getUserFromSession(final HttpServletRequest httpRequest) {

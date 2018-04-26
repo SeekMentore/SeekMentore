@@ -64,7 +64,7 @@ public class ApplicationDao {
 	 * Use the below query for 
 	 * INSERT, UPDATE, DELETE
 	 */
-	public void updateWithPreparedQueryAndIndividualOrderedParams(final String query, final Object... params) {
+	public void updateWithPreparedQueryAndIndividualOrderedParams(final String query, final Object[] params) {
 		LoggerUtils.logOnConsole(query);
         jdbcTemplate.update(query, params);
     }
