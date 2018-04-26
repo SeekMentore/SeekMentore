@@ -21,12 +21,13 @@
 <div class="banner-separator"></div>
 <form method="POST" id="signout_form" class="noscreen">
 </form>
-<div id="all-records-div" class="w3-row-padding">
+<div id="non_contacted-all-records-div" class="w3-row-padding">
 	<Br/>
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
 				<th>Non Contacted Tutors</th>
+				<th id="non_contacted-total-records">Total Records = </th>
 			</tr>
 		</table>
 	</div>
@@ -39,7 +40,151 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="become-tutor-records">
+			<tbody id="non_contacted-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="non_verified-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Non Verified Tutors</th>
+				<th id="non_verified-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="non_verified-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="verified-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Verified Tutors</th>
+				<th id="verified-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="verified-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="verification_failed-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Verification Failed Tutors</th>
+				<th id="verification_failed-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="verification_failed-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="to_be_recontacted-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>To be Recontacted Tutors</th>
+				<th id="to_be_recontacted-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="to_be_recontacted-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="selected-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Selected Tutors</th>
+				<th id="selected-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="selected-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="rejected-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Rejected Tutors</th>
+				<th id="rejected-total-records">Total Records = </th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="rejected-tutor-records">
 			</tbody>
 		</table>
 	</div>

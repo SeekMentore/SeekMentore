@@ -9,7 +9,7 @@ function createTutorNavigatorObject(tutorListResponse) {
 			if (null != this.tutorList && this.tutorList.length > 0)
 				return this.tutorList[this.currentIndex];
 			else 
-				null;
+				return null;
 		},
 		
 		previousTutorRecord		: function() {
@@ -36,23 +36,71 @@ function createTutorNavigatorObject(tutorListResponse) {
 				return this.getCurrentTutorRecord();
 			}
 			return null;
+		},
+		
+		getList : function() {
+			return this.tutorList;
+		},
+		
+		getRecordCount : function() {
+			if (null != this.tutorList && this.tutorList.length > 0)
+				return this.tutorList.length;
+			else 
+				return 0;
+		},
+		
+		getListItem : function(index) {
+			if (null != this.tutorList && this.tutorList.length > 0)
+				return this.tutorList[index];
+			else 
+				return null;
 		}
 	}
 	return obj;
 }
 
 function showNonContactedTutorRecords(response) {
-	tutorListMap['non_contacted'] = createTutorNavigatorObject(response);
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
+}
+
+function showNonVerifiedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_verified');
+}
+
+function showVerifiedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verified');
+}
+
+function showVerificationFailedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verification_failed');
+}
+
+function showToBeRecontactedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'to_be_recontacted');
+}
+
+function showSelectedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'selected');
+}
+
+function showRejectedTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
+}
+
+function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
+	tutorListMap[gridName] = createTutorNavigatorObject(response);
+	var tutorNavigatorObject = tutorListMap[gridName];
 	var html ='';
-	for (var i=0;i < tutorListMap['non_contacted'].tutorList.length; i++) {
-		var tutorObj = tutorListMap['non_contacted'].tutorList[i];
+	for (var i=0;i < tutorNavigatorObject.getRecordCount(); i++) {
+		var tutorObj = tutorNavigatorObject.getListItem(i);
 		html +='<tr>';
-		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorRecord(\'non_contacted\', '+i+')">'+showValue(tutorObj.firstName)+' '+showValue(tutorObj.lastName)+ '</a></td>';
+		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorRecord(\''+gridName+'\', '+i+')">'+showValue(tutorObj.firstName)+' '+showValue(tutorObj.lastName)+ '</a></td>';
 		html += '<td><a href="mailto:'+showValue(tutorObj.emailId)+'">'+showValue(tutorObj.emailId)+'</a></td>';
 		html += '<td><a href="tel:'+showValue(tutorObj.contactNumber)+'">'+showValue(tutorObj.contactNumber)+'</a></td>';
 		html +='</tr>';
 	}
-	$('#become-tutor-records').html(html);
+	$('#'+gridName+'-tutor-records').html(html);
+	$('#'+gridName+'-total-records').html($('#'+gridName+'-total-records').html() + ' ' + tutorNavigatorObject.getRecordCount());
 }
 
 function previousTutorRecord() {
@@ -70,12 +118,24 @@ function getParticularTutorRecord(gridName, recordNumber) {
 
 function hideTutorAllRecordsPage() {
 	$('#selected-record-div').removeClass('noscreen');
-	$('#all-records-div').addClass('noscreen');
+	$('#non_contacted-all-records-div').addClass('noscreen');
+	$('#non_verified-all-records-div').addClass('noscreen');
+	$('#verified-all-records-div').addClass('noscreen');
+	$('#verification_failed-all-records-div').addClass('noscreen');
+	$('#to_be_recontacted-all-records-div').addClass('noscreen');
+	$('#selected-all-records-div').addClass('noscreen');
+	$('#rejected-all-records-div').addClass('noscreen');
 }
 
 function showTutorAllRecordsPage() {
 	$('#selected-record-div').addClass('noscreen');
-	$('#all-records-div').removeClass('noscreen');
+	$('#non_contacted-all-records-div').removeClass('noscreen');
+	$('#non_verified-all-records-div').removeClass('noscreen');
+	$('#verified-all-records-div').removeClass('noscreen');
+	$('#verification_failed-all-records-div').removeClass('noscreen');
+	$('#to_be_recontacted-all-records-div').removeClass('noscreen');
+	$('#selected-all-records-div').removeClass('noscreen');
+	$('#rejected-all-records-div').removeClass('noscreen');
 }
 
 function openTutorRecord(tutorObj) {
@@ -138,4 +198,10 @@ function takeAction(button) {
 	callWebservice('/rest/admin/takeActionOnRegisteredTutors', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
-callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showNonContactedTutorRecords);
+callWebservice('/rest/admin/displayNonContactedTutorRegistrations', null, showNonContactedTutorRecords);
+callWebservice('/rest/admin/displayNonVerifiedTutorRegistrations', null, showNonVerifiedTutorRecords);
+callWebservice('/rest/admin/displayVerifiedTutorRegistrations', null, showVerifiedTutorRecords);
+callWebservice('/rest/admin/displayVerificationFailedTutorRegistrations', null, showVerificationFailedTutorRecords);
+callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
+callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
+callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
