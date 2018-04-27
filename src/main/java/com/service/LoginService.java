@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.constants.BeanConstants;
 import com.constants.LoginConstants;
 import com.constants.RestMethodConstants;
-import com.dao.ApplicationDao;
 import com.model.Credential;
 import com.model.ErrorPacket;
 import com.model.User;
@@ -21,14 +20,14 @@ import com.utils.SecurityUtil;
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
 public class LoginService implements LoginConstants {
 	
-	@Autowired
-	private transient ApplicationDao applicationDao;
+	//@Autowired
+	//private transient ApplicationDao applicationDao;
 	
 	@Autowired
 	private transient CommonsService commonsService;
 	
 	public User validateCredential(final Credential credential) throws Exception {
-		User user = applicationDao.find("SELECT * FROM EMPLOYEE WHERE LOWER(USER_ID) = ?", new Object[] {credential.getUserId().toLowerCase()}, User.class);
+		User user = commonsService.getUserFromDbUsingUserId(credential.getUserId());
 		if (null != user) {
 			final String decryptUserPasswordFromDB = SecurityUtil.decrypt(user.getEncyptedPassword());
 			final String decryptUserPasswordFromUI = SecurityUtil.decryptClientSide(credential.getClientSideEncypytedPassword());

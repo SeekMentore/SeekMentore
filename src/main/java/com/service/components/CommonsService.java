@@ -12,6 +12,7 @@ import com.constants.BeanConstants;
 import com.constants.components.CommonsConstants;
 import com.dao.ApplicationDao;
 import com.model.ErrorPacket;
+import com.model.User;
 import com.model.components.commons.SelectLookup;
 import com.model.mail.ApplicationMail;
 import com.utils.ExceptionUtils;
@@ -52,8 +53,16 @@ public class CommonsService implements CommonsConstants {
 	}
 	
 	@Transactional
+	public User getUserFromDbUsingUserId(final String userId) {
+		if (null != userId) {
+			return applicationDao.find("SELECT * FROM EMPLOYEE WHERE LOWER(USER_ID) = ?", new Object[] {userId.toLowerCase()}, User.class);
+		}
+		return null;
+	}
+	
+	@Transactional
 	public List<SelectLookup> getSelectLookupEntryList(final String selectLookupTable, final Object[] paramlist) {
-		return applicationDao.findAll("SELECT LABEL FROM SELECT_LOOKUP_TABLE where VALUE IN (QUESTION_MARK_PLACE_HOLDER)".replaceAll("SELECT_LOOKUP_TABLE", selectLookupTable).replaceAll("QUESTION_MARK_PLACE_HOLDER", generateQuestionMarksAsPerParamNumber(paramlist)), paramlist, SelectLookup.class);
+		return applicationDao.findAll("SELECT * FROM SELECT_LOOKUP_TABLE where VALUE IN (QUESTION_MARK_PLACE_HOLDER)".replaceAll("SELECT_LOOKUP_TABLE", selectLookupTable).replaceAll("QUESTION_MARK_PLACE_HOLDER", generateQuestionMarksAsPerParamNumber(paramlist)), paramlist, SelectLookup.class);
 	}
 	
 	private String generateQuestionMarksAsPerParamNumber(final Object[] paramlist) {
