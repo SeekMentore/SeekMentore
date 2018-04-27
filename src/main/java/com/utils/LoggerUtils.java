@@ -1,9 +1,16 @@
 package com.utils;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.constants.BeanConstants;
 import com.constants.LoggerConstants;
+import com.model.ErrorPacket;
+import com.service.components.CommonsService;
+import com.utils.context.AppContext;
 
 public class LoggerUtils implements LoggerConstants {
 	
@@ -53,6 +60,20 @@ public class LoggerUtils implements LoggerConstants {
 	
 	public static void logFatal(final Throwable exception) {
 		logFatal(ExceptionUtils.generateErrorLog(exception));
-		LOGGER.fatal(exception.getMessage(), exception);
+		if (isFatalEnabled)
+			LOGGER.fatal(exception.getMessage(), exception);
+	}
+	
+	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
+		final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
+		getCommonsService().feedErrorRecord(errorPacket);
+		if (isErrorEnabled)
+			LOGGER.error(errorPacket.getErrorTrace());
+		if (isTraceEnabled)
+			LOGGER.trace(exception.getMessage(), exception);
+	}
+	
+	public static CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 }

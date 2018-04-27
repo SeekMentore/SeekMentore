@@ -1,91 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Seek Mentor</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore</title>
 </head>
 <body>
-<table border="1" align="center" width="50%">
-<tr>
-<th> Form </th>
-<th> Save Data </th>
-<th> Retrieve Data </th>
-<th> Download PDF </th>
-<th> Download Report </th>
-</tr>
-<tr>
-<th> Form 11 </th>
-<th> <button id="saveForm11" >Save Form</button> </th>
-<th> <input type="text" value="" size="10" id="empId11" /><button id="getForm11" >Get Form</button> </th>
-<th> <button id="downloadForm11" >Download</button> </th>
-<th>  </th>
-</tr>
-<tr>
-<th> Form F </th>
-<th> <button id="saveFormF" >Save Form</button> </th>
-<th> <input type="text" value="" size="10" id="empIdF" /><button id="getFormF" >Get Form</button> </th>
-<th> <button id="downloadFormF" >Download</button> </th>
-<th>  </th>
-</tr>
-<tr>
-<th> Form 2 </th>
-<th> <button id="saveForm2" >Save Form</button> </th>
-<th> <input type="text" value="" size="10" id="empId2" /><button id="getForm2" >Get Form</button> </th>
-<th> <button id="downloadForm2" >Download</button> </th>
-<th>  </th>
-</tr>
-<tr>
-<th> Admin </th>
-<th>  </th>
-<th>  </th>
-<th>  </th>
-<th> <input type="text" value="" size="10" id="empIdAdmin" /><button id="downloadReport" >Download</button> </th>
-</tr>
-<tr>
-<th> Commons </th>
-<th> <button id="getCountryList" >Get Country List</button> </th>
-<th> <button id="sendEmail" >Send Email</button> </th>
-<th>  </th>
-<th>  </th>
-</tr>
-</table>
-<form id="downloadFileForm11" 
-	  action="/IndiaPFServer/rest/form-11/downloadForm" 
-	  target="ifrDownload" 
-	  method="post" 
-	  class="noscreen"
->
-	<input type="text" value="" size="10" name="empId" id="downloadEmpId11" />
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info noscreen">
+	  <div id="employee-name">Welcome - </div>
+	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
 </form>
-<form id="downloadFileFormF" 
-	  action="/IndiaPFServer/rest/form-F/downloadForm" 
-	  target="ifrDownload" 
-	  method="post" 
-	  class="noscreen"
->
-	<input type="text" value="" size="10" name="empId" id="downloadEmpIdF" />
-</form>
-<form id="downloadFileForm2" 
-	  action="/IndiaPFServer/rest/form-2/downloadForm" 
-	  target="ifrDownload" 
-	  method="post" 
-	  class="noscreen"
->
-	<input type="text" value="" size="10" name="empId" id="downloadEmpId2" />
-</form>
-<form id="downloadReportAdmin" 
-	  action="/IndiaPFServer/rest/admin/downloadReport" 
-	  target="ifrDownload" 
-	  method="post" 
-	  class="noscreen"
->
-	<input type="text" value="" size="10" name="empId" id="downloadEmpIdAdmin" />
-</form>
-<!-- iframe used to download the pdf document -->
-<iframe id="ifrDownload" name="ifrDownloadPdf" width="0" height="0"></iframe>
-<div id="responseDiv" ></div>
-<!-- Load all scripts here -->
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+  <!-- Modal content -->
+  <div class="modal-content">
+  	<div id="alert-title"></div>
+    <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+    <hr class="modal-line" />
+    <p id="notification-popup-model-content-section"></p>
+    <hr class="modal-line" />
+    <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
-<script src="scripts/applicationCommon.js"></script>
+<script src="scripts/utilities.js"></script>
+<script>
+	callWebservice('/rest/commons/getServerInfo', null, showServerInfo);
+	
+	function showServerInfo(response) {
+		showNotificationModal(encodeObjectAsJSON(response), true);
+	}
+</script>
 </body>
 </html>

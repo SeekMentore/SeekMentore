@@ -1,6 +1,7 @@
 package com.utils;
 
 import com.constants.ExceptionConstants;
+import com.exception.ApplicationException;
 
 public class ExceptionUtils implements ExceptionConstants {
 	
@@ -10,6 +11,10 @@ public class ExceptionUtils implements ExceptionConstants {
 			root = org.apache.commons.lang.exception.ExceptionUtils.getCause(exception) == null ? exception	: org.apache.commons.lang.exception.ExceptionUtils.getCause(exception);
 		}
 		return root;
+	}
+	
+	public static void rethrowCheckedExceptionAsUncheckedException(final Throwable exception) throws RuntimeException {
+		throw new ApplicationException(exception);
 	}
 	
 	public static String generateErrorLog(final Throwable exception) {

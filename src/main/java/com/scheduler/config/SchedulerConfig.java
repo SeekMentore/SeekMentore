@@ -20,7 +20,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import com.constants.SchedulerConstants;
-import com.scheduler.jobs.ReminderEmailJob;
+import com.scheduler.jobs.EmailSenderJob;
 import com.utils.context.AppContext;
 
 @Configuration
@@ -58,33 +58,33 @@ public class SchedulerConfig implements SchedulerConstants {
     
     private Trigger[] getTriggerArray() {
     	final List<Trigger> triggerList = new ArrayList<Trigger>();
-    	triggerList.add(reminderEmailJobTrigger().getObject());
+    	triggerList.add(emailSenderJobTrigger().getObject());
         return triggerList.toArray(new Trigger[0]);
     }
-
+    
     /**
-     * Configuring Trigger & JobDetails for "ReminderEmailJob"
+     * Configuring Trigger & JobDetails for "EmailSenderJob"
      */
-    @Bean(name = "reminderEmailJobTrigger")
-    public CronTriggerFactoryBean reminderEmailJobTrigger() {
+    @Bean(name = "emailSenderJobTrigger")
+    public CronTriggerFactoryBean emailSenderJobTrigger() {
         final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
-        factoryBean.setJobDetail(reminderEmailJobDetails().getObject());
-        factoryBean.setStartDelay(ReminderEmailJob.START_DELAY);
-        factoryBean.setCronExpression(ReminderEmailJob.CRON_EXPRESSION);
+        factoryBean.setJobDetail(emailSenderJobDetails().getObject());
+        factoryBean.setStartDelay(EmailSenderJob.START_DELAY);
+        factoryBean.setCronExpression(EmailSenderJob.CRON_EXPRESSION);
         factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY);
         return factoryBean;
     }
 
-    @Bean(name = "reminderEmailJobDetails")
-    public JobDetailFactoryBean reminderEmailJobDetails() {
+    @Bean(name = "emailSenderJobDetails")
+    public JobDetailFactoryBean emailSenderJobDetails() {
         final JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
-        jobDetailFactoryBean.setJobClass(ReminderEmailJob.class);
-        jobDetailFactoryBean.setDescription(ReminderEmailJob.DESCRIPTION);
+        jobDetailFactoryBean.setJobClass(EmailSenderJob.class);
+        jobDetailFactoryBean.setDescription(EmailSenderJob.DESCRIPTION);
         jobDetailFactoryBean.setDurability(true);
-        jobDetailFactoryBean.setName(ReminderEmailJob.KEY);
+        jobDetailFactoryBean.setName(EmailSenderJob.KEY);
         return jobDetailFactoryBean;
     }
     /**
-     * Configuring Trigger & JobDetails for "ReminderEmailJob"
+     * Configuring Trigger & JobDetails for "EmailSenderJob"
      */
 }

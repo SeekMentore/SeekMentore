@@ -1,32 +1,24 @@
 package com.webservices.rest.components;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
-import org.json.JSONException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.CommonsConstants;
-import com.model.mail.MailAttachment;
+import com.model.User;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
-import com.service.components.Form11Service;
-import com.service.components.FormFService;
-import com.utils.MailUtils;
+import com.utils.ApplicationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -35,55 +27,55 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_COMMONS) 
 public class CommonsRestService extends AbstractRestWebservice implements RestMethodConstants, CommonsConstants {
 	
-	@Path(REST_METHOD_NAME_GET_COUNTRY_LIST)
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Path(REST_METHOD_NAME_TO_GET_USER)
 	@POST
-	public void getCountryList (
+	public String getUser (
 			@Context final HttpServletRequest request
-	) throws IOException, JSONException {
-		getCommonsService().testJDBCConnection();
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_GET_USER;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final User user = ApplicationUtils.returnUserObjWithoutSensitiveInformationFromSessionUserObjectBeforeSendingOnUI(getLoggedInUser(request));
+			return convertObjToJSONString(user, REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
-	@Path(REST_METHOD_NAME_GET_STATE_LIST)
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Path(REST_METHOD_NAME_TO_GET_SERVER_INFO)
 	@POST
-    public void getStateList (
-    		@Context final HttpServletRequest request,
-    		@Context final HttpServletResponse response
+	public String getServerInfo (
+			@Context final HttpServletRequest request
 	) throws Exception {
-		final List<MailAttachment> attachments = new LinkedList<MailAttachment>();
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "Form 11" + PERIOD + FileConstants.EXTENSION_PDF, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_FORM11_SERVICE, Form11Service.class).downloadForm(getLoggedInEmpId(request)),
-											"application/pdf"));
-		attachments.add(new MailAttachment(getLoggedInEmpId(request) + "Form F" + PERIOD + FileConstants.EXTENSION_PDF, 
-											AppContext.getBean(BeanConstants.BEAN_NAME_FORMF_SERVICE, FormFService.class).downloadForm(getLoggedInEmpId(request)),
-											"application/pdf"));
-		MailUtils.sendEmail(null, 
-				"mukherjeeshantanu797@gmail.com;gunjack.mukherjee@gmail.com", 
-				"prm.seekmentore@gmail.com",
-				"partner.seekmentore@gmail.com",
-				"Simple Email Subject", 
-				"Simple Email Body");
-		MailUtils.sendEmailWithAttachments(null, 
-				"mukherjeeshantanu797@gmail.com", 
-				"Attachment Email Subject", 
-				"<html><body><h1>this is html h1</h1><h3>this is html h3</h3></body></html>",
-				attachments);
-		final List<MailAttachment> attachments1 = new LinkedList<MailAttachment>();
-		MailUtils.sendEmailWithAttachments(null, 
-				"mukherjeeshantanu797@gmail.com", 
-				"Without Attachment Email Subject", 
-				"<html><body><h1>Without Attachment this is html h1</h1><h3>Without Attachment this is html h3</h3></body></html>",
-				attachments1);
-    }
+		this.methodName = REST_METHOD_NAME_TO_GET_SERVER_INFO;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getJNDIandControlConfigurationLoadService().getServerName(), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
 	
 	public CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 	
+	 public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
+	
 	@Override
-	public boolean doSecurity(final HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return true;
+	public void doSecurity(final HttpServletRequest request) {
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_TO_GET_USER : {
+				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_TO_GET_SERVER_INFO : {
+				this.securityPassed = true;
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
 	}
 }

@@ -1,34 +1,33 @@
 ---------------------------------------------------------------------------------
 --                                     SELECT DATABASE
 ---------------------------------------------------------------------------------
-USE INDIA_PROVIDENT_FUND;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
--- Form 2 Tables
+-- Public Pages Tables
 ---------------------------------------------------------------------------------
-SELECT * FROM FORM2;
-SELECT * FROM FORM2_EMP_PF_NOM_DTLS;
-SELECT * FROM FORM2_WDW_CHLDRN_NOM_DTLS;
-SELECT * FROM FORM2_ONLY_WDW_NOM_DTLS;
+SELECT * FROM BECOME_TUTOR;
+SELECT * FROM FIND_TUTOR;
+SELECT * FROM SUBSCRIBE_WITH_US;
+SELECT * FROM SUBMIT_QUERY;
 
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-SELECT * FROM FORM11;
-SELECT * FROM FORM11_KYC_DTLS;
+SELECT * FROM SUBSCRIBED_CUSTOMER;
+SELECT * FROM REGISTERED_TUTOR;
 
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-SELECT * FROM FORMF;
-SELECT * FROM FORMF_EMP_GRTY_NOM_DTLS;
+SELECT * FROM GENDER_LOOKUP;
+SELECT * FROM QUALIFICATION_LOOKUP;
+SELECT * FROM PROFESSION_LOOKUP;
+SELECT * FROM TRANSPORT_MODE_LOOKUP;
+SELECT * FROM LOCATIONS_LOOKUP;
+SELECT * FROM PREFERRED_TIME_LOOKUP;
+SELECT * FROM STUDENT_GRADE_LOOKUP;
+SELECT * FROM SUBJECTS_LOOKUP;
 
----------------------------------------------------------------------------------
--- Look Up tables
----------------------------------------------------------------------------------
-SELECT * FROM COUNTRY;
-SELECT * FROM STATE;
-SELECT * FROM MARITAL_STATUS;
-SELECT * FROM RELATIONSHIP;
-SELECT * FROM CATEGORY;
-SELECT * FROM GENDER;
+SELECT * FROM APP_ERROR_REPORT;
+
+SELECT * FROM MAIL_QUEUE;
+SELECT * FROM MAIL_ATTACHMENTS;
+
+SELECT * FROM EMPLOYEE;
+
+
