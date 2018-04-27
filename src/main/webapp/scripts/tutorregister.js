@@ -120,6 +120,7 @@ function getParticularTutorRecord(gridName, recordNumber) {
 function hideTutorAllRecordsPage() {
 	$('#selected-record-div').removeClass('noscreen');
 	$('.action-section').addClass('noscreen');
+	$('#download-report-div').addClass('noscreen');
 	$('#non_contacted-all-records-div').addClass('noscreen');
 	$('#non_verified-all-records-div').addClass('noscreen');
 	$('#verified-all-records-div').addClass('noscreen');
@@ -138,6 +139,7 @@ function hideTutorAllRecordsPage() {
 
 function showTutorAllRecordsPage() {
 	$('#selected-record-div').addClass('noscreen');
+	$('#download-report-div').removeClass('noscreen');
 	$('#non_contacted-all-records-div').removeClass('noscreen');
 	$('#non_verified-all-records-div').removeClass('noscreen');
 	$('#verified-all-records-div').removeClass('noscreen');
@@ -223,4 +225,18 @@ function loadGrids() {
 	callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
 	callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
 	callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
+}
+
+function downloadReport() {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/admin/downloadAdminReportTutorRegistrations';
+	form.submit();
+}
+
+function downloadProfile() {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/admin/downloadAdminTutorRegistrationProfilePdf';
+	$('#downloadForm-tentativeTutorId').val(tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().tentativeTutorId);
+	$('#downloadForm-name').val(tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().firstName + '_' + tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().lastName);
+	form.submit();
 }

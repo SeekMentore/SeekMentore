@@ -20,9 +20,6 @@ import com.utils.SecurityUtil;
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
 public class LoginService implements LoginConstants {
 	
-	//@Autowired
-	//private transient ApplicationDao applicationDao;
-	
 	@Autowired
 	private transient CommonsService commonsService;
 	

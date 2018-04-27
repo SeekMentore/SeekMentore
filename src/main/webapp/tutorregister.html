@@ -21,6 +21,23 @@
 <div class="banner-separator"></div>
 <form method="POST" id="signout_form" class="noscreen">
 </form>
+<div id="download-report-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="">
+			<tr>
+				<th class="center-align">
+					<button 
+						type="button" 
+						onClick="downloadReport()"
+						class="login-form-element submit-button button-green" >
+						Download Report
+					</button> 
+				</th>
+			</tr>
+		</table>
+	</div>
+</div>
 <div id="non_contacted-all-records-div" class="w3-row-padding">
 	<Br/>
 	<div class="w3-row-padding">
@@ -190,6 +207,23 @@
 	</div>
 </div>
 <div id="selected-record-div" class="w3-row-padding noscreen">
+<BR/>
+	<div id="download-profile-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="">
+				<tr>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="downloadProfile()"
+							class="login-form-element submit-button button-green" >
+							Download Tutor Profile
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
   <BR/>
   <div class="w3-row-padding">
 	<table align="center" class="all-records">
@@ -527,6 +561,16 @@
 </div>
 <BR/>
 <BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+	<input type="text" value="" size="10" name="tentativeTutorId" id="downloadForm-tentativeTutorId" />
+	<input type="text" value="" size="10" name="name" id="downloadForm-name" />
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
 <!-- The Modal -->
 <div id="notification-popup-modal" class="modal noscreen">
   <!-- Modal content -->

@@ -183,6 +183,10 @@ table.all-records tr:nth-child(even){background-color: #f2f2f2}
 		font-size: 1em !important;
 	}
 	
+	.center-align {
+		text-align: center !important;
+	}
+	
 	.admin-panel-cards {
 	    min-height: 5em;
 	    text-align: center;

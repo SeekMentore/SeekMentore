@@ -2,9 +2,6 @@ package com.constants;
 
 public interface RestMethodConstants extends RestParamsConstants {
 	
-	String REST_METHOD_NAME_AUTHETICATE = "/authenticate";
-	
-	String REST_METHOD_NAME_DOWNLOAD_REPORT = "/downloadReport";
 	
 	// Public Access REST methods
 	// REST methods to submit data
@@ -18,6 +15,8 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US = "/getDropdownListDataSubscribeWithUs";
 	
 	// Admin REST methods
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF = "/downloadAdminTutorRegistrationProfilePdf";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_REGISTRATIONS = "/downloadAdminReportTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS = "/displayNonContactedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS = "/displayNonVerifiedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS = "/displayVerifiedTutorRegistrations";

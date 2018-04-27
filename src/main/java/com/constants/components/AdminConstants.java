@@ -1,6 +1,7 @@
 package com.constants.components;
 
 import com.constants.ApplicationConstants;
+import com.constants.VelocityConstants;
 
 public interface AdminConstants extends ApplicationConstants {
 	
@@ -20,4 +21,8 @@ public interface AdminConstants extends ApplicationConstants {
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";
 	String VALIDATION_MESSAGE_INVALID_TUTOR_ID = "Invalid Tutor Id.";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_REMARKS = "Please provide remarks for this action.";
+	
+	String VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/admin";
+	String VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH = VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/tutorregister";
+	String REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH + "/registered-tutor-profile.vm";
 }

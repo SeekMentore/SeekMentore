@@ -5,7 +5,7 @@ function showUserInfo(response) {
 }
 
 function showValue(val) {
-	return (null != val) ? (('N' != val) ? (('Y' != val) ? val : 'Yes') : 'No') : '';
+	return (null != val) ? val : '';
 }
 
 callWebservice('/rest/commons/getUser', null, showUserInfo);

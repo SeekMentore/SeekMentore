@@ -1,10 +1,13 @@
 package com.service.components;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +17,17 @@ import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
+import com.model.WorkbookReport;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
+import com.utils.ApplicationUtils;
+import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
+import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_ADMIN_SERVICE)
-public class AdminService implements AdminConstants{
+public class AdminService implements AdminConstants {
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -30,7 +38,31 @@ public class AdminService implements AdminConstants{
 	@PostConstruct
 	public void init() {}
 	
-	public List<BecomeTutor> displayTutorRegistrations(final String grid) {
+	public byte[] downloadAdminReport() throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		workbookReport.createSheet("NON_CONTACTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("NON_VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("VERIFICATION_FAILED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("TO_BE_RECONTACTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("SELECTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		workbookReport.createSheet("REJECTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
+		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	public byte[] downloadAdminTutorRegistrationProfilePdf(final String tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
+		final BecomeTutor registeredTutorObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = ?", new Object[] {tentativeTutorId}, BecomeTutor.class);
+		if (null != registeredTutorObject) {
+			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInTutorRegistrationObject(registeredTutorObject);
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("registeredTutorObject", registeredTutorObject);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
+		return null;
+	}
+	
+	public List<BecomeTutor> displayTutorRegistrations(final String grid, final String delimiter) {
 		final StringBuilder query = new StringBuilder("SELECT * FROM BECOME_TUTOR WHERE ");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
@@ -65,22 +97,41 @@ public class AdminService implements AdminConstants{
 		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), BecomeTutor.class);
 		for (final BecomeTutor registeredTutorObject : registeredTutorList) {
 			// Get all lookup data and user ids back to original label and values
-			registeredTutorObject.setGender(preapreLookupLabelString("GENDER_LOOKUP",registeredTutorObject.getGender(), false));
-			registeredTutorObject.setQualification(preapreLookupLabelString("QUALIFICATION_LOOKUP",registeredTutorObject.getQualification(), false));
-			registeredTutorObject.setPrimaryProfession(preapreLookupLabelString("PROFESSION_LOOKUP",registeredTutorObject.getPrimaryProfession(), false));
-			registeredTutorObject.setTransportMode(preapreLookupLabelString("TRANSPORT_MODE_LOOKUP",registeredTutorObject.getTransportMode(), false));
-			registeredTutorObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", registeredTutorObject.getStudentGrade(), true));
-			registeredTutorObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", registeredTutorObject.getSubjects(), true));
-			registeredTutorObject.setLocations(preapreLookupLabelString("LOCATIONS_LOOKUP", registeredTutorObject.getLocations(), true));
-			registeredTutorObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", registeredTutorObject.getPreferredTimeToCall(), true));
-			registeredTutorObject.setWhoContacted(getNameOfUserFromUserId(registeredTutorObject.getWhoContacted()));
-			registeredTutorObject.setWhoVerified(getNameOfUserFromUserId(registeredTutorObject.getWhoVerified()));
-			registeredTutorObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(registeredTutorObject.getWhoSuggestedForRecontact()));
-			registeredTutorObject.setWhoRecontacted(getNameOfUserFromUserId(registeredTutorObject.getWhoRecontacted()));
-			registeredTutorObject.setWhoSelected(getNameOfUserFromUserId(registeredTutorObject.getWhoSelected()));
-			registeredTutorObject.setWhoRejected(getNameOfUserFromUserId(registeredTutorObject.getWhoRejected()));
+			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, delimiter);
 		}
 		return registeredTutorList;
+	}
+	
+	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor registeredTutorObject, final String delimiter) {
+		registeredTutorObject.setGender(preapreLookupLabelString("GENDER_LOOKUP",registeredTutorObject.getGender(), false, delimiter));
+		registeredTutorObject.setQualification(preapreLookupLabelString("QUALIFICATION_LOOKUP",registeredTutorObject.getQualification(), false, delimiter));
+		registeredTutorObject.setPrimaryProfession(preapreLookupLabelString("PROFESSION_LOOKUP",registeredTutorObject.getPrimaryProfession(), false, delimiter));
+		registeredTutorObject.setTransportMode(preapreLookupLabelString("TRANSPORT_MODE_LOOKUP",registeredTutorObject.getTransportMode(), false, delimiter));
+		registeredTutorObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", registeredTutorObject.getStudentGrade(), true, delimiter));
+		registeredTutorObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", registeredTutorObject.getSubjects(), true, delimiter));
+		registeredTutorObject.setLocations(preapreLookupLabelString("LOCATIONS_LOOKUP", registeredTutorObject.getLocations(), true, delimiter));
+		registeredTutorObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", registeredTutorObject.getPreferredTimeToCall(), true, delimiter));
+		registeredTutorObject.setWhoContacted(getNameOfUserFromUserId(registeredTutorObject.getWhoContacted()));
+		registeredTutorObject.setWhoVerified(getNameOfUserFromUserId(registeredTutorObject.getWhoVerified()));
+		registeredTutorObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(registeredTutorObject.getWhoSuggestedForRecontact()));
+		registeredTutorObject.setWhoRecontacted(getNameOfUserFromUserId(registeredTutorObject.getWhoRecontacted()));
+		registeredTutorObject.setWhoSelected(getNameOfUserFromUserId(registeredTutorObject.getWhoSelected()));
+		registeredTutorObject.setWhoRejected(getNameOfUserFromUserId(registeredTutorObject.getWhoRejected()));
+		registeredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsContacted()));
+		registeredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsAuthenticationVerified()));
+		registeredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsToBeRecontacted()));
+		registeredTutorObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsSelected()));
+		registeredTutorObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsRejected()));
+		registeredTutorObject.setReApplied(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getReApplied()));
+	}
+	
+	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor registeredTutorObject) {
+		registeredTutorObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getContactedRemarks()));
+		registeredTutorObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getVerificationRemarks()));
+		registeredTutorObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSuggestionRemarks()));
+		registeredTutorObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRecontactedRemarks()));
+		registeredTutorObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSelectionRemarks()));
+		registeredTutorObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRejectionRemarks()));
 	}
 	
 	public Map<String, Object> takeActionOnRegisteredTutors (
@@ -169,10 +220,10 @@ public class AdminService implements AdminConstants{
 				return user.getName();
 			}
 		}
-		return null;
+		return EMPTY_STRING;
 	}
 	
-	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect) {
+	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) {
 		final StringBuilder multiLineString = new StringBuilder(EMPTY_STRING);
 		if (multiSelect) {
 			final List<SelectLookup> selectLookupList = commonsService.getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));
@@ -181,7 +232,7 @@ public class AdminService implements AdminConstants{
 				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(selectLookup.getDescription())) {
 					multiLineString.append(WHITESPACE).append(selectLookup.getDescription());
 				}
-				multiLineString.append(LINE_BREAK);
+				multiLineString.append(delimiter);
 			}
 		} else {
 			multiLineString.append(commonsService.getSelectLookupEntry(selectLookupTable, value).getLabel());

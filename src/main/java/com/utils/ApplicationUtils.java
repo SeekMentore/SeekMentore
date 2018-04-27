@@ -34,4 +34,21 @@ public class ApplicationUtils implements ApplicationConstants {
 		newuserobj.setUserType(null);
 		return newuserobj;
 	}
+	
+	public static String returnBlankIfStringNull(final String obj) {
+		if (obj == null)
+			return EMPTY_STRING;
+		return obj.toString();
+	}
+	
+	public static String setYesOrNoFromYN(final String value) {
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(value)) {
+			switch (value) {
+				case YES : return "Yes";
+				case NO : return "No";
+				default : return value;
+			}
+		}
+		return EMPTY_STRING;
+	}
 }
