@@ -171,7 +171,7 @@ function openTutorRecord(tutorObj) {
 		$('#WHO_CONTACTED').html(showValue(tutorObj.whoContacted));
 		$('#CONTACTED_DATE').html(showValue(tutorObj.contactedDate));
 		$('#CONTACTED_REMARKS').html(showValue(tutorObj.contactedRemarks));
-		$('#IS_AUTH_VERIFIED').html(showValue(tutorObj.isAuthenticationVerified));
+		$('#IS_AUTHENTICATION_VERIFIED').html(showValue(tutorObj.isAuthenticationVerified));
 		$('#WHO_VERIFIED').html(showValue(tutorObj.whoVerified));
 		$('#VERIFICATION_DATE').html(showValue(tutorObj.verificationDate));
 		$('#VERIFICATION_REMARKS').html(showValue(tutorObj.verificationRemarks));
