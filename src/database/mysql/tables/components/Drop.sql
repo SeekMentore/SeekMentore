@@ -1,42 +1,38 @@
 ---------------------------------------------------------------------------------
 --                                     SELECT DATABASE
 ---------------------------------------------------------------------------------
-USE INDIA_PROVIDENT_FUND;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
 --                                     TABLES
 ---------------------------------------------------------------------------------
--- Form 2 Tables
+-- Public Pages Tables
 ---------------------------------------------------------------------------------
-DROP TABLE IF EXISTS FORM2_EMP_PF_NOM_DTLS;
-DROP TABLE IF EXISTS FORM2_WDW_CHLDRN_NOM_DTLS;
-DROP TABLE IF EXISTS FORM2_ONLY_WDW_NOM_DTLS;
-DROP TABLE IF EXISTS FORM2;
+DROP TABLE IF EXISTS BECOME_TUTOR;
+DROP TABLE IF EXISTS FIND_TUTOR;
+DROP TABLE IF EXISTS SUBSCRIBE_WITH_US;
+DROP TABLE IF EXISTS SUBMIT_QUERY;
 
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-DROP TABLE IF EXISTS FORM11_KYC_DTLS;
-DROP TABLE IF EXISTS FORM11;
+DROP TABLE IF EXISTS SUBSCRIBED_CUSTOMER;
+DROP TABLE IF EXISTS REGISTERED_TUTOR;
 
----------------------------------------------------------------------------------
--- Form F Tables
----------------------------------------------------------------------------------
-DROP TABLE IF EXISTS FORMF_EMP_GRTY_NOM_DTLS;
-DROP TABLE IF EXISTS FORMF;
+DROP TABLE IF EXISTS GENDER_LOOKUP;
+DROP TABLE IF EXISTS QUALIFICATION_LOOKUP;
+DROP TABLE IF EXISTS PROFESSION_LOOKUP;
+DROP TABLE IF EXISTS TRANSPORT_MODE_LOOKUP;
+DROP TABLE IF EXISTS LOCATIONS_LOOKUP;
+DROP TABLE IF EXISTS PREFERRED_TIME_LOOKUP;
+DROP TABLE IF EXISTS STUDENT_GRADE_LOOKUP;
+DROP TABLE IF EXISTS SUBJECTS_LOOKUP;
 
----------------------------------------------------------------------------------
--- Look Up tables
----------------------------------------------------------------------------------
-DROP TABLE IF EXISTS COUNTRY;
-DROP TABLE IF EXISTS STATE;
-DROP TABLE IF EXISTS MARITAL_STATUS;
-DROP TABLE IF EXISTS RELATIONSHIP;
-DROP TABLE IF EXISTS CATEGORY;
-DROP TABLE IF EXISTS GENDER;
+DROP TABLE IF EXISTS APP_ERROR_REPORT;
 
+DROP TABLE IF EXISTS MAIL_QUEUE;
+DROP TABLE IF EXISTS MAIL_ATTACHMENTS;
+
+DROP TABLE IF EXISTS EMPLOYEE;
 ---------------------------------------------------------------------------------
 --                                     DATABASE
 ---------------------------------------------------------------------------------
-DROP DATABASE INDIA_PROVIDENT_FUND;
+DROP DATABASE SEEK_MENTORE;
 

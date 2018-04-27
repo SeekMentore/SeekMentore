@@ -1,37 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	pageAccessType values 
+		G - General Access only Public Rest URL's & Commons URL
+		M - Mentor Access
+		P - Professional Team Access
+		A - Admin Access
+		S - Super/all Access
+		D - Development Team Access
+		T - Testing Team Access
+ -->
 <menu>
 	<pageList id="secured">
-		<page id="form11" url="/rest/form-11" pageAccessType="U,A">
+		<!-- <page id="publicAccess" url="/rest/publicaccess" pageAccessType="G">
 			<webservice id="getForm" url="/getForm"></webservice>
 			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
 			<webservice id="downloadForm" url="/downloadForm"></webservice>
+		</page> -->
+		<page id="admin" url="/admin.html" pageAccessType="A"></page>
+		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
+		<page id="adminRest" url="/rest/admin" pageAccessType="A">
+			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
+			<webservice id="displayNonVerifiedTutorRegistrations" url="/displayNonVerifiedTutorRegistrations"></webservice>
+			<webservice id="displayVerifiedTutorRegistrations" url="/displayVerifiedTutorRegistrations"></webservice>
+			<webservice id="displayVerificationFailedTutorRegistrations" url="/displayVerificationFailedTutorRegistrations"></webservice>
+			<webservice id="displayToBeRecontactedTutorRegistrations" url="/displayToBeRecontactedTutorRegistrations"></webservice>
+			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
+			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
+			<webservice id="takeActionOnRegisteredTutors" url="/takeActionOnRegisteredTutors"></webservice>
+			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
+			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
 		</page>
-		<page id="form2" url="/rest/form-2" pageAccessType="U,A">
-			<webservice id="getForm" url="/getForm"></webservice>
-			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm2"></webservice>
-			<webservice id="downloadForm" url="/downloadForm"></webservice>
-		</page>
-		<page id="formF" url="/rest/form-F" pageAccessType="U,A">
-			<webservice id="getForm" url="/getForm"></webservice>
-			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForFormF"></webservice>
-			<webservice id="downloadForm" url="/downloadForm"></webservice>
-		</page>
-		<page id="admin" url="/rest/admin" pageAccessType="A">
-			<webservice id="downloadReport" url="/downloadReport"></webservice>
-		</page>
-		<page id="commons" url="/rest/commons" pageAccessType="U,A">
-			<webservice id="getCountryList" url="/getCountryList"></webservice>
-			<webservice id="getStateList" url="/getStateList"></webservice>
-			<webservice id="getRelationshipList" url="/getRelationshipList"></webservice>
-			<webservice id="getGenderList" url="/getGenderList"></webservice>
-			<webservice id="getMaritalStatusList" url="/getMaritalStatusList"></webservice>
-			<webservice id="getCategoryList" url="/getCategoryList"></webservice>
+		<page id="commons" url="/rest/commons" pageAccessType="G">
+			<webservice id=" getUser" url="/getUser"></webservice>
 		</page>
 	</pageList>
 	<pageList id="unsecured">
-		<page id="index" url="/">
+		<page id="index" url="/"></page>
+		<page id="index" url="/index.html"></page>
+		<page id="publicAccess" url="/rest/publicaccess">
+			<webservice id="becomeTutor" url="/becomeTutor"></webservice>
+			<webservice id="findTutor" url="/findTutor"></webservice>
+			<webservice id="submitQuery" url="/submitQuery"></webservice>
+			<webservice id="subscribe" url="/subscribe"></webservice>
+			<webservice id="getDropdownListDataBecomeTutor" url="/getDropdownListDataBecomeTutor"></webservice>
+			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
+			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
 		</page>
-		<page id="index" url="/index.html">
+		<page id="login" url="/login.html"></page>
+		<page id="loginRest" url="/rest/login">
+			<webservice id="validateCredential" url="/validateCredential"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
 		</page>
+		<page id="commons" url="/rest/commons">
+			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+		</page>
+		<page id="login" url="/error.html"></page>
 	</pageList>
 </menu>

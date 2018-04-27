@@ -12,6 +12,8 @@ public class MailConfiguration implements Serializable {
 	private int port;
 	private String encryptedUsername;
 	private String encryptedPassword;
+	private ImportantCompanyMailIdsAndLists importantCompanyMailIdsAndLists;
+	private MailingDuringDevelopmentAndTestingFeatures mailingDuringDevelopmentAndTestingFeatures;
 	
 	public String getHost() {
 		return host;
@@ -35,7 +37,6 @@ public class MailConfiguration implements Serializable {
 		return encryptedPassword;
 	}
 	
-	@XmlElement
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
@@ -44,8 +45,24 @@ public class MailConfiguration implements Serializable {
 		return encryptedUsername;
 	}
 
-	@XmlElement
 	public void setEncryptedUsername(String encryptedUsername) {
 		this.encryptedUsername = encryptedUsername;
+	}
+
+	public ImportantCompanyMailIdsAndLists getImportantCompanyMailIdsAndLists() {
+		return importantCompanyMailIdsAndLists;
+	}
+
+	@XmlElement
+	public void setImportantCompanyMailIdsAndLists(ImportantCompanyMailIdsAndLists importantCompanyMailIdsAndLists) {
+		this.importantCompanyMailIdsAndLists = importantCompanyMailIdsAndLists;
+	}
+
+	public MailingDuringDevelopmentAndTestingFeatures getMailingDuringDevelopmentAndTestingFeatures() {
+		return mailingDuringDevelopmentAndTestingFeatures;
+	}
+
+	public void setMailingDuringDevelopmentAndTestingFeatures(MailingDuringDevelopmentAndTestingFeatures mailingDuringDevelopmentAndTestingFeatures) {
+		this.mailingDuringDevelopmentAndTestingFeatures = mailingDuringDevelopmentAndTestingFeatures;
 	}
 }

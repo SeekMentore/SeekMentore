@@ -13,7 +13,9 @@ public class ControlConfiguration implements Serializable {
 	private String appEncyptionAlgorithm;
 	private String appEncodingStandard;
 	private Boolean applyFilterToApplication;
+	private String remoteConnectionAcceptedLanguage;
 	private MailConfiguration mailConfiguration;
+	private CaptchaParams captchaParams;
 
 	public String getAppEncyptionAlgorithm() {
 		return appEncyptionAlgorithm;
@@ -49,5 +51,23 @@ public class ControlConfiguration implements Serializable {
 	@XmlElement
 	public void setMailConfiguration(MailConfiguration mailConfiguration) {
 		this.mailConfiguration = mailConfiguration;
+	}
+
+	public CaptchaParams getCaptchaParams() {
+		return captchaParams;
+	}
+
+	@XmlElement
+	public void setCaptchaParams(CaptchaParams captchaParams) {
+		this.captchaParams = captchaParams;
+	}
+
+	public String getRemoteConnectionAcceptedLanguage() {
+		return remoteConnectionAcceptedLanguage;
+	}
+
+	@XmlElement
+	public void setRemoteConnectionAcceptedLanguage(String remoteConnectionAcceptedLanguage) {
+		this.remoteConnectionAcceptedLanguage = remoteConnectionAcceptedLanguage;
 	}
 }

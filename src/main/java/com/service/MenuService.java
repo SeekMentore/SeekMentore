@@ -16,7 +16,6 @@ import com.model.menu.Menu;
 import com.model.menu.Page;
 import com.model.menu.PageList;
 import com.model.menu.Webservice;
-import com.utils.AdditionalAccessFunctionUtils;
 import com.utils.ApplicationUtils;
 
 @Service(BeanConstants.BEAN_NAME_MENU_SERVICE)
@@ -34,20 +33,14 @@ public class MenuService implements MenuConstants {
 			this.additionalAccessFunction = additionalAccessFunction;
 		}
 		
-		public boolean hasAccessToURL(final String empId, final List<String> providedAccessRoles, final Map<String, Object> extraParams) {
+		public boolean hasAccessToURL(final String userId, final List<String> providedAccessRoles, final Map<String, Object> extraParams) {
 			return PAGE_UNSECURED.equals(this.pageAccessType) 
-					|| (checkPageAccessTypeWithProvidedRoles(providedAccessRoles) && checkAdditionalAccess(empId, extraParams));
+					|| (checkPageAccessTypeWithProvidedRoles(providedAccessRoles) && checkAdditionalAccess(userId, extraParams));
 		}
 		
 		private boolean checkAdditionalAccess(final String empId, final Map<String, Object> extraParams) {
 			if (null == this.additionalAccessFunction || EMPTY_STRING.equals(this.additionalAccessFunction.trim()))
 				return true;
-			if (this.additionalAccessFunction.equals("saveAccessForForm11"))
-				return AdditionalAccessFunctionUtils.saveAccessForForm11(empId, extraParams);
-			if (this.additionalAccessFunction.equals("saveAccessForFormF"))
-				return AdditionalAccessFunctionUtils.saveAccessForForm2(empId, extraParams);
-			if (this.additionalAccessFunction.equals("saveAccessForForm2"))
-				return AdditionalAccessFunctionUtils.saveAccessForFormF(empId, extraParams);
 			throw new ApplicationException(EXCEPTION_UNDEFINED_ADDITIONAL_ACCESS_FUNCTION);
 		}
 		
@@ -94,9 +87,9 @@ public class MenuService implements MenuConstants {
 		return applicationMenu;
 	}
 	
-	public boolean hasAccessToURL(final String empId, final String url, final List<String> providedAccessRoles, final Map<String, Object> extraParams) {
+	public boolean hasAccessToURL(final String userId, final String url, final List<String> providedAccessRoles, final Map<String, Object> extraParams) {
 		return (null != url && !url.equals(EMPTY_STRING) && null != menuUrlToPageAccessTypeMap.get(url.toUpperCase())) 
-				&& (menuUrlToPageAccessTypeMap.get(url.toUpperCase()).hasAccessToURL(empId, providedAccessRoles, extraParams));
+				&& (menuUrlToPageAccessTypeMap.get(url.toUpperCase()).hasAccessToURL(userId, providedAccessRoles, extraParams));
 	}
 	
 	public boolean isPageSecured(final String url) {
