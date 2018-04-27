@@ -1,34 +1,32 @@
 ---------------------------------------------------------------------------------
 --                                     SELECT DATABASE
 ---------------------------------------------------------------------------------
-USE INDIA_PROVIDENT_FUND;
+USE SEEK_MENTORE;
 
 ---------------------------------------------------------------------------------
--- Form 2 Tables
+-- Public Pages Tables
 ---------------------------------------------------------------------------------
-DELETE FROM FORM2_EMP_PF_NOM_DTLS;
-DELETE FROM FORM2_WDW_CHLDRN_NOM_DTLS;
-DELETE FROM FORM2_ONLY_WDW_NOM_DTLS;
-DELETE FROM FORM2;
+DELETE FROM BECOME_TUTOR;
+DELETE FROM FIND_TUTOR;
+DELETE FROM SUBSCRIBE_WITH_US;
+DELETE FROM SUBMIT_QUERY;
 
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-DELETE FROM FORM11_KYC_DTLS;
-DELETE FROM FORM11;
+DELETE FROM SUBSCRIBED_CUSTOMER;
+DELETE FROM REGISTERED_TUTOR;
 
----------------------------------------------------------------------------------
--- Form 11 Tables
----------------------------------------------------------------------------------
-DELETE FROM FORMF_EMP_GRTY_NOM_DTLS;
-DELETE FROM FORMF;
+DELETE FROM GENDER_LOOKUP;
+DELETE FROM QUALIFICATION_LOOKUP;
+DELETE FROM PROFESSION_LOOKUP;
+DELETE FROM TRANSPORT_MODE_LOOKUP;
+DELETE FROM LOCATIONS_LOOKUP;
+DELETE FROM PREFERRED_TIME_LOOKUP;
+DELETE FROM STUDENT_GRADE_LOOKUP;
+DELETE FROM SUBJECTS_LOOKUP;
 
----------------------------------------------------------------------------------
--- Look Up tables
----------------------------------------------------------------------------------
-DELETE FROM STATE;
-DELETE FROM COUNTRY;
-DELETE FROM MARITAL_STATUS;
-DELETE FROM RELATIONSHIP;
-DELETE FROM CATEGORY;
-DELETE FROM GENDER;
+DELETE FROM APP_ERROR_REPORT;
+
+DELETE FROM MAIL_QUEUE;
+DELETE FROM MAIL_ATTACHMENTS;
+
+DELETE FROM EMPLOYEE;
+

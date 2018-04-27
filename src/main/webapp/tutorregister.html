@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Admin - Tutor Register</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info">
+	  <div id="employee-name">Welcome - </div>
+	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="download-report-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="">
+			<tr>
+				<th class="center-align">
+					<button 
+						type="button" 
+						onClick="downloadReport()"
+						class="login-form-element submit-button button-green" >
+						Download Report
+					</button> 
+				</th>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="non_contacted-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Non Contacted Tutors</th>
+				<th id="non_contacted-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="non_contacted-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="non_verified-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Non Verified Tutors</th>
+				<th id="non_verified-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="non_verified-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="verified-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Verified Tutors</th>
+				<th id="verified-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="verified-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="verification_failed-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Verification Failed Tutors</th>
+				<th id="verification_failed-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="verification_failed-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="to_be_recontacted-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>To be Recontacted Tutors</th>
+				<th id="to_be_recontacted-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="to_be_recontacted-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="selected-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Selected Tutors</th>
+				<th id="selected-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="selected-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="rejected-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Rejected Tutors</th>
+				<th id="rejected-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="rejected-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="selected-record-div" class="w3-row-padding noscreen">
+<BR/>
+	<div id="download-profile-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="">
+				<tr>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="downloadProfile()"
+							class="login-form-element submit-button button-green" >
+							Download Tutor Profile
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+  <BR/>
+  <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+   <div class="w3-row-padding">
+	    <table align="center" class="all-records">
+	    	<tr>
+	    		<td>Application Date</td>
+	    		<td id="APPLICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Application Status</td>
+	    		<td id="APPLICATION_STATUS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Date of Birth</td>
+	    		<td id="DATE_OF_BIRTH"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td id="CONTACT_NUMBER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td id="EMAIL_ID"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>First Name</td>
+	    		<td id="FIRST_NAME"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Last Name</td>
+	    		<td id="LAST_NAME"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Gender</td>
+	    		<td id="GENDER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Qualification</td>
+	    		<td id="QUALIFICATION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Primary Profession</td>
+	    		<td id="PRIMARY_PROFESSION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Transport Mode</td>
+	    		<td id="TRANSPORT_MODE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Teaching Experience</td>
+	    		<td id="TEACHING_EXP"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Student Grade</td>
+	    		<td id="STUDENT_GRADE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subjects</td>
+	    		<td id="SUBJECTS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Locations</td>
+	    		<td id="LOCATIONS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Time To Call</td>
+	    		<td id="PREFERRED_TIME_TO_CALL"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td id="ADDITIONAL_DETAILS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Contacted</td>
+	    		<td id="IS_CONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Contacted</td>
+	    		<td id="WHO_CONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Date</td>
+	    		<td id="CONTACTED_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Remarks</td>
+	    		<td id="CONTACTED_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Authentication Verified</td>
+	    		<td id="IS_AUTHENTICATION_VERIFIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Verified</td>
+	    		<td id="WHO_VERIFIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Date</td>
+	    		<td id="VERIFICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Remarks</td>
+	    		<td id="VERIFICATION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is To Be Recontacted</td>
+	    		<td id="IS_TO_BE_RECONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Suggested For Re-contact</td>
+	    		<td id="WHO_SUGGESTED_FOR_RECONTACT"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Date</td>
+	    		<td id="SUGGESTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Remarks</td>
+	    		<td id="SUGGESTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Recontacted</td>
+	    		<td id="WHO_RECONTACTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Date</td>
+	    		<td id="RECONTACTED_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Remarks</td>
+	    		<td id="RECONTACTED_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Selected</td>
+	    		<td id="IS_SELECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Selected</td>
+	    		<td id="WHO_SELECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Date</td>
+	    		<td id="SELECTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Remarks</td>
+	    		<td id="SELECTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Rejected</td>
+	    		<td id="IS_REJECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Rejected</td>
+	    		<td id="WHO_REJECTED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Date</td>
+	    		<td id="REJECTION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Remarks</td>
+	    		<td id="REJECTION_REMARKS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Count</td>
+	    		<td id="REJECTION_COUNT"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Re Applied</td>
+	    		<td id="RE_APPLIED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Previous Application Date</td>
+	    		<td id="PREVIOUS_APPLICATION_DATE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Record Last Updated</td>
+	    		<td id="RECORD_LAST_UPDATED"></td>
+	    	</tr>
+		</table>
+   </div>
+   <div id="remarks-div" class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<textarea rows="4" cols="76" id="remarks" placeholder="Provide reason in case of Rejection or Need for Recontact!!!"></textarea>
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="non_contacted-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('contacted')"
+					class="login-form-element submit-button button-green" >
+					Contacted
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('recontact')"
+					class="login-form-element submit-button" >
+					Re-contact
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="non_verified-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('verify')"
+					class="login-form-element submit-button button-green" >
+					Verify
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('failverify')"
+					class="login-form-element submit-button button-red" >
+					Fail Verification
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="verified-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('select')"
+					class="login-form-element submit-button button-green" >
+					Select
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="verification_failed-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reverify')"
+					class="login-form-element submit-button button-green" >
+					Re-verify
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div id="to_be_recontacted-action-section" class="w3-row-padding action-section">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('recontacted')"
+					class="login-form-element submit-button button-green" >
+					Recontacted
+				</button> 
+			</td>
+			<td>
+				<button 
+					type="button" 
+					onClick="takeAction('reject')"
+					class="login-form-element submit-button button-red" >
+					Reject
+				</button> 
+			</td>
+		</tr>
+	</table>
+   </div>
+   <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+</div>
+<BR/>
+<BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+	<input type="text" value="" size="10" name="tentativeTutorId" id="downloadForm-tentativeTutorId" />
+	<input type="text" value="" size="10" name="name" id="downloadForm-name" />
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+  <!-- Modal content -->
+  <div class="modal-content">
+  	<div id="alert-title"></div>
+    <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+    <hr class="modal-line" />
+    <p id="notification-popup-model-content-section"></p>
+    <hr class="modal-line" />
+    <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/admin.js"></script>
+<script src="scripts/tutorregister.js"></script>
+<script>
+	loadGrids();
+</script>
+</body>
+</html>
