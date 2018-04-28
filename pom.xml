@@ -315,6 +315,11 @@
             <version>${version.jersey}</version>
         </dependency>
         <dependency>
+		    <groupId>org.glassfish.jersey.containers</groupId>
+		    <artifactId>jersey-container-servlet-core</artifactId>
+		    <version>${version.jersey}</version>
+		</dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <version>${version.jersey}</version>
@@ -341,6 +346,11 @@
             <artifactId>jersey-client</artifactId>
             <version>${version.jersey}</version>
         </dependency>
+        <dependency>
+		    <groupId>org.glassfish.jersey.core</groupId>
+		    <artifactId>jersey-server</artifactId>
+		    <version>${version.jersey}</version>
+		</dependency>
         <!-- End of Jersey REST -->
         
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->

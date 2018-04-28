@@ -1,5 +1,6 @@
 package com.webservices.rest.components;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,9 +15,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.auth0.jwt.internal.org.apache.commons.io.IOUtils;
 import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
@@ -190,6 +194,24 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			return convertObjToJSONString(getAdminService().takeActionOnRegisteredTutors(gridName, button, tentativeTutorId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path("/testUpload")
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public void testUpload (
+			@FormDataParam("comments") final String comments,
+			@FormDataParam("inputFile") final InputStream uploadedInputStream,
+			@FormDataParam("inputFile") final FormDataContentDisposition uploadedFileDetail,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		if (null != uploadedInputStream) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStream);
+			if (fileBytes.length > 0) {
+				FileUtils.writeFileToResponse(response, uploadedFileDetail.getFileName(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, fileBytes);
+			}
+		}
 	}
 	
 	public AdminService getAdminService() {

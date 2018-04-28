@@ -1,6 +1,7 @@
 package com.utils;
 
 import java.io.File;
+import java.util.Base64;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -51,4 +52,15 @@ public class ApplicationUtils implements ApplicationConstants {
 		}
 		return EMPTY_STRING;
 	}
+	
+	/**
+     * System Encoder and Decoder for sending complex binary data 
+     */
+    public static byte[] generateBase64EncodedData(final byte[] bytes) {
+    	return Base64.getEncoder().encode(bytes);
+    }
+    
+    public static byte[] generateBase64DecodedData(final byte[] bytes) {
+    	return Base64.getDecoder().decode(bytes);
+    }
 }
