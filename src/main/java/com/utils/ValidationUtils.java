@@ -88,7 +88,6 @@ public class ValidationUtils implements ValidationConstants {
 				new InternetAddress(email).validate();
 				return true;
 			} catch (AddressException ex) {}
-			return true;
 		}
 		return false;
 	}
