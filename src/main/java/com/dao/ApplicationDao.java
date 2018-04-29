@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -26,9 +26,6 @@ public class ApplicationDao implements ApplicationConstants {
 	
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
-	
-	@Autowired
-	private transient JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	private transient NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -74,17 +71,12 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for 
 	 * INSERT, UPDATE, DELETE
 	 */
-	public void insertOrUpdateWithParams(final String query, final Map<String, Object> params) {
+	public void executeUpdate(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
 		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
 		LoggerUtils.logOnConsole(paramsString.toString());
 		namedParameterJdbcTemplate.update(query, parameters);
-    }
-	
-	public void updateWithPreparedQueryWithoutParams(final String query) {
-		LoggerUtils.logOnConsole(query);
-        jdbcTemplate.update(query);
     }
 	
 	public long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
@@ -117,9 +109,12 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT single record
 	 */
-	public <T extends Object> T find(final String query, final Object[] params, final Class<T> type) {
+	public <T extends Object> T find(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws DataAccessException, InstantiationException, IllegalAccessException {
 		LoggerUtils.logOnConsole(query);
-		final List<T> list = jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
+		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
+		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
+		LoggerUtils.logOnConsole(paramsString.toString());
+		final List<T> list = namedParameterJdbcTemplate.query(query, parameters, rowmapper);
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -133,9 +128,9 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
-	public <T extends Object> T findWithoutParams(final String query, final Class<T> type) {
+	public <T extends Object> T findWithoutParams(final String query, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
-		final List<T> list = jdbcTemplate.query(query, new BeanPropertyRowMapper<T>(type));
+		final List<T> list = namedParameterJdbcTemplate.query(query, rowmapper);
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -153,13 +148,16 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT multiple records
 	 */
-	public < T extends Object > List<T> findAll(final String query, final Object[] params, final Class<T> type) {
+	public < T extends Object > List<T> findAll(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
-		return jdbcTemplate.query(query, params, new BeanPropertyRowMapper<T>(type));
+		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
+		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
+		LoggerUtils.logOnConsole(paramsString.toString());
+		return namedParameterJdbcTemplate.query(query, parameters, rowmapper);
     }
 	
-	public < T extends Object > List<T> findAllWithoutParams(final String query, final Class<T> type) {
+	public < T extends Object > List<T> findAllWithoutParams(final String query, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
-		return jdbcTemplate.query(query, new BeanPropertyRowMapper<T>(type));
+		return namedParameterJdbcTemplate.query(query, rowmapper);
     }
 }

@@ -72,7 +72,7 @@ public class SchedulerService implements SchedulerConstants {
 					paramsMap.put("errorDate", errorPacket.getOccuredAt());
 					paramsMap.put("errorTrace", errorPacket.getErrorTrace());
 					paramsMap.put("mailId", mailObj.getMailId());
-					applicationDao.insertOrUpdateWithParams("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
+					applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
 					continue;
 					// If exception occurred do not update the record as sent
 				}
@@ -80,7 +80,7 @@ public class SchedulerService implements SchedulerConstants {
 				paramsMap.put("mailSent", YES);
 				paramsMap.put("sendDate", new Timestamp(new Date().getTime()));
 				paramsMap.put("mailId", mailObj.getMailId());
-				applicationDao.insertOrUpdateWithParams("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate WHERE MAIL_ID = :mailId", paramsMap);
+				applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate WHERE MAIL_ID = :mailId", paramsMap);
 			}
 			lockService.releaseLock("executeEmailSenderJob", key);
 		}

@@ -14,6 +14,7 @@ public class MailAttachment implements Serializable {
 	private static final long serialVersionUID = -6980182144471502902L;
 	
 	private long attachmentId; 
+	private long mailId;
 	
 	private String filename;
 	
@@ -97,5 +98,13 @@ public class MailAttachment implements Serializable {
 
 	public void setAttachment(MimeBodyPart attachment) {
 		this.attachment = attachment;
+	}
+
+	public long getMailId() {
+		return mailId;
+	}
+
+	public void setMailId(long mailId) {
+		this.mailId = mailId;
 	}
 }

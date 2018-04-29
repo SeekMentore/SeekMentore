@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
@@ -20,6 +21,7 @@ import com.model.User;
 import com.model.WorkbookReport;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
+import com.model.rowmappers.BecomeTutorRowMapper;
 import com.utils.ApplicationUtils;
 import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
@@ -51,7 +53,9 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public byte[] downloadAdminTutorRegistrationProfilePdf(final String tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
-		final BecomeTutor registeredTutorObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = ?", new Object[] {tentativeTutorId}, BecomeTutor.class);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tentativeTutorId", tentativeTutorId);
+		final BecomeTutor registeredTutorObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap, new BecomeTutorRowMapper());
 		if (null != registeredTutorObject) {
 			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInTutorRegistrationObject(registeredTutorObject);
@@ -62,7 +66,7 @@ public class AdminService implements AdminConstants {
 		return null;
 	}
 	
-	public List<BecomeTutor> displayTutorRegistrations(final String grid, final String delimiter) {
+	public List<BecomeTutor> displayTutorRegistrations(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final StringBuilder query = new StringBuilder("SELECT * FROM BECOME_TUTOR WHERE ");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
@@ -94,7 +98,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 		}
-		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), BecomeTutor.class);
+		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
 		for (final BecomeTutor registeredTutorObject : registeredTutorList) {
 			// Get all lookup data and user ids back to original label and values
 			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, delimiter);
@@ -102,7 +106,7 @@ public class AdminService implements AdminConstants {
 		return registeredTutorList;
 	}
 	
-	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor registeredTutorObject, final String delimiter) {
+	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor registeredTutorObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		registeredTutorObject.setGender(preapreLookupLabelString("GENDER_LOOKUP",registeredTutorObject.getGender(), false, delimiter));
 		registeredTutorObject.setQualification(preapreLookupLabelString("QUALIFICATION_LOOKUP",registeredTutorObject.getQualification(), false, delimiter));
 		registeredTutorObject.setPrimaryProfession(preapreLookupLabelString("PROFESSION_LOOKUP",registeredTutorObject.getPrimaryProfession(), false, delimiter));
@@ -180,11 +184,11 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 		}
-		applicationDao.insertOrUpdateWithParams(query.toString(), paramsMap);
+		applicationDao.executeUpdate(query.toString(), paramsMap);
 		return response;
 	}
 	
-	private String getNameOfUserFromUserId(final String userId) {
+	private String getNameOfUserFromUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(userId)) {
 			final User user = commonsService.getUserFromDbUsingUserId(userId);
 			if (null != user) {
@@ -194,7 +198,7 @@ public class AdminService implements AdminConstants {
 		return EMPTY_STRING;
 	}
 	
-	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) {
+	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final StringBuilder multiLineString = new StringBuilder(EMPTY_STRING);
 		if (multiSelect) {
 			final List<SelectLookup> selectLookupList = commonsService.getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));

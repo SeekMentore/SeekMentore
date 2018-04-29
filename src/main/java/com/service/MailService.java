@@ -46,7 +46,7 @@ public class MailService implements MailConstants {
 				attachmentsPramsMap.put("content", attachment.getContent());
 				attachmentsPramsMap.put("filename", attachment.getFilename());
 				attachmentsPramsMap.put("applicationType", FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-				applicationDao.insertOrUpdateWithParams("INSERT INTO MAIL_ATTACHMENTS(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) VALUES(:mailId, :content, :filename, :applicationType)", attachmentsPramsMap);
+				applicationDao.executeUpdate("INSERT INTO MAIL_ATTACHMENTS(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) VALUES(:mailId, :content, :filename, :applicationType)", attachmentsPramsMap);
 			}
 		}
 	}

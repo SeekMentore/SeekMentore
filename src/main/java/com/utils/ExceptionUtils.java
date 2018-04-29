@@ -1,5 +1,7 @@
 package com.utils;
 
+import java.sql.ResultSet;
+
 import com.constants.ExceptionConstants;
 import com.exception.ApplicationException;
 
@@ -47,5 +49,16 @@ public class ExceptionUtils implements ExceptionConstants {
 			}
 		}
 		return lastCausedBy;
+	}
+	
+	public static <T extends Object> T exceptionHandlerForRowMapper(ResultSet row, String columnLabel, Class<T> type) {
+		try {
+			return row.getObject(columnLabel, type);
+		} catch (Exception e) {
+			if (type == Long.class || type == Integer.class || type == Double.class || type == Float.class) {
+				return type.cast(0);
+			}
+			return null;
+		}
 	}
 }
