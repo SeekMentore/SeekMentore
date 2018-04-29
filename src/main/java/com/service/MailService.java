@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.dao.ApplicationDao;
 import com.model.mail.ApplicationMail;
@@ -44,7 +45,7 @@ public class MailService implements MailConstants {
 				attachmentsPramsMap.put("mailId", mailId);
 				attachmentsPramsMap.put("content", attachment.getContent());
 				attachmentsPramsMap.put("filename", attachment.getFilename());
-				attachmentsPramsMap.put("applicationType", attachment.getApplicationType());
+				attachmentsPramsMap.put("applicationType", FileConstants.APPLICATION_TYPE_OCTET_STEAM);
 				applicationDao.insertOrUpdateWithParams("INSERT INTO MAIL_ATTACHMENTS(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) VALUES(:mailId, :content, :filename, :applicationType)", attachmentsPramsMap);
 			}
 		}

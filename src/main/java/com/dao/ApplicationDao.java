@@ -94,7 +94,9 @@ public class ApplicationDao implements ApplicationConstants {
 		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
 		LoggerUtils.logOnConsole(paramsString.toString());
 		namedParameterJdbcTemplate.update(query, parameters, keyHolder);
-		return keyHolder.getKey().longValue();
+		if (null != keyHolder.getKey())
+			return keyHolder.getKey().longValue();
+		return 0;
 	}
 	
 	private SqlParameterSource getSqlParameterSource(final Map<String, Object> params, final StringBuilder paramsString) {

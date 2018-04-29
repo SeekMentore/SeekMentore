@@ -1,10 +1,13 @@
 package com.service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +35,13 @@ public class SchedulerService implements SchedulerConstants {
 	@Autowired
 	private LockService lockService;
 	
-	public void executeEmailSenderJob(final JobExecutionContext context) {
+	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
 		if (null != key) {
 			LoggerUtils.logOnConsole("executeEmailSenderJob");
 			final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
 			for (final ApplicationMail mailObj : mailObjList) {
+				mailObj.setAttachments(commonsService.getAttachments(mailObj.getMailId()));
 				try {
 					int retriedCounter = 0;
 					do {
