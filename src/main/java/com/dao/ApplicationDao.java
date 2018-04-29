@@ -2,26 +2,36 @@ package com.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.constants.ApplicationConstants;
 import com.exception.ApplicationException;
 import com.utils.LoggerUtils;
 
 @Repository("applicationDao")
 @EnableTransactionManagement
-public class ApplicationDao {
+public class ApplicationDao implements ApplicationConstants {
 	
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 	
 	@Autowired
 	private transient JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private transient NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	/**
 	 * HibernateTemplate DAO calls
@@ -64,9 +74,12 @@ public class ApplicationDao {
 	 * Use the below query for 
 	 * INSERT, UPDATE, DELETE
 	 */
-	public void updateWithPreparedQueryAndIndividualOrderedParams(final String query, final Object[] params) {
+	public void insertOrUpdateWithParams(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
-        jdbcTemplate.update(query, params);
+		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
+		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
+		LoggerUtils.logOnConsole(paramsString.toString());
+		namedParameterJdbcTemplate.update(query, parameters);
     }
 	
 	public void updateWithPreparedQueryWithoutParams(final String query) {
@@ -74,19 +87,29 @@ public class ApplicationDao {
         jdbcTemplate.update(query);
     }
 	
-	/*public void updateWithReturningSelectKey(final String query, final Object... params) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-			    new PreparedStatementCreator() {
-			        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-			            PreparedStatement ps =
-			                connection.prepareStatement(query, new String[] {"id"});
-			            ps.setString(1, name);
-			            return ps;
-			        }
-			    },
-			    keyHolder);
-	}*/
+	public long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
+		LoggerUtils.logOnConsole(query);
+		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
+		final KeyHolder keyHolder = new GeneratedKeyHolder();
+		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
+		LoggerUtils.logOnConsole(paramsString.toString());
+		namedParameterJdbcTemplate.update(query, parameters, keyHolder);
+		return keyHolder.getKey().longValue();
+	}
+	
+	private SqlParameterSource getSqlParameterSource(final Map<String, Object> params, final StringBuilder paramsString) {
+		MapSqlParameterSource mapSqlParameterSource = null;
+		if (null != params) {
+			mapSqlParameterSource = new MapSqlParameterSource();
+			for(Map.Entry<String, Object> entry : params.entrySet()) {
+				mapSqlParameterSource.addValue(entry.getKey(), entry.getValue());
+				paramsString.append(entry.getKey()).append(ASSIGNMENT_OPERATOR).append(entry.getValue());
+			}
+		}
+		if (null == mapSqlParameterSource)
+			throw new ApplicationException("Parameters cannot be NULL while Inserting record.");
+		return mapSqlParameterSource;
+	}
 	
 	/*
 	 * Use the below query for

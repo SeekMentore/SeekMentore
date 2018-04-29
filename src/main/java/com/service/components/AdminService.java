@@ -145,71 +145,42 @@ public class AdminService implements AdminConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
-		Object[] params = null;
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", user.getUserId());
+		paramsMap.put("remarks", remarks);
+		paramsMap.put("tentativeTutorId", tentativeTutorId);
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[3];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = ?, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[5];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = user.getUserId();
-				params[3] = remarks;
-				params[4] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = ?, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = ?, IS_REJECTED = 'Y', WHO_REJECTED = ?, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = ?, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[5];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = user.getUserId();
-				params[3] = remarks;
-				params[4] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = ?, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[3];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_FAILVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = ?, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[3];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = ?, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[3];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = ?, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = ?, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = ?");
-				params = new Object[3];
-				params[0] = user.getUserId();
-				params[1] = remarks;
-				params[2] = tentativeTutorId;
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 		}
-		applicationDao.updateWithPreparedQueryAndIndividualOrderedParams(query.toString(), params);
+		applicationDao.insertOrUpdateWithParams(query.toString(), paramsMap);
 		return response;
 	}
 	

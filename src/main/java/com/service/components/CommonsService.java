@@ -1,6 +1,8 @@
 package com.service.components;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -29,7 +31,11 @@ public class CommonsService implements CommonsConstants {
 	
 	@Transactional
 	public void feedErrorRecord(final ErrorPacket errorPacket) {
-		applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("INSERT INTO APP_ERROR_REPORT(OCCURED_AT, REQUEST_URI, ERROR_TRACE) VALUES(?, ?, ?)", new Object[] {errorPacket.getOccuredAt(), errorPacket.getRequestURI(), errorPacket.getErrorTrace()});
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("occurredAt", errorPacket.getOccuredAt());
+		paramsMap.put("requestURI", errorPacket.getRequestURI());
+		paramsMap.put("errorTrace", errorPacket.getErrorTrace());
+		applicationDao.insertOrUpdateWithParams("INSERT INTO APP_ERROR_REPORT(OCCURED_AT, REQUEST_URI, ERROR_TRACE) VALUES(:occurredAt, :requestURI, :errorTrace)", paramsMap);
 		try {
 			MailUtils.sendErrorMessageEmail(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace(), null);
 		} catch (Exception e) {
@@ -74,5 +80,9 @@ public class CommonsService implements CommonsConstants {
 				questionMarks.append("?");
 		}
 		return questionMarks.toString();
+	}
+
+	public String testNamedParamter(String query, final Object[] params, final Map<String, Object> paramsMap, String switcher) {
+		return null;
 	}
 }

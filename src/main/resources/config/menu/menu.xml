@@ -54,6 +54,7 @@
 		</page>
 		<page id="commons" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+			<webservice id="testNamedParamter" url="/testNamedParamter"></webservice>
 		</page>
 		<page id="adminRest" url="/rest/admin">
 			<webservice id="testUpload" url="/testUpload"></webservice>

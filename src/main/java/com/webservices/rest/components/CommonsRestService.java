@@ -1,8 +1,11 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -50,6 +53,30 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		doSecurity(request);
 		if (this.securityPassed) {
 			return convertObjToJSONString(getJNDIandControlConfigurationLoadService().getServerName(), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path("/testNamedParamter")
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String testNamedParamter (
+			@FormParam("query") final String query,
+			@FormParam("param1") final String param1,
+			@FormParam("param2") final String param2,
+			@FormParam("param3") final String param3,
+			@FormParam("switcher") final String switcher,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_GET_SERVER_INFO;
+		doSecurity(request);
+		if (this.securityPassed) {
+			Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("param1", param1);
+			paramsMap.put("param2", param2);
+			paramsMap.put("param3", param3);
+			final Object[] params = new Object[] {param1, param2, param3};
+			return convertObjToJSONString(getCommonsService().testNamedParamter(query, params, paramsMap, switcher), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
