@@ -2,8 +2,10 @@ package com.webservices.rest.components;
 
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.auth0.jwt.internal.org.apache.commons.io.IOUtils;
 import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
@@ -27,10 +30,12 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
 import com.model.ErrorPacket;
+import com.model.mail.MailAttachment;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
+import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
@@ -44,6 +49,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	private String button;
 	private String uniqueId;
 	private String remarks;
+	private String recepientEmailId;
+	private String emailSubject;
+	private String emailBody;
 	
 	/*
 	 * Tutor Registration Admin
@@ -372,32 +380,63 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	 * Tutor Enquiry Admin
 	 */
 	
-	@Path("/testUpload")
+	@Path(REST_METHOD_NAME_SEND_EMAIL)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public void testUpload (
-			@FormDataParam("comments") final String comments,
-			@FormDataParam("inputFile") final InputStream uploadedInputStream,
-			@FormDataParam("inputFile") final FormDataContentDisposition uploadedFileDetail,
+			@FormDataParam("recepientEmailId") final String recepientEmailId,
+			@FormDataParam("email-subject") final String emailSubject,
+			@FormDataParam("emailBody") final String emailBody,
+			@FormDataParam("inputFile_1") final InputStream uploadedInputStreamFile1,
+			@FormDataParam("inputFile_1") final FormDataContentDisposition uploadedFileDetailFile1,
+			@FormDataParam("inputFile_2") final InputStream uploadedInputStreamFile2,
+			@FormDataParam("inputFile_2") final FormDataContentDisposition uploadedFileDetailFile2,
+			@FormDataParam("inputFile_3") final InputStream uploadedInputStreamFile3,
+			@FormDataParam("inputFile_3") final FormDataContentDisposition uploadedFileDetailFile3,
+			@FormDataParam("inputFile_4") final InputStream uploadedInputStreamFile4,
+			@FormDataParam("inputFile_4") final FormDataContentDisposition uploadedFileDetailFile4,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		/*if (null != uploadedInputStream) {
-			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStream);
-			if (fileBytes.length > 0) {
-				List<MailAttachment> attachments = new ArrayList<MailAttachment>();
-				attachments.add(new MailAttachment("First_File.pdf", fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
-				attachments.add(new MailAttachment("Second_File.pdf", fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
-				MailUtils.sendMimeMessageEmail( 
-						"mukherjeeshantanu797@gmail.com", 
-						null,
-						null,
-						"Test Attachment Mail", 
-						"Test Email",
-						attachments);
-				FileUtils.writeFileToResponse(response, uploadedFileDetail.getFileName(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, fileBytes);
+		this.methodName = REST_METHOD_NAME_SEND_EMAIL;
+		this.recepientEmailId = recepientEmailId;
+		this.emailSubject = emailSubject;
+		this.emailBody = emailBody;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+			if (null != uploadedInputStreamFile1) {
+				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFile1);
+				if (fileBytes.length > 0) {
+					attachments.add(new MailAttachment(uploadedFileDetailFile1.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				}
 			}
-		}*/
+			if (null != uploadedInputStreamFile2) {
+				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFile2);
+				if (fileBytes.length > 0) {
+					attachments.add(new MailAttachment(uploadedFileDetailFile2.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				}
+			}
+			if (null != uploadedInputStreamFile3) {
+				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFile3);
+				if (fileBytes.length > 0) {
+					attachments.add(new MailAttachment(uploadedFileDetailFile3.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				}
+			}
+			if (null != uploadedInputStreamFile4) {
+				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFile4);
+				if (fileBytes.length > 0) {
+					attachments.add(new MailAttachment(uploadedFileDetailFile4.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				}
+			}
+			MailUtils.sendMimeMessageEmail( 
+					recepientEmailId, 
+					null,
+					null,
+					emailSubject, 
+					emailBody,
+					attachments.isEmpty() ? null : attachments);
+		}
 	}
 	
 	public AdminService getAdminService() {
@@ -437,6 +476,10 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS :
 			case REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS : {
 				handleTakeActionSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_SEND_EMAIL : {
+				handleSendEmailSecurity();
 				break;
 			}
 		}
@@ -512,6 +555,37 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleSendEmailSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validateEmailAddress(this.recepientEmailId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_INVALID_RECEPIENT_ADDRESS,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailSubject)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_INVALID_BUTTON_ACTION,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		} 
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailBody)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_INVALID_UNIQUE_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailBody);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

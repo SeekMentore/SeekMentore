@@ -42,6 +42,8 @@
 			<webservice id="takeActionOnEnquiredTutors" url="/takeActionOnEnquiredTutors"></webservice>
 			<webservice id="downloadAdminReportTutorEnquiries" url="/downloadAdminReportTutorEnquiries"></webservice>
 			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
+			<!-- Admin Send Email -->
+			<webservice id="sendEmail" url="/sendEmail"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
@@ -66,9 +68,6 @@
 		</page>
 		<page id="commons" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
-		</page>
-		<page id="adminRest" url="/rest/admin">
-			<webservice id="testUpload" url="/testUpload"></webservice>
 		</page>
 		<page id="login" url="/error.html"></page>
 	</pageList>

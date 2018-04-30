@@ -21,6 +21,7 @@ public interface AdminConstants extends ApplicationConstants {
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";
 	String VALIDATION_MESSAGE_INVALID_UNIQUE_ID = "Invalid Unique {Tutor Id / Enquiry Id / Subscription Id} Id.";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_REMARKS = "Please provide remarks for this action.";
+	String VALIDATION_MESSAGE_INVALID_RECEPIENT_ADDRESS = "Invalid Recepient Email Address.";
 	
 	String VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/admin";
 	// Tutor Registration Admin

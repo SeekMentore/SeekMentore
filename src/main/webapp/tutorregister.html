@@ -561,6 +561,93 @@
 		</tr>
 	</table>
    </div>
+   <div id="send-email-div" class="w3-row-padding">
+   <br/>
+	   <form id="email-form" target="ifrDownload" method="post" enctype="multipart/form-data">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th class="center-align" colspan="2">Email Panel</th>
+				</tr>
+				<tr>
+					<td>
+						To -<input type="hidden" name="recepientEmailId" id="recepientEmailId"/>
+					</td>
+					<td id="recepientEmailId-text">
+						$RECEPIENT_EMAIL
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Subject
+					</td>
+					<td>
+						<input type="text" name="email-subject" id="email-subject" size="70" placeholder="Please enter subject here."/>
+					</td>
+				</tr>
+				<tr>
+					<td id="salutationText" colspan="2">
+						Hello $TUTOR_NAME,
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea rows="6" cols="76" id="emailText" name="emailText" placeholder="Please enter email body here."></textarea>
+						<input type="hidden" name="emailBody" id="emailBody" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Thanks & Regards,
+						<br/><p id="email-regards-username">$USER_NAME</p>
+						<br/>&lt;Company Contact Information&gt;
+					</td>
+				</tr>
+			</table>
+			<table align="center" class="all-records">
+				<tr>
+					<td colspan="2">
+						Attach Files &lt;Maximum 4 files to be attached&gt;
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File 1: <input type="file" name="inputFile_1" name="inputFile_1" size="25" accept=".pdf" />
+					</td>
+					<td>
+						File 2: <input type="file" name="inputFile_2" name="inputFile_2" size="25" accept=".pdf" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File 3: <input type="file" name="inputFile_3" name="inputFile_3" size="25" accept=".pdf" />
+					</td>
+					<td>
+						File 4: <input type="file" name="inputFile_4" name="inputFile_4" size="25" accept=".pdf" />
+					</td>
+				</tr>
+			</table>
+			<table align="center" class="all-records">
+				<tr>
+					<td>
+						<button 
+							type="button" 
+							onClick="sendEmail()"
+							class="login-form-element submit-button button-green" >
+							Send Email
+						</button> 
+					</td>
+					<td>
+						<button 
+							type="button" 
+							onClick="resetEmail()"
+							class="login-form-element submit-button" >
+							Reset
+						</button> 
+					</td>
+				</tr>
+			</table>
+	   </form>
+   </div>
 </div>
 <BR/>
 <BR/>

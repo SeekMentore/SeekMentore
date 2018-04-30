@@ -37,6 +37,8 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES = "/displaySelectedTutorEnquiries";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES = "/displayRejectedTutorEnquiries";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS = "/takeActionOnEnquiredTutors";
+	// Send Email
+	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
 	String REST_METHOD_NAME_TO_LOGOUT = "/logout";

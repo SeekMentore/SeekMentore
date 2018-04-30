@@ -97,11 +97,11 @@ public class ApplicationDao implements ApplicationConstants {
 			mapSqlParameterSource = new MapSqlParameterSource();
 			for(Map.Entry<String, Object> entry : params.entrySet()) {
 				mapSqlParameterSource.addValue(entry.getKey(), entry.getValue());
-				paramsString.append(entry.getKey()).append(ASSIGNMENT_OPERATOR).append(entry.getValue());
+				paramsString.append(entry.getKey()).append(ASSIGNMENT_OPERATOR).append(entry.getValue()).append(SEMICOLON).append(WHITESPACE);
 			}
 		}
 		if (null == mapSqlParameterSource)
-			throw new ApplicationException("Parameters cannot be NULL while Inserting record.");
+			throw new ApplicationException("Parameters cannot be NULL when using Paramterized Query.");
 		return mapSqlParameterSource;
 	}
 	

@@ -2,6 +2,7 @@ package com.utils;
 
 import java.io.File;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -51,6 +52,29 @@ public class ApplicationUtils implements ApplicationConstants {
 			}
 		}
 		return EMPTY_STRING;
+	}
+	
+	public static Map<String, Object> computeFileSizeInIterativeManner(final Long bytes) {
+		final Map<String, Object> sizeResponse = new HashMap<String, Object>();
+		Double size = (double) bytes;
+		String sizeExt = "Bytes";
+		if (size > 0) {
+			if (size > 1024) {
+				size = (double) (size/1024);
+				sizeExt = "KB";
+			}
+			if (size > 1024) {
+				size = (double) (size/1024);
+				sizeExt = "MB";
+			}
+			if (size > 1024) {
+				size = (double) (size/1024);
+				sizeExt = "GB";
+			}
+		}
+		sizeResponse.put("size", size);
+		sizeResponse.put("sizeExt", sizeExt);
+		return sizeResponse;
 	}
 	
 	/**

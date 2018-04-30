@@ -196,6 +196,8 @@ function openTutorRecord(tutorObj) {
 		$('#RE_APPLIED').html(showValue(tutorObj.reApplied));
 		$('#PREVIOUS_APPLICATION_DATE').html(showValue(tutorObj.previousApplicationDate));
 		$('#RECORD_LAST_UPDATED').html(showValue(tutorObj.recordLastUpdated));
+		
+		replacePlaceHoldersForEmailPanel(showValue(tutorObj.emailId), showValue(tutorObj.firstName)+' '+showValue(tutorObj.lastName));
 	} 
 }
 

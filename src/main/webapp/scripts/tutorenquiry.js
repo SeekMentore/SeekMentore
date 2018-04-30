@@ -105,16 +105,16 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 }
 
 function previousEnquiryRecord() {
-	openTutorRecord(enquiryListMap[enquiryListMap.selectedGrid].previousEnquiryRecord());
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].previousEnquiryRecord());
 }
 
 function nextEnquiryRecord() {
-	openTutorRecord(enquiryListMap[enquiryListMap.selectedGrid].nextEnquiryRecord());
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].nextEnquiryRecord());
 }
 
 function getParticularEnquiryRecord(gridName, recordNumber) {
 	enquiryListMap.selectedGrid = gridName;
-	openTutorRecord(enquiryListMap[enquiryListMap.selectedGrid].getParticularEnquiryRecord(recordNumber));
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].getParticularEnquiryRecord(recordNumber));
 }
 
 function hideEnquiryAllRecordsPage() {
@@ -149,43 +149,45 @@ function showEnquiryAllRecordsPage() {
 	$('#rejected-all-records-div').removeClass('noscreen');
 }
 
-function openTutorRecord(tutorObj) {
+function openEnquiryRecord(enquiryObj) {
 	hideEnquiryAllRecordsPage();
-	if (null != tutorObj) {
-		$('#ENQUIRY_DATE').html(showValue(tutorObj.enquiryDate));
-		$('#ENQUIRY_STATUS').html(showValue(tutorObj.enquiryStatus));
-		$('#NAME').html(showValue(tutorObj.name));
-		$('#CONTACT_NUMBER').html('<a href="tel:'+showValue(tutorObj.contactNumber)+'">'+showValue(tutorObj.contactNumber)+'</a>');
-		$('#EMAIL_ID').html('<a href="mailto:'+showValue(tutorObj.emailId)+'">'+showValue(tutorObj.emailId)+'</a>');
-		$('#STUDENT_GRADE').html(showValue(tutorObj.studentGrade));
-		$('#SUBJECTS').html(showValue(tutorObj.subjects));
-		$('#PREFERRED_TIME_TO_CALL').html(showValue(tutorObj.preferredTimeToCall));
-		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
-		$('#IS_CONTACTED').html(showValue(tutorObj.isContacted));
-		$('#WHO_CONTACTED').html(showValue(tutorObj.whoContacted));
-		$('#CONTACTED_DATE').html(showValue(tutorObj.contactedDate));
-		$('#CONTACTED_REMARKS').html(showValue(tutorObj.contactedRemarks));
-		$('#IS_AUTHENTICATION_VERIFIED').html(showValue(tutorObj.isAuthenticationVerified));
-		$('#WHO_VERIFIED').html(showValue(tutorObj.whoVerified));
-		$('#VERIFICATION_DATE').html(showValue(tutorObj.verificationDate));
-		$('#VERIFICATION_REMARKS').html(showValue(tutorObj.verificationRemarks));
-		$('#IS_TO_BE_RECONTACTED').html(showValue(tutorObj.isToBeRecontacted));
-		$('#WHO_SUGGESTED_FOR_RECONTACT').html(showValue(tutorObj.whoSuggestedForRecontact));
-		$('#SUGGESTION_DATE').html(showValue(tutorObj.suggestionDate));
-		$('#SUGGESTION_REMARKS').html(showValue(tutorObj.suggestionRemarks));
-		$('#WHO_RECONTACTED').html(showValue(tutorObj.whoRecontacted));
-		$('#RECONTACTED_DATE').html(showValue(tutorObj.recontactedDate));
-		$('#RECONTACTED_REMARKS').html(showValue(tutorObj.recontactedRemarks));
-		$('#IS_SELECTED').html(showValue(tutorObj.isSelected));
-		$('#WHO_SELECTED').html(showValue(tutorObj.whoSelected));
-		$('#SELECTION_DATE').html(showValue(tutorObj.selectionDate));
-		$('#SELECTION_REMARKS').html(showValue(tutorObj.selectionRemarks));
-		$('#IS_REJECTED').html(showValue(tutorObj.isRejected));
-		$('#WHO_REJECTED').html(showValue(tutorObj.whoRejected));
-		$('#REJECTION_DATE').html(showValue(tutorObj.rejectionDate));
-		$('#REJECTION_REMARKS').html(showValue(tutorObj.rejectionRemarks));
-		$('#PREVIOUS_APPLICATION_DATE').html(showValue(tutorObj.previousApplicationDate));
-		$('#RECORD_LAST_UPDATED').html(showValue(tutorObj.recordLastUpdated));
+	if (null != enquiryObj) {
+		$('#ENQUIRY_DATE').html(showValue(enquiryObj.enquiryDate));
+		$('#ENQUIRY_STATUS').html(showValue(enquiryObj.enquiryStatus));
+		$('#NAME').html(showValue(enquiryObj.name));
+		$('#CONTACT_NUMBER').html('<a href="tel:'+showValue(enquiryObj.contactNumber)+'">'+showValue(enquiryObj.contactNumber)+'</a>');
+		$('#EMAIL_ID').html('<a href="mailto:'+showValue(enquiryObj.emailId)+'">'+showValue(enquiryObj.emailId)+'</a>');
+		$('#STUDENT_GRADE').html(showValue(enquiryObj.studentGrade));
+		$('#SUBJECTS').html(showValue(enquiryObj.subjects));
+		$('#PREFERRED_TIME_TO_CALL').html(showValue(enquiryObj.preferredTimeToCall));
+		$('#ADDITIONAL_DETAILS').html(showValue(enquiryObj.additionalDetails));
+		$('#IS_CONTACTED').html(showValue(enquiryObj.isContacted));
+		$('#WHO_CONTACTED').html(showValue(enquiryObj.whoContacted));
+		$('#CONTACTED_DATE').html(showValue(enquiryObj.contactedDate));
+		$('#CONTACTED_REMARKS').html(showValue(enquiryObj.contactedRemarks));
+		$('#IS_AUTHENTICATION_VERIFIED').html(showValue(enquiryObj.isAuthenticationVerified));
+		$('#WHO_VERIFIED').html(showValue(enquiryObj.whoVerified));
+		$('#VERIFICATION_DATE').html(showValue(enquiryObj.verificationDate));
+		$('#VERIFICATION_REMARKS').html(showValue(enquiryObj.verificationRemarks));
+		$('#IS_TO_BE_RECONTACTED').html(showValue(enquiryObj.isToBeRecontacted));
+		$('#WHO_SUGGESTED_FOR_RECONTACT').html(showValue(enquiryObj.whoSuggestedForRecontact));
+		$('#SUGGESTION_DATE').html(showValue(enquiryObj.suggestionDate));
+		$('#SUGGESTION_REMARKS').html(showValue(enquiryObj.suggestionRemarks));
+		$('#WHO_RECONTACTED').html(showValue(enquiryObj.whoRecontacted));
+		$('#RECONTACTED_DATE').html(showValue(enquiryObj.recontactedDate));
+		$('#RECONTACTED_REMARKS').html(showValue(enquiryObj.recontactedRemarks));
+		$('#IS_SELECTED').html(showValue(enquiryObj.isSelected));
+		$('#WHO_SELECTED').html(showValue(enquiryObj.whoSelected));
+		$('#SELECTION_DATE').html(showValue(enquiryObj.selectionDate));
+		$('#SELECTION_REMARKS').html(showValue(enquiryObj.selectionRemarks));
+		$('#IS_REJECTED').html(showValue(enquiryObj.isRejected));
+		$('#WHO_REJECTED').html(showValue(enquiryObj.whoRejected));
+		$('#REJECTION_DATE').html(showValue(enquiryObj.rejectionDate));
+		$('#REJECTION_REMARKS').html(showValue(enquiryObj.rejectionRemarks));
+		$('#PREVIOUS_APPLICATION_DATE').html(showValue(enquiryObj.previousApplicationDate));
+		$('#RECORD_LAST_UPDATED').html(showValue(enquiryObj.recordLastUpdated));
+		
+		replacePlaceHoldersForEmailPanel(showValue(enquiryObj.emailId), showValue(enquiryObj.name));
 	} 
 }
 
