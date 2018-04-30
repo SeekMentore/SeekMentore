@@ -18,7 +18,7 @@
 		</page> -->
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
-		<page id="tutorenquiry.html" url="/tutorenquiry.html" pageAccessType="A"></page>
+		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
