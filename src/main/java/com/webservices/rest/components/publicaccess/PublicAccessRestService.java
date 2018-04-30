@@ -336,7 +336,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_BECOME_TUTOR, becomeTutorApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_BECOME_TUTOR, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + becomeTutorApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -387,7 +387,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_FIND_TUTOR, findTutorApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_FIND_TUTOR, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + findTutorApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -445,7 +445,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBSCRIBE, subscribeWithUsApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBSCRIBE, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + subscribeWithUsApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -468,7 +468,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBMIT_QUERY, submitQueryApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_SUBMIT_QUERY, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + submitQueryApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

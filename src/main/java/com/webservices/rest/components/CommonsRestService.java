@@ -67,10 +67,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_TO_GET_USER : {
-				this.securityPassed = true;
-				break;
-			}
+			case REST_METHOD_NAME_TO_GET_USER : 
 			case REST_METHOD_NAME_TO_GET_SERVER_INFO : {
 				this.securityPassed = true;
 				break;

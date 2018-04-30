@@ -92,12 +92,12 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL : {
-				handleCredential();
-				break;
-			}
 			case REST_METHOD_NAME_TO_LOGOUT : {
 				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL : {
+				handleCredential();
 				break;
 			}
 		}
@@ -128,7 +128,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.credential.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.credential.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 

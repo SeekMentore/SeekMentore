@@ -2,10 +2,8 @@ package com.webservices.rest.components;
 
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +20,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.auth0.jwt.internal.org.apache.commons.io.IOUtils;
 import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
@@ -30,12 +27,10 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
 import com.model.ErrorPacket;
-import com.model.mail.MailAttachment;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
-import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
@@ -47,9 +42,12 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	
 	private String gridName;
 	private String button;
-	private String tentativeTutorId;
+	private String uniqueId;
 	private String remarks;
 	
+	/*
+	 * Tutor Registration Admin
+	 */
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_REGISTRATIONS)
 	@Produces({MediaType.APPLICATION_JSON})  
 	@POST
@@ -57,7 +55,11 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
-		FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReport());
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_REGISTRATIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportTutorRegistrations());
+		}
     }
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF)
@@ -70,7 +72,11 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
-		FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorRegistrationProfilePdf(tentativeTutorId));
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorRegistrationProfilePdf(tentativeTutorId));
+		}
     }
 	
 	@Path(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS)
@@ -191,7 +197,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS;
 		this.gridName = gridName;
 		this.button = button;
-		this.tentativeTutorId = tentativeTutorId;
+		this.uniqueId = tentativeTutorId;
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
@@ -199,6 +205,172 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
+	/*
+	 * Tutor Registration Admin
+	 */
+	/*
+	 * Tutor Enquiry Admin
+	 */
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@POST
+    public void downloadAdminReportTutorEnquiries (
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Enquiry_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportTutorEnquiry());
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+    public void downloadAdminTutorEnquiryProfilePdf (
+    		@FormParam("enquiryId") final String enquiryId,
+    		@FormParam("name") final String name,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Enquiry_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorEnquiryProfilePdf(enquiryId));
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayNonContactedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayNonVerifiedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerifiedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerificationFailedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayToBeRecontactedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displaySelectedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayRejectedTutorEnquiries (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String takeActionOnEnquiredTutors (
+			@FormParam("gridName") final String gridName,
+			@FormParam("button") final String button,
+			@FormParam("enquiryId") final String enquiryId,
+			@FormParam("remarks") final String remarks,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS;
+		this.gridName = gridName;
+		this.button = button;
+		this.uniqueId = enquiryId;
+		this.remarks = remarks;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().takeActionOnEnquiredTutors(gridName, button, enquiryId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	/*
+	 * Tutor Enquiry Admin
+	 */
 	
 	@Path("/testUpload")
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
@@ -210,7 +382,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		if (null != uploadedInputStream) {
+		/*if (null != uploadedInputStream) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStream);
 			if (fileBytes.length > 0) {
 				List<MailAttachment> attachments = new ArrayList<MailAttachment>();
@@ -225,7 +397,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 						attachments);
 				FileUtils.writeFileToResponse(response, uploadedFileDetail.getFileName(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, fileBytes);
 			}
-		}
+		}*/
 	}
 	
 	public AdminService getAdminService() {
@@ -241,34 +413,28 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_REGISTRATIONS :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF :
+			case REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS :
+			case REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : 
+			case REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES :
+			case REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES : 
+			case REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES : 
+			case REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES : 
+			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES : 
+			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES : 
+			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF :{
 				this.securityPassed = true;
 				break;
 			}
-			case REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
-			case REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
-			case REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
-			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
-			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
-			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : {
-				this.securityPassed = true;
-				break;
-			}
+			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS :
 			case REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS : {
 				handleTakeActionSecurity();
 				break;
@@ -314,10 +480,10 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 				}
 			}
 		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tentativeTutorId)) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.uniqueId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_INVALID_TUTOR_ID,
+					AdminConstants.VALIDATION_MESSAGE_INVALID_UNIQUE_ID,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -343,7 +509,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			}
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.tentativeTutorId + LINE_BREAK + this.remarks);
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="css/lib/w3.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="shortcut icon" href="favicon.ico" />
-	<title>Seek Mentore - Admin - Tutor Register</title>
+	<title>Seek Mentore - Admin - Tutor Enquiry</title>
 </head>
 <body>
 <div class="w3-container w3-green banner">
@@ -46,7 +46,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Non Contacted Tutors</th>
+				<th>Non Contacted Enquiries</th>
 				<th id="non_contacted-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -60,7 +60,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="non_contacted-tutor-records">
+			<tbody id="non_contacted-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -70,7 +70,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Non Verified Tutors</th>
+				<th>Non Verified Enquiries</th>
 				<th id="non_verified-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -84,7 +84,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="non_verified-tutor-records">
+			<tbody id="non_verified-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -94,7 +94,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Verified Tutors</th>
+				<th>Verified Enquiries</th>
 				<th id="verified-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -108,7 +108,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="verified-tutor-records">
+			<tbody id="verified-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -118,7 +118,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Verification Failed Tutors</th>
+				<th>Verification Failed Enquiries</th>
 				<th id="verification_failed-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -132,7 +132,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="verification_failed-tutor-records">
+			<tbody id="verification_failed-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -142,7 +142,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>To be Recontacted Tutors</th>
+				<th>To be Recontacted Enquiries</th>
 				<th id="to_be_recontacted-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -156,7 +156,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="to_be_recontacted-tutor-records">
+			<tbody id="to_be_recontacted-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -166,7 +166,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Selected Tutors</th>
+				<th>Selected Enquiries</th>
 				<th id="selected-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -180,7 +180,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="selected-tutor-records">
+			<tbody id="selected-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -190,7 +190,7 @@
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
-				<th>Rejected Tutors</th>
+				<th>Rejected Enquiries</th>
 				<th id="rejected-total-records" class="total-records"></th>
 			</tr>
 		</table>
@@ -204,7 +204,7 @@
 					<th>Contact Number</th>
 				</tr>
 			</thead>
-			<tbody id="rejected-tutor-records">
+			<tbody id="rejected-enquiry-records">
 			</tbody>
 		</table>
 	</div>
@@ -220,7 +220,7 @@
 							type="button" 
 							onClick="downloadProfile()"
 							class="login-form-element submit-button button-green" >
-							Download Tutor Profile
+							Download Enquiry Profile
 						</button> 
 					</th>
 				</tr>
@@ -231,25 +231,25 @@
   <div class="w3-row-padding">
 	<table align="center" class="all-records">
 		<tr class="header-panel">
-			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
-			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
-			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+			<th><a href="javascript:void(0);" onclick="previousEnquiryRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showEnquiryAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextEnquiryRecord()">Next &gt;&gt;</a></th>
 		</tr>
 	</table>
    </div>
    <div class="w3-row-padding">
 	    <table align="center" class="all-records">
 	    	<tr>
-	    		<td>Application Date</td>
-	    		<td id="APPLICATION_DATE"></td>
+	    		<td>Enquiry Date</td>
+	    		<td id="ENQUIRY_DATE"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>Application Status</td>
-	    		<td id="APPLICATION_STATUS"></td>
+	    		<td>Enquiry Status</td>
+	    		<td id="ENQUIRY_STATUS"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>Date of Birth</td>
-	    		<td id="DATE_OF_BIRTH"></td>
+	    		<td>Name</td>
+	    		<td id="NAME"></td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contact Number</td>
@@ -260,44 +260,12 @@
 	    		<td id="EMAIL_ID"></td>
 	    	</tr>
 	    	<tr>
-	    		<td>First Name</td>
-	    		<td id="FIRST_NAME"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Last Name</td>
-	    		<td id="LAST_NAME"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Gender</td>
-	    		<td id="GENDER"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Qualification</td>
-	    		<td id="QUALIFICATION"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Primary Profession</td>
-	    		<td id="PRIMARY_PROFESSION"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Transport Mode</td>
-	    		<td id="TRANSPORT_MODE"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Teaching Experience</td>
-	    		<td id="TEACHING_EXP"></td>
-	    	</tr>
-	    	<tr>
 	    		<td>Student Grade</td>
 	    		<td id="STUDENT_GRADE"></td>
 	    	</tr>
 	    	<tr>
 	    		<td>Subjects</td>
 	    		<td id="SUBJECTS"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Locations</td>
-	    		<td id="LOCATIONS"></td>
 	    	</tr>
 	    	<tr>
 	    		<td>Preferred Time To Call</td>
@@ -398,18 +366,6 @@
 	    	<tr>
 	    		<td>Rejection Remarks</td>
 	    		<td id="REJECTION_REMARKS"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Rejection Count</td>
-	    		<td id="REJECTION_COUNT"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Re Applied</td>
-	    		<td id="RE_APPLIED"></td>
-	    	</tr>
-	    	<tr>
-	    		<td>Previous Application Date</td>
-	    		<td id="PREVIOUS_APPLICATION_DATE"></td>
 	    	</tr>
 	    	<tr>
 	    		<td>Record Last Updated</td>
@@ -555,9 +511,9 @@
    <div class="w3-row-padding">
 	<table align="center" class="all-records">
 		<tr class="header-panel">
-			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
-			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
-			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+			<th><a href="javascript:void(0);" onclick="previousEnquiryRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showEnquiryAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextEnquiryRecord()">Next &gt;&gt;</a></th>
 		</tr>
 	</table>
    </div>
@@ -570,7 +526,7 @@
   	method="post" 
   	class="noscreen"
 >
-	<input type="text" value="" size="10" name="tentativeTutorId" id="downloadForm-tentativeTutorId" />
+	<input type="text" value="" size="10" name="enquiryId" id="downloadForm-enquiryId" />
 	<input type="text" value="" size="10" name="name" id="downloadForm-name" />
 </form>
 <iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
@@ -596,7 +552,7 @@
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
 <script src="scripts/utilities.js"></script>
 <script src="scripts/admin.js"></script>
-<script src="scripts/tutorregister.js"></script>
+<script src="scripts/tutorenquiry.js"></script>
 <script>
 	loadGrids();
 </script>

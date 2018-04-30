@@ -19,10 +19,14 @@ public interface AdminConstants extends ApplicationConstants {
 	
 	String VALIDATION_MESSAGE_INVALID_GRID_REFERENCE_ACCESS = "Invalid Grid Reference Access.";
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";
-	String VALIDATION_MESSAGE_INVALID_TUTOR_ID = "Invalid Tutor Id.";
+	String VALIDATION_MESSAGE_INVALID_UNIQUE_ID = "Invalid Unique {Tutor Id / Enquiry Id / Subscription Id} Id.";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_REMARKS = "Please provide remarks for this action.";
 	
 	String VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/admin";
+	// Tutor Registration Admin
 	String VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH = VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/tutorregister";
 	String REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH + "/registered-tutor-profile.vm";
+	// Tutor Enquiry Admin
+	String VELOCITY_TEMPLATES_ADMIN_ENQUIRED_TUTOR_PATH = VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/tutorenquiry";
+	String ENQUIRED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_ADMIN_ENQUIRED_TUTOR_PATH + "/enquired-tutor-profile.vm";
 }
