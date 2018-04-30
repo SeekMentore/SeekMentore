@@ -2,8 +2,10 @@ package com.webservices.rest.components;
 
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +30,12 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
 import com.model.ErrorPacket;
+import com.model.mail.MailAttachment;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
+import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
@@ -209,6 +213,16 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		if (null != uploadedInputStream) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStream);
 			if (fileBytes.length > 0) {
+				List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+				attachments.add(new MailAttachment("First_File.pdf", fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				attachments.add(new MailAttachment("Second_File.pdf", fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				MailUtils.sendMimeMessageEmail( 
+						"mukherjeeshantanu797@gmail.com", 
+						null,
+						null,
+						"Test Attachment Mail", 
+						"Test Email",
+						attachments);
 				FileUtils.writeFileToResponse(response, uploadedFileDetail.getFileName(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, fileBytes);
 			}
 		}
