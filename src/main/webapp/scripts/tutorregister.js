@@ -128,6 +128,7 @@ function hideTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').addClass('noscreen');
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
+	$('#header-div').addClass('noscreen');
 	$('#'+tutorListMap.selectedGrid+'-action-section').removeClass('noscreen');
 	var obj = document.getElementById(tutorListMap.selectedGrid+'-action-section');
 	if (null != obj) {
@@ -147,6 +148,7 @@ function showTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').removeClass('noscreen');
 	$('#selected-all-records-div').removeClass('noscreen');
 	$('#rejected-all-records-div').removeClass('noscreen');
+	$('#header-div').removeClass('noscreen');
 }
 
 function openTutorRecord(tutorObj) {

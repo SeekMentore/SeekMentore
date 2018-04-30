@@ -128,6 +128,7 @@ function hideEnquiryAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').addClass('noscreen');
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
+	$('#header-div').addClass('noscreen');
 	$('#'+enquiryListMap.selectedGrid+'-action-section').removeClass('noscreen');
 	var obj = document.getElementById(enquiryListMap.selectedGrid+'-action-section');
 	if (null != obj) {
@@ -147,6 +148,7 @@ function showEnquiryAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').removeClass('noscreen');
 	$('#selected-all-records-div').removeClass('noscreen');
 	$('#rejected-all-records-div').removeClass('noscreen');
+	$('#header-div').removeClass('noscreen');
 }
 
 function openEnquiryRecord(enquiryObj) {
