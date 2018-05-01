@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +39,7 @@ import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -51,8 +53,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	private String uniqueId;
 	private String remarks;
 	private String recepientEmailId;
+	private String emailSalutationName;
 	private String emailSubject;
-	private String emailBody;
+	private String emailText;
 	
 	/*
 	 * Tutor Registration Admin
@@ -386,8 +389,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	@POST
 	public void testUpload (
 			@FormDataParam("recepientEmailId") final String recepientEmailId,
+			@FormDataParam("email-salutation-name") final String emailSalutationName,
 			@FormDataParam("email-subject") final String emailSubject,
-			@FormDataParam("emailBody") final String emailBody,
+			@FormDataParam("emailText") final String emailText,
 			@FormDataParam("inputFile_1") final InputStream uploadedInputStreamFile1,
 			@FormDataParam("inputFile_1") final FormDataContentDisposition uploadedFileDetailFile1,
 			@FormDataParam("inputFile_2") final InputStream uploadedInputStreamFile2,
@@ -401,8 +405,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SEND_EMAIL;
 		this.recepientEmailId = recepientEmailId;
+		this.emailSalutationName = emailSalutationName;
 		this.emailSubject = emailSubject;
-		this.emailBody = emailBody;
+		this.emailText = emailText;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
@@ -430,18 +435,19 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					attachments.add(new MailAttachment(uploadedFileDetailFile4.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 				}
 			}
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("emailSalutationName", emailSalutationName);
+			attributes.put("emailText", emailText.replaceAll(NEW_LINE, LINE_BREAK));
+			attributes.put("user", getLoggedInUser(request));
+			attributes.put("companyContactInfo", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 			MailUtils.sendMimeMessageEmail( 
 					recepientEmailId, 
 					null,
 					null,
 					emailSubject, 
-					refactorEmailBody(emailBody),
+					VelocityUtils.parseTemplate(ADMIN_EMAIL_VELOCITY_TEMPLATE_PATH, attributes),
 					attachments.isEmpty() ? null : attachments);
 		}
-	}
-	
-	private String refactorEmailBody(final String emailBody) {
-		return emailBody.replaceAll("<Company Contact Information>", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 	}
 	
 	public AdminService getAdminService() {
@@ -577,6 +583,13 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailSalutationName)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_INVALID_SALUTATION,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailSubject)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
@@ -584,7 +597,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		} 
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailBody)) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailText)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_UNIQUE_ID,
@@ -593,8 +606,8 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailBody);
+					REST_METHOD_NAME_SEND_EMAIL, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

@@ -45,7 +45,7 @@ public class CompanyAdminContactDetails implements Serializable {
 	public String getContactDetailsInEmbeddedFormat() {
 		return ApplicationConstants.LINE_BREAK + this.salutationText + ApplicationConstants.LINE_BREAK + "Mobile: -" 
 					+ this.mobile + ApplicationConstants.LINE_BREAK + "Mail to: -" 
-					+ this.email + ApplicationConstants.LINE_BREAK + this.website + ApplicationConstants.LINE_BREAK;
+					+ this.email + ApplicationConstants.LINE_BREAK;
 	}
 
 	public String getSalutationText() {
