@@ -31,6 +31,7 @@ import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
 import com.model.ErrorPacket;
 import com.model.mail.MailAttachment;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
@@ -434,7 +435,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					null,
 					null,
 					emailSubject, 
-					emailBody,
+					emailBody.replaceAll("<Company Contact Information>", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat()),
 					attachments.isEmpty() ? null : attachments);
 		}
 	}
@@ -445,6 +446,10 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	
 	public CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 	
 	@Override
