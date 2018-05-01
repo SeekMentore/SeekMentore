@@ -435,9 +435,13 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					null,
 					null,
 					emailSubject, 
-					emailBody.replaceAll("<Company Contact Information>", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat()),
+					refactorEmailBody(emailBody),
 					attachments.isEmpty() ? null : attachments);
 		}
+	}
+	
+	private String refactorEmailBody(final String emailBody) {
+		return emailBody.replaceAll("<Company Contact Information>", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 	}
 	
 	public AdminService getAdminService() {

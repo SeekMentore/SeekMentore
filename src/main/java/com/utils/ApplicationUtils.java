@@ -9,10 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import com.constants.ApplicationConstants;
-import com.constants.BeanConstants;
 import com.model.User;
-import com.service.JNDIandControlConfigurationLoadService;
-import com.utils.context.AppContext;
 
 public class ApplicationUtils implements ApplicationConstants {
 	
