@@ -44,6 +44,18 @@
 			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
 			<!-- Admin Send Email -->
 			<webservice id="sendEmail" url="/sendEmail"></webservice>
+			<!-- Subscription Admin -->
+			<webservice id="displayNonContactedSubscriptions" url="/displayNonContactedSubscriptions"></webservice>
+			<webservice id="displayNonVerifiedSubscriptions" url="/displayNonVerifiedSubscriptions"></webservice>
+			<webservice id="displayVerifiedSubscriptions" url="/displayVerifiedSubscriptions"></webservice>
+			<webservice id="displayVerificationFailedSubscriptions" url="/displayVerificationFailedSubscriptions"></webservice>
+			<webservice id="displayToBeRecontactedSubscriptions" url="/displayToBeRecontactedSubscriptions"></webservice>
+			<webservice id="displaySelectedSubscriptions" url="/displaySelectedSubscriptions"></webservice>
+			<webservice id="displayRejectedSubscriptions" url="/displayRejectedSubscriptions"></webservice>
+			<webservice id="takeActionOnSubscriptions" url="/takeActionOnSubscriptions"></webservice>
+			<webservice id="downloadAdminReportSubscriptions" url="/downloadAdminReportSubscriptions"></webservice>
+			<webservice id="downloadAdminIndividualSubscriptionProfilePdf" url="/downloadAdminIndividualSubscriptionProfilePdf"></webservice>
+			<!-- Subscription Admin -->
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

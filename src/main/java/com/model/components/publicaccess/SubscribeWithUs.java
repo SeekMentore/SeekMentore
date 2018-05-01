@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.utils.PrintFormatterUtils;
+import com.model.ApplicationWorkbookObject;
 
 @Entity
 @Table( name = SubscribeWithUsConstants.TABLE_NAME, 
@@ -25,7 +26,7 @@ import com.utils.PrintFormatterUtils;
 )
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SubscribeWithUs extends PublicApplication implements Serializable, SubscribeWithUsConstants {
+public class SubscribeWithUs extends PublicApplication implements Serializable, SubscribeWithUsConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
@@ -552,5 +553,95 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		switch (reportSwitch) {
+		case "Admin_Report" : {
+			return new Object[] {
+					COLUMN_NAME_APPLICATION_DATE,
+					COLUMN_NAME_APPLICATION_STATUS,
+					COLUMN_NAME_FIRST_NAME,
+					COLUMN_NAME_LAST_NAME,
+					COLUMN_NAME_CONTACT_NUMBER,
+					COLUMN_NAME_EMAIL_ID,
+					COLUMN_NAME_STUDENT_GRADE,
+					COLUMN_NAME_SUBJECTS,
+					COLUMN_NAME_PREFERRED_TIME_TO_CALL,
+					COLUMN_NAME_ADDITIONAL_DETAILS,
+					COLUMN_NAME_IS_CONTACTED,
+					COLUMN_NAME_WHO_CONTACTED,
+					COLUMN_NAME_CONTACTED_DATE,
+					COLUMN_NAME_CONTACTED_REMARKS,
+					COLUMN_NAME_IS_AUTHENTICATION_VERIFIED,
+					COLUMN_NAME_WHO_VERIFIED,
+					COLUMN_NAME_VERIFICATION_DATE,
+					COLUMN_NAME_VERIFICATION_REMARKS,
+					COLUMN_NAME_IS_TO_BE_RECONTACTED,
+					COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT,
+					COLUMN_NAME_SUGGESTION_DATE,
+					COLUMN_NAME_SUGGESTION_REMARKS,
+					COLUMN_NAME_WHO_RECONTACTED,
+					COLUMN_NAME_RECONTACTED_DATE,
+					COLUMN_NAME_RECONTACTED_REMARKS,
+					COLUMN_NAME_IS_SELECTED,
+					COLUMN_NAME_WHO_SELECTED,
+					COLUMN_NAME_SELECTION_DATE,
+					COLUMN_NAME_SELECTION_REMARKS,
+					COLUMN_NAME_IS_REJECTED,
+					COLUMN_NAME_WHO_REJECTED,
+					COLUMN_NAME_REJECTION_DATE,
+					COLUMN_NAME_REJECTION_REMARKS,
+					COLUMN_NAME_RECORD_LAST_UPDATED,					
+				};
+		}
+	}
+	return new Object[] {};
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		switch (reportSwitch) {
+			case "Admin_Report" : {
+				return new Object[] {
+						this.applicationDate,
+						this.applicationStatus,
+						this.firstName,
+						this.lastName,
+						this.contactNumber,
+						this.emailId,
+						this.studentGrade,
+						this.subjects,
+						this.preferredTimeToCall,
+						this.additionalDetails,
+						this.isContacted,
+						this.whoContacted,
+						this.contactedDate,
+						this.contactedRemarks,
+						this.isAuthenticationVerified,
+						this.whoVerified,
+						this.verificationDate,
+						this.verificationRemarks,
+						this.isToBeRecontacted,
+						this.whoSuggestedForRecontact,
+						this.suggestionDate,
+						this.suggestionRemarks,
+						this.whoRecontacted,
+						this.recontactedDate,
+						this.recontactedRemarks,
+						this.isSelected,
+						this.whoSelected,
+						this.selectionDate,
+						this.selectionRemarks,
+						this.isRejected,
+						this.whoRejected,
+						this.rejectionDate,
+						this.rejectionRemarks,
+						this.recordLastUpdated,
+				};
+			}
+		}
+		return new Object[] {};
 	}
 }
