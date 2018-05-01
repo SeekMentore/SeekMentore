@@ -22,8 +22,10 @@ import com.model.WorkbookReport;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
+import com.model.components.publicaccess.SubscribeWithUs;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.FindTutorRowMapper;
+import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.utils.ApplicationUtils;
 import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
@@ -341,6 +343,156 @@ public class AdminService implements AdminConstants {
 	}
 	/*
 	 * Tutor Enquiry Admin
+	 */
+	
+	/*
+	 * Subscrition Admin
+	 */
+	public byte[] downloadAdminReportSubscriptions() throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		workbookReport.createSheet("NON_CONTACTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("NON_VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("VERIFICATION_FAILED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("TO_BE_RECONTACTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("SELECTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		workbookReport.createSheet("REJECTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
+		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	public byte[] downloadAdminIndividualSubscriptionProfilePdf(final String tentativeSubscriptionId) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
+		final SubscribeWithUs enquiredSubscriptionObject = applicationDao.find("SELECT * FROM SUBSCRIBE_WITH_US WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId", paramsMap, new SubscribeWithUsRowMapper());
+		if (null != enquiredSubscriptionObject) {
+			replacePlaceHolderAndIdsFromSubscribeWithUsObject(enquiredSubscriptionObject, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInSubscribeWithUsObject(enquiredSubscriptionObject);
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("enquiredSubscriptionObject", enquiredSubscriptionObject);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(SUBSCRIPTION_INDIVIDUAL_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
+		return null;
+	}
+	
+	
+	public List<SubscribeWithUs> displaySubscriptions(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final StringBuilder query = new StringBuilder("SELECT * FROM SUBSCRIBE_WITH_US WHERE ");
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'N'");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES : {
+				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'");
+				break;
+			}
+		}
+		final List<SubscribeWithUs> subscribeWithUsList = applicationDao.findAllWithoutParams(query.toString(), new SubscribeWithUsRowMapper());
+		for (final SubscribeWithUs subscribeWithUsObject : subscribeWithUsList) {
+			// Get all lookup data and user ids back to original label and values
+			replacePlaceHolderAndIdsFromSubscribeWithUsObject(subscribeWithUsObject, delimiter);
+		}
+		return subscribeWithUsList;
+	}
+	
+	private void replacePlaceHolderAndIdsFromSubscribeWithUsObject(final SubscribeWithUs enquiredSubscriptionObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		enquiredSubscriptionObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", enquiredSubscriptionObject.getStudentGrade(), true, delimiter));
+		enquiredSubscriptionObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", enquiredSubscriptionObject.getSubjects(), true, delimiter));
+		enquiredSubscriptionObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", enquiredSubscriptionObject.getPreferredTimeToCall(), true, delimiter));
+		enquiredSubscriptionObject.setWhoContacted(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoContacted()));
+		enquiredSubscriptionObject.setWhoVerified(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoVerified()));
+		enquiredSubscriptionObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSuggestedForRecontact()));
+		enquiredSubscriptionObject.setWhoRecontacted(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRecontacted()));
+		enquiredSubscriptionObject.setWhoSelected(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSelected()));
+		enquiredSubscriptionObject.setWhoRejected(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRejected()));
+		enquiredSubscriptionObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsContacted()));
+		enquiredSubscriptionObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsAuthenticationVerified()));
+		enquiredSubscriptionObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsToBeRecontacted()));
+		enquiredSubscriptionObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsSelected()));
+		enquiredSubscriptionObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsRejected()));
+	}
+	
+	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribedIndividualObject) {
+		subscribedIndividualObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getContactedRemarks()));
+		subscribedIndividualObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getVerificationRemarks()));
+		subscribedIndividualObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getSuggestionRemarks()));
+		subscribedIndividualObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getRecontactedRemarks()));
+		subscribedIndividualObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getSelectionRemarks()));
+		subscribedIndividualObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getRejectionRemarks()));
+	}
+	
+	public Map<String, Object> takeActionOnSubscriptions (
+			final String gridName, 
+			final String button, 
+			final String tentativeSubscriptionId,
+			final String remarks,
+			final User user
+	) {
+		final Map<String, Object> response = new HashMap<String, Object>();
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", user.getUserId());
+		paramsMap.put("remarks", remarks);
+		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
+		switch(button) {
+			case BUTTON_ACTION_CONTACTED : {
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACT : {
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_REJECT : {
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_VERIFY:
+			case BUTTON_ACTION_REVERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_FAILVERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_SELECT : {
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACTED : {
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+		}
+		applicationDao.executeUpdate(query.toString(), paramsMap);
+		return response;
+	}
+	/*
+	 * Subscrition Admin
+	 * 
 	 */
 	
 	private String getNameOfUserFromUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {

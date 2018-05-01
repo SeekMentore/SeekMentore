@@ -37,6 +37,17 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES = "/displaySelectedTutorEnquiries";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES = "/displayRejectedTutorEnquiries";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS = "/takeActionOnEnquiredTutors";
+	// Subscription Enquiry
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF = "/downloadAdminIndividualSubscriptionProfilePdf";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIPTIONS = "/downloadAdminReportSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS = "/displayNonContactedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS = "/displayNonVerifiedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS = "/displayVerifiedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS = "/displayVerificationFailedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS = "/displayToBeRecontactedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS = "/displaySelectedSubscriptions";
+	String REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS = "/displayRejectedSubscriptions";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS = "/takeActionOnSubscriptions";
 	// Send Email
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods

@@ -384,6 +384,171 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	 * Tutor Enquiry Admin
 	 */
 	
+	/*
+	 * Subscription Admin
+	 */
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIPTIONS)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@POST
+    public void downloadAdminReportSubscriptions (
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Subscriptions_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscriptions());
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+    public void downloadAdminIndividualSubscriptionProfilePdf (
+    		@FormParam("tentativeSubscriptionId") final String tentativeSubscriptionId,
+    		@FormParam("name") final String name,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Individual_Subscription_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminIndividualSubscriptionProfilePdf(tentativeSubscriptionId));
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayNonContactedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayNonVerifiedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerifiedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayVerificationFailedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayToBeRecontactedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displaySelectedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayRejectedSubscriptions (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String takeActionOnSubscriptions (
+			@FormParam("gridName") final String gridName,
+			@FormParam("button") final String button,
+			@FormParam("tentativeSubscriptionId") final String tentativeSubscriptionId,
+			@FormParam("remarks") final String remarks,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS;
+		this.gridName = gridName;
+		this.button = button;
+		this.uniqueId = tentativeSubscriptionId;
+		this.remarks = remarks;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getAdminService().takeActionOnSubscriptions(gridName, button, tentativeSubscriptionId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}	
+	
+	/*
+	 * Subscription Admin
+	 */
+	
 	@Path(REST_METHOD_NAME_SEND_EMAIL)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
