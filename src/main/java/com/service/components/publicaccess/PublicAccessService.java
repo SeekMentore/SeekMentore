@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,9 @@ import com.model.components.publicaccess.RegisteredTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
 import com.model.components.publicaccess.SubscribedCustomer;
+import com.model.rowmappers.BecomeTutorRowMapper;
+import com.model.rowmappers.RegisteredTutorRowMapper;
+import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
@@ -111,15 +115,19 @@ public class PublicAccessService implements PublicAccessConstants {
 		final PublicApplication application, 
 		final Map<String, Object> response, 
 		final Date currentTimestamp
-	) {
+	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_REGISTRATION);
 		final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
 		becomeTutorApplication.setRecordLastUpdated(currentTimestamp);
 		// Check email Id in system
-		final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = ?", new Object[] {becomeTutorApplication.getEmailId()}, BecomeTutor.class);
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", becomeTutorApplication.getEmailId());
+		final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new BecomeTutorRowMapper());
 		// Check contact number in system
-		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = ?", new Object[] {becomeTutorApplication.getContactNumber()}, BecomeTutor.class);
+		paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", becomeTutorApplication.getContactNumber());
+		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new BecomeTutorRowMapper());
 		if (null != becomeTutorApplicationInDatabaseWithEmailId) {
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -171,16 +179,20 @@ public class PublicAccessService implements PublicAccessConstants {
 			final PublicApplication application, 
 			final Map<String, Object> response, 
 			final Date currentTimestamp
-	) {
+	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_ENQUIRY);
 		final FindTutor findTutorApplication = (FindTutor) application;
 		findTutorApplication.setRecordLastUpdated(currentTimestamp);
 		// Check email Id in system for Subscribed Customer
-		final FindTutor findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {findTutorApplication.getEmailId()}, FindTutor.class);
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", findTutorApplication.getEmailId());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
 		// Check contact number in system for Subscribed Customer
-		final FindTutor findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {findTutorApplication.getContactNumber()}, FindTutor.class);
-		if (null != findTutorSubscribedCustomerRegistrationInDatabaseWithEmailId || null != findTutorSubscribedCustomerRegistrationInDatabaseWithContactNumber) {
+		paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", findTutorApplication.getContactNumber());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
+		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
 			findTutorApplication.setSubscribedCustomer(YES);
 		} else {
 			findTutorApplication.setSubscribedCustomer(NO);
@@ -216,15 +228,19 @@ public class PublicAccessService implements PublicAccessConstants {
 			final PublicApplication application, 
 			final Map<String, Object> response, 
 			final Date currentTimestamp
-	) {
+	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBSCRIBE_WITH_US);
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) application;
 		subscribeWithUsApplication.setRecordLastUpdated(currentTimestamp);
 		// Check email Id in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {subscribeWithUsApplication.getEmailId()}, SubscribedCustomer.class);
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", subscribeWithUsApplication.getEmailId());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
 		// Check contact number in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = ?", new Object[] {subscribeWithUsApplication.getContactNumber()}, SubscribedCustomer.class);
+		paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", subscribeWithUsApplication.getContactNumber());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
 		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
 			subscribeWithUsApplication.setSubscribedCustomer(YES);
 		} else {
@@ -261,15 +277,19 @@ public class PublicAccessService implements PublicAccessConstants {
 			final PublicApplication application, 
 			final Map<String, Object> response, 
 			final Date currentTimestamp
-	) {
+	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBMIT_QUERY);
 		final SubmitQuery submitQueryApplication = (SubmitQuery) application;
 		submitQueryApplication.setRecordLastUpdated(currentTimestamp);
 		// Check contact number in system for Registered Tutor
-		final RegisteredTutor registeredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, RegisteredTutor.class);
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", submitQueryApplication.getEmailId());
+		final RegisteredTutor registeredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new RegisteredTutorRowMapper());
 		// Check email Id in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = ?", new Object[] {submitQueryApplication.getEmailId()}, SubscribedCustomer.class);
+		paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", submitQueryApplication.getEmailId());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
 		if (null != registeredTutorInDatabaseWithEmailId) {
 			submitQueryApplication.setRegisteredTutor(YES);
 		} else {

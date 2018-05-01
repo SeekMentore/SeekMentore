@@ -41,7 +41,7 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	
 	String SUBJECT_NEW_TUTOR_REGISTRATION_REQUEST = "New Tutor Registration request arrived";
 	String BECOME_TUTOR_APPLICATION_VM_OBJECT = "becomeTutorApplication";
-	String SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION = "Congratulations !! Your Registration is successfull with " + COMPANY_NAME_IN_QUOTES;
+	String SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION = "Congratulations !! Your Registration is successful with " + COMPANY_NAME_IN_QUOTES;
 	
 	
 	String VELOCITY_TEMPLATES_FIND_TUTOR_PATH = VELOCITY_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH + "/findtutor";

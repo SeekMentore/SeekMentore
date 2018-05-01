@@ -13,6 +13,9 @@ public class MailAttachment implements Serializable {
 
 	private static final long serialVersionUID = -6980182144471502902L;
 	
+	private long attachmentId; 
+	private long mailId;
+	
 	private String filename;
 	
 	private byte[] content;
@@ -26,6 +29,8 @@ public class MailAttachment implements Serializable {
 	private DataHandler dataHandler;
 	
 	private MimeBodyPart attachment;
+	
+	public MailAttachment() {}
 	
 	public MailAttachment(String filename, byte[] content, String applicationType) throws IOException, MessagingException {
 		this.filename = filename;
@@ -69,5 +74,37 @@ public class MailAttachment implements Serializable {
 
 	public DataHandler getDataHandler() {
 		return dataHandler;
+	}
+
+	public long getAttachmentId() {
+		return attachmentId;
+	}
+
+	public void setAttachmentId(long attachmentId) {
+		this.attachmentId = attachmentId;
+	}
+	
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
+	}
+
+	public void setAttachment(MimeBodyPart attachment) {
+		this.attachment = attachment;
+	}
+
+	public long getMailId() {
+		return mailId;
+	}
+
+	public void setMailId(long mailId) {
+		this.mailId = mailId;
 	}
 }

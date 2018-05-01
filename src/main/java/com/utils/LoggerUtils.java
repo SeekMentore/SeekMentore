@@ -7,8 +7,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.constants.BeanConstants;
+import com.constants.JNDIandControlConfigurationConstants;
 import com.constants.LoggerConstants;
 import com.model.ErrorPacket;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.utils.context.AppContext;
 
@@ -24,7 +26,12 @@ public class LoggerUtils implements LoggerConstants {
 	private static final transient boolean isErrorEnabled = LOGGER.isErrorEnabled();
 	
 	public static void logOnConsole(final String message) {
-		System.out.println(message);
+		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL)) {
+			// Only print on console if Server is Local
+			System.out.println(message);
+		} else {
+			logDebugSteps(message);
+		}
 	}
 	
 	public static void logInfoSteps(final String message) {
@@ -75,5 +82,9 @@ public class LoggerUtils implements LoggerConstants {
 	
 	public static CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 }

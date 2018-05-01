@@ -1,8 +1,13 @@
 package com.service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +35,13 @@ public class SchedulerService implements SchedulerConstants {
 	@Autowired
 	private LockService lockService;
 	
-	public void executeEmailSenderJob(final JobExecutionContext context) {
+	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
 		if (null != key) {
 			LoggerUtils.logOnConsole("executeEmailSenderJob");
 			final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
 			for (final ApplicationMail mailObj : mailObjList) {
+				mailObj.setAttachments(commonsService.getAttachments(mailObj.getMailId()));
 				try {
 					int retriedCounter = 0;
 					do {
@@ -61,11 +67,20 @@ public class SchedulerService implements SchedulerConstants {
 				} catch (Exception e) {
 					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
 					commonsService.feedErrorRecord(errorPacket);
-					applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = ?, ERROR_DATE = ?, ERROR_TRACE = ? WHERE MAIL_ID = ?", new Object[] {YES, errorPacket.getOccuredAt(), errorPacket.getErrorTrace(), mailObj.getMailId()});
+					final Map<String, Object> paramsMap = new HashMap<String, Object>();
+					paramsMap.put("errorOccuredWhileSending", YES);
+					paramsMap.put("errorDate", errorPacket.getOccuredAt());
+					paramsMap.put("errorTrace", errorPacket.getErrorTrace());
+					paramsMap.put("mailId", mailObj.getMailId());
+					applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
 					continue;
 					// If exception occurred do not update the record as sent
 				}
-				applicationDao.updateWithPreparedQueryAndIndividualOrderedParams("UPDATE MAIL_QUEUE SET MAIL_SENT = ?, SEND_DATE = ? WHERE MAIL_ID = ?", new Object[] {YES, new Timestamp(new Date().getTime()), mailObj.getMailId()});
+				final Map<String, Object> paramsMap = new HashMap<String, Object>();
+				paramsMap.put("mailSent", YES);
+				paramsMap.put("sendDate", new Timestamp(new Date().getTime()));
+				paramsMap.put("mailId", mailObj.getMailId());
+				applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate WHERE MAIL_ID = :mailId", paramsMap);
 			}
 			lockService.releaseLock("executeEmailSenderJob", key);
 		}

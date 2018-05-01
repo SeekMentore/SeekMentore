@@ -30,6 +30,10 @@ a {
 	clear:both;
 }
 
+.no-border {
+	border : 0px solid #000000 !important;
+}
+
 table.all-records {
     border-collapse: collapse;
     border-spacing: 0;

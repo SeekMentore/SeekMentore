@@ -18,7 +18,9 @@
 		</page> -->
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
+		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
+			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
 			<webservice id="displayNonVerifiedTutorRegistrations" url="/displayNonVerifiedTutorRegistrations"></webservice>
 			<webservice id="displayVerifiedTutorRegistrations" url="/displayVerifiedTutorRegistrations"></webservice>
@@ -29,6 +31,19 @@
 			<webservice id="takeActionOnRegisteredTutors" url="/takeActionOnRegisteredTutors"></webservice>
 			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
 			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
+			<!-- Tutor Enquiry Admin -->
+			<webservice id="displayNonContactedTutorEnquiries" url="/displayNonContactedTutorEnquiries"></webservice>
+			<webservice id="displayNonVerifiedTutorEnquiries" url="/displayNonVerifiedTutorEnquiries"></webservice>
+			<webservice id="displayVerifiedTutorEnquiries" url="/displayVerifiedTutorEnquiries"></webservice>
+			<webservice id="displayVerificationFailedTutorEnquiries" url="/displayVerificationFailedTutorEnquiries"></webservice>
+			<webservice id="displayToBeRecontactedTutorEnquiries" url="/displayToBeRecontactedTutorEnquiries"></webservice>
+			<webservice id="displaySelectedTutorEnquiries" url="/displaySelectedTutorEnquiries"></webservice>
+			<webservice id="displayRejectedTutorEnquiries" url="/displayRejectedTutorEnquiries"></webservice>
+			<webservice id="takeActionOnEnquiredTutors" url="/takeActionOnEnquiredTutors"></webservice>
+			<webservice id="downloadAdminReportTutorEnquiries" url="/downloadAdminReportTutorEnquiries"></webservice>
+			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
+			<!-- Admin Send Email -->
+			<webservice id="sendEmail" url="/sendEmail"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

@@ -16,6 +16,7 @@ public class ControlConfiguration implements Serializable {
 	private String remoteConnectionAcceptedLanguage;
 	private MailConfiguration mailConfiguration;
 	private CaptchaParams captchaParams;
+	private CompanyContactDetails companyContactDetails;
 
 	public String getAppEncyptionAlgorithm() {
 		return appEncyptionAlgorithm;
@@ -69,5 +70,14 @@ public class ControlConfiguration implements Serializable {
 	@XmlElement
 	public void setRemoteConnectionAcceptedLanguage(String remoteConnectionAcceptedLanguage) {
 		this.remoteConnectionAcceptedLanguage = remoteConnectionAcceptedLanguage;
+	}
+
+	public CompanyContactDetails getCompanyContactDetails() {
+		return companyContactDetails;
+	}
+
+	@XmlElement
+	public void setCompanyContactDetails(CompanyContactDetails companyContactDetails) {
+		this.companyContactDetails = companyContactDetails;
 	}
 }
