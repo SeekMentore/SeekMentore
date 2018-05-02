@@ -41,6 +41,7 @@
 		<version.mybatis>3.2.2</version.mybatis>
 		<version.c3p0>0.9.1.2</version.c3p0>
 		<version.ibatis.core>3.0</version.ibatis.core>
+		<version.aws.sdk>1.9.2</version.aws.sdk>
 	</properties>	
 	
 	<repositories>
@@ -503,15 +504,15 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.nexmo</groupId>
-		    <artifactId>client</artifactId>
-		    <version>2.0.1</version>
-		</dependency>
-		
-		<dependency>
 		    <groupId>eu.bitwalker</groupId>
 		    <artifactId>UserAgentUtils</artifactId>
 		    <version>1.20</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk</artifactId>
+		    <version>${version.aws.sdk}</version>
 		</dependency>
 		
 	</dependencies>
