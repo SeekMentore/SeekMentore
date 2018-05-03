@@ -2,10 +2,8 @@ package com.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Clob;
 import java.sql.SQLException;
@@ -36,27 +34,7 @@ public class FileUtils implements FileConstants {
 		response.getOutputStream().close();
 	}
 	
-	public static byte[] getPDFAsByteArray(final String sourcePath) throws IOException {
-		final File file = new File(sourcePath);
-		final InputStream inputStream = new FileInputStream(file);
-        final byte[] bytes = new byte[(int)file.length()];
-        int offset = 0;
-        int numRead = 0;
-        if (inputStream != null) {
-        	while (offset < bytes.length && (numRead = inputStream.read(bytes, offset, bytes.length-offset)) >= 0) {
-        		offset += numRead;
-        	}
-        }
-        if (inputStream != null) {
-        	inputStream.close();
-        }
-        if (offset < bytes.length) {
-        	throw new ApplicationException(EXCEPTION_MESSAGE_COULD_NOT_COMPLETELY_READ_FILE + file.getName());
-        }
-        return bytes;
-	}
-	
-	public static String deteteFile(final String url) {
+	public static String deteteArbitraryFile(final String url) {
 		final File file = new File(url);
 		if (file.delete()) {
 			return EMPTY_STRING;
@@ -64,11 +42,9 @@ public class FileUtils implements FileConstants {
 		return EMPTY_STRING;
 	}
 
-	public static void generateFile(final byte[] content, final String url) throws IOException {
-		final FileOutputStream fileOutputStream = new FileOutputStream(url);
-		fileOutputStream.write(content);
-		if (fileOutputStream != null) {
-			fileOutputStream.close();
+	public static void generateArbitraryFile(final byte[] content, final String url) throws IOException {
+		try (final FileOutputStream fileOutputStream = new FileOutputStream(url)) {
+			fileOutputStream.write(content);
 		}
 	}
 

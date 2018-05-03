@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Tutor</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info noscreen">
+	  <div id="employee-name">Welcome - </div>
+	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records login">
+			<tr class="header-panel">
+				<th>Login Panel</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<form id="document-upload-form" method="post" enctype="multipart/form-data">
+			Tutor Id<input type="text" value="" size="10" name="tutorId" id="tutorId" />
+			PAN: <input type="file" name="inputFilePan" name="inputFilePan" size="25" accept=".pdf" />
+			DL: <input type="file" name="inputFileDriverLicense" name="inputFileDriverLicense" size="25" accept=".pdf" />
+			AADHAAR CARD: <input type="file" name="inputFileAadhaarCard" name="inputFileAadhaarCard" size="25" accept=".pdf" />
+			<button 
+				type="button" 
+				onClick="uploadDocuments()"
+				class="login-form-element submit-button button-green" >
+				Upload Documents
+			</button> 
+			<button 
+				type="button" 
+				onClick="resetDocuments()"
+				class="login-form-element submit-button" >
+				Reset
+			</button> 
+		</form>
+	</div>
+</div>
+<BR/>
+<BR/>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+ <!-- Modal content -->
+ <div class="modal-content">
+ 	<div id="alert-title"></div>
+   <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+   <hr class="modal-line" />
+   <p id="notification-popup-model-content-section"></p>
+   <hr class="modal-line" />
+   <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/tutor.js"></script>
+</body>
+</html>

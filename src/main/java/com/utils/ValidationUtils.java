@@ -92,6 +92,16 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
+	public static boolean validateFileExtension(final String extension, final String filename) {
+		if (validatePlainNotNullAndEmptyTextString(filename)) {
+			final String fileExtension = filename.substring(filename.lastIndexOf(DOT) + 1);
+			if (filename.indexOf(DOT) == filename.lastIndexOf(DOT)) {
+				return extension.equalsIgnoreCase(fileExtension);
+			}
+		}
+		return false;
+	}
+	
 	public static CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}

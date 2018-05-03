@@ -10,6 +10,5 @@ public interface FileConstants extends ApplicationConstants {
 	String EXTENSION_TEXT = "txt";
 	String EXTENSION_XLSX = "xlsx";
 	
-	String EXCEPTION_MESSAGE_COULD_NOT_COMPLETELY_READ_FILE = "Could not completely read file - ";
 	String EXCEPTION_MESSAGE_MISMATCHED_NUMBER_OF_FILE_BYTES_AND_FILE_NAMES = "Mismatched number of File bytes and File names.";
 }
