@@ -4,40 +4,41 @@
 var subscriptionListMap = new Object();
 subscriptionListMap.selectedGrid = 'none';
 function loadGrids() {
-	callWebservice('/rest/admin/displayNonContactedSubscriptions', null, showNonContactedTutorRecords);
-	callWebservice('/rest/admin/displayNonVerifiedSubscriptions', null, showNonVerifiedTutorRecords);
-	callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedTutorRecords);
-	callWebservice('/rest/admin/displayVerificationFailedSubscriptions', null, showVerificationFailedTutorRecords);
-	callWebservice('/rest/admin/displayToBeRecontactedSubscriptions', null, showToBeRecontactedTutorRecords);
-	callWebservice('/rest/admin/displaySelectedSubscriptions', null, showSelectedTutorRecords);
-	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedTutorRecords);
+	callWebservice('/rest/admin/displayNonContactedSubscriptions', null, showNonContactedSubscriptions);
+	/*callWebservice('/rest/admin/displayNonVerifiedSubscriptions', null, showNonVerifiedSubscriptions);
+	callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedSubscriptions);
+	callWebservice('/rest/admin/displayVerificationFailedSubscriptions', null, showVerificationFailedSubscriptions);
+	callWebservice('/rest/admin/displayToBeRecontactedSubscriptions', null, showToBeRecontactedSubscriptions);
+	callWebservice('/rest/admin/displaySelectedSubscriptions', null, showSelectedSubscriptions);
+	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedSubscriptions);*/
 }
 
-function showNonContactedTutorRecords(response){
-  prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
+function showNonContactedSubscriptions(response){
+	window.a = response;
+//  prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
 
-function showNonVerifiedTutorRecords(response){
+function showNonVerifiedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_verified');
 }
 
-function showVerifiedTutorRecords(response){
+function showVerifiedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verified');
 }
 
-function showVerificationFailedTutorRecords(response){
+function showVerificationFailedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verification_failed');
 }
 
-function showToBeRecontactedTutorRecords(response){
+function showToBeRecontactedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'to_be_recontacted');
 }
 
-function showSelectedTutorRecords(response){
+function showSelectedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'selected');
 }
 
-function showRejectedTutorRecords(response){
+function showRejectedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
 
@@ -141,7 +142,7 @@ function hideSubscriptionAllRecordsPage() {
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
 	$('#header-div').addClass('noscreen');
-	$('#'+tutorListMap.selectedGrid+'-action-section').removeClass('noscreen');
+	$('#'+subscriptionListMap.selectedGrid+'-action-section').removeClass('noscreen');
 	var obj = document.getElementById(subscriptionListMap.selectedGrid+'-action-section');
 	if (null != obj) {
 		$('#remarks-div').removeClass('noscreen');
@@ -203,4 +204,35 @@ function openSubscribedRecord(subscriptionObj) {
 		
 		replacePlaceHoldersForEmailPanel(showValue(subscriptionObj.emailId), showValue(subscriptionObj.firstName)+' '+showValue(subscriptionObj.lastName));
 	} 
+}
+
+function takeAction(button) {
+	var data = { 
+			gridName: subscriptionListMap.selectedGrid, 
+			button : button, 
+			tentativeSubscriptionId : subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().tentativeSubscriptionId,
+			remarks : $('#remarks').val()
+	}
+	successMessage = 'Tutor Registration Admin action successfully taken.';
+	callbackAfterCommonSuccess = takeActionAfterSuccessCallback;
+	callWebservice('/rest/admin/takeActionOnSubscriptions', data, null, null, null, 'application/x-www-form-urlencoded');
+}
+
+var takeActionAfterSuccessCallback = function(response) {
+	$('#remarks').val('');
+	showSubscriptionAllRecordsPage();
+	loadGrids();
+}
+function downloadReport() {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/admin/downloadAdminReportSubscriptions';
+	form.submit();
+}
+
+function downloadProfile() {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/admin/downloadAdminIndividualSubscriptionProfilePdf';
+	$('#downloadForm-tentativeSubscriptionId').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().tentativeSubscriptionId);
+	$('#downloadForm-name').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().firstName + '_' + subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().lastName);
+	form.submit();
 }
