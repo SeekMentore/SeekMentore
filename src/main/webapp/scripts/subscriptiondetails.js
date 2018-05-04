@@ -5,23 +5,24 @@ var subscriptionListMap = new Object();
 subscriptionListMap.selectedGrid = 'none';
 function loadGrids() {
 	callWebservice('/rest/admin/displayNonContactedSubscriptions', null, showNonContactedSubscriptions);
-	/*callWebservice('/rest/admin/displayNonVerifiedSubscriptions', null, showNonVerifiedSubscriptions);
-	callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedSubscriptions);
+	callWebservice('/rest/admin/displayNonVerifiedSubscriptions', null, showNonVerifiedSubscriptions);
+	/*callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedSubscriptions);
 	callWebservice('/rest/admin/displayVerificationFailedSubscriptions', null, showVerificationFailedSubscriptions);
 	callWebservice('/rest/admin/displayToBeRecontactedSubscriptions', null, showToBeRecontactedSubscriptions);
 	callWebservice('/rest/admin/displaySelectedSubscriptions', null, showSelectedSubscriptions);
-	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedSubscriptions);*/
+	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedSubscriptions); */
 }
 
 function showNonContactedSubscriptions(response){
-	window.a = response;
-//  prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
+	
+    prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
 
 function showNonVerifiedSubscriptions(response){
+	window.a = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_verified');
 }
-
+/*
 function showVerifiedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verified');
 }
@@ -41,7 +42,7 @@ function showSelectedSubscriptions(response){
 function showRejectedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
-
+*/
 function createSubscriptionNavigatorObject(subscriptionListResponse) {
 	var obj =	{
 		currentIndex 	: 0,
@@ -113,7 +114,7 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 		html += '<td><a href="tel:'+showValue(subscriptionObj.contactNumber)+'">'+showValue(subscriptionObj.contactNumber)+'</a></td>';
 		html +='</tr>';
 	}
-	$('#'+gridName+'-tutor-records').html(html);
+	$('#'+gridName+'-subscriptions-records').html(html);
 	$('#'+gridName+'-total-records').html('Total Records = ' + subscriptionNavigatorObject.getRecordCount());
 }
 
@@ -235,4 +236,25 @@ function downloadProfile() {
 	$('#downloadForm-tentativeSubscriptionId').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().tentativeSubscriptionId);
 	$('#downloadForm-name').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().firstName + '_' + subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().lastName);
 	form.submit();
+}
+
+function hideSubscribedAllRecordsPage() {
+	$('#selected-record-div').removeClass('noscreen');
+	$('.action-section').addClass('noscreen');
+	$('#download-report-div').addClass('noscreen');
+	$('#non_contacted-all-records-div').addClass('noscreen');
+	$('#non_verified-all-records-div').addClass('noscreen');
+	$('#verified-all-records-div').addClass('noscreen');
+	$('#verification_failed-all-records-div').addClass('noscreen');
+	$('#to_be_recontacted-all-records-div').addClass('noscreen');
+	$('#selected-all-records-div').addClass('noscreen');
+	$('#rejected-all-records-div').addClass('noscreen');
+	$('#header-div').addClass('noscreen');
+	$('#'+subscriptionListMap.selectedGrid+'-action-section').removeClass('noscreen');
+	var obj = document.getElementById(subscriptionListMap.selectedGrid+'-action-section');
+	if (null != obj) {
+		$('#remarks-div').removeClass('noscreen');
+	} else {
+		$('#remarks-div').addClass('noscreen');
+	}	
 }
