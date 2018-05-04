@@ -6,11 +6,11 @@ subscriptionListMap.selectedGrid = 'none';
 function loadGrids() {
 	callWebservice('/rest/admin/displayNonContactedSubscriptions', null, showNonContactedSubscriptions);
 	callWebservice('/rest/admin/displayNonVerifiedSubscriptions', null, showNonVerifiedSubscriptions);
-	/*callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedSubscriptions);
+	callWebservice('/rest/admin/displayVerifiedSubscriptions', null, showVerifiedSubscriptions);
 	callWebservice('/rest/admin/displayVerificationFailedSubscriptions', null, showVerificationFailedSubscriptions);
 	callWebservice('/rest/admin/displayToBeRecontactedSubscriptions', null, showToBeRecontactedSubscriptions);
 	callWebservice('/rest/admin/displaySelectedSubscriptions', null, showSelectedSubscriptions);
-	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedSubscriptions); */
+	callWebservice('/rest/admin/displayRejectedSubscriptions', null, showRejectedSubscriptions); 
 }
 
 function showNonContactedSubscriptions(response){
@@ -22,7 +22,7 @@ function showNonVerifiedSubscriptions(response){
 	window.a = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_verified');
 }
-/*
+
 function showVerifiedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'verified');
 }
@@ -42,7 +42,7 @@ function showSelectedSubscriptions(response){
 function showRejectedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
-*/
+
 function createSubscriptionNavigatorObject(subscriptionListResponse) {
 	var obj =	{
 		currentIndex 	: 0,
