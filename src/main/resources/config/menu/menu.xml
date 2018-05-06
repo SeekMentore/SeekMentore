@@ -58,6 +58,10 @@
 			<webservice id="downloadAdminIndividualSubscriptionProfilePdf" url="/downloadAdminIndividualSubscriptionProfilePdf"></webservice>
 			<!-- Subscription Admin -->
 		</page>
+		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
+		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
+			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
+		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
 		</page>
@@ -83,9 +87,5 @@
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
 		</page>
 		<page id="error" url="/error.html"></page>
-		<page id="tutor" url="/tutor.html"></page>
-		<page id="tutorRest" url="/rest/tutor">
-			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
-		</page>
 	</pageList>
 </menu>

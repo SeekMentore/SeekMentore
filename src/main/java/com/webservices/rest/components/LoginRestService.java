@@ -1,5 +1,6 @@
 package com.webservices.rest.components;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,12 +57,29 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			final User user = getLoginService().validateCredential(credential);
 			if (null != user) {
 				LoginUtils.createNewSession(request, user);
-				WebServiceUtils.redirectToPage("/admin.html", request, response);
+				redirectToHomePageAsPerUserType(user.getUserType(), request, response);
 			} else {
 				WebServiceUtils.redirectToPage("/login.html?message=INVALID_USER", request, response);
 			}
 		} else {
 			WebServiceUtils.redirectToPage("/login.html?message=INVALID_DATA", request, response);
+		}
+	}
+	
+	private void redirectToHomePageAsPerUserType(final String userType, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+		switch(userType) {
+			case "Admin" : {
+				WebServiceUtils.redirectToPage("/admin.html", request, response);
+				break;
+			}
+			case "Tutor" : {
+				WebServiceUtils.redirectToPage("/tutor.html", request, response);
+				break;
+			}
+			default	: {
+				WebServiceUtils.redirectToPage("/error.html", request, response);
+				break;
+			}
 		}
 	}
 	

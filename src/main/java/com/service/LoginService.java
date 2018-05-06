@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
@@ -24,7 +25,7 @@ public class LoginService implements LoginConstants {
 	private transient CommonsService commonsService;
 	
 	public User validateCredential(final Credential credential) throws Exception {
-		User user = commonsService.getUserFromDbUsingUserId(credential.getUserId());
+		User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
 		if (null != user) {
 			final String decryptUserPasswordFromDB = SecurityUtil.decrypt(user.getEncyptedPassword());
 			final String decryptUserPasswordFromUI = SecurityUtil.decryptClientSide(credential.getClientSideEncypytedPassword());
@@ -47,12 +48,29 @@ public class LoginService implements LoginConstants {
 		return user;
 	}
 	
+	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
+		switch(userType) {
+			case "Admin" : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
+			case "Tutor" : return commonsService.getUserFromTutorDbUsingUserId(userId);
+			default	: return null;
+		}
+	}
+	
 	private void setAccessTypes(final User user) {
 		final List<String> pageAccessTypes = new ArrayList<String>();
-		if (user.getUserType().equals("Admin")) {
-			pageAccessTypes.add("A");
-			pageAccessTypes.add("G");
+		switch(user.getUserType()) {
+			case "Admin" : {
+				pageAccessTypes.add("A");
+				break;
+			}
+			case "Tutor" : {
+				pageAccessTypes.add("M");
+				break;
+			}
+			default	: {
+			}
 		}
+		pageAccessTypes.add("G");
 		user.setPageAccessTypes(pageAccessTypes);
 	}
 }

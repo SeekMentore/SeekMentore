@@ -497,7 +497,7 @@ public class AdminService implements AdminConstants {
 	
 	private String getNameOfUserFromUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(userId)) {
-			final User user = commonsService.getUserFromDbUsingUserId(userId);
+			final User user = commonsService.getUserFromEmployeeDbUsingUserId(userId);
 			if (null != user) {
 				return user.getName();
 			}

@@ -86,11 +86,21 @@ public class CommonsService implements CommonsConstants {
 	}
 	
 	@Transactional
-	public User getUserFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public User getUserFromEmployeeDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());
 			return applicationDao.find("SELECT * FROM EMPLOYEE WHERE LOWER(USER_ID) = :userId", paramsMap, new UserRowMapper());
+		}
+		return null;
+	}
+	
+	@Transactional
+	public User getUserFromTutorDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (null != userId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", userId.toLowerCase());
+			return applicationDao.find("Select R.*, 'Tutor' USER_TYPE from REGISTERED_TUTOR R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
 		}
 		return null;
 	}
