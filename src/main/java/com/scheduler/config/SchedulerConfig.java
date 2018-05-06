@@ -21,6 +21,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import com.constants.SchedulerConstants;
 import com.scheduler.jobs.EmailSenderJob;
+import com.scheduler.jobs.TutorRegisterJob;
 import com.utils.context.AppContext;
 
 @Configuration
@@ -59,6 +60,7 @@ public class SchedulerConfig implements SchedulerConstants {
     private Trigger[] getTriggerArray() {
     	final List<Trigger> triggerList = new ArrayList<Trigger>();
     	triggerList.add(emailSenderJobTrigger().getObject());
+    	triggerList.add(tutorRegisterJobTrigger().getObject());
         return triggerList.toArray(new Trigger[0]);
     }
     
@@ -86,5 +88,30 @@ public class SchedulerConfig implements SchedulerConstants {
     }
     /**
      * Configuring Trigger & JobDetails for "EmailSenderJob"
+     */
+    /**
+     * Configuring Trigger & JobDetails for "TutorRegisterJob"
+     */
+    @Bean(name = "tutorRegisterJobTrigger")
+    public CronTriggerFactoryBean tutorRegisterJobTrigger() {
+        final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
+        factoryBean.setJobDetail(tutorRegisterJobDetails().getObject());
+        factoryBean.setStartDelay(TutorRegisterJob.START_DELAY);
+        factoryBean.setCronExpression(TutorRegisterJob.CRON_EXPRESSION);
+        factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+        return factoryBean;
+    }
+
+    @Bean(name = "tutorRegisterJobDetails")
+    public JobDetailFactoryBean tutorRegisterJobDetails() {
+        final JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+        jobDetailFactoryBean.setJobClass(TutorRegisterJob.class);
+        jobDetailFactoryBean.setDescription(TutorRegisterJob.DESCRIPTION);
+        jobDetailFactoryBean.setDurability(true);
+        jobDetailFactoryBean.setName(TutorRegisterJob.KEY);
+        return jobDetailFactoryBean;
+    }
+    /**
+     * Configuring Trigger & JobDetails for "TutorRegisterJob"
      */
 }

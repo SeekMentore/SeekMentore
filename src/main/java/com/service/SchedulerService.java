@@ -17,11 +17,16 @@ import com.constants.BeanConstants;
 import com.constants.SchedulerConstants;
 import com.dao.ApplicationDao;
 import com.model.ErrorPacket;
+import com.model.components.publicaccess.BecomeTutor;
+import com.model.components.publicaccess.RegisteredTutor;
 import com.model.mail.ApplicationMail;
 import com.service.components.CommonsService;
+import com.service.components.TutorService;
+import com.utils.ApplicationUtils;
 import com.utils.ExceptionUtils;
 import com.utils.LoggerUtils;
 import com.utils.MailUtils;
+import com.utils.SecurityUtil;
 
 @Service(BeanConstants.BEAN_NAME_SCHEDULER_SERVICE)
 public class SchedulerService implements SchedulerConstants {
@@ -30,10 +35,13 @@ public class SchedulerService implements SchedulerConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
-	private CommonsService commonsService;
+	private transient CommonsService commonsService;
 	
 	@Autowired
-	private LockService lockService;
+	private transient LockService lockService;
+	
+	@Autowired
+	private transient TutorService tutorService;
 	
 	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
@@ -83,6 +91,39 @@ public class SchedulerService implements SchedulerConstants {
 				applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate WHERE MAIL_ID = :mailId", paramsMap);
 			}
 			lockService.releaseLock("executeEmailSenderJob", key);
+		}
+	}
+	
+	public void executeTutorRegisterJob(final JobExecutionContext context) throws Exception {
+		final String key = lockService.lockObject("executeTutorRegisterJob");
+		if (null != key) {
+			LoggerUtils.logOnConsole("executeTutorRegisterJob");
+			final List<BecomeTutor> tutorObjList = tutorService.getSelectedTutorRegistrations(20);
+			for (final BecomeTutor tutorObj : tutorObjList) {
+				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(ApplicationUtils.generateRandomPassword(null, 4, 8, true, true, true, true, false, false, false, false, false));
+				final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
+				final RegisteredTutor registeredTutorObj = new RegisteredTutor();
+				registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase()+WHITESPACE+tutorObj.getLastName().toUpperCase());
+				registeredTutorObj.setContactNumber(tutorObj.getContactNumber());
+				registeredTutorObj.setEmailId(tutorObj.getEmailId());
+				registeredTutorObj.setTentativeTutorId(tutorObj.getTentativeTutorId());
+				registeredTutorObj.setDateOfBirth(tutorObj.getDateOfBirth());
+				registeredTutorObj.setGender(tutorObj.getGender());
+				registeredTutorObj.setQualification(tutorObj.getQualification());
+				registeredTutorObj.setPrimaryProfession(tutorObj.getPrimaryProfession());
+				registeredTutorObj.setTransportMode(tutorObj.getTransportMode());
+				registeredTutorObj.setTeachingExp(tutorObj.getTeachingExp());
+				registeredTutorObj.setInterestedStudentGrades(tutorObj.getStudentGrade());
+				registeredTutorObj.setInterestedSubjects(tutorObj.getSubjects());
+				registeredTutorObj.setComfortableLocations(tutorObj.getLocations());
+				registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
+				registeredTutorObj.setEncyptedPassword(encryptedTemporaryPassword);
+				registeredTutorObj.setUserId(tutorObj.getEmailId());
+				tutorService.feedRegisteredTutorRecords(registeredTutorObj);
+				tutorService.sendProfileGenerationEmailToTutor(registeredTutorObj, generateTemporaryPassword);
+				tutorService.updateBecomeTutorForDataMigrated(tutorObj.getTentativeTutorId());
+			}
+			lockService.releaseLock("executeTutorRegisterJob", key);
 		}
 	}
 }

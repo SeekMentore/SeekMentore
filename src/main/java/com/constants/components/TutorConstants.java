@@ -1,6 +1,7 @@
 package com.constants.components;
 
 import com.constants.ApplicationConstants;
+import com.constants.VelocityConstants;
 
 public interface TutorConstants extends ApplicationConstants {
 	
@@ -11,4 +12,7 @@ public interface TutorConstants extends ApplicationConstants {
 	
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
+	
+	String VELOCITY_TEMPLATES_REGISTERED_TUTOR_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/tutor";
+	String PROFILE_CREATION_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_REGISTERED_TUTOR_FOLDER_PATH + "/profile-created.vm";
 }
