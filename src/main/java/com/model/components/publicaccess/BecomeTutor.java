@@ -165,6 +165,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	
 	@Column(name = COLUMN_NAME_REJECTION_COUNT)
 	private Integer rejectionCount;
+	
 	@Column(name = COLUMN_NAME_REFERENCE)
 	private String reference;
 	
@@ -274,8 +275,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionRemarks = rejectionRemarks;
 		this.rejectionCount = rejectionCount;
 		this.reApplied = reApplied;
-		this.reference= reference;
-		this.preferredTeachingType=preferredTeachingType;
+		this.reference = reference;
+		this.preferredTeachingType = preferredTeachingType;
 		this.previousApplicationDate = previousApplicationDate;
 		this.recordLastUpdated = recordLastUpdated;
 	}
@@ -761,7 +762,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
 						COLUMN_NAME_RECORD_LAST_UPDATED,
 						COLUMN_NAME_REFERENCE,
-						COLUMN_NAME_PREFERRED_TEACHING_TYPE,
+						COLUMN_NAME_PREFERRED_TEACHING_TYPE
 					};
 			}
 		}
@@ -818,7 +819,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.previousApplicationDate,
 						this.recordLastUpdated,
 						this.reference,
-						this.preferredTeachingType,
+						this.preferredTeachingType
 				};
 			}
 		}

@@ -7,7 +7,7 @@ import java.util.Date;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.constants.components.publicaccess.RegisteredTutorConstants;
-import com.model.components.publicaccess.RegisteredTutor;
+import com.model.components.RegisteredTutor;
 import com.utils.ExceptionUtils;
 
 public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, RegisteredTutorConstants {

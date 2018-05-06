@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.components.publicaccess.BecomeTutor;
+import com.utils.ExceptionUtils;
 
 public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutorConstants {
 
@@ -56,7 +57,7 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setRejectionRemarks(row.getString(COLUMN_NAME_REJECTION_REMARKS));
 		becomeTutor.setRejectionCount(row.getInt(COLUMN_NAME_REJECTION_COUNT));
 		becomeTutor.setReApplied(row.getString(COLUMN_NAME_RE_APPLIED));
-		becomeTutor.setReference(row.getString(COLUMN_NAME_REFERENCE));
+		becomeTutor.setReference(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_REFERENCE, String.class));
 		becomeTutor.setPreferredTeachingType(row.getString(COLUMN_NAME_PREFERRED_TEACHING_TYPE));
 		becomeTutor.setPreviousApplicationDate(row.getDate(COLUMN_NAME_PREVIOUS_APPLICATION_DATE));
 		becomeTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));

@@ -1,4 +1,4 @@
-package com.model.components.publicaccess;
+package com.model.components;
 
 import java.io.Serializable;
 

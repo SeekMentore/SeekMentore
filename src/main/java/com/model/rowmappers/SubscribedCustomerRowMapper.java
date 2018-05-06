@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.constants.components.publicaccess.SubscribedCustomerConstants;
-import com.model.components.publicaccess.SubscribedCustomer;
+import com.model.components.SubscribedCustomer;
 
 public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer>, SubscribedCustomerConstants {
 
