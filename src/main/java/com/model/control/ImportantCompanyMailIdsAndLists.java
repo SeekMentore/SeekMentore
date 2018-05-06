@@ -30,6 +30,8 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 	private String hrDeptMailList;
 	private String accountsDeptMailList;
 	
+	private String testingGroupMailList;
+	
 	
 	public String getPrm() {
 		return prm;
@@ -191,6 +193,15 @@ public class ImportantCompanyMailIdsAndLists implements Serializable {
 	@XmlElement
 	public void setQuerySupportMailList(String querySupportMailList) {
 		this.querySupportMailList = querySupportMailList;
+	}
+
+	public String getTestingGroupMailList() {
+		return testingGroupMailList;
+	}
+
+	@XmlElement
+	public void setTestingGroupMailList(String testingGroupMailList) {
+		this.testingGroupMailList = testingGroupMailList;
 	}
 	
 }
