@@ -177,8 +177,6 @@ public class PublicAccessService implements PublicAccessConstants {
 			becomeTutorApplication.setRejectionRemarks(null);
 			becomeTutorApplication.setRejectionCount(0);
 			becomeTutorApplication.setReApplied(null);
-			becomeTutorApplication.setReference(null);
-			becomeTutorApplication.setPreferredTeachingType(null);
 			becomeTutorApplication.setPreviousApplicationDate(null);
 		}
 	}
@@ -230,10 +228,6 @@ public class PublicAccessService implements PublicAccessConstants {
 		findTutorApplication.setWhoRejected(null);
 		findTutorApplication.setRejectionDate(null);
 		findTutorApplication.setRejectionRemarks(null);
-		findTutorApplication.setAddressDetails(null);
-		findTutorApplication.setLocation(null);
-		findTutorApplication.setReference(null);
-	
 	}
 	
 	private void handleSubscribeWithUsApplication (
@@ -283,9 +277,6 @@ public class PublicAccessService implements PublicAccessConstants {
 		subscribeWithUsApplication.setWhoRejected(null);
 		subscribeWithUsApplication.setRejectionDate(null);
 		subscribeWithUsApplication.setRejectionRemarks(null);
-		subscribeWithUsApplication.setAddressDetails(null);
-		subscribeWithUsApplication.setLocation(null);
-		subscribeWithUsApplication.setReference(null);
 	}
 	
 	private void handleSubmitQueryApplication (
