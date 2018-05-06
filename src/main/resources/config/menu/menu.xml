@@ -18,6 +18,7 @@
 		</page> -->
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
+		<page id="subscribewithusadmin" url="/subscribewithusadmin.html" pageAccessType="A"></page>
 		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
@@ -78,9 +79,13 @@
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
 		</page>
-		<page id="commons" url="/rest/commons">
+		<page id="commonsUnsecured" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
 		</page>
-		<page id="login" url="/error.html"></page>
+		<page id="error" url="/error.html"></page>
+		<page id="tutor" url="/tutor.html"></page>
+		<page id="tutorRest" url="/rest/tutor">
+			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
+		</page>
 	</pageList>
 </menu>

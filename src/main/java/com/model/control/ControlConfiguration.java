@@ -17,6 +17,7 @@ public class ControlConfiguration implements Serializable {
 	private MailConfiguration mailConfiguration;
 	private CaptchaParams captchaParams;
 	private CompanyContactDetails companyContactDetails;
+	private AWSParams awsParams;
 
 	public String getAppEncyptionAlgorithm() {
 		return appEncyptionAlgorithm;
@@ -79,5 +80,13 @@ public class ControlConfiguration implements Serializable {
 	@XmlElement
 	public void setCompanyContactDetails(CompanyContactDetails companyContactDetails) {
 		this.companyContactDetails = companyContactDetails;
+	}
+
+	public AWSParams getAwsParams() {
+		return awsParams;
+	}
+
+	public void setAwsParams(AWSParams awsParams) {
+		this.awsParams = awsParams;
 	}
 }

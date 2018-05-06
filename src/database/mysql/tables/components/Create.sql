@@ -170,6 +170,13 @@ CONTACT_NUMBER VARCHAR(15) NOT NULL UNIQUE,
 EMAIL_ID VARCHAR(100) NOT NULL UNIQUE,
 PRIMARY KEY (TUTOR_ID));
 
+CREATE TABLE TUTOR_DOCUMENTS(
+DOCUMENT_ID INT NOT NULL AUTO_INCREMENT,
+TUTOR_ID INT NOT NULL,
+FS_KEY VARCHAR(1000) NOT NULL,
+FILENAME VARCHAR(100) NOT NULL,
+PRIMARY KEY (DOCUMENT_ID));
+
 ---------------------------------------------------------------------------------
 -- Core Lookup Tables
 ---------------------------------------------------------------------------------

@@ -56,4 +56,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	// Commons REST methods
 	String REST_METHOD_NAME_TO_GET_USER = "/getUser";
 	String REST_METHOD_NAME_TO_GET_SERVER_INFO = "/getServerInfo";
+	// Tutor REST methods
+	String REST_METHOD_NAME_UPLOAD_DOCUMENTS = "/uploadDocuments";
 }

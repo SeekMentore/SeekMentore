@@ -18,12 +18,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.poi.util.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.auth0.jwt.internal.org.apache.commons.io.IOUtils;
 import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
@@ -552,7 +552,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	@Path(REST_METHOD_NAME_SEND_EMAIL)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
-	public void testUpload (
+	public void sendEmail (
 			@FormDataParam("recepientEmailId") final String recepientEmailId,
 			@FormDataParam("email-salutation-name") final String emailSalutationName,
 			@FormDataParam("email-subject") final String emailSubject,
@@ -649,10 +649,21 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES : 
 			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES :
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES :
-			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF :{
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIPTIONS :
+			case REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS :
+			case REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS : 
+			case REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS : 
+			case REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS : 
+			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS : 
+			case REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS : 
+			case REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS : 
+{
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS :
 			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS :
 			case REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS : {
 				handleTakeActionSecurity();
