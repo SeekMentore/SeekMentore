@@ -144,6 +144,15 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
 	
+	@Column(name = COLUMN_NAME_LOCATION)
+	private String location;
+	
+	@Column(name = COLUMN_NAME_REFERENCE)
+	private String reference;
+	
+	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
+	private String addressDetails;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
 	private Date recordLastUpdated;
@@ -184,6 +193,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 			String whoRejected,
 			Date rejectionDate,
 			String rejectionRemarks,
+			String location,
+			String reference,
+			String addressDetails,
 			Date recordLastUpdated
 			
 	) {
@@ -220,6 +232,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.whoRejected = whoRejected;
 		this.rejectionDate = rejectionDate;
 		this.rejectionRemarks = rejectionRemarks;
+		this.location = location;
+		this.reference = reference;
+		this.addressDetails = addressDetails;
 		this.recordLastUpdated = recordLastUpdated;
 	}
 
@@ -447,6 +462,30 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.rejectionRemarks = rejectionRemarks;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+
 	public String getStudentGrade() {
 		return studentGrade;
 	}
@@ -551,6 +590,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
 	}
@@ -593,6 +635,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
+					COLUMN_NAME_LOCATION,
+					COLUMN_NAME_REFERENCE,
+					COLUMN_NAME_ADDRESS_DETAILS,
 					COLUMN_NAME_RECORD_LAST_UPDATED,					
 				};
 		}
@@ -638,6 +683,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 						this.whoRejected,
 						this.rejectionDate,
 						this.rejectionRemarks,
+						this.location,
+						this.reference,
+						this.addressDetails,
 						this.recordLastUpdated,
 				};
 			}

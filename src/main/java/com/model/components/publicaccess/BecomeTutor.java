@@ -165,6 +165,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	
 	@Column(name = COLUMN_NAME_REJECTION_COUNT)
 	private Integer rejectionCount;
+	@Column(name = COLUMN_NAME_REFERENCE)
+	private String reference;
+	
+	@Column(name = COLUMN_NAME_PREFERRED_TEACHING_TYPE)
+	private String preferredTeachingType;
 	
 	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
@@ -223,6 +228,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			Integer rejectionCount,
 			String reApplied,
 			Date previousApplicationDate,
+			String reference,
+			String preferredTeachingType,
 			Date recordLastUpdated
 	) {
 		this.applicationDate = applicationDate;
@@ -267,6 +274,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionRemarks = rejectionRemarks;
 		this.rejectionCount = rejectionCount;
 		this.reApplied = reApplied;
+		this.reference= reference;
+		this.preferredTeachingType=preferredTeachingType;
 		this.previousApplicationDate = previousApplicationDate;
 		this.recordLastUpdated = recordLastUpdated;
 	}
@@ -631,6 +640,22 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.recordLastUpdated = recordLastUpdated;
 	}
 	
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	public String getPreferredTeachingType() {
+		return preferredTeachingType;
+	}
+
+	public void setPreferredTeachingType(String preferredTeachingType) {
+		this.preferredTeachingType = preferredTeachingType;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
@@ -680,6 +705,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RE_APPLIED, this.reApplied));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREVIOUS_APPLICATION_DATE, this.previousApplicationDate));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, this.recordLastUpdated));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, this.reference));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TEACHING_TYPE, this.preferredTeachingType));
 		becomeTutorApplication.append(PrintFormatterUtils.endATable());
 		return becomeTutorApplication.toString();
 	}
@@ -733,6 +760,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_RE_APPLIED,
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
 						COLUMN_NAME_RECORD_LAST_UPDATED,
+						COLUMN_NAME_REFERENCE,
+						COLUMN_NAME_PREFERRED_TEACHING_TYPE,
 					};
 			}
 		}
@@ -788,6 +817,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.reApplied,
 						this.previousApplicationDate,
 						this.recordLastUpdated,
+						this.reference,
+						this.preferredTeachingType,
 				};
 			}
 		}

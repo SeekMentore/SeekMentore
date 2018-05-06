@@ -48,6 +48,9 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		findTutor.setRejectionDate(row.getDate(COLUMN_NAME_REJECTION_DATE));
 		findTutor.setRejectionRemarks(row.getString(COLUMN_NAME_REJECTION_REMARKS));
 		findTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
+		findTutor.setLocation(row.getString(COLUMN_NAME_LOCATION));
+		findTutor.setReference(row.getString(COLUMN_NAME_REFERENCE));
+		findTutor.setAddressDetails(row.getString(COLUMN_NAME_ADDRESS_DETAILS));
 		return findTutor;
 	}
 

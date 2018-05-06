@@ -141,6 +141,15 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
 	
+	@Column(name = COLUMN_NAME_LOCATION)
+	private String location;
+	
+	@Column(name = COLUMN_NAME_REFERENCE)
+	private String reference;
+	
+	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
+	private String addressDetails;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
 	private Date recordLastUpdated;
@@ -180,6 +189,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 			String whoRejected,
 			Date rejectionDate,
 			String rejectionRemarks,
+			String location,
+			String reference,
+			String addressDetails,
 			Date recordLastUpdated
 			
 	) {
@@ -216,6 +228,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.rejectionDate = rejectionDate;
 		this.rejectionRemarks = rejectionRemarks;
 		this.recordLastUpdated = recordLastUpdated;
+		this.location = location;
+		this.reference = reference;
+		this.addressDetails = addressDetails;
 	}
 
 	public String getContactNumber() {
@@ -360,6 +375,30 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setSuggestionRemarks(String suggestionRemarks) {
 		this.suggestionRemarks = suggestionRemarks;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
 	}
 
 	public String getWhoRecontacted() {
@@ -537,6 +576,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		findTutorApplication.append(PrintFormatterUtils.endATable());
 		return findTutorApplication.toString();
 	}
@@ -578,6 +620,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
+					COLUMN_NAME_LOCATION,
+					COLUMN_NAME_REFERENCE,
+					COLUMN_NAME_ADDRESS_DETAILS,
 					COLUMN_NAME_RECORD_LAST_UPDATED,
 				};
 		}
@@ -622,6 +667,9 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 						this.whoRejected,
 						this.rejectionDate,
 						this.rejectionRemarks,
+						this.location,
+						this.reference,
+						this.addressDetails,
 						this.recordLastUpdated,
 				};
 			}

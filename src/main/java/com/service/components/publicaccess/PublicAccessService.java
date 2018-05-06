@@ -99,14 +99,20 @@ public class PublicAccessService implements PublicAccessConstants {
 			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
 			mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
 			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+			mapListSelectLookup.put("referenceLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP));
+			mapListSelectLookup.put("preferredTeachingTypeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP));
 		} else if (PAGE_REFERENCE_TUTOR_ENQUIRY.equals(page)) {
 			mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
 			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
 			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+			mapListSelectLookup.put("referenceLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP));
+			mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
 		} else if (PAGE_REFERENCE_SUBSCRIBE_WITH_US.equals(page)) {
 			mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
 			mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
 			mapListSelectLookup.put("preferredTimeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP));
+			mapListSelectLookup.put("referenceLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP));
+			mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
 		}
 		return mapListSelectLookup;
 	}
@@ -171,6 +177,8 @@ public class PublicAccessService implements PublicAccessConstants {
 			becomeTutorApplication.setRejectionRemarks(null);
 			becomeTutorApplication.setRejectionCount(0);
 			becomeTutorApplication.setReApplied(null);
+			becomeTutorApplication.setReference(null);
+			becomeTutorApplication.setPreferredTeachingType(null);
 			becomeTutorApplication.setPreviousApplicationDate(null);
 		}
 	}
@@ -222,6 +230,10 @@ public class PublicAccessService implements PublicAccessConstants {
 		findTutorApplication.setWhoRejected(null);
 		findTutorApplication.setRejectionDate(null);
 		findTutorApplication.setRejectionRemarks(null);
+		findTutorApplication.setAddressDetails(null);
+		findTutorApplication.setLocation(null);
+		findTutorApplication.setReference(null);
+	
 	}
 	
 	private void handleSubscribeWithUsApplication (
@@ -271,6 +283,9 @@ public class PublicAccessService implements PublicAccessConstants {
 		subscribeWithUsApplication.setWhoRejected(null);
 		subscribeWithUsApplication.setRejectionDate(null);
 		subscribeWithUsApplication.setRejectionRemarks(null);
+		subscribeWithUsApplication.setAddressDetails(null);
+		subscribeWithUsApplication.setLocation(null);
+		subscribeWithUsApplication.setReference(null);
 	}
 	
 	private void handleSubmitQueryApplication (
