@@ -9,16 +9,16 @@ public class PublicApplication implements Serializable {
 	private static final long serialVersionUID = -2232244327975645054L;
 	
 	@Transient
-	private boolean flag;
+	private Boolean flag;
 	
 	@Transient
 	private String captchaResponse;
 
-	public boolean isFlag() {
+	public Boolean isFlag() {
 		return flag;
 	}
 
-	public void setFlag(boolean flag) {
+	public void setFlag(Boolean flag) {
 		this.flag = flag;
 	}
 

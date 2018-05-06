@@ -33,7 +33,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_TENTATIVE_TUTOR_ID, unique = true, nullable = false)
-	private long tentativeTutorId;
+	private Long tentativeTutorId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_APPLICATION_DATE, length = 10, nullable = false)
@@ -71,7 +71,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private String transportMode;
 	
 	@Column(name = COLUMN_NAME_TEACHING_EXPERIENCE, nullable = false)
-	private int teachingExp;
+	private Integer teachingExp;
 	
 	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
 	private String studentGrade;
@@ -164,7 +164,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private String rejectionRemarks;
 	
 	@Column(name = COLUMN_NAME_REJECTION_COUNT)
-	private int rejectionCount;
+	private Integer rejectionCount;
 	
 	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
@@ -191,7 +191,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String qualification,
 			String primaryProfession,
 			String transportMode,
-			int teachingExp,
+			Integer teachingExp,
 			String studentGrade,
 			String subjects,
 			String locations,
@@ -220,7 +220,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String whoRejected,
 			Date rejectionDate,
 			String rejectionRemarks,
-			int rejectionCount,
+			Integer rejectionCount,
 			String reApplied,
 			Date previousApplicationDate,
 			Date recordLastUpdated
@@ -271,11 +271,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.recordLastUpdated = recordLastUpdated;
 	}
 
-	public long getTentativeTutorId() {
+	public Long getTentativeTutorId() {
 		return tentativeTutorId;
 	}
 
-	public void setTentativeTutorId(long tentativeTutorId) {
+	public void setTentativeTutorId(Long tentativeTutorId) {
 		this.tentativeTutorId = tentativeTutorId;
 	}
 
@@ -351,11 +351,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.transportMode = transportMode;
 	}
 
-	public int getTeachingExp() {
+	public Integer getTeachingExp() {
 		return teachingExp;
 	}
 
-	public void setTeachingExp(int teachingExp) {
+	public void setTeachingExp(Integer teachingExp) {
 		this.teachingExp = teachingExp;
 	}
 
@@ -599,11 +599,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionRemarks = rejectionRemarks;
 	}
 
-	public int getRejectionCount() {
+	public Integer getRejectionCount() {
 		return rejectionCount;
 	}
 
-	public void setRejectionCount(int rejectionCount) {
+	public void setRejectionCount(Integer rejectionCount) {
 		this.rejectionCount = rejectionCount;
 	}
 

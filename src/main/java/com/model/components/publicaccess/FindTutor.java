@@ -33,7 +33,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_ENQUIRY_ID, unique = true, nullable = false)
-	private long enquiryId;
+	private Long enquiryId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_ENQUIRY_DATE, length = 10, nullable = false)
@@ -442,11 +442,11 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.rejectionRemarks = rejectionRemarks;
 	}
 
-	public long getEnquiryId() {
+	public Long getEnquiryId() {
 		return enquiryId;
 	}
 
-	public void setEnquiryId(long enquiryId) {
+	public void setEnquiryId(Long enquiryId) {
 		this.enquiryId = enquiryId;
 	}
 

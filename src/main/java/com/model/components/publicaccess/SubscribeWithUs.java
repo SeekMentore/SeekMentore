@@ -33,7 +33,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, unique = true, nullable = false)
-	private long tentativeSubscriptionId;
+	private Long tentativeSubscriptionId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_APPLICATION_DATE, length = 10, nullable = false)
@@ -471,11 +471,11 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.recordLastUpdated = recordLastUpdated;
 	}
 	
-	public long getTentativeSubscriptionId() {
+	public Long getTentativeSubscriptionId() {
 		return tentativeSubscriptionId;
 	}
 
-	public void setTentativeSubscriptionId(long tentativeSubscriptionId) {
+	public void setTentativeSubscriptionId(Long tentativeSubscriptionId) {
 		this.tentativeSubscriptionId = tentativeSubscriptionId;
 	}
 
