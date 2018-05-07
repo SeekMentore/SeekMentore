@@ -9,7 +9,7 @@ public class ErrorPacket implements Serializable, UserConstants {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private long errorId;
+	private Long errorId;
 	private Timestamp occuredAt;
 	private String requestURI;
 	private String errorTrace;
@@ -51,11 +51,11 @@ public class ErrorPacket implements Serializable, UserConstants {
 		this.errorTrace = errorTrace;
 	}
 
-	public long getErrorId() {
+	public Long getErrorId() {
 		return errorId;
 	}
 
-	public void setErrorId(long errorId) {
+	public void setErrorId(Long errorId) {
 		this.errorId = errorId;
 	}
 }

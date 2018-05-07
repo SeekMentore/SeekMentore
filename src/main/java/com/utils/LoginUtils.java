@@ -1,5 +1,8 @@
 package com.utils;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -7,7 +10,11 @@ import org.springframework.dao.DataAccessException;
 
 import com.constants.BeanConstants;
 import com.constants.LoginConstants;
+import com.exception.ApplicationException;
+import com.model.Employee;
+import com.model.LogonTracker;
 import com.model.User;
+import com.model.components.RegisteredTutor;
 import com.service.LoginService;
 import com.service.components.CommonsService;
 import com.utils.context.AppContext;
@@ -18,6 +25,13 @@ public class LoginUtils implements LoginConstants {
 		final HttpSession session = httpRequest.getSession();
 		session.setAttribute(USER_OBJECT, user);
 		session.setAttribute(USER_TYPE,  user.getUserType());
+		final LogonTracker logonTracker = new LogonTracker();
+		logonTracker.setUserId(user.getUserId());
+		logonTracker.setUserType(user.getUserType());
+		logonTracker.setLoginTime(new Timestamp(new Date().getTime()));
+		logonTracker.setLoginFrom(WebServiceUtils.getUserAgent(httpRequest));
+		logonTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
+		getLoginService().feedLogonTracker(logonTracker);
 	}
 	
 	private static <T extends Object> T getUserTypeObject(final HttpServletRequest httpRequest, final Class<T> type) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -55,6 +69,21 @@ public class LoginUtils implements LoginConstants {
 	
 	public static <T extends Object> T getUserTypeObjectFromSession(final HttpServletRequest httpRequest, Class<T> type) throws DataAccessException, InstantiationException, IllegalAccessException {
 		return getUserTypeObject(httpRequest, type);
+	}
+	
+	public static String getEmailIdOfUserInSession(final HttpServletRequest httpRequest) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String userType = getUserTypeFromSession(httpRequest);
+		switch(userType) {
+			case "Admin" : {
+				final Employee employee = Employee.class.cast(getUserTypeObject(httpRequest, Employee.class));
+				return employee.getUserId() + "@" + employee.getEmailDomain();
+			}
+			case "Tutor" : {
+				final RegisteredTutor registeredTutor = RegisteredTutor.class.cast(getUserTypeObject(httpRequest, RegisteredTutor.class));
+				return registeredTutor.getEmailId();
+			}
+		}
+		throw new ApplicationException("No Email Id in Session");
 	}
 	
 	public static void logoutUserSession(final HttpServletRequest httpRequest) {

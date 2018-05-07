@@ -7,18 +7,18 @@ import com.constants.components.publicaccess.SubscribedCustomerConstants;
 public class SubscribedCustomer implements Serializable, SubscribedCustomerConstants {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
-	private String customerId;
+	private Long customerId;
 	private String name;
 	private String contactNumber;
 	private String emailId;
 	
 	public SubscribedCustomer() {}
 
-	public String getCustomerId() {
+	public Long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(String customerId) {
+	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 

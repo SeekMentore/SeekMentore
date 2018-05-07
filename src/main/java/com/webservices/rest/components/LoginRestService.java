@@ -88,7 +88,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.user = getLoggedInUser(request);
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getLoginService().changePassword(getLoggedInUser(request), getLoggedInUserId(request), getLoggedInUserType(request), newPassword), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getLoginService().changePassword(getLoggedInUser(request), newPassword, LoginUtils.getEmailIdOfUserInSession(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}

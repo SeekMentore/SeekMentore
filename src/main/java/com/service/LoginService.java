@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.LoginConstants;
@@ -19,9 +20,13 @@ import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
 import com.model.Credential;
 import com.model.ErrorPacket;
+import com.model.LogonTracker;
+import com.model.PasswordChangeTracker;
 import com.model.User;
 import com.service.components.CommonsService;
+import com.utils.MailUtils;
 import com.utils.SecurityUtil;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
 public class LoginService implements LoginConstants {
@@ -31,6 +36,9 @@ public class LoginService implements LoginConstants {
 	
 	@Autowired
 	private transient CommonsService commonsService;
+	
+	@Autowired
+	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	public User validateCredential(final Credential credential) throws Exception {
 		User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
@@ -54,6 +62,28 @@ public class LoginService implements LoginConstants {
 			}
 		}
 		return user;
+	}
+	
+	@Transactional
+	public void feedLogonTracker(final LogonTracker logonTracker) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", logonTracker.getUserId());
+		paramsMap.put("userType", logonTracker.getUserType());
+		paramsMap.put("loginTime", logonTracker.getLoginTime());
+		paramsMap.put("loginFrom", logonTracker.getLoginFrom());
+		paramsMap.put("machineIp", logonTracker.getMachineIp());
+		applicationDao.executeUpdate("INSERT INTO LOGON_TRACKER(USER_ID, USER_TYPE, LOGIN_TIME, LOGIN_FROM, MACHINE_IP) VALUES(:userId, :userType, :loginTime, :loginFrom, :machineIp)", paramsMap);
+	}
+	
+	@Transactional
+	public void feedPasswordChangeTracker(final PasswordChangeTracker passwordChangeTracker) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("userId", passwordChangeTracker.getUserId());
+		paramsMap.put("userType", passwordChangeTracker.getUserType());
+		paramsMap.put("changeTime", passwordChangeTracker.getChangeTime());
+		paramsMap.put("encyptedPasswordOld", passwordChangeTracker.getEncyptedPasswordOld());
+		paramsMap.put("encyptedPasswordNew", passwordChangeTracker.getEncyptedPasswordNew());
+		applicationDao.executeUpdate("INSERT INTO PASSWORD_CHANGE_TRACKER(USER_ID, USER_TYPE, CHANGE_TIME, ENCYPTED_PASSWORD_OLD, ENCYPTED_PASSWORD_NEW) VALUES(:userId, :userType, :changeTime, :encyptedPasswordOld, :encyptedPasswordNew)", paramsMap);
 	}
 	
 	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -82,14 +112,37 @@ public class LoginService implements LoginConstants {
 		user.setPageAccessTypes(pageAccessTypes);
 	}
 
-	public Map<String, Object> changePassword(final User user, final String loggedInUserId, final String loggedInUserType, final String newPassword) throws Exception {
+	public Map<String, Object> changePassword(final User user, final String newPassword, final String emailIdOfUserInSession) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
-		changePasswordAsPerUserType(loggedInUserType, loggedInUserId, encryptedNewPassword);
+		final String encryptedOldPassword = user.getEncyptedPassword();
+		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
 		user.setEncyptedPassword(encryptedNewPassword);
+		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
+		passwordChangeTracker.setUserId(user.getUserId());
+		passwordChangeTracker.setUserType(user.getUserType());
+		passwordChangeTracker.setChangeTime(new Timestamp(new Date().getTime()));
+		passwordChangeTracker.setEncyptedPasswordOld(encryptedOldPassword);
+		passwordChangeTracker.setEncyptedPasswordNew(encryptedNewPassword);
+		feedPasswordChangeTracker(passwordChangeTracker);
+		sendPasswordChangeEmailToUser(user, emailIdOfUserInSession);
 		return response;
+	}
+	
+	public void sendPasswordChangeEmailToUser(final User user, final String emailIdOfUserInSession) throws Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("addressName", user.getName());
+		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		MailUtils.sendMimeMessageEmail( 
+				emailIdOfUserInSession, 
+				null,
+				null,
+				"Alert - Your Seek Mentore password has been changed", 
+				VelocityUtils.parseTemplate(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
 	}
 	
 	private void changePasswordAsPerUserType(final String userType, final String loggedInUserId, final String encryptedNewPassword) throws IOException {
