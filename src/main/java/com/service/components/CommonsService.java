@@ -151,17 +151,19 @@ public class CommonsService implements CommonsConstants {
 	
 	public String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final StringBuilder multiLineString = new StringBuilder(EMPTY_STRING);
-		if (multiSelect) {
-			final List<SelectLookup> selectLookupList = getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));
-			for(final SelectLookup selectLookup : selectLookupList) {
-				multiLineString.append(selectLookup.getLabel());
-				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(selectLookup.getDescription())) {
-					multiLineString.append(WHITESPACE).append(selectLookup.getDescription());
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(value)) {
+			if (multiSelect) {
+				final List<SelectLookup> selectLookupList = getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));
+				for(final SelectLookup selectLookup : selectLookupList) {
+					multiLineString.append(selectLookup.getLabel());
+					if (ValidationUtils.validatePlainNotNullAndEmptyTextString(selectLookup.getDescription())) {
+						multiLineString.append(WHITESPACE).append(selectLookup.getDescription());
+					}
+					multiLineString.append(delimiter);
 				}
-				multiLineString.append(delimiter);
+			} else {
+				multiLineString.append(getSelectLookupEntry(selectLookupTable, value).getLabel());
 			}
-		} else {
-			multiLineString.append(getSelectLookupEntry(selectLookupTable, value).getLabel());
 		}
 		return multiLineString.toString();
 	}
