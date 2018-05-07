@@ -2,7 +2,7 @@ package com.model.rowmappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -28,6 +28,7 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 		registeredTutor.setTeachingExp(ExceptionUtils.exceptionHandlerForRowMapper(row, "TEACHING_EXP", Integer.class));
 		registeredTutor.setInterestedStudentGrades(ExceptionUtils.exceptionHandlerForRowMapper(row, "INTERESTED_STUDENT_GRADES", String.class));
 		registeredTutor.setInterestedSubjects(ExceptionUtils.exceptionHandlerForRowMapper(row, "INTERESTED_SUBJECTS", String.class));
+		registeredTutor.setPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, "PREFERRED_TEACHING_TYPE", String.class));
 		registeredTutor.setComfortableLocations(ExceptionUtils.exceptionHandlerForRowMapper(row, "COMFORTABLE_LOCATIONS", String.class));
 		registeredTutor.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDITIONAL_DETAILS", String.class));
 		registeredTutor.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCYPTED_PASSWORD", String.class));

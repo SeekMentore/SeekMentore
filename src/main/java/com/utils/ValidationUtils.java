@@ -53,12 +53,14 @@ public class ValidationUtils implements ValidationConstants {
 	}
 	
 	public static boolean validateNumber (
-			final int number, 
+			final Integer number, 
 			final boolean hasMaxCount,
 			final int maxCount,
 			final boolean hasMinCount,
 			final int minCount
 	) {
+		if (null == number)
+			return false;
 		final boolean patternMatched = Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(String.valueOf(number)).find();
 		final boolean isUnderMaxCountLimit = hasMaxCount ? number <= maxCount : true;
 		final boolean isUnderMinCountLimit = hasMinCount ? number >= minCount : true;

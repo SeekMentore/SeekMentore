@@ -7,17 +7,21 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.model.components.RegisteredTutor;
+import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.MailUtils;
+import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_TUTOR_SERVICE)
@@ -29,16 +33,20 @@ public class TutorService implements TutorConstants {
 	@Autowired
 	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
+	@Autowired
+	private transient CommonsService commonsService;
+	
 	@PostConstruct
 	public void init() {}
 	
 	@Transactional
-	public void feedDocumentsRecord(final String tutorId, final Map<String, String> uploadedFiles) {
+	public void feedDocumentsRecord(final Long tutorId, final Map<String, String> uploadedFiles) {
 		for (Map.Entry<String, String> entry : uploadedFiles.entrySet()) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("tutorId", tutorId);
 			paramsMap.put("fsKey", entry.getValue());
 			paramsMap.put("filename", entry.getKey());
+			applicationDao.executeUpdate("DELETE FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId AND FS_KEY = :fsKey", paramsMap);
 			applicationDao.executeUpdate("INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)", paramsMap);
 		}
 	}
@@ -52,7 +60,7 @@ public class TutorService implements TutorConstants {
 	public void updateBecomeTutorForDataMigrated(final Long tentativeTutorId) {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tentativeTutorId", tentativeTutorId);
-		applicationDao.executeUpdate("UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y' WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap);
+		applicationDao.executeUpdate("UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap);
 	}
 	
 	@Transactional
@@ -69,12 +77,13 @@ public class TutorService implements TutorConstants {
 		paramsMap.put("transportMode", registeredTutorObj.getTransportMode());
 		paramsMap.put("teachingExp", registeredTutorObj.getTeachingExp());
 		paramsMap.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
+		paramsMap.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
 		paramsMap.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
 		paramsMap.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
 		paramsMap.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
 		paramsMap.put("encyptedPassword", registeredTutorObj.getEncyptedPassword());
 		paramsMap.put("userId", registeredTutorObj.getUserId());
-		applicationDao.executeUpdate("INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encyptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId)", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encyptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)", paramsMap);
 	}
 	
 	public void sendProfileGenerationEmailToTutor(final RegisteredTutor registeredTutorObj, final String temporaryPassword) throws Exception {
@@ -94,5 +103,123 @@ public class TutorService implements TutorConstants {
 	
 	public String getFolderPathToUploadTutorDocuments(final String tutorId) {
 		return "secured/tutor/documents/" + tutorId;
+	}
+	
+	public void loadTutorRecord(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
+		replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, LINE_BREAK);
+		removeSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
+		
+	}
+	
+	public Map<String, List<SelectLookup>> getDropdownListData() {
+		final Map<String, List<SelectLookup>> mapListSelectLookup = new HashMap<String, List<SelectLookup>>();
+		mapListSelectLookup.put("qualificationLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP));
+		mapListSelectLookup.put("professionLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP));
+		mapListSelectLookup.put("transportModeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP));
+		mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
+		mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
+		mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
+		mapListSelectLookup.put("preferredTeachingTypeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP));
+		return mapListSelectLookup;
+	}
+	
+	@Transactional
+	public Map<String, Object> updateDetails(final RegisteredTutor registeredTutorObj) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		String updateQuery = "UPDATE REGISTERED_TUTOR SET ";
+		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "QUALIFICATION = :qualification";
+			updatedPropertiesParams.put("qualification", registeredTutorObj.getQualification());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "PRIMARY_PROFESSION = :primaryProfession";
+			updatedPropertiesParams.put("primaryProfession", registeredTutorObj.getPrimaryProfession());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "TRANSPORT_MODE = :transportMode";
+			updatedPropertiesParams.put("transportMode", registeredTutorObj.getTransportMode());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getInterestedStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "INTERESTED_STUDENT_GRADES = :interestedStudentGrades";
+			updatedPropertiesParams.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "INTERESTED_SUBJECTS = :interestedSubjects";
+			updatedPropertiesParams.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getComfortableLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "COMFORTABLE_LOCATIONS = :comfortableLocations";
+			updatedPropertiesParams.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
+		}
+		if (ValidationUtils.validateNumber(registeredTutorObj.getTeachingExp(), true, 99, false, 0)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "TEACHING_EXP = :teachingExp";
+			updatedPropertiesParams.put("teachingExp", registeredTutorObj.getTeachingExp());
+		}
+		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "PREFERRED_TEACHING_TYPE = :preferredTeachingType";
+			updatedPropertiesParams.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(registeredTutorObj.getAdditionalDetails())) {
+			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADDITIONAL_DETAILS = :additionalDetails";
+			updatedPropertiesParams.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
+		}
+		if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
+			updateQuery += " WHERE TUTOR_ID = :tutorId";
+			updatedPropertiesParams.put("tutorId", registeredTutorObj.getTutorId());
+			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		}
+		return response;
+	}
+	
+	public void replacePlaceHolderAndIdsFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		registeredTutorObj.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,registeredTutorObj.getGender(), false, delimiter));
+		registeredTutorObj.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,registeredTutorObj.getQualification(), false, delimiter));
+		registeredTutorObj.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,registeredTutorObj.getPrimaryProfession(), false, delimiter));
+		registeredTutorObj.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,registeredTutorObj.getTransportMode(), false, delimiter));
+		registeredTutorObj.setInterestedStudentGrades(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, registeredTutorObj.getInterestedStudentGrades(), true, delimiter));
+		registeredTutorObj.setInterestedSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, registeredTutorObj.getInterestedSubjects(), true, delimiter));
+		registeredTutorObj.setComfortableLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, registeredTutorObj.getComfortableLocations(), true, delimiter));
+		registeredTutorObj.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObj.getPreferredTeachingType(), true, delimiter));
+	}
+	
+	public void removeSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
+		registeredTutorObj.setTutorId(null);
+		registeredTutorObj.setTentativeTutorId(null);
+		registeredTutorObj.setEncyptedPassword(null);
+		registeredTutorObj.setUserId(null);
+		registeredTutorObj.setRecordLastUpdated(null);
+		registeredTutorObj.setUpdatedBy(null);
 	}
 }

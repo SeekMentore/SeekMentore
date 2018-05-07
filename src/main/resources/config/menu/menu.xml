@@ -61,9 +61,16 @@
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
 			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
+			<webservice id="loadTutorRecord" url="/loadTutorRecord"></webservice>
+			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
+			<webservice id="updateDetails" url="/updateDetails"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
+		</page>
+		<page id="loginRest" url="/rest/login" pageAccessType="G">
+			<webservice id="changePassword" url="/changePassword"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
 		</page>
 	</pageList>
 	<pageList id="unsecured">
@@ -79,9 +86,8 @@
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
 		</page>
 		<page id="login" url="/login.html"></page>
-		<page id="loginRest" url="/rest/login">
+		<page id="loginRestUnsecured" url="/rest/login">
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
-			<webservice id="logout" url="/logout"></webservice>
 		</page>
 		<page id="commonsUnsecured" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>

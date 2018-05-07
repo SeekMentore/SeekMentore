@@ -28,6 +28,7 @@ import com.service.LoginService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.LoginUtils;
+import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
@@ -39,6 +40,10 @@ import com.webservices.rest.AbstractRestWebservice;
 public class LoginRestService extends AbstractRestWebservice implements RestMethodConstants, LoginConstants {
 	
 	private Credential credential;
+	private User user;
+	private String oldPassword;
+	private String newPassword;
+	private String retypenewPassword;
 	
 	@Path(REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL)
 	@Consumes("application/x-www-form-urlencoded")
@@ -64,6 +69,27 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		} else {
 			WebServiceUtils.redirectToPage("/login.html?message=INVALID_DATA", request, response);
 		}
+	}
+	
+	@Path(REST_METHOD_NAME_CHANGE_PASSWORD)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String changePassword (
+			@FormParam("oldPassword") final String oldPassword,
+			@FormParam("newPassword") final String newPassword,
+			@FormParam("retypenewPassword") final String retypenewPassword,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_CHANGE_PASSWORD;
+		this.oldPassword = oldPassword;
+		this.newPassword = newPassword;
+		this.retypenewPassword = retypenewPassword;
+		this.user = getLoggedInUser(request);
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getLoginService().changePassword(getLoggedInUser(request), getLoggedInUserId(request), getLoggedInUserType(request), newPassword), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
 	private void redirectToHomePageAsPerUserType(final String userType, final HttpServletRequest request, final HttpServletResponse response) throws IOException {
@@ -114,6 +140,10 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_CHANGE_PASSWORD : {
+				handleChangePassword();
+				break;
+			}
 			case REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL : {
 				handleCredential();
 				break;
@@ -147,6 +177,69 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.credential.toString());
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	} 
+	
+	private void handleChangePassword() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.oldPassword)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_AN_OLD_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		try {
+			final String decryptUserPasswordFromUI = SecurityUtil.decryptClientSide(this.oldPassword);
+			final String decryptUserPasswordFromSession = SecurityUtil.decrypt(this.user.getEncyptedPassword());
+			if (!decryptUserPasswordFromSession.equals(decryptUserPasswordFromUI)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						LoginConstants.VALIDATION_MESSAGE_INCORRECT_OLD_PASSWORD,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
+		} catch(Exception e) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_INCORRECT_OLD_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.newPassword)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.retypenewPassword)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_RETYPE_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		try {
+			final String decryptUserNewPasswordFromUI = SecurityUtil.decryptClientSide(this.newPassword);
+			final String decryptUserRetypeNewPasswordFromUI = SecurityUtil.decryptClientSide(this.retypenewPassword);
+			if (!decryptUserNewPasswordFromUI.equals(decryptUserRetypeNewPasswordFromUI)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						LoginConstants.VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
+		} catch(Exception e) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypenewPassword);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 

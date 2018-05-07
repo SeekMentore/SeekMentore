@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.dao.DataAccessException;
 
 import com.constants.ApplicationConstants;
 import com.google.gson.Gson;
@@ -18,6 +19,14 @@ public abstract class AbstractWebservice {
 	
 	public User getLoggedInUser(final HttpServletRequest request) {
 		return LoginUtils.getUserFromSession(request);
+	}
+	
+	public String getLoggedInUserType(final HttpServletRequest request) {
+		return LoginUtils.getUserTypeFromSession(request);
+	}
+	
+	public <T extends Object> T getLoggedInUserTypeObject(final HttpServletRequest request, Class<T> type) throws DataAccessException, InstantiationException, IllegalAccessException {
+		return LoginUtils.getUserTypeObjectFromSession(request, type);
 	}
 	
 	public String convertObjToJSONString(

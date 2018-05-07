@@ -116,6 +116,7 @@ public class SchedulerService implements SchedulerConstants {
 				registeredTutorObj.setInterestedStudentGrades(tutorObj.getStudentGrade());
 				registeredTutorObj.setInterestedSubjects(tutorObj.getSubjects());
 				registeredTutorObj.setComfortableLocations(tutorObj.getLocations());
+				registeredTutorObj.setPreferredTeachingType(tutorObj.getPreferredTeachingType());
 				registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
 				registeredTutorObj.setEncyptedPassword(encryptedTemporaryPassword);
 				registeredTutorObj.setUserId(tutorObj.getEmailId());

@@ -27,8 +27,34 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
 	private String userId;
 	private Date recordLastUpdated;
 	private String updatedBy;
+	private String preferredTeachingType;
 	
 	public RegisteredTutor() {}
+	
+	public RegisteredTutor getACopy() {
+		final RegisteredTutor newInstance = new RegisteredTutor();
+		newInstance.tutorId = tutorId;
+		newInstance.name = name;
+		newInstance.contactNumber = contactNumber;
+		newInstance.emailId = emailId;
+		newInstance.tentativeTutorId = tentativeTutorId;
+		newInstance.dateOfBirth = dateOfBirth;
+		newInstance.gender = gender;
+		newInstance.qualification = qualification;
+		newInstance.primaryProfession = primaryProfession;
+		newInstance.transportMode = transportMode;
+		newInstance.teachingExp = teachingExp;
+		newInstance.interestedStudentGrades = interestedStudentGrades;
+		newInstance.interestedSubjects = interestedSubjects;
+		newInstance.comfortableLocations = comfortableLocations;
+		newInstance.additionalDetails = additionalDetails;
+		newInstance.encyptedPassword = encyptedPassword;
+		newInstance.userId = userId;
+		newInstance.recordLastUpdated = recordLastUpdated;
+		newInstance.updatedBy = updatedBy;
+		newInstance.preferredTeachingType = preferredTeachingType;
+		return newInstance;
+	}
 
 	public String getName() {
 		return name;
@@ -180,5 +206,13 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public String getPreferredTeachingType() {
+		return preferredTeachingType;
+	}
+
+	public void setPreferredTeachingType(String preferredTeachingType) {
+		this.preferredTeachingType = preferredTeachingType;
 	}
 }

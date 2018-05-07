@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
+import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.WorkbookReport;
-import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubscribeWithUs;
@@ -28,7 +28,6 @@ import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.utils.ApplicationUtils;
 import com.utils.PDFUtils;
-import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
 
@@ -77,31 +76,31 @@ public class AdminService implements AdminConstants {
 		final StringBuilder query = new StringBuilder("SELECT * FROM BECOME_TUTOR WHERE ");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'N'");
+				query.append("IS_CONTACTED = 'N' AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
+				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'");
+				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'");
+				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y' AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
 		}
@@ -114,20 +113,22 @@ public class AdminService implements AdminConstants {
 	}
 	
 	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor registeredTutorObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		registeredTutorObject.setGender(preapreLookupLabelString("GENDER_LOOKUP",registeredTutorObject.getGender(), false, delimiter));
-		registeredTutorObject.setQualification(preapreLookupLabelString("QUALIFICATION_LOOKUP",registeredTutorObject.getQualification(), false, delimiter));
-		registeredTutorObject.setPrimaryProfession(preapreLookupLabelString("PROFESSION_LOOKUP",registeredTutorObject.getPrimaryProfession(), false, delimiter));
-		registeredTutorObject.setTransportMode(preapreLookupLabelString("TRANSPORT_MODE_LOOKUP",registeredTutorObject.getTransportMode(), false, delimiter));
-		registeredTutorObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", registeredTutorObject.getStudentGrade(), true, delimiter));
-		registeredTutorObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", registeredTutorObject.getSubjects(), true, delimiter));
-		registeredTutorObject.setLocations(preapreLookupLabelString("LOCATIONS_LOOKUP", registeredTutorObject.getLocations(), true, delimiter));
-		registeredTutorObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", registeredTutorObject.getPreferredTimeToCall(), true, delimiter));
-		registeredTutorObject.setWhoContacted(getNameOfUserFromUserId(registeredTutorObject.getWhoContacted()));
-		registeredTutorObject.setWhoVerified(getNameOfUserFromUserId(registeredTutorObject.getWhoVerified()));
-		registeredTutorObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(registeredTutorObject.getWhoSuggestedForRecontact()));
-		registeredTutorObject.setWhoRecontacted(getNameOfUserFromUserId(registeredTutorObject.getWhoRecontacted()));
-		registeredTutorObject.setWhoSelected(getNameOfUserFromUserId(registeredTutorObject.getWhoSelected()));
-		registeredTutorObject.setWhoRejected(getNameOfUserFromUserId(registeredTutorObject.getWhoRejected()));
+		registeredTutorObject.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,registeredTutorObject.getGender(), false, delimiter));
+		registeredTutorObject.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,registeredTutorObject.getQualification(), false, delimiter));
+		registeredTutorObject.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,registeredTutorObject.getPrimaryProfession(), false, delimiter));
+		registeredTutorObject.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,registeredTutorObject.getTransportMode(), false, delimiter));
+		registeredTutorObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, registeredTutorObject.getStudentGrade(), true, delimiter));
+		registeredTutorObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, registeredTutorObject.getSubjects(), true, delimiter));
+		registeredTutorObject.setLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, registeredTutorObject.getLocations(), true, delimiter));
+		registeredTutorObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, registeredTutorObject.getPreferredTimeToCall(), true, delimiter));
+		registeredTutorObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, registeredTutorObject.getReference(), false, delimiter));
+		registeredTutorObject.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObject.getPreferredTeachingType(), true, delimiter));
+		registeredTutorObject.setWhoContacted(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoContacted()));
+		registeredTutorObject.setWhoVerified(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoVerified()));
+		registeredTutorObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoSuggestedForRecontact()));
+		registeredTutorObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoRecontacted()));
+		registeredTutorObject.setWhoSelected(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoSelected()));
+		registeredTutorObject.setWhoRejected(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoRejected()));
 		registeredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsContacted()));
 		registeredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsAuthenticationVerified()));
 		registeredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsToBeRecontacted()));
@@ -267,15 +268,17 @@ public class AdminService implements AdminConstants {
 	}
 	
 	private void replacePlaceHolderAndIdsFromTutorEnquiryObject(final FindTutor enquiredTutorObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		enquiredTutorObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", enquiredTutorObject.getStudentGrade(), true, delimiter));
-		enquiredTutorObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", enquiredTutorObject.getSubjects(), true, delimiter));
-		enquiredTutorObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", enquiredTutorObject.getPreferredTimeToCall(), true, delimiter));
-		enquiredTutorObject.setWhoContacted(getNameOfUserFromUserId(enquiredTutorObject.getWhoContacted()));
-		enquiredTutorObject.setWhoVerified(getNameOfUserFromUserId(enquiredTutorObject.getWhoVerified()));
-		enquiredTutorObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(enquiredTutorObject.getWhoSuggestedForRecontact()));
-		enquiredTutorObject.setWhoRecontacted(getNameOfUserFromUserId(enquiredTutorObject.getWhoRecontacted()));
-		enquiredTutorObject.setWhoSelected(getNameOfUserFromUserId(enquiredTutorObject.getWhoSelected()));
-		enquiredTutorObject.setWhoRejected(getNameOfUserFromUserId(enquiredTutorObject.getWhoRejected()));
+		enquiredTutorObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiredTutorObject.getStudentGrade(), true, delimiter));
+		enquiredTutorObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiredTutorObject.getSubjects(), true, delimiter));
+		enquiredTutorObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, enquiredTutorObject.getPreferredTimeToCall(), true, delimiter));
+		enquiredTutorObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiredTutorObject.getLocation(), true, delimiter));
+		enquiredTutorObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, enquiredTutorObject.getReference(), false, delimiter));
+		enquiredTutorObject.setWhoContacted(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoContacted()));
+		enquiredTutorObject.setWhoVerified(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoVerified()));
+		enquiredTutorObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoSuggestedForRecontact()));
+		enquiredTutorObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRecontacted()));
+		enquiredTutorObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoSelected()));
+		enquiredTutorObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRejected()));
 		enquiredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsContacted()));
 		enquiredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsAuthenticationVerified()));
 		enquiredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsToBeRecontacted()));
@@ -416,15 +419,17 @@ public class AdminService implements AdminConstants {
 	}
 	
 	private void replacePlaceHolderAndIdsFromSubscribeWithUsObject(final SubscribeWithUs enquiredSubscriptionObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		enquiredSubscriptionObject.setStudentGrade(preapreLookupLabelString("STUDENT_GRADE_LOOKUP", enquiredSubscriptionObject.getStudentGrade(), true, delimiter));
-		enquiredSubscriptionObject.setSubjects(preapreLookupLabelString("SUBJECTS_LOOKUP", enquiredSubscriptionObject.getSubjects(), true, delimiter));
-		enquiredSubscriptionObject.setPreferredTimeToCall(preapreLookupLabelString("PREFERRED_TIME_LOOKUP", enquiredSubscriptionObject.getPreferredTimeToCall(), true, delimiter));
-		enquiredSubscriptionObject.setWhoContacted(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoContacted()));
-		enquiredSubscriptionObject.setWhoVerified(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoVerified()));
-		enquiredSubscriptionObject.setWhoSuggestedForRecontact(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSuggestedForRecontact()));
-		enquiredSubscriptionObject.setWhoRecontacted(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRecontacted()));
-		enquiredSubscriptionObject.setWhoSelected(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSelected()));
-		enquiredSubscriptionObject.setWhoRejected(getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRejected()));
+		enquiredSubscriptionObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiredSubscriptionObject.getStudentGrade(), true, delimiter));
+		enquiredSubscriptionObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiredSubscriptionObject.getSubjects(), true, delimiter));
+		enquiredSubscriptionObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, enquiredSubscriptionObject.getPreferredTimeToCall(), true, delimiter));
+		enquiredSubscriptionObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiredSubscriptionObject.getLocation(), true, delimiter));
+		enquiredSubscriptionObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, enquiredSubscriptionObject.getReference(), false, delimiter));
+		enquiredSubscriptionObject.setWhoContacted(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoContacted()));
+		enquiredSubscriptionObject.setWhoVerified(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoVerified()));
+		enquiredSubscriptionObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSuggestedForRecontact()));
+		enquiredSubscriptionObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRecontacted()));
+		enquiredSubscriptionObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSelected()));
+		enquiredSubscriptionObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRejected()));
 		enquiredSubscriptionObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsContacted()));
 		enquiredSubscriptionObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsAuthenticationVerified()));
 		enquiredSubscriptionObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsToBeRecontacted()));
@@ -494,31 +499,4 @@ public class AdminService implements AdminConstants {
 	 * Subscrition Admin
 	 * 
 	 */
-	
-	private String getNameOfUserFromUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(userId)) {
-			final User user = commonsService.getUserFromEmployeeDbUsingUserId(userId);
-			if (null != user) {
-				return user.getName();
-			}
-		}
-		return EMPTY_STRING;
-	}
-	
-	private String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final StringBuilder multiLineString = new StringBuilder(EMPTY_STRING);
-		if (multiSelect) {
-			final List<SelectLookup> selectLookupList = commonsService.getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));
-			for(final SelectLookup selectLookup : selectLookupList) {
-				multiLineString.append(selectLookup.getLabel());
-				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(selectLookup.getDescription())) {
-					multiLineString.append(WHITESPACE).append(selectLookup.getDescription());
-				}
-				multiLineString.append(delimiter);
-			}
-		} else {
-			multiLineString.append(commonsService.getSelectLookupEntry(selectLookupTable, value).getLabel());
-		}
-		return multiLineString.toString();
-	}
 }

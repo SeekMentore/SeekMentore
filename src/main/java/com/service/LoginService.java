@@ -1,9 +1,12 @@
 package com.service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.constants.BeanConstants;
 import com.constants.LoginConstants;
 import com.constants.RestMethodConstants;
+import com.dao.ApplicationDao;
+import com.exception.ApplicationException;
 import com.model.Credential;
 import com.model.ErrorPacket;
 import com.model.User;
@@ -20,6 +25,9 @@ import com.utils.SecurityUtil;
 
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
 public class LoginService implements LoginConstants {
+	
+	@Autowired
+	private transient ApplicationDao applicationDao;
 	
 	@Autowired
 	private transient CommonsService commonsService;
@@ -72,5 +80,34 @@ public class LoginService implements LoginConstants {
 		}
 		pageAccessTypes.add("G");
 		user.setPageAccessTypes(pageAccessTypes);
+	}
+
+	public Map<String, Object> changePassword(final User user, final String loggedInUserId, final String loggedInUserType, final String newPassword) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
+		changePasswordAsPerUserType(loggedInUserType, loggedInUserId, encryptedNewPassword);
+		user.setEncyptedPassword(encryptedNewPassword);
+		return response;
+	}
+	
+	private void changePasswordAsPerUserType(final String userType, final String loggedInUserId, final String encryptedNewPassword) throws IOException {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", loggedInUserId);
+		params.put("encryptedPassword", encryptedNewPassword);
+		switch(userType) {
+			case "Admin" : {
+				applicationDao.executeUpdate("UPDATE EMPLOYEE SET ENCYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				break;
+			}
+			case "Tutor" : {
+				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				break;
+			}
+			default	: {
+				throw new ApplicationException("Invalid Usertype " + userType);
+			}
+		}
 	}
 }

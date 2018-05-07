@@ -29,13 +29,13 @@ Hello $addressName,
 
 <br/><br/>
 Your Tutor Profile has been created in 'Seek Mentore'.
-<br/>
+<br/><br/>
 Please login here http://www.seekmentore.com/tutor with the below credentials.
-<br/>
+<br/><br/>
 User-Id : $userId
-<br/>
+<br/><br/>
 Temporary Password : $temporaryPassword  [Please change your password after login]
-<br/>
+<br/><br/>
 User-Type : Tutor
 <br/><br/>
 

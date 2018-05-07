@@ -733,6 +733,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_SUBJECTS,
 						COLUMN_NAME_LOCATIONS,
 						COLUMN_NAME_PREFERRED_TIME_TO_CALL,
+						COLUMN_NAME_PREFERRED_TEACHING_TYPE,
+						COLUMN_NAME_REFERENCE,
 						COLUMN_NAME_ADDITIONAL_DETAILS,
 						COLUMN_NAME_IS_CONTACTED,
 						COLUMN_NAME_WHO_CONTACTED,
@@ -760,9 +762,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_REJECTION_COUNT,
 						COLUMN_NAME_RE_APPLIED,
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
-						COLUMN_NAME_RECORD_LAST_UPDATED,
-						COLUMN_NAME_REFERENCE,
-						COLUMN_NAME_PREFERRED_TEACHING_TYPE
+						COLUMN_NAME_RECORD_LAST_UPDATED
 					};
 			}
 		}
@@ -790,6 +790,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.subjects,
 						this.locations,
 						this.preferredTimeToCall,
+						this.preferredTeachingType,
+						this.reference,
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
@@ -817,9 +819,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.rejectionCount,
 						this.reApplied,
 						this.previousApplicationDate,
-						this.recordLastUpdated,
-						this.reference,
-						this.preferredTeachingType
+						this.recordLastUpdated
 				};
 			}
 		}

@@ -53,6 +53,8 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_PREFERRED_TEACHING_TYPE = "PREFERRED_TEACHING_TYPE";
 	
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE = "Please select valid multiple 'Preferred Tutoring Type'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE = "Please select valid 'Reference'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS = "Please select valid multiple 'Locations'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE = "Please select a valid 'Transport Mode'";

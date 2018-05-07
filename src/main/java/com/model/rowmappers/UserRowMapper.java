@@ -5,11 +5,10 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.constants.components.publicaccess.SubscribedCustomerConstants;
 import com.model.User;
 import com.utils.ExceptionUtils;
 
-public class UserRowMapper implements RowMapper<User>, SubscribedCustomerConstants {
+public class UserRowMapper implements RowMapper<User> {
 
 	@Override
 	public User mapRow(ResultSet row, int rowNum) throws SQLException {

@@ -27,11 +27,13 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.TutorConstants;
 import com.model.ErrorPacket;
+import com.model.components.RegisteredTutor;
 import com.service.components.CommonsService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.ValidationUtils;
+import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -40,56 +42,110 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_TUTOR) 
 public class TutorRestService extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 	
-	private String tutorId;
+	private Long tutorId;
 	private String panCardFileName;
-	private String driverLicenseFileName;
+	private String photoFileName;
 	private String aadhaarCardFileName;
+	
+	@Path(REST_METHOD_NAME_LOAD_TUTOR_RECORD)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String loadTutorRecord (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_LOAD_TUTOR_RECORD;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final RegisteredTutor registeredTutorObj = getLoggedInUserTypeObject(request, RegisteredTutor.class).getACopy();
+			getTutorService().loadTutorRecord(registeredTutorObj);
+			return convertObjToJSONString(registeredTutorObj, REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String getDropdownListDataRegisteredTutor (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getTutorService().getDropdownListData(), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TO_UPDATE_DETAILS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String updateDetails (
+			final RegisteredTutor registeredTutorObj,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_UPDATE_DETAILS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			registeredTutorObj.setTutorId(getLoggedInUserTypeObject(request, RegisteredTutor.class).getTutorId());
+			return convertObjToJSONString(getTutorService().updateDetails(registeredTutorObj), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
 	
 	@Path(REST_METHOD_NAME_UPLOAD_DOCUMENTS)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public void uploadDocuments (
-			@FormDataParam("tutorId") final String tutorId,
+			@FormDataParam("inputFilePhoto") final InputStream uploadedInputStreamFilePhoto,
+			@FormDataParam("inputFilePhoto") final FormDataContentDisposition uploadedFileDetailFilePhoto,
 			@FormDataParam("inputFilePan") final InputStream uploadedInputStreamFilePan,
 			@FormDataParam("inputFilePan") final FormDataContentDisposition uploadedFileDetailFilePan,
-			@FormDataParam("inputFileDriverLicense") final InputStream uploadedInputStreamFileDriverLicense,
-			@FormDataParam("inputFileDriverLicense") final FormDataContentDisposition uploadedFileDetailFileDriverLicense,
 			@FormDataParam("inputFileAadhaarCard") final InputStream uploadedInputStreamFileAadhaarCard,
 			@FormDataParam("inputFileAadhaarCard") final FormDataContentDisposition uploadedFileDetailFileAadhaarCard,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPLOAD_DOCUMENTS;
-		this.tutorId = tutorId;
+		this.tutorId = getLoggedInUserTypeObject(request, RegisteredTutor.class).getTutorId();
+		this.photoFileName = (null != uploadedFileDetailFilePhoto) ? uploadedFileDetailFilePhoto.getFileName() : null; 
 		this.panCardFileName = (null != uploadedFileDetailFilePan) ? uploadedFileDetailFilePan.getFileName() : null; 
-		this.driverLicenseFileName = (null != uploadedFileDetailFileDriverLicense) ? uploadedFileDetailFileDriverLicense.getFileName() : null; 
 		this.aadhaarCardFileName = (null != uploadedFileDetailFileAadhaarCard) ? uploadedFileDetailFileAadhaarCard.getFileName() : null; 
 		doSecurity(request);
 		if (this.securityPassed) {
-			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(tutorId);
+			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
 			final Map<String, String> uploadedFiles = new HashMap<String, String>();
+			if (null != uploadedInputStreamFilePhoto) {
+				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePhoto);
+				if (fileBytes.length > 0) {
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PROFILE_PHOTO.jpg");
+					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "PROFILE_PHOTO.jpg", fileBytes);
+					uploadedFiles.put("PROFILE_PHOTO.jpg", key);
+				}
+			}
 			if (null != uploadedInputStreamFilePan) {
 				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePan);
 				if (fileBytes.length > 0) {
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PAN_CARD.pdf");
 					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "PAN_CARD.pdf", fileBytes);
 					uploadedFiles.put("PAN_CARD.pdf", key);
-				}
-			}
-			if (null != uploadedInputStreamFileDriverLicense) {
-				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileDriverLicense);
-				if (fileBytes.length > 0) {
-					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "DRIVER_LICENSE.pdf", fileBytes);
-					uploadedFiles.put("DRIVER_LICENSE.pdf", key);
 				}
 			}
 			if (null != uploadedInputStreamFileAadhaarCard) {
 				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileAadhaarCard);
 				if (fileBytes.length > 0) {
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "AADHAAR_CARD.pdf");
 					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "AADHAAR_CARD.pdf", fileBytes);
 					uploadedFiles.put("AADHAAR_CARD.pdf", key);
 				}
 			}
 			getTutorService().feedDocumentsRecord(tutorId, uploadedFiles);
+			WebServiceUtils.redirectToPage("/tutor.html?success=true", request, response);
+		} else {
+			WebServiceUtils.redirectToPage("/tutor.html?success=false&message="+this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE), request, response);
 		}
 	}
 	
@@ -106,6 +162,12 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
+			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
+			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
+			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR : {
+				this.securityPassed = true;
+				break;
+			}
 			case REST_METHOD_NAME_UPLOAD_DOCUMENTS : {
 				handleUploadDocumentsSecurity();
 				break;
@@ -116,17 +178,17 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	private void handleUploadDocumentsSecurity() {
 		this.securityPassed = true;
+		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_JPG, this.photoFileName)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
 		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF, this.panCardFileName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_FILENAME_PAN,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF, this.driverLicenseFileName)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_INVALID_FILENAME_DRIVING_LICENSE,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -137,7 +199,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		} 
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.tutorId))) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
@@ -147,7 +209,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					REST_METHOD_NAME_SEND_EMAIL, 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.panCardFileName + LINE_BREAK + this.driverLicenseFileName + LINE_BREAK + this.aadhaarCardFileName + LINE_BREAK + this.tutorId);
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.photoFileName + LINE_BREAK + this.panCardFileName + LINE_BREAK + this.aadhaarCardFileName + LINE_BREAK + this.tutorId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

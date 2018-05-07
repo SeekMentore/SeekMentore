@@ -52,10 +52,14 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
+	String REST_METHOD_NAME_CHANGE_PASSWORD = "/changePassword";
 	String REST_METHOD_NAME_TO_LOGOUT = "/logout";
 	// Commons REST methods
 	String REST_METHOD_NAME_TO_GET_USER = "/getUser";
 	String REST_METHOD_NAME_TO_GET_SERVER_INFO = "/getServerInfo";
 	// Tutor REST methods
 	String REST_METHOD_NAME_UPLOAD_DOCUMENTS = "/uploadDocuments";
+	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
+	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
 }

@@ -29,9 +29,7 @@ function decodeObjectFromJSON(json) {
 
 function callWebservice(url, data, success, failure, method, contentType) {
 	// Show Pop up loader 
-	if (null != $('#loader-popup-modal')) {
-		$('#loader-popup-modal').removeClass('noscreen');
-	}
+	showLoader();
 	$.ajax({
         url			: ctxPath + url,
         type		: ((null != method) ? method : 'POST'),
@@ -40,9 +38,7 @@ function callWebservice(url, data, success, failure, method, contentType) {
         cache		: false,
         dataType	: 'json',
         success		: function(data) {
-        				if (null != $('#loader-popup-modal')) {
-        					$('#loader-popup-modal').addClass('noscreen');
-        				}
+        				removeLoader();
         				var response = decodeObjectFromJSON(data.response)
 			        	if (null != success) {
 			        		success(response);
@@ -51,9 +47,7 @@ function callWebservice(url, data, success, failure, method, contentType) {
 			        	}
 		},
 		error		: function(error) {
-						if (null != $('#loader-popup-modal')) {
-							$('#loader-popup-modal').addClass('noscreen');
-						}
+						removeLoader();
 			        	if (null != failure) {
 			        		failure(error);
 			        	} else {
@@ -61,6 +55,18 @@ function callWebservice(url, data, success, failure, method, contentType) {
 			        	}
 		}
     });
+}
+
+function showLoader() {
+	if (null != $('#loader-popup-modal')) {
+		$('#loader-popup-modal').removeClass('noscreen');
+	}
+}
+
+function removeLoader() {
+	if (null != $('#loader-popup-modal')) {
+		$('#loader-popup-modal').addClass('noscreen');
+	}
 }
 
 var queryParams = new Object();
@@ -73,7 +79,7 @@ function readGetParameters() {
 		for (var i = 0; i < paramArray.length; i++) {
 			var paramString = paramArray[i];
 			var paramValueArray = paramString.split('=');
-			queryParams[paramValueArray[0]] = paramValueArray[1];
+			queryParams[paramValueArray[0]] = replaceURLEncoders(paramValueArray[1]);
 		}
 	}
 }
@@ -116,6 +122,21 @@ window.onclick = function(event) {
 	if (event.target == modal) {
 		$('#notification-popup-modal').addClass('noscreen');
 	}
+}
+
+function showValue(val) {
+	return (null != val) ? val : '';
+}
+
+function replaceURLEncoders(value) {
+	return value.replace(/%20/g,' ').replace(/%3C/g, '<').replace(/%3E/g, '>').replace(/%27/g, '\'').replace(/%27/g, '\'');
+}
+
+function getDateValue(value) {
+	if (null != value && value.trim() != '') {
+		return new Date(value);
+	}
+	return null;
 }
 
 readGetParameters();
