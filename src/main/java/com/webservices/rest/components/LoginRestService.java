@@ -28,6 +28,7 @@ import com.service.LoginService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.LoginUtils;
+import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.WebServiceUtils;
@@ -230,6 +231,14 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 						LoginConstants.VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD,
 						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 				this.securityPassed = false;
+			} else {
+				if (!PasswordUtils.checkPasswordPolicy(decryptUserNewPasswordFromUI)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							LoginConstants.VALIDATION_MESSAGE_PASSWORD_POLICY_FAILED,
+							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					this.securityPassed = false;
+				}
 			}
 		} catch(Exception e) {
 			ApplicationUtils.appendMessageInMapAttribute(

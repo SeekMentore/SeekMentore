@@ -18,4 +18,5 @@ public interface LoginConstants extends PageConstants {
 	String VALIDATION_MESSAGE_PLEASE_ENTER_RETYPE_NEW_PASSWORD = "Please provide 'Retype New Password'";
 	String VALIDATION_MESSAGE_INCORRECT_OLD_PASSWORD = "Incorrect 'Old Password'";
 	String VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD = "'New Password' and 'Retype New Password' do not match.";
+	String VALIDATION_MESSAGE_PASSWORD_POLICY_FAILED = "'New Password' does not follow Password Policy.<br/>Please prepare the password as per Password Policy.";
 }

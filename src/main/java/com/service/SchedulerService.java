@@ -26,6 +26,7 @@ import com.utils.ApplicationUtils;
 import com.utils.ExceptionUtils;
 import com.utils.LoggerUtils;
 import com.utils.MailUtils;
+import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
 
 @Service(BeanConstants.BEAN_NAME_SCHEDULER_SERVICE)
@@ -100,7 +101,7 @@ public class SchedulerService implements SchedulerConstants {
 			LoggerUtils.logOnConsole("executeTutorRegisterJob");
 			final List<BecomeTutor> tutorObjList = tutorService.getSelectedTutorRegistrations(20);
 			for (final BecomeTutor tutorObj : tutorObjList) {
-				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(ApplicationUtils.generateRandomPassword(null, 4, 8, true, true, true, true, false, false, false, false, false));
+				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(null, 4, 8, true, true, true, true, false, false, false, false, false));
 				final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 				final RegisteredTutor registeredTutorObj = new RegisteredTutor();
 				registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase()+WHITESPACE+tutorObj.getLastName().toUpperCase());
