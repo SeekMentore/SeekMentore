@@ -14,8 +14,21 @@
 	  <img src="images/company-logo-complete.png" />
   </div>
   <div class="user-info">
-	  <div id="user-name">Welcome - </div>
-	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Admin Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Registrations</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithusadmin.html" >Subscribe With Us</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
   </div>
 </div>
 <div class="banner-separator"></div>
