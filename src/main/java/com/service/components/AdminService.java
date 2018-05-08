@@ -103,6 +103,10 @@ public class AdminService implements AdminConstants {
 				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y' AND IS_DATA_MIGRATED IS NULL");
 				break;
 			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS : {
+				query.append("IS_DATA_MIGRATED = 'Y'");
+				break;
+			}
 		}
 		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
 		for (final BecomeTutor registeredTutorObject : registeredTutorList) {
@@ -135,6 +139,7 @@ public class AdminService implements AdminConstants {
 		registeredTutorObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsSelected()));
 		registeredTutorObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsRejected()));
 		registeredTutorObject.setReApplied(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getReApplied()));
+		registeredTutorObject.setIsDataMigrated(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsDataMigrated()));
 	}
 	
 	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor registeredTutorObject) {
@@ -279,6 +284,7 @@ public class AdminService implements AdminConstants {
 		enquiredTutorObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRecontacted()));
 		enquiredTutorObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoSelected()));
 		enquiredTutorObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRejected()));
+		enquiredTutorObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getSubscribedCustomer()));
 		enquiredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsContacted()));
 		enquiredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsAuthenticationVerified()));
 		enquiredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsToBeRecontacted()));
@@ -430,6 +436,7 @@ public class AdminService implements AdminConstants {
 		enquiredSubscriptionObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRecontacted()));
 		enquiredSubscriptionObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSelected()));
 		enquiredSubscriptionObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRejected()));
+		enquiredSubscriptionObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getSubscribedCustomer()));
 		enquiredSubscriptionObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsContacted()));
 		enquiredSubscriptionObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsAuthenticationVerified()));
 		enquiredSubscriptionObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsToBeRecontacted()));

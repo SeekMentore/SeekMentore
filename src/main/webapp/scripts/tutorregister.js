@@ -170,6 +170,8 @@ function openTutorRecord(tutorObj) {
 		$('#SUBJECTS').html(showValue(tutorObj.subjects));
 		$('#LOCATIONS').html(showValue(tutorObj.locations));
 		$('#PREFERRED_TIME_TO_CALL').html(showValue(tutorObj.preferredTimeToCall));
+		$('#REFERENCE').html(showValue(tutorObj.reference));
+		$('#PREFERRED_TEACHING_TYPE').html(showValue(tutorObj.preferredTeachingType));
 		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
 		$('#IS_CONTACTED').html(showValue(tutorObj.isContacted));
 		$('#WHO_CONTACTED').html(showValue(tutorObj.whoContacted));
@@ -198,6 +200,8 @@ function openTutorRecord(tutorObj) {
 		$('#RE_APPLIED').html(showValue(tutorObj.reApplied));
 		$('#PREVIOUS_APPLICATION_DATE').html(showValue(tutorObj.previousApplicationDate));
 		$('#RECORD_LAST_UPDATED').html(showValue(tutorObj.recordLastUpdated));
+		$('#IS_DATA_MIGRATED').html(showValue(tutorObj.isDataMigrated));
+		$('#WHEN_MIGRATED').html(showValue(tutorObj.whenMigrated));
 		
 		replacePlaceHoldersForEmailPanel(showValue(tutorObj.emailId), showValue(tutorObj.firstName)+' '+showValue(tutorObj.lastName));
 	} 

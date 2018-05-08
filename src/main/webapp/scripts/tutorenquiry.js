@@ -162,7 +162,11 @@ function openEnquiryRecord(enquiryObj) {
 		$('#STUDENT_GRADE').html(showValue(enquiryObj.studentGrade));
 		$('#SUBJECTS').html(showValue(enquiryObj.subjects));
 		$('#PREFERRED_TIME_TO_CALL').html(showValue(enquiryObj.preferredTimeToCall));
+		$('#LOCATION').html(showValue(enquiryObj.location));
+		$('#REFERENCE').html(showValue(enquiryObj.reference));
+		$('#ADDRESS_DETAILS').html(showValue(enquiryObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(enquiryObj.additionalDetails));
+		$('#SUBSCRIBED_CUSTOMER').html(showValue(enquiryObj.subscribedCustomer));
 		$('#IS_CONTACTED').html(showValue(enquiryObj.isContacted));
 		$('#WHO_CONTACTED').html(showValue(enquiryObj.whoContacted));
 		$('#CONTACTED_DATE').html(showValue(enquiryObj.contactedDate));

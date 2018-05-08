@@ -564,6 +564,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, studentGrade));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
@@ -590,9 +593,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
 	}
@@ -611,6 +611,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 					COLUMN_NAME_STUDENT_GRADE,
 					COLUMN_NAME_SUBJECTS,
 					COLUMN_NAME_PREFERRED_TIME_TO_CALL,
+					COLUMN_NAME_LOCATION,
+					COLUMN_NAME_REFERENCE,
+					COLUMN_NAME_ADDRESS_DETAILS,
 					COLUMN_NAME_ADDITIONAL_DETAILS,
 					COLUMN_NAME_IS_CONTACTED,
 					COLUMN_NAME_WHO_CONTACTED,
@@ -635,10 +638,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
-					COLUMN_NAME_LOCATION,
-					COLUMN_NAME_REFERENCE,
-					COLUMN_NAME_ADDRESS_DETAILS,
-					COLUMN_NAME_RECORD_LAST_UPDATED,					
+					COLUMN_NAME_RECORD_LAST_UPDATED					
 				};
 		}
 	}
@@ -659,6 +659,9 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 						this.studentGrade,
 						this.subjects,
 						this.preferredTimeToCall,
+						this.location,
+						this.reference,
+						this.addressDetails,
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
@@ -683,10 +686,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 						this.whoRejected,
 						this.rejectionDate,
 						this.rejectionRemarks,
-						this.location,
-						this.reference,
-						this.addressDetails,
-						this.recordLastUpdated,
+						this.recordLastUpdated
 				};
 			}
 		}

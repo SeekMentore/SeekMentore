@@ -177,7 +177,11 @@ function openSubscribedRecord(subscriptionObj) {
 		$('#STUDENT_GRADE').html(showValue(subscriptionObj.studentGrade));
 		$('#SUBJECTS').html(showValue(subscriptionObj.subjects));
 		$('#PREFERRED_TIME_TO_CALL').html(showValue(subscriptionObj.preferredTimeToCall));
+		$('#LOCATION').html(showValue(subscriptionObj.location));
+		$('#REFERENCE').html(showValue(subscriptionObj.reference));
+		$('#ADDRESS_DETAILS').html(showValue(subscriptionObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(subscriptionObj.additionalDetails));
+		$('#SUBSCRIBED_CUSTOMER').html(showValue(subscriptionObj.subscribedCustomer));
 		$('#IS_CONTACTED').html(showValue(subscriptionObj.isContacted));
 		$('#WHO_CONTACTED').html(showValue(subscriptionObj.whoContacted));
 		$('#CONTACTED_DATE').html(showValue(subscriptionObj.contactedDate));

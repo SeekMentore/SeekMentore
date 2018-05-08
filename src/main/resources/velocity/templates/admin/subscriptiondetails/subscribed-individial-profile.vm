@@ -52,7 +52,6 @@ body {
 	    		<td>Email Id</td>
 	    		<td>$enquiredSubscriptionObject.emailId</td>
 	    	</tr>
-    
 	    	<tr>
 	    		<td>Student Grade</td>
 	    		<td>$enquiredSubscriptionObject.studentGrade</td>
@@ -66,17 +65,29 @@ body {
 	    		<td>$enquiredSubscriptionObject.preferredTimeToCall</td>
 	    	</tr>
 	    	<tr>
+	    		<td>Location</td>
+	    		<td>$enquiredSubscriptionObject.location</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$enquiredSubscriptionObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Address Details</td>
+	    		<td>$enquiredSubscriptionObject.addressDetails</td>
+	    	</tr>
+	    	<tr>
 	    		<td>Additional Details</td>
 	    		<td>$enquiredSubscriptionObject.additionalDetails</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Is Contacted</td>
-	    		<td>$enquiredSubscriptionObject.isContacted</td>
-	    	</tr>
-            <tr>
 	    		<td>Subscribed Customer</td>
 	    		<td>$enquiredSubscriptionObject.subscribedCustomer</td>
 	    	</tr> 
+	    	<tr>
+	    		<td>Is Contacted</td>
+	    		<td>$enquiredSubscriptionObject.isContacted</td>
+	    	</tr>
 	    	<tr>
 	    		<td>Who Contacted</td>
 	    		<td>$enquiredSubscriptionObject.whoContacted</td>

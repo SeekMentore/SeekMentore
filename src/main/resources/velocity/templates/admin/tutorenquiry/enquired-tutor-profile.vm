@@ -60,8 +60,24 @@ body {
 	    		<td>$enquiredTutorObject.preferredTimeToCall</td>
 	    	</tr>
 	    	<tr>
+	    		<td>Location</td>
+	    		<td>$enquiredTutorObject.location</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$enquiredTutorObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Address Details</td>
+	    		<td>$enquiredTutorObject.addressDetails</td>
+	    	</tr>
+	    	<tr>
 	    		<td>Additional Details</td>
 	    		<td>$enquiredTutorObject.additionalDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subscribed Customer</td>
+	    		<td>$enquiredTutorObject.subscribedCustomer</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Contacted</td>

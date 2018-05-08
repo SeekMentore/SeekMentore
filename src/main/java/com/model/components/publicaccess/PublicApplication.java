@@ -1,6 +1,7 @@
 package com.model.components.publicaccess;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Transient;
 
@@ -10,6 +11,12 @@ public class PublicApplication implements Serializable {
 	
 	@Transient
 	private Boolean flag;
+	
+	@Transient
+	private String isDataMigrated;
+	
+	@Transient
+	private Date whenMigrated;
 	
 	@Transient
 	private String captchaResponse;
@@ -28,5 +35,25 @@ public class PublicApplication implements Serializable {
 
 	public void setCaptchaResponse(String captchaResponse) {
 		this.captchaResponse = captchaResponse;
+	}
+
+	public String getIsDataMigrated() {
+		return isDataMigrated;
+	}
+
+	public void setIsDataMigrated(String isDataMigrated) {
+		this.isDataMigrated = isDataMigrated;
+	}
+
+	public Date getWhenMigrated() {
+		return whenMigrated;
+	}
+
+	public void setWhenMigrated(Date whenMigrated) {
+		this.whenMigrated = whenMigrated;
+	}
+
+	public Boolean getFlag() {
+		return flag;
 	}
 }

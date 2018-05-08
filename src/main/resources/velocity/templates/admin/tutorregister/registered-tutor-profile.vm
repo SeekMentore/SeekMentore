@@ -92,6 +92,14 @@ body {
 	    		<td>$registeredTutorObject.preferredTimeToCall</td>
 	    	</tr>
 	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$registeredTutorObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td>$registeredTutorObject.preferredTeachingType</td>
+	    	</tr>
+	    	<tr>
 	    		<td>Additional Details</td>
 	    		<td>$registeredTutorObject.additionalDetails</td>
 	    	</tr>
@@ -202,6 +210,14 @@ body {
 	    	<tr>
 	    		<td>Record Last Updated</td>
 	    		<td>$registeredTutorObject.recordLastUpdated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Data Migrated</td>
+	    		<td>$registeredTutorObject.isDataMigrated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>When Migrated</td>
+	    		<td>$registeredTutorObject.whenMigrated</td>
 	    	</tr>
 		</table>
 
