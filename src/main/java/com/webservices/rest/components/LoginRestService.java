@@ -60,6 +60,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.credential = new Credential(userId, userType, password);
 		doSecurity(request);
 		if (this.securityPassed) {
+			// Trimming User-Id
+			this.credential.setUserId(this.credential.getUserId().trim());
 			final User user = getLoginService().validateCredential(credential);
 			if (null != user) {
 				LoginUtils.createNewSession(request, user);

@@ -16,7 +16,7 @@
   <div class="user-info">
 	  <div class="menu-dropdown-div">
 	  	<div class="menu-dropdown">
-		<button onclick="toggleMenu()" class="dropbtn">Admin Pages</button>
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
 		  <div id="menu-Dropdown" class="dropdown-content">
 		    <a href="tutorregister.html" >Tutor Registrations</a>
 		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
@@ -228,6 +228,30 @@
 				</tr>
 			</thead>
 			<tbody id="rejected-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+<div id="registered-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Registered Tutors</th>
+				<th id="registered-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="registered-tutor-records">
 			</tbody>
 		</table>
 	</div>

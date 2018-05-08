@@ -88,6 +88,10 @@ function showRejectedTutorRecords(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
 
+function showRegisteredTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'registered');
+}
+
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 	tutorListMap[gridName] = createTutorNavigatorObject(response);
 	var tutorNavigatorObject = tutorListMap[gridName];
@@ -128,6 +132,7 @@ function hideTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').addClass('noscreen');
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
+	$('#registered-all-records-div').addClass('noscreen');
 	$('#header-div').addClass('noscreen');
 	$('#'+tutorListMap.selectedGrid+'-action-section').removeClass('noscreen');
 	var obj = document.getElementById(tutorListMap.selectedGrid+'-action-section');
@@ -148,6 +153,7 @@ function showTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').removeClass('noscreen');
 	$('#selected-all-records-div').removeClass('noscreen');
 	$('#rejected-all-records-div').removeClass('noscreen');
+	$('#registered-all-records-div').removeClass('noscreen');
 	$('#header-div').removeClass('noscreen');
 }
 
@@ -233,6 +239,7 @@ function loadGrids() {
 	callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
 	callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
 	callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
+	callWebservice('/rest/admin/displayRegisteredTutors', null, showRegisteredTutorRecords);
 }
 
 function downloadReport() {
