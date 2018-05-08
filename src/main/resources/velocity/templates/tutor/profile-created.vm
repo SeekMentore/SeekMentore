@@ -34,7 +34,9 @@ Please login here http://www.seekmentore.com/tutor with the below credentials.
 <br/><br/>
 User-Id : $userId
 <br/><br/>
-Temporary Password : $temporaryPassword  [Please change your password after login]
+Temporary Password : $temporaryPassword  
+<br/><br/>
+[Please change your password after login]
 <br/><br/>
 User-Type : Tutor
 <br/><br/>
