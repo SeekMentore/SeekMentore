@@ -217,7 +217,8 @@ public class TutorService implements TutorConstants {
 			updatedPropertiesParams.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
 		}
 		if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-			updateQuery += " WHERE TUTOR_ID = :tutorId";
+			updatedPropertiesParams.put("updatedBy", "SELF");
+			updateQuery += " ,RECORD_LAST_UPDATED = SYSDATE(), UPDATED_BY = :updatedBy WHERE TUTOR_ID = :tutorId";
 			updatedPropertiesParams.put("tutorId", registeredTutorObj.getTutorId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
