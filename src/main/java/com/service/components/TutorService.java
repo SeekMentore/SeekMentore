@@ -276,6 +276,7 @@ public class TutorService implements TutorConstants {
 		final List<RegisteredTutor> registeredTutorList = applicationDao.findAllWithoutParams("SELECT * FROM REGISTERED_TUTOR", new RegisteredTutorRowMapper());
 		for (final RegisteredTutor registeredTutorObject : registeredTutorList) {
 			// Get all lookup data and user ids back to original label and values
+			registeredTutorObject.setDocuments(getTutorDocuments(registeredTutorObject.getTutorId()));
 			removeUltraSensitiveInformationFromRegisteredTutorObject(registeredTutorObject);
 			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObject, delimiter);
 		}

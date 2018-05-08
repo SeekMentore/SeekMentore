@@ -29,6 +29,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS = "/takeActionOnRegisteredTutors";
 	// Registered Tutors
 	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT = "/downloadDocumentFromAdmin";
 	// Tutor Enquiry
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF = "/downloadAdminTutorEnquiryProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES = "/downloadAdminReportTutorEnquiries";

@@ -2,6 +2,7 @@ package com.model.components;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 
@@ -28,6 +29,7 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
 	private Date recordLastUpdated;
 	private String updatedBy;
 	private String preferredTeachingType;
+	private List<TutorDocument> documents;
 	
 	public RegisteredTutor() {}
 	
@@ -214,5 +216,13 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
 
 	public void setPreferredTeachingType(String preferredTeachingType) {
 		this.preferredTeachingType = preferredTeachingType;
+	}
+
+	public List<TutorDocument> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<TutorDocument> documents) {
+		this.documents = documents;
 	}
 }

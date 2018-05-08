@@ -251,14 +251,14 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateNameString(becomeTutorApplication.getFirstName(), false)) {
+		if (!ValidationUtils.validateNameString(becomeTutorApplication.getFirstName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateNameString(becomeTutorApplication.getLastName(), false)) {
+		if (!ValidationUtils.validateNameString(becomeTutorApplication.getLastName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
@@ -444,14 +444,14 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getFirstName(), false)) {
+		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getFirstName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getLastName(), false)) {
+		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getLastName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,

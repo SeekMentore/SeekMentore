@@ -123,7 +123,76 @@ function openTutorRecord(tutorObj) {
 		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
 		
 		replacePlaceHoldersForEmailPanel(showValue(tutorObj.emailId), showValue(tutorObj.name));
+		
+		var tutorDocuments = tutorObj.documents;
+		$('#inputFilePhoto-absent').removeClass('noscreen');
+		$('.inputFilePhoto-reminder').removeClass('noscreen');
+		$('#inputFilePhoto-link').addClass('noscreen');
+		$('.inputFilePhoto-action').addClass('noscreen');
+		
+		$('#inputFilePan-absent').removeClass('noscreen');
+		$('.inputFilePan-reminder').removeClass('noscreen');
+		$('#inputFilePan-link').addClass('noscreen');
+		$('.inputFilePan-action').addClass('noscreen');
+		
+		$('#inputFileAadhaarCard-absent').removeClass('noscreen');
+		$('.inputFileAadhaarCard-reminder').removeClass('noscreen');
+		$('#inputFileAadhaarCard-link').addClass('noscreen');
+		$('.inputFileAadhaarCard-action').addClass('noscreen');
+		
+		if (null != tutorDocuments && tutorDocuments.length > 0) {
+			for (var i = 0; i < tutorDocuments.length; i++) {
+				var filename = tutorDocuments[i].filename;
+				if (filename == 'PROFILE_P1HOTO.jpg') {
+					$('#inputFilePhoto-absent').addClass('noscreen');
+					$('.inputFilePhoto-reminder').addClass('noscreen');
+					$('#inputFilePhoto-link').removeClass('noscreen');
+					$('.inputFilePhoto-action').removeClass('noscreen');
+				} else if (filename == 'PAN_CARD.pdf') {
+					$('#inputFilePan-absent').addClass('noscreen');
+					$('.inputFilePan-reminder').addClass('noscreen');
+					$('#inputFilePan-link').removeClass('noscreen');
+					$('.inputFilePan-action').removeClass('noscreen');
+				} else if (filename == 'AADHAAR_CARD.pdf') {
+					$('#inputFileAadhaarCard-absent').addClass('noscreen');
+					$('.inputFileAadhaarCard-reminder').addClass('noscreen');
+					$('#inputFileAadhaarCard-link').removeClass('noscreen');
+					$('.inputFileAadhaarCard-action').removeClass('noscreen');
+				}
+			}
+		}
 	} 
+}
+
+function downloadDocument(documentType) {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/tutor/downloadDocumentFromAdmin';
+	$('#downloadForm-documentType').val(documentType);
+	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentTutorRecord().tutorId);
+	form.submit();
+	if (documentType == 'PROFILE_PHOTO') {
+		$('#inputFilePhoto-link').addClass('noscreen');
+		$('#inputFilePhoto-downloading').removeClass('noscreen');
+	} else if (documentType == 'PAN_CARD') {
+		$('#inputFilePan-link').addClass('noscreen');
+		$('#inputFilePan-downloading').removeClass('noscreen');
+	} else if (documentType == 'AADHAAR_CARD') {
+		$('#inputFileAadhaarCard-link').addClass('noscreen');
+		$('#inputFileAadhaarCard-downloading').removeClass('noscreen');
+	}
+	window.setTimeout(
+			function disableDownloadButton() {
+				if (documentType == 'PROFILE_PHOTO') {
+					$('#inputFilePhoto-link').removeClass('noscreen');
+					$('#inputFilePhoto-downloading').addClass('noscreen');
+				} else if (documentType == 'PAN_CARD') {
+					$('#inputFilePan-link').removeClass('noscreen');
+					$('#inputFilePan-downloading').addClass('noscreen');
+				} else if (documentType == 'AADHAAR_CARD') {
+					$('#inputFileAadhaarCard-link').removeClass('noscreen');
+					$('#inputFileAadhaarCard-downloading').addClass('noscreen');
+				}
+			}, 8000)
 }
 
 function loadGrids() {

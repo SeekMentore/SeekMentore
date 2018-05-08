@@ -120,7 +120,7 @@
 	</div>
 </div>
 <BR/>
-  <div class="w3-row-padding">
+<div class="w3-row-padding">
 	<table align="center" class="all-records">
 		<tr class="header-panel">
 			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
@@ -129,6 +129,126 @@
 		</tr>
 	</table>
    </div>
+<div id="documents-div">
+			<div class="w3-row-padding">
+				<table align="center" class="all-records">
+					<tr class="header-panel">
+						<th>Uploaded Documents</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form id="document-upload-form" method="post" enctype="multipart/form-data">
+					<table align="center" class="all-records">
+						<tbody>
+							<tr>
+								<td>Photograph</td>
+								<td>
+									<p id="inputFilePhoto-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('PROFILE_PHOTO')" id="inputFilePhoto-link" class="clickable-link-effect noscreen">Download Photograph</a>
+									<p id="inputFilePhoto-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFilePhoto-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('PROFILE_PHOTO')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFilePhoto-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('PROFILE_PHOTO')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFilePhoto-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('PROFILE_PHOTO')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+							<tr>
+								<td>PAN card</td>
+								<td>
+									<p id="inputFilePan-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('PAN_CARD')" id="inputFilePan-link" class="clickable-link-effect noscreen">Download PAN card</a>
+									<p id="inputFilePan-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFilePan-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('PAN_CARD')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFilePan-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('PAN_CARD')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFilePan-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('PAN_CARD')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+							<tr>
+								<td>Aadhaar card</td>
+								<td>
+									<p id="inputFileAadhaarCard-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('AADHAAR_CARD')" id="inputFileAadhaarCard-link" class="clickable-link-effect noscreen">Download Aadhaar card</a>
+									<p id="inputFileAadhaarCard-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFileAadhaarCard-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('AADHAAR_CARD')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFileAadhaarCard-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('AADHAAR_CARD')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFileAadhaarCard-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('AADHAAR_CARD')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div class="w3-row-padding">
+				<table align="center" class="all-records">
+					<tr class="header-panel">
+						<th>Tutor Details</th>
+					</tr>
+				</table>
+			</div>
    <div class="w3-row-padding">
 	    <table align="center" class="all-records">
 	    	<tr>
@@ -299,6 +419,7 @@
   	class="noscreen"
 >
 	<input type="text" value="" size="10" name="tutorId" id="downloadForm-tutorId" />
+	<input type="text" value="" size="10" name="documentType" id="downloadForm-documentType" />
 	<input type="text" value="" size="10" name="name" id="downloadForm-name" />
 </form>
 <iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>

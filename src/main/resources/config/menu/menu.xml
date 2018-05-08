@@ -68,6 +68,7 @@
 			<webservice id="updateDetails" url="/updateDetails"></webservice>
 			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
 			<webservice id="registeredTutorsList" url="/registeredTutorsList" pageAccessType="A"></webservice>
+			<webservice id="downloadDocumentFromAdmin" url="/downloadDocumentFromAdmin" pageAccessType="A"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

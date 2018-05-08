@@ -190,6 +190,27 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+    public void downloadDocumentFromAdmin (
+    		@FormParam("tutorId") final Long tutorId,
+    		@FormParam("documentType") final String documentType,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT;
+		this.tutorId = tutorId;
+		this.documentType = documentType;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
+			final TutorDocument tutorDocument = getTutorService().downloadDocument(documentType, this.tutorId, folderPathToUploadDocuments);
+			FileUtils.writeFileToResponse(response, tutorDocument.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, tutorDocument.getContent());
+		}
+    }
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -206,7 +227,8 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
 			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR :
-			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST : {
+			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT : {
 				this.securityPassed = true;
 				break;
 			}
