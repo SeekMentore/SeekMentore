@@ -9,8 +9,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -28,10 +30,12 @@ import com.constants.ScopeConstants;
 import com.constants.components.TutorConstants;
 import com.model.ErrorPacket;
 import com.model.components.RegisteredTutor;
+import com.model.components.TutorDocument;
 import com.service.components.CommonsService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
+import com.utils.FileUtils;
 import com.utils.ValidationUtils;
 import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
@@ -46,6 +50,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	private String panCardFileName;
 	private String photoFileName;
 	private String aadhaarCardFileName;
+	private String documentType;
 	
 	@Path(REST_METHOD_NAME_LOAD_TUTOR_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -56,9 +61,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_LOAD_TUTOR_RECORD;
 		doSecurity(request);
 		if (this.securityPassed) {
-			final RegisteredTutor registeredTutorObj = getLoggedInUserTypeObject(request, RegisteredTutor.class).getACopy();
-			getTutorService().loadTutorRecord(registeredTutorObj);
-			return convertObjToJSONString(registeredTutorObj, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getTutorService().getTutorRecordWithDocuments(getLoggedInUserTypeObject(request, RegisteredTutor.class).getACopy()), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -95,6 +98,26 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+    public void downloadDocument (
+    		@FormParam("documentType") final String documentType,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT;
+		this.tutorId = getLoggedInUserTypeObject(request, RegisteredTutor.class).getTutorId();
+		this.documentType = documentType;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
+			final TutorDocument tutorDocument = getTutorService().downloadDocument(documentType, this.tutorId, folderPathToUploadDocuments);
+			FileUtils.writeFileToResponse(response, tutorDocument.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, tutorDocument.getContent());
+		}
+    }
 	
 	@Path(REST_METHOD_NAME_UPLOAD_DOCUMENTS)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
@@ -168,6 +191,10 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT : {
+				handleDownloadDocumentsSecurity();
+				break;
+			}
 			case REST_METHOD_NAME_UPLOAD_DOCUMENTS : {
 				handleUploadDocumentsSecurity();
 				break;
@@ -208,8 +235,46 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_SEND_EMAIL, 
+					REST_METHOD_NAME_UPLOAD_DOCUMENTS, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.photoFileName + LINE_BREAK + this.panCardFileName + LINE_BREAK + this.aadhaarCardFileName + LINE_BREAK + this.tutorId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleDownloadDocumentsSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.tutorId))) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.documentType))) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		} else {
+			switch(documentType) {
+				case "PROFILE_PHOTO": break;
+				case "PAN_CARD": break;
+				case "AADHAAR_CARD": break;
+				default : {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE,
+							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					this.securityPassed = false;
+					break;
+				}
+			}
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.documentType);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

@@ -64,6 +64,7 @@
 			<webservice id="loadTutorRecord" url="/loadTutorRecord"></webservice>
 			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
 			<webservice id="updateDetails" url="/updateDetails"></webservice>
+			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

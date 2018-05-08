@@ -9,6 +9,7 @@ public interface TutorConstants extends ApplicationConstants {
 	String VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH = "Invalid file for Photograpgh.<br/>Please Upload only '.jpg' files.";
 	String VALIDATION_MESSAGE_INVALID_FILENAME_AADHAAR_CARD = "Invalid file for Aadhaar card.<br/>Please Upload only '.pdf' files.";
 	String VALIDATION_MESSAGE_INVALID_TUTOR_ID = "Invalid User Id.";
+	String VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE = "Invalid Document Type.";
 	
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";

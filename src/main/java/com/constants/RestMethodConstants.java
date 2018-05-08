@@ -62,4 +62,5 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
 	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
+	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
 }

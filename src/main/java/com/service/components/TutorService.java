@@ -16,10 +16,13 @@ import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.model.components.RegisteredTutor;
+import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.rowmappers.BecomeTutorRowMapper;
+import com.model.rowmappers.TutorDocumentRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.FileSystemUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -105,10 +108,30 @@ public class TutorService implements TutorConstants {
 		return "secured/tutor/documents/" + tutorId;
 	}
 	
-	public void loadTutorRecord(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> response = new HashMap<String, Object>();
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put("tutorDocuments", getTutorDocuments(registeredTutorObj.getTutorId()));
 		replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, LINE_BREAK);
 		removeSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
-		
+		response.put("tutorObj", registeredTutorObj);
+		return response;
+	}
+	
+	@Transactional
+	public List<TutorDocument> getTutorDocuments(final Long tutorId) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		return applicationDao.findAll("SELECT * FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId", paramsMap, new TutorDocumentRowMapper());
+	}
+	
+	@Transactional
+	public TutorDocument getTutorDocument(final Long tutorId, final String filename) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("filename", filename);
+		return applicationDao.find("SELECT * FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public Map<String, List<SelectLookup>> getDropdownListData() {
@@ -221,5 +244,21 @@ public class TutorService implements TutorConstants {
 		registeredTutorObj.setUserId(null);
 		registeredTutorObj.setRecordLastUpdated(null);
 		registeredTutorObj.setUpdatedBy(null);
+	}
+
+	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
+		final String filename = getFileNameForDocument(documentType);
+		final TutorDocument tutorDocument = getTutorDocument(tutorId, filename);
+		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystem(folderPathToUploadDocuments, tutorDocument.getFilename()));
+		return tutorDocument;
+	}
+	
+	private String getFileNameForDocument(final String documentType) {
+		switch(documentType) {
+			case "PROFILE_PHOTO": return "PROFILE_PHOTO.jpg";
+			case "PAN_CARD": return "PAN_CARD.pdf";
+			case "AADHAAR_CARD": return "AADHAAR_CARD.pdf";
+		}
+		return null;
 	}
 }

@@ -26,6 +26,11 @@ a {
 	font-size: 1.2em;
 }
 
+.clickable-link-effect {
+	text-decoration: underline !important;
+	color: blue !important;
+}
+
 .banner-separator {
 	clear:both;
 }

@@ -41,7 +41,8 @@ function showChangePassword() {
 }
 
 function showLoadedRecord(response) {
-	var tutorObj = response;
+	window.response = response;
+	var tutorObj = response.tutorObj;
 	if (null != tutorObj) {
 		$('#NAME').html(showValue(tutorObj.name));
 		$('#DATE_OF_BIRTH').html(showValue(tutorObj.dateOfBirth));
@@ -58,6 +59,27 @@ function showLoadedRecord(response) {
 		$('#PREFERRED_TEACHING_TYPE').html(showValue(tutorObj.preferredTeachingType));
 		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
 	} 
+	resetDocuments();
+	var tutorDocuments = response.tutorDocuments;
+	if (null != tutorDocuments && tutorDocuments.length > 0) {
+		for (var i = 0; i < tutorDocuments.length; i++) {
+			var filename = tutorDocuments[i].filename;
+			if (filename == 'PROFILE_PHOTO.jpg') {
+				$('#inputFilePhoto').addClass('noscreen');
+				$('#inputFilePhoto-link').removeClass('noscreen');
+			} else if (filename == 'PAN_CARD.pdf') {
+				$('#inputFilePan').addClass('noscreen');
+				$('#inputFilePan-link').removeClass('noscreen');
+			} else if (filename == 'AADHAAR_CARD.pdf') {
+				$('#inputFileAadhaarCard').addClass('noscreen');
+				$('#inputFileAadhaarCard-link').removeClass('noscreen');
+			}
+		}
+		if (tutorDocuments.length == 3) {
+			$('#upload-action-buttons').addClass('noscreen');
+			$('#upload-instructions').addClass('noscreen');
+		}
+	}
 }
 
 function prepareUpdateParams() {
@@ -157,6 +179,13 @@ function loadRecord() {
 
 function loadDropdowns() {
 	callWebservice('/rest/tutor/getDropdownListDataRegisteredTutor', null, loadBecomeTutorDropdowns);
+}
+
+function downloadDocument(documentType) {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/tutor/downloadDocument';
+	$('#downloadForm-documentType').val(documentType);
+	form.submit();
 }
 
 var success = queryParams['success'];
