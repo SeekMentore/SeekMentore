@@ -20,6 +20,7 @@ import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.rowmappers.BecomeTutorRowMapper;
+import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.FileSystemUtils;
@@ -114,7 +115,7 @@ public class TutorService implements TutorConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		response.put("tutorDocuments", getTutorDocuments(registeredTutorObj.getTutorId()));
 		replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, LINE_BREAK);
-		removeSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
+		removeAllSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
 		response.put("tutorObj", registeredTutorObj);
 		return response;
 	}
@@ -238,13 +239,18 @@ public class TutorService implements TutorConstants {
 		registeredTutorObj.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObj.getPreferredTeachingType(), true, delimiter));
 	}
 	
-	public void removeSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
+	public void removeAllSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
 		registeredTutorObj.setTutorId(null);
 		registeredTutorObj.setTentativeTutorId(null);
 		registeredTutorObj.setEncyptedPassword(null);
 		registeredTutorObj.setUserId(null);
 		registeredTutorObj.setRecordLastUpdated(null);
 		registeredTutorObj.setUpdatedBy(null);
+	}
+	
+	public void removeUltraSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
+		registeredTutorObj.setTentativeTutorId(null);
+		registeredTutorObj.setEncyptedPassword(null);
 	}
 
 	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
@@ -261,5 +267,18 @@ public class TutorService implements TutorConstants {
 			case "AADHAAR_CARD": return "AADHAAR_CARD.pdf";
 		}
 		return null;
+	}
+	
+	/*
+	 * Admin Functions
+	 */
+	public List<RegisteredTutor> registeredTutorsList(final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final List<RegisteredTutor> registeredTutorList = applicationDao.findAllWithoutParams("SELECT * FROM REGISTERED_TUTOR", new RegisteredTutorRowMapper());
+		for (final RegisteredTutor registeredTutorObject : registeredTutorList) {
+			// Get all lookup data and user ids back to original label and values
+			removeUltraSensitiveInformationFromRegisteredTutorObject(registeredTutorObject);
+			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObject, delimiter);
+		}
+		return registeredTutorList;
 	}
 }

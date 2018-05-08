@@ -94,11 +94,15 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validateFileExtension(final String extension, final String filename) {
+	public static boolean validateFileExtension(final String[] extensions, final String filename) {
 		if (validatePlainNotNullAndEmptyTextString(filename)) {
 			final String fileExtension = filename.substring(filename.lastIndexOf(DOT) + 1);
 			if (filename.indexOf(DOT) == filename.lastIndexOf(DOT)) {
-				return extension.equalsIgnoreCase(fileExtension);
+				for (final String extension : extensions) {
+					if (extension.equalsIgnoreCase(fileExtension)) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;

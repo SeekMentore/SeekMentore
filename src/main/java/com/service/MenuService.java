@@ -75,7 +75,8 @@ public class MenuService implements MenuConstants {
 					if (null != page.getWebservice() && !page.getWebservice().isEmpty()) {
 						for (final Webservice webservice : page.getWebservice()) {
 							final String url = page.getUrl() + webservice.getUrl();
-							menuUrlToPageAccessTypeMap.put(url.toUpperCase(), new MenuAttributes(pageAccessType, webservice.getAdditionalAccessFunction()));
+							final String overridenPageAccessType = (!PAGE_UNSECURED.equals(pageAccessType)) ? ((null != webservice.getPageAccessType()) ? webservice.getPageAccessType() : pageAccessType) : PAGE_UNSECURED;
+							menuUrlToPageAccessTypeMap.put(url.toUpperCase(), new MenuAttributes(overridenPageAccessType, webservice.getAdditionalAccessFunction()));
 						}
 					}
 				}

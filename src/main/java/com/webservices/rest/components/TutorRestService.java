@@ -172,6 +172,24 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
+	/*
+	 * Admin Functions
+	 */
+	@Path(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String registeredTutorsList (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getTutorService().registeredTutorsList(LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -187,7 +205,8 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		switch(this.methodName) {
 			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
-			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR : {
+			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR :
+			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST : {
 				this.securityPassed = true;
 				break;
 			}
@@ -205,21 +224,21 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	private void handleUploadDocumentsSecurity() {
 		this.securityPassed = true;
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_JPG, this.photoFileName)) {
+		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_ARRAY_JPG_JPEG.split(COMMA), this.photoFileName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF, this.panCardFileName)) {
+		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.panCardFileName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_FILENAME_PAN,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF, this.aadhaarCardFileName)) {
+		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.aadhaarCardFileName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_FILENAME_AADHAAR_CARD,

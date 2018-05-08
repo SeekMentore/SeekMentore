@@ -4,7 +4,7 @@ public interface PasswordConstants extends ApplicationConstants {
 
 	String CAPITAL_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     String SMALL_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
-    String SPECIAL_CHARACTERS = "!@#$%^&*_=+-/.?<>)";
+    String SPECIAL_CHARACTERS = "!@#^*_?";
     String NUMBERS = "0123456789";
     
     Integer MIN_PASSWORD_LENGTH = 4;

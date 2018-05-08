@@ -18,8 +18,9 @@
 		</page> -->
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
-		<page id="subscribewithusadmin" url="/subscribewithusadmin.html" pageAccessType="A"></page>
 		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
+		<page id="subscribewithusadmin" url="/subscribewithusadmin.html" pageAccessType="A"></page>
+		<page id="registeredtutor" url="/registeredtutor.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
@@ -66,6 +67,7 @@
 			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
 			<webservice id="updateDetails" url="/updateDetails"></webservice>
 			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
+			<webservice id="registeredTutorsList" url="/registeredTutorsList" pageAccessType="A"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
