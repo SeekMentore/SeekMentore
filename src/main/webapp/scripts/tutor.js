@@ -186,6 +186,29 @@ function downloadDocument(documentType) {
 	form.action = ctxPath + '/rest/tutor/downloadDocument';
 	$('#downloadForm-documentType').val(documentType);
 	form.submit();
+	if (documentType == 'PROFILE_PHOTO') {
+		$('#inputFilePhoto-link').addClass('noscreen');
+		$('#inputFilePhoto-downloading').removeClass('noscreen');
+	} else if (documentType == 'PAN_CARD') {
+		$('#inputFilePan-link').addClass('noscreen');
+		$('#inputFilePan-downloading').removeClass('noscreen');
+	} else if (documentType == 'AADHAAR_CARD') {
+		$('#inputFileAadhaarCard-link').addClass('noscreen');
+		$('#inputFileAadhaarCard-downloading').removeClass('noscreen');
+	}
+	window.setTimeout(
+			function disableDownloadButton() {
+				if (documentType == 'PROFILE_PHOTO') {
+					$('#inputFilePhoto-link').removeClass('noscreen');
+					$('#inputFilePhoto-downloading').addClass('noscreen');
+				} else if (documentType == 'PAN_CARD') {
+					$('#inputFilePan-link').removeClass('noscreen');
+					$('#inputFilePan-downloading').addClass('noscreen');
+				} else if (documentType == 'AADHAAR_CARD') {
+					$('#inputFileAadhaarCard-link').removeClass('noscreen');
+					$('#inputFileAadhaarCard-downloading').addClass('noscreen');
+				}
+			}, 8000)
 }
 
 var success = queryParams['success'];
