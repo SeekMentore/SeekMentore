@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
@@ -299,17 +300,20 @@ public class TutorService implements TutorConstants {
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
 		paramsMap.put("filename", filename);
-		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'Y', WHO_ACTED = :whoActed, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
+		paramsMap.put("remarks", remarks);
+		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'Y', WHO_ACTED = :whoActed, REMARKS = :remarks, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
 		return getTutorDocuments(tutorId);
 	}
 	
-	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
+	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
 		final String filename = getFileNameForDocument(documentType);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
 		paramsMap.put("filename", filename);
-		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'N', WHO_ACTED = :whoActed, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
+		paramsMap.put("remarks", remarks);
+		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'N', WHO_ACTED = :whoActed, REMARKS = :remarks, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
+		sendDocumentRejectionEmailToTutor(tutorId, documentType, remarks);
 		return getTutorDocuments(tutorId);
 	}
 	
@@ -322,12 +326,35 @@ public class TutorService implements TutorConstants {
 		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		attributes.put("documentType", documentType);
 		attributes.put("remarks", remarks);
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 		MailUtils.sendMimeMessageEmail( 
 				registeredTutorObj.getEmailId(), 
 				null,
 				null,
 				"Your " + documentType + " file has been rejected", 
-				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes),
+				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
+	}
+	
+	public Map<String, Object> sendDocumentReminderEmailToTutor(final Long tutorId, final String documentType) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("addressName", registeredTutorObj.getName());
+		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		attributes.put("documentType", documentType);
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				null,
+				"Reminder: Your " + documentType + " is missing", 
+				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		return response;
 	}
 }

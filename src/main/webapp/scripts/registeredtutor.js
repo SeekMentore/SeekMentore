@@ -154,7 +154,7 @@ function prepareDocumentSection() {
 		for (var i = 0; i < tutorDocuments.length; i++) {
 			var filename = tutorDocuments[i].filename;
 			var isApproved = tutorDocuments[i].isApproved;
-			if (filename == 'PROFILE_P1HOTO.jpg') {
+			if (filename == 'PROFILE_PHOTO.jpg') {
 				$('#inputFilePhoto-absent').addClass('noscreen');
 				$('.inputFilePhoto-reminder').addClass('noscreen');
 				$('#inputFilePhoto-link').removeClass('noscreen');
@@ -230,7 +230,8 @@ function loadGrids() {
 function approveDocument(documentType) {
 	var data = { 
 			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
-			documentType 	: documentType
+			documentType 	: documentType,
+			remarks		: $('#remarks').val()
 	}
 	successMessage = 'Succesfully Approved the Document.';
 	callbackAfterCommonSuccess = actionAfterSuccessCallback;
@@ -240,11 +241,21 @@ function approveDocument(documentType) {
 function rejectDocument(documentType) {
 	var data = { 
 			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
-			documentType 	: documentType
+			documentType 	: documentType,
+			remarks		: $('#remarks').val()
 	}
 	successMessage = 'Succesfully Rejected the Document.';
 	callbackAfterCommonSuccess = actionAfterSuccessCallback;
 	callWebservice('/rest/tutor/rejectDocumentFromAdmin', data, null, null, null, 'application/x-www-form-urlencoded');
+}
+
+function sendReminderEmail(documentType) {
+	var data = { 
+			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
+			documentType 	: documentType
+	}
+	successMessage = 'Succesfully sent Document Reminder.';
+	callWebservice('/rest/tutor/sendDocumentReminderEmail', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
 var actionAfterSuccessCallback = function(response) {

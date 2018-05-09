@@ -252,6 +252,24 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
+	@Path(REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String sendDocumentReminderEmail (
+			@FormParam("tutorId") final Long tutorId,
+			@FormParam("documentType") final String documentType,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN;
+		this.tutorId = tutorId;
+		this.documentType = documentType;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getTutorService().sendDocumentReminderEmailToTutor(tutorId, documentType), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -272,6 +290,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN :
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT :
 			case REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT : {
 				handleDownloadDocumentsSecurity();

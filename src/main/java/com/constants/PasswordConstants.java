@@ -8,7 +8,7 @@ public interface PasswordConstants extends ApplicationConstants {
     String NUMBERS = "0123456789";
     
     Integer MIN_PASSWORD_LENGTH = 4;
-	Integer MAX_PASSWORD_LENGTH = 8;
+	Integer MAX_PASSWORD_LENGTH = 12;
 	Boolean CAPITAL_CHARACTERS_ALLOWED = true;
 	Boolean SMALL_CHARACTERS_ALLOWED = true;
 	Boolean SPECIAL_CHARACTERS_ALLOWED = true;

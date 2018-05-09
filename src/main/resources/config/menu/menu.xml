@@ -71,6 +71,7 @@
 			<webservice id="downloadDocumentFromAdmin" url="/downloadDocumentFromAdmin" pageAccessType="A"></webservice>
 			<webservice id="aprroveDocumentFromAdmin" url="/aprroveDocumentFromAdmin" pageAccessType="A"></webservice>
 			<webservice id="rejectDocumentFromAdmin" url="/rejectDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="sendDocumentReminderEmail" url="/sendDocumentReminderEmail" pageAccessType="A"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

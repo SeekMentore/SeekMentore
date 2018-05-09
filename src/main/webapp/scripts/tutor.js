@@ -1,3 +1,5 @@
+var tutorObj;
+var tutorDocuments;
 function uploadDocuments() {
 	showLoader();
 	var form = document.getElementById('document-upload-form');
@@ -41,8 +43,7 @@ function showChangePassword() {
 }
 
 function showLoadedRecord(response) {
-	window.response = response;
-	var tutorObj = response.tutorObj;
+	tutorObj = response.tutorObj;
 	if (null != tutorObj) {
 		$('#NAME').html(showValue(tutorObj.name));
 		$('#DATE_OF_BIRTH').html(showValue(tutorObj.dateOfBirth));
@@ -60,26 +61,67 @@ function showLoadedRecord(response) {
 		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
 	} 
 	resetDocuments();
-	var tutorDocuments = response.tutorDocuments;
+	tutorDocuments = response.tutorDocuments;
 	if (null != tutorDocuments && tutorDocuments.length > 0) {
 		for (var i = 0; i < tutorDocuments.length; i++) {
 			var filename = tutorDocuments[i].filename;
+			var isApproved = tutorDocuments[i].isApproved;
+			var rejected = false;
 			if (filename == 'PROFILE_PHOTO.jpg') {
 				$('#inputFilePhoto').addClass('noscreen');
 				$('#inputFilePhoto-link').removeClass('noscreen');
+				$('#inputFilePhoto-status').removeClass('noscreen');
+				if (null == isApproved) {
+					$('#inputFilePhoto-status').html('Pending Approval');
+				} else if ('Y' == isApproved) {
+					$('#inputFilePhoto-status').html('Approved');
+				} else if ('N' == isApproved) {
+					$('#inputFilePhoto-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PROFILE_PHOTO\')">Rejected</a>');
+					$('#inputFilePhoto').removeClass('noscreen');
+					$('#inputFilePhoto-link').addClass('noscreen');
+					rejected = true;
+				}
 			} else if (filename == 'PAN_CARD.pdf') {
 				$('#inputFilePan').addClass('noscreen');
 				$('#inputFilePan-link').removeClass('noscreen');
+				$('#inputFilePan-status').removeClass('noscreen');
+				if (null == isApproved) {
+					$('#inputFilePan-status').html('Pending Approval');
+				} else if ('Y' == isApproved) {
+					$('#inputFilePan-status').html('Approved');
+				} else if ('N' == isApproved) {
+					$('#inputFilePan-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PAN_CARD\')">Rejected</a>');
+					$('#inputFilePan').removeClass('noscreen');
+					$('#inputFilePan-link').addClass('noscreen');
+					rejected = true;
+				}
 			} else if (filename == 'AADHAAR_CARD.pdf') {
 				$('#inputFileAadhaarCard').addClass('noscreen');
 				$('#inputFileAadhaarCard-link').removeClass('noscreen');
+				$('#inputFileAadhaarCard-status').removeClass('noscreen');
+				if (null == isApproved) {
+					$('#inputFileAadhaarCard-status').html('Pending Approval');
+				} else if ('Y' == isApproved) {
+					$('#inputFileAadhaarCard-status').html('Approved');
+				} else if ('N' == isApproved) {
+					$('#inputFileAadhaarCard-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'AADHAAR_CARD\')">Rejected</a>');
+					$('#inputFileAadhaarCard').removeClass('noscreen');
+					$('#inputFileAadhaarCard-link').addClass('noscreen');
+					rejected = true;
+				}
 			}
 		}
-		if (tutorDocuments.length == 3) {
+		if (!rejected && tutorDocuments.length == 3) {
 			$('#upload-action-buttons').addClass('noscreen');
 			$('#upload-instructions').addClass('noscreen');
 		}
 	}
+}
+
+function showRejectedDetails(index, documentType) {
+	var tutorDocument = tutorDocuments[index];
+	var html = tutorDocument.remarks + '<br/><br/>' + '<a href="javascript:void(0)" onclick="downloadRejectionDocument(\''+documentType+'\')" id="rejection-popuplink" class="clickable-link-effect">Download Document</a>';
+	showNotificationModalWithModifiedHeader(html, 'Remarks for Rejection');
 }
 
 function prepareUpdateParams() {
@@ -208,7 +250,21 @@ function downloadDocument(documentType) {
 					$('#inputFileAadhaarCard-link').removeClass('noscreen');
 					$('#inputFileAadhaarCard-downloading').addClass('noscreen');
 				}
-			}, 8000)
+			}, 8000);
+}
+
+function downloadRejectionDocument(documentType) {
+	var form = document.getElementById('downloadForm');
+	form.action = ctxPath + '/rest/tutor/downloadDocument';
+	$('#downloadForm-documentType').val(documentType);
+	form.submit();
+	$('#rejection-popuplink').html('Downloading...');
+	$('#rejection-popuplink').removeClass('clickable-link-effect');
+	window.setTimeout(
+			function disableDownloadButton() {
+				$('#rejection-popuplink').html('Download Document');
+				$('#rejection-popuplink').addClass('clickable-link-effect');
+			}, 8000);
 }
 
 var success = queryParams['success'];

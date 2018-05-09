@@ -112,6 +112,18 @@ function showNotificationModal(message, isSuccess) {
 	}
 }
 
+function showNotificationModalWithModifiedHeader(message, header) {
+	$('#notification-popup-modal').removeClass('noscreen');
+	$('#notification-popup-model-content-section').html(message);
+	$('#alert-title').html(header);
+	
+	$('#alert-title').addClass('successMessage');
+	$('#alert-title').removeClass('failureMessage');
+	
+	$('#notification-popup-model-content-section').addClass('successMessage');
+	$('#notification-popup-model-content-section').removeClass('failureMessage');
+}
+
 //Configure notification popup modal and register events
 function closeNotificationPopUpModal() {
 	$('#notification-popup-modal').addClass('noscreen');

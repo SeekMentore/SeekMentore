@@ -27,13 +27,9 @@ body {
 		<h3 align="center">Tutor Profile</h3>
 		<br/>
 		<table align="center">
-	    	<tr>
-	    		<td>Application Date</td>
-	    		<td>$registeredTutorObject.applicationDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Application Status</td>
-	    		<td>$registeredTutorObject.applicationStatus</td>
+			<tr>
+	    		<td>Name</td>
+	    		<td>$registeredTutorObject.name</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Date of Birth</td>
@@ -46,14 +42,6 @@ body {
 	    	<tr>
 	    		<td>Email Id</td>
 	    		<td>$registeredTutorObject.emailId</td>
-	    	</tr>
-	    	<tr>
-	    		<td>First Name</td>
-	    		<td>$registeredTutorObject.firstName</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Last Name</td>
-	    		<td>$registeredTutorObject.lastName</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Gender</td>

@@ -54,7 +54,10 @@
 								<td>
 									<input type="file" class="form-element" name="inputFilePhoto" id="inputFilePhoto" size="25" accept=".jpg" />
 									<a href="javascript:void(0)" onclick="downloadDocument('PROFILE_PHOTO')" id="inputFilePhoto-link" class="clickable-link-effect noscreen">Download Photograph</a>
-									<p id="inputFilePhoto-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td>
+									<span id="inputFilePhoto-downloading" class="noscreen">Downloading...</span>
+									<span id="inputFilePhoto-status" class="noscreen"></span>
 								</td>
 							</tr>
 							<tr>
@@ -62,7 +65,10 @@
 								<td>
 									<input type="file" class="form-element" name="inputFilePan" id="inputFilePan" size="25" accept=".pdf" />
 									<a href="javascript:void(0)" onclick="downloadDocument('PAN_CARD')" id="inputFilePan-link" class="clickable-link-effect noscreen">Download PAN card</a>
-									<p id="inputFilePan-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td>
+									<span id="inputFilePan-downloading" class="noscreen">Downloading...</span>
+									<span id="inputFilePan-status" class="noscreen"></span>
 								</td>
 							</tr>
 							<tr>
@@ -70,9 +76,14 @@
 								<td>
 									<input type="file" class="form-element" name="inputFileAadhaarCard" id="inputFileAadhaarCard" size="25" accept=".pdf" />
 									<a href="javascript:void(0)" onclick="downloadDocument('AADHAAR_CARD')" id="inputFileAadhaarCard-link" class="clickable-link-effect noscreen">Download Aadhaar card</a>
-									<p id="inputFileAadhaarCard-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td>
+									<span id="inputFileAadhaarCard-downloading" class="noscreen">Downloading...</span>
+									<span id="inputFileAadhaarCard-status" class="noscreen"></span>
 								</td>
 							</tr>
+					</table>
+					<table align="center" class="all-records">
 							<tr id="upload-action-buttons">
 								<th>
 									<button 
@@ -267,7 +278,7 @@
 				    	<tr>
 				    		<td>
 				    			<ins><b>Password Policy</b></ins> :
-				    			Your password should be minimum 4 and maximum 8 letters. 
+				    			Your password should be minimum 4 and maximum 12 letters. 
 				    			Should contain at-least 1 Capital and at-least 1 Small Letter. 
 				    			It should not start or end with a Number or Special Character. 
 				    			Allowed special characters <b>!@#^*_?</b>
