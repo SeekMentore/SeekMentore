@@ -88,8 +88,9 @@ public class LoginService implements LoginConstants {
 	
 	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
 		switch(userType) {
-			case "Admin" : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
-			case "Tutor" : return commonsService.getUserFromTutorDbUsingUserId(userId);
+			case "Admin"          : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
+			case "Tutor"          : return commonsService.getUserFromTutorDbUsingUserId(userId);
+			case "Parent-Student" : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
 			default	: return null;
 		}
 	}
@@ -103,6 +104,10 @@ public class LoginService implements LoginConstants {
 			}
 			case "Tutor" : {
 				pageAccessTypes.add("M");
+				break;
+			}
+			case "Parent-Student" : {
+				pageAccessTypes.add("C");
 				break;
 			}
 			default	: {

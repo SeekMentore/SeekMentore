@@ -131,6 +131,16 @@ public class CommonsService implements CommonsConstants {
 	}
 	
 	@Transactional
+	public User getUserFromSubscribedCustomerDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (null != userId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", userId.toLowerCase());
+			return applicationDao.find("Select R.*, 'Parent-Student' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
+		}
+		return null;
+	}
+	
+	@Transactional
 	public List<SelectLookup> getSelectLookupEntryList(final String selectLookupTable, final Object[] paramlist) {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		for (int i = 0; i< paramlist.length; i++) {

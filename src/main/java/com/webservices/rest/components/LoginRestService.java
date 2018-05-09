@@ -105,6 +105,10 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 				WebServiceUtils.redirectToPage("/tutor.html", request, response);
 				break;
 			}
+			case "Parent-Student" : {
+				WebServiceUtils.redirectToPage("/customer.html", request, response);
+				break;
+			}
 			default	: {
 				WebServiceUtils.redirectToPage("/error.html", request, response);
 				break;

@@ -4,6 +4,7 @@
 		G - General Access only Public Rest URL's & Commons URL
 		M - Mentor Access
 		P - Professional Team Access
+		C - Customer Access
 		A - Admin Access
 		S - Super/all Access
 		D - Development Team Access
@@ -82,6 +83,7 @@
 			<webservice id="changePassword" url="/changePassword"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
 		</page>
+		<page id="parentstudent" url="/customer.html" pageAccessType="C"></page>
 	</pageList>
 	<pageList id="unsecured">
 		<page id="index" url="/"></page>
