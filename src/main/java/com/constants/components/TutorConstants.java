@@ -11,6 +11,7 @@ public interface TutorConstants extends ApplicationConstants {
 	String VALIDATION_MESSAGE_INVALID_TUTOR_ID = "Invalid User Id.";
 	String VALIDATION_MESSAGE_REMARKS = "Please provide some remarks.";
 	String VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE = "Invalid Document Type.";
+	String VALIDATION_MESSAGE_NO_FILES_UPLOADED = "Please upload some files.";
 	
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
 	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";

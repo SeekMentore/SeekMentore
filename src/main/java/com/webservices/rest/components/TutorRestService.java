@@ -311,33 +311,52 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	private void handleUploadDocumentsSecurity() {
 		this.securityPassed = true;
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_ARRAY_JPG_JPEG.split(COMMA), this.photoFileName)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
-			this.securityPassed = false;
+		Integer counter = 0;
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(this.photoFileName)) {
+			if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_ARRAY_JPG_JPEG.split(COMMA), this.photoFileName)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
+			counter++;
 		}
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.panCardFileName)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_INVALID_FILENAME_PAN,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
-			this.securityPassed = false;
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(this.panCardFileName)) {
+			if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.panCardFileName)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						VALIDATION_MESSAGE_INVALID_FILENAME_PAN,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
+			counter++;
 		}
-		if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.aadhaarCardFileName)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_INVALID_FILENAME_AADHAAR_CARD,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
-			this.securityPassed = false;
-		} 
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(this.aadhaarCardFileName)) {
+			if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_PDF.split(COMMA), this.aadhaarCardFileName)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						VALIDATION_MESSAGE_INVALID_FILENAME_AADHAAR_CARD,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
+			counter++;
+		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
+		}
+		if (this.securityPassed) {
+			if (counter == 0) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						VALIDATION_MESSAGE_NO_FILES_UPLOADED,
+						RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+				this.securityPassed = false;
+			}
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 

@@ -127,6 +127,7 @@ function openTutorRecord(tutorObj) {
 	} 
 }
 
+var documentTypeIndexMap = new Object();
 function prepareDocumentSection() {
 	var tutorDocuments = tutorNavigatorObject.getCurrentTutorRecord().documents;
 	$('#inputFilePhoto-absent').removeClass('noscreen');
@@ -155,6 +156,7 @@ function prepareDocumentSection() {
 			var filename = tutorDocuments[i].filename;
 			var isApproved = tutorDocuments[i].isApproved;
 			if (filename == 'PROFILE_PHOTO.jpg') {
+				documentTypeIndexMap['PROFILE_PHOTO'] = i;
 				$('#inputFilePhoto-absent').addClass('noscreen');
 				$('.inputFilePhoto-reminder').addClass('noscreen');
 				$('#inputFilePhoto-link').removeClass('noscreen');
@@ -166,6 +168,7 @@ function prepareDocumentSection() {
 					$('.inputFilePhoto-rejected').removeClass('noscreen');
 				}
 			} else if (filename == 'PAN_CARD.pdf') {
+				documentTypeIndexMap['PAN_CARD'] = i;
 				$('#inputFilePan-absent').addClass('noscreen');
 				$('.inputFilePan-reminder').addClass('noscreen');
 				$('#inputFilePan-link').removeClass('noscreen');
@@ -177,6 +180,7 @@ function prepareDocumentSection() {
 					$('.inputFilePan-rejected').removeClass('noscreen');
 				}
 			} else if (filename == 'AADHAAR_CARD.pdf') {
+				documentTypeIndexMap['AADHAAR_CARD'] = i;
 				$('#inputFileAadhaarCard-absent').addClass('noscreen');
 				$('.inputFileAadhaarCard-reminder').addClass('noscreen');
 				$('#inputFileAadhaarCard-link').removeClass('noscreen');
@@ -190,6 +194,13 @@ function prepareDocumentSection() {
 			}
 		}
 	}
+}
+
+function showDocumentDetails(documentType) {
+	var tutorDocuments = tutorNavigatorObject.getCurrentTutorRecord().documents;
+	var tutorDocument = tutorDocuments[documentTypeIndexMap[documentType]];
+	var html = 'User: - ' + tutorDocument.whoActed + '<br/><br/>' + 'Date & Time: - ' + tutorDocument.actionDate + '<br/><br/>' + 'Remarks: - ' + tutorDocument.remarks;
+	showNotificationModalWithModifiedHeader(html, 'Details');
 }
 
 function downloadDocument(documentType) {
