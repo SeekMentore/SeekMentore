@@ -1,11 +1,13 @@
 package com.service.components;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,8 +28,10 @@ import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.MailUtils;
+import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -247,6 +251,10 @@ public class TutorService implements TutorConstants {
 		registeredTutorObj.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObj.getPreferredTeachingType(), true, delimiter));
 	}
 	
+	private void replaceNullWithBlankRemarksInRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
+		registeredTutorObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(registeredTutorObj.getAdditionalDetails()));
+	}
+	
 	public void removeAllSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
 		registeredTutorObj.setTutorId(null);
 		registeredTutorObj.setTentativeTutorId(null);
@@ -367,8 +375,17 @@ public class TutorService implements TutorConstants {
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 
-	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final String tentativeTutorId) {
-		// TODO Auto-generated method stub
+	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final Long tutorId) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		if (null != registeredTutorObj) {
+			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInRegisteredTutorObject(registeredTutorObj);
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("registeredTutorObj", registeredTutorObj);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
 		return null;
 	}
 }

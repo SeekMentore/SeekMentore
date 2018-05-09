@@ -87,7 +87,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF;
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorRegistrationProfilePdf(tentativeTutorId));
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_PDF_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorRegistrationProfilePdf(tentativeTutorId));
 		}
     }
 	
@@ -265,7 +265,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF;
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Enquiry_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorEnquiryProfilePdf(enquiryId));
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Enquiry_PDF_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminTutorEnquiryProfilePdf(enquiryId));
 		}
     }
 	
@@ -429,7 +429,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF;
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Individual_Subscription_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminIndividualSubscriptionProfilePdf(tentativeSubscriptionId));
+			FileUtils.writeFileToResponse(response, "Admin_Individual_Subscription_PDF_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminIndividualSubscriptionProfilePdf(tentativeSubscriptionId));
 		}
     }
 	

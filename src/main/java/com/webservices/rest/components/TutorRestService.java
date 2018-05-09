@@ -52,6 +52,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	private String aadhaarCardFileName;
 	private String documentType;
 	private String remarks;
+	private String name;
 	
 	@Path(REST_METHOD_NAME_LOAD_TUTOR_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -280,7 +281,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutors());
+			FileUtils.writeFileToResponse(response, "Admin_Registered_Tutor_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutors());
 		}
     }
 	
@@ -289,15 +290,17 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
     public void downloadAdminIndividualRegisteredTutorProfilePdf (
-    		@FormParam("tutorId") final String tentativeTutorId,
+    		@FormParam("tutorId") final Long tutorId,
     		@FormParam("name") final String name,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF;
+		this.tutorId = tutorId;
+		this.name = name;
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminIndividualRegisteredTutorProfilePdf(tentativeTutorId));
+			FileUtils.writeFileToResponse(response, "Admin_Registered_Tutor_PDF_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminIndividualRegisteredTutorProfilePdf(tutorId));
 		}
     }
 	
@@ -315,12 +318,15 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS :
-			case REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF :
 			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
 			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR :
 			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST : {
 				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF : {
+				handleAdminPDFDownloadSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN :
@@ -440,6 +446,30 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					this.methodName, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.remarks + LINE_BREAK + this.documentType);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleAdminPDFDownloadSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.name)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_NAME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.name);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
