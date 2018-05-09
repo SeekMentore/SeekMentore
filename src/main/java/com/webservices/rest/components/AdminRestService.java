@@ -211,24 +211,24 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS)
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String takeActionOnRegisteredTutors (
+	public String takeActionOnTutorRegistration (
 			@FormParam("gridName") final String gridName,
 			@FormParam("button") final String button,
 			@FormParam("tentativeTutorId") final String tentativeTutorId,
 			@FormParam("remarks") final String remarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS;
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION;
 		this.gridName = gridName;
 		this.button = button;
 		this.uniqueId = tentativeTutorId;
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().takeActionOnRegisteredTutors(gridName, button, tentativeTutorId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getAdminService().takeActionOnTutorRegistration(gridName, button, tentativeTutorId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
@@ -374,24 +374,24 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS)
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_ENQUIRY)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String takeActionOnEnquiredTutors (
+	public String takeActionOnTutorEnquiry (
 			@FormParam("gridName") final String gridName,
 			@FormParam("button") final String button,
 			@FormParam("enquiryId") final String enquiryId,
 			@FormParam("remarks") final String remarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS;
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_ENQUIRY;
 		this.gridName = gridName;
 		this.button = button;
 		this.uniqueId = enquiryId;
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().takeActionOnEnquiredTutors(gridName, button, enquiryId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getAdminService().takeActionOnTutorEnquiry(gridName, button, enquiryId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
@@ -681,8 +681,8 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 				break;
 			}
 			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS :
-			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS :
-			case REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS : {
+			case REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_ENQUIRY :
+			case REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION : {
 				handleTakeActionSecurity();
 				break;
 			}
@@ -761,7 +761,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS, 
+					this.methodName, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -799,7 +799,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_SEND_EMAIL, 
+					this.methodName, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}

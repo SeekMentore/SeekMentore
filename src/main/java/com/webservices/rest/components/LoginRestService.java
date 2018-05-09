@@ -179,7 +179,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.credential.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.credential.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 
@@ -250,7 +250,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypenewPassword);
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypenewPassword);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 

@@ -29,156 +29,156 @@ body {
 		<table align="center">
 	    	<tr>
 	    		<td>Application Date</td>
-	    		<td>$enquiredSubscriptionObject.applicationDate</td>
+	    		<td>$subscribeWithUsObject.applicationDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Application Status</td>
-	    		<td>$enquiredSubscriptionObject.applicationStatus</td>
+	    		<td>$subscribeWithUsObject.applicationStatus</td>
 	    	</tr>
                  <tr>
 	    		<td>First Name</td>
-	    		<td>$enquiredSubscriptionObject.firstName</td>
+	    		<td>$subscribeWithUsObject.firstName</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Last Name</td>
-	    		<td>$enquiredSubscriptionObject.lastName</td>
+	    		<td>$subscribeWithUsObject.lastName</td>
 	    	</tr>
 
 	    	<tr>
 	    		<td>Contact Number</td>
-	    		<td>$enquiredSubscriptionObject.contactNumber</td>
+	    		<td>$subscribeWithUsObject.contactNumber</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Email Id</td>
-	    		<td>$enquiredSubscriptionObject.emailId</td>
+	    		<td>$subscribeWithUsObject.emailId</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Student Grade</td>
-	    		<td>$enquiredSubscriptionObject.studentGrade</td>
+	    		<td>$subscribeWithUsObject.studentGrade</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Subjects</td>
-	    		<td>$enquiredSubscriptionObject.subjects</td>
+	    		<td>$subscribeWithUsObject.subjects</td>
 	    	</tr>
 	       	<tr>
 	    		<td>Preferred Time To Call</td>
-	    		<td>$enquiredSubscriptionObject.preferredTimeToCall</td>
+	    		<td>$subscribeWithUsObject.preferredTimeToCall</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Location</td>
-	    		<td>$enquiredSubscriptionObject.location</td>
+	    		<td>$subscribeWithUsObject.location</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Reference</td>
-	    		<td>$enquiredSubscriptionObject.reference</td>
+	    		<td>$subscribeWithUsObject.reference</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Address Details</td>
-	    		<td>$enquiredSubscriptionObject.addressDetails</td>
+	    		<td>$subscribeWithUsObject.addressDetails</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Additional Details</td>
-	    		<td>$enquiredSubscriptionObject.additionalDetails</td>
+	    		<td>$subscribeWithUsObject.additionalDetails</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Subscribed Customer</td>
-	    		<td>$enquiredSubscriptionObject.subscribedCustomer</td>
+	    		<td>$subscribeWithUsObject.subscribedCustomer</td>
 	    	</tr> 
 	    	<tr>
 	    		<td>Is Contacted</td>
-	    		<td>$enquiredSubscriptionObject.isContacted</td>
+	    		<td>$subscribeWithUsObject.isContacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Contacted</td>
-	    		<td>$enquiredSubscriptionObject.whoContacted</td>
+	    		<td>$subscribeWithUsObject.whoContacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contacted Date</td>
-	    		<td>$enquiredSubscriptionObject.contactedDate</td>
+	    		<td>$subscribeWithUsObject.contactedDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contacted Remarks</td>
-	    		<td>$enquiredSubscriptionObject.contactedRemarks</td>
+	    		<td>$subscribeWithUsObject.contactedRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Authentication Verified</td>
-	    		<td>$enquiredSubscriptionObject.isAuthenticationVerified</td>
+	    		<td>$subscribeWithUsObject.isAuthenticationVerified</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Verified</td>
-	    		<td>$enquiredSubscriptionObject.whoVerified</td>
+	    		<td>$subscribeWithUsObject.whoVerified</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Verification Date</td>
-	    		<td>$enquiredSubscriptionObject.verificationDate</td>
+	    		<td>$subscribeWithUsObject.verificationDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Verification Remarks</td>
-	    		<td>$enquiredSubscriptionObject.verificationRemarks</td>
+	    		<td>$subscribeWithUsObject.verificationRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is To Be Recontacted</td>
-	    		<td>$enquiredSubscriptionObject.isToBeRecontacted</td>
+	    		<td>$subscribeWithUsObject.isToBeRecontacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Suggested For Re-contact</td>
-	    		<td>$enquiredSubscriptionObject.whoSuggestedForRecontact</td>
+	    		<td>$subscribeWithUsObject.whoSuggestedForRecontact</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Suggestion Date</td>
-	    		<td>$enquiredSubscriptionObject.suggestionDate</td>
+	    		<td>$subscribeWithUsObject.suggestionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Suggestion Remarks</td>
-	    		<td>$enquiredSubscriptionObject.suggestionRemarks</td>
+	    		<td>$subscribeWithUsObject.suggestionRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Recontacted</td>
-	    		<td>$enquiredSubscriptionObject.whoRecontacted</td>
+	    		<td>$subscribeWithUsObject.whoRecontacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Recontacted Date</td>
-	    		<td>$enquiredSubscriptionObject.recontactedDate</td>
+	    		<td>$subscribeWithUsObject.recontactedDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Recontacted Remarks</td>
-	    		<td>$enquiredSubscriptionObject.recontactedRemarks</td>
+	    		<td>$subscribeWithUsObject.recontactedRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Selected</td>
-	    		<td>$enquiredSubscriptionObject.isSelected</td>
+	    		<td>$subscribeWithUsObject.isSelected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Selected</td>
-	    		<td>$enquiredSubscriptionObject.whoSelected</td>
+	    		<td>$subscribeWithUsObject.whoSelected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Selection Date</td>
-	    		<td>$enquiredSubscriptionObject.selectionDate</td>
+	    		<td>$subscribeWithUsObject.selectionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Selection Remarks</td>
-	    		<td>$enquiredSubscriptionObject.selectionRemarks</td>
+	    		<td>$subscribeWithUsObject.selectionRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Rejected</td>
-	    		<td>$enquiredSubscriptionObject.isRejected</td>
+	    		<td>$subscribeWithUsObject.isRejected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Rejected</td>
-	    		<td>$enquiredSubscriptionObject.whoRejected</td>
+	    		<td>$subscribeWithUsObject.whoRejected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Rejection Date</td>
-	    		<td>$enquiredSubscriptionObject.rejectionDate</td>
+	    		<td>$subscribeWithUsObject.rejectionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Rejection Remarks</td>
-	    		<td>$enquiredSubscriptionObject.rejectionRemarks</td>
+	    		<td>$subscribeWithUsObject.rejectionRemarks</td>
 	    	</tr>    
 	    	<tr>
 	    		<td>Record Last Updated</td>
-	    		<td>$enquiredSubscriptionObject.recordLastUpdated</td>
+	    		<td>$subscribeWithUsObject.recordLastUpdated</td>
 	    	</tr>
 		</table>
 

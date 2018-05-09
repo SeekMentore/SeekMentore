@@ -31,7 +31,7 @@
 			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
 			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
 			<webservice id="displayRegisteredTutors" url="/displayRegisteredTutors"></webservice>
-			<webservice id="takeActionOnRegisteredTutors" url="/takeActionOnRegisteredTutors"></webservice>
+			<webservice id="takeActionOnTutorRegistration" url="/takeActionOnTutorRegistration"></webservice>
 			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
 			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
 			<!-- Tutor Enquiry Admin -->
@@ -42,7 +42,7 @@
 			<webservice id="displayToBeRecontactedTutorEnquiries" url="/displayToBeRecontactedTutorEnquiries"></webservice>
 			<webservice id="displaySelectedTutorEnquiries" url="/displaySelectedTutorEnquiries"></webservice>
 			<webservice id="displayRejectedTutorEnquiries" url="/displayRejectedTutorEnquiries"></webservice>
-			<webservice id="takeActionOnEnquiredTutors" url="/takeActionOnEnquiredTutors"></webservice>
+			<webservice id="takeActionOnTutorEnquiry" url="/takeActionOnTutorEnquiry"></webservice>
 			<webservice id="downloadAdminReportTutorEnquiries" url="/downloadAdminReportTutorEnquiries"></webservice>
 			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
 			<!-- Admin Send Email -->
@@ -69,6 +69,8 @@
 			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
 			<webservice id="registeredTutorsList" url="/registeredTutorsList" pageAccessType="A"></webservice>
 			<webservice id="downloadDocumentFromAdmin" url="/downloadDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="aprroveDocumentFromAdmin" url="/aprroveDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="rejectDocumentFromAdmin" url="/rejectDocumentFromAdmin" pageAccessType="A"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

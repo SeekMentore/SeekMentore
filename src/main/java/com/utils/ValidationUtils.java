@@ -15,8 +15,8 @@ import com.utils.context.AppContext;
 
 public class ValidationUtils implements ValidationConstants {
 	
-	public static boolean validatePlainNotNullAndEmptyTextString(final String text) {
-		if (null != text && !EMPTY_STRING.equals(text))
+	public static boolean validatePlainNotNullAndEmptyTextString(final Object text) {
+		if (null != text && !EMPTY_STRING.equals(text.toString()))
 			return true;
 		return false;
 	}

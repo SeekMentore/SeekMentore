@@ -1,0 +1,225 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+		<h3 align="center">Tutor Profile</h3>
+		<br/>
+		<table align="center">
+	    	<tr>
+	    		<td>Application Date</td>
+	    		<td>$tutorRegisterObject.applicationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Application Status</td>
+	    		<td>$tutorRegisterObject.applicationStatus</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Date of Birth</td>
+	    		<td>$tutorRegisterObject.dateOfBirth</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td>$tutorRegisterObject.contactNumber</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td>$tutorRegisterObject.emailId</td>
+	    	</tr>
+	    	<tr>
+	    		<td>First Name</td>
+	    		<td>$tutorRegisterObject.firstName</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Last Name</td>
+	    		<td>$tutorRegisterObject.lastName</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Gender</td>
+	    		<td>$tutorRegisterObject.gender</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Qualification</td>
+	    		<td>$tutorRegisterObject.qualification</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Primary Profession</td>
+	    		<td>$tutorRegisterObject.primaryProfession</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Transport Mode</td>
+	    		<td>$tutorRegisterObject.transportMode</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Teaching Experience</td>
+	    		<td>$tutorRegisterObject.teachingExp</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Student Grade</td>
+	    		<td>$tutorRegisterObject.studentGrade</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subjects</td>
+	    		<td>$tutorRegisterObject.subjects</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Locations</td>
+	    		<td>$tutorRegisterObject.locations</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Time To Call</td>
+	    		<td>$tutorRegisterObject.preferredTimeToCall</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$tutorRegisterObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td>$tutorRegisterObject.preferredTeachingType</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td>$tutorRegisterObject.additionalDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Contacted</td>
+	    		<td>$tutorRegisterObject.isContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Contacted</td>
+	    		<td>$tutorRegisterObject.whoContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Date</td>
+	    		<td>$tutorRegisterObject.contactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Remarks</td>
+	    		<td>$tutorRegisterObject.contactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Authentication Verified</td>
+	    		<td>$tutorRegisterObject.isAuthenticationVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Verified</td>
+	    		<td>$tutorRegisterObject.whoVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Date</td>
+	    		<td>$tutorRegisterObject.verificationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Remarks</td>
+	    		<td>$tutorRegisterObject.verificationRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is To Be Recontacted</td>
+	    		<td>$tutorRegisterObject.isToBeRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Suggested For Re-contact</td>
+	    		<td>$tutorRegisterObject.whoSuggestedForRecontact</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Date</td>
+	    		<td>$tutorRegisterObject.suggestionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Remarks</td>
+	    		<td>$tutorRegisterObject.suggestionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Recontacted</td>
+	    		<td>$tutorRegisterObject.whoRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Date</td>
+	    		<td>$tutorRegisterObject.recontactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Remarks</td>
+	    		<td>$tutorRegisterObject.recontactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Selected</td>
+	    		<td>$tutorRegisterObject.isSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Selected</td>
+	    		<td>$tutorRegisterObject.whoSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Date</td>
+	    		<td>$tutorRegisterObject.selectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Remarks</td>
+	    		<td>$tutorRegisterObject.selectionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Rejected</td>
+	    		<td>$tutorRegisterObject.isRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Rejected</td>
+	    		<td>$tutorRegisterObject.whoRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Date</td>
+	    		<td>$tutorRegisterObject.rejectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Remarks</td>
+	    		<td>$tutorRegisterObject.rejectionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Count</td>
+	    		<td>$tutorRegisterObject.rejectionCount</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Re Applied</td>
+	    		<td>$tutorRegisterObject.reApplied</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Previous Application Date</td>
+	    		<td>$tutorRegisterObject.previousApplicationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Record Last Updated</td>
+	    		<td>$tutorRegisterObject.recordLastUpdated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Data Migrated</td>
+	    		<td>$tutorRegisterObject.isDataMigrated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>When Migrated</td>
+	    		<td>$tutorRegisterObject.whenMigrated</td>
+	    	</tr>
+		</table>
+
+</body>
+</html>

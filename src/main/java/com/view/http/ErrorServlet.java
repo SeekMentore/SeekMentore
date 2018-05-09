@@ -15,6 +15,7 @@ import com.constants.MessageConstants;
 import com.model.ErrorPacket;
 import com.service.components.CommonsService;
 import com.utils.ExceptionUtils;
+import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
 import com.utils.localization.Message;
 
@@ -53,6 +54,7 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     }
 	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri, errorText);
 	     getCommonsService().feedErrorRecord(errorPacket);
+	     WebServiceUtils.redirectToPage("/error.html", request, response);
 	}
 	
 	public CommonsService getCommonsService() {

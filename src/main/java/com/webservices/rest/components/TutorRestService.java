@@ -51,6 +51,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	private String photoFileName;
 	private String aadhaarCardFileName;
 	private String documentType;
+	private String remarks;
 	
 	@Path(REST_METHOD_NAME_LOAD_TUTOR_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -211,6 +212,46 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
     }
 	
+	@Path(REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String aprroveDocumentFromAdmin (
+			@FormParam("tutorId") final Long tutorId,
+			@FormParam("documentType") final String documentType,
+			@FormParam("remarks") final String remarks,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN;
+		this.tutorId = tutorId;
+		this.documentType = documentType;
+		this.remarks = remarks;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getTutorService().aprroveDocumentFromAdmin(tutorId, documentType, getLoggedInUserId(request), remarks), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String rejectDocumentFromAdmin (
+			@FormParam("tutorId") final Long tutorId,
+			@FormParam("documentType") final String documentType,
+			@FormParam("remarks") final String remarks,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN;
+		this.tutorId = tutorId;
+		this.documentType = documentType;
+		this.remarks = remarks;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getTutorService().rejectDocumentFromAdmin(tutorId, documentType, getLoggedInUserId(request), remarks), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -227,17 +268,22 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
 			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR :
-			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST :
-			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT : {
+			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST : {
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT :
 			case REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT : {
 				handleDownloadDocumentsSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_UPLOAD_DOCUMENTS : {
 				handleUploadDocumentsSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN : 
+			case REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN : {
+				handleAdminIndividualTutorObjectAccessSecurity();
 				break;
 			}
 		}
@@ -267,7 +313,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		} 
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.tutorId))) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
@@ -276,22 +322,29 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_UPLOAD_DOCUMENTS, 
+					this.methodName, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.photoFileName + LINE_BREAK + this.panCardFileName + LINE_BREAK + this.aadhaarCardFileName + LINE_BREAK + this.tutorId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleDownloadDocumentsSecurity() {
+	private void handleAdminIndividualTutorObjectAccessSecurity() {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.tutorId))) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(String.valueOf(this.documentType))) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.remarks)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_REMARKS,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.documentType)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE,
@@ -314,7 +367,45 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT, 
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.remarks + LINE_BREAK + this.documentType);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleDownloadDocumentsSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.documentType)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		} else {
+			switch(documentType) {
+				case "PROFILE_PHOTO": break;
+				case "PAN_CARD": break;
+				case "AADHAAR_CARD": break;
+				default : {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							VALIDATION_MESSAGE_INVALID_DOCUMENT_TYPE,
+							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					this.securityPassed = false;
+					break;
+				}
+			}
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName, 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.documentType);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}

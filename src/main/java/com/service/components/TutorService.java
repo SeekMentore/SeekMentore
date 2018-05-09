@@ -113,7 +113,11 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> response = new HashMap<String, Object>();
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
-		response.put("tutorDocuments", getTutorDocuments(registeredTutorObj.getTutorId()));
+		final List<TutorDocument> tutorDocumentList = getTutorDocuments(registeredTutorObj.getTutorId());
+		for (final TutorDocument tutorDocument : tutorDocumentList) {
+			removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
+		}
+		response.put("tutorDocuments", tutorDocumentList);
 		replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, LINE_BREAK);
 		removeAllSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
 		response.put("tutorObj", registeredTutorObj);
@@ -256,8 +260,14 @@ public class TutorService implements TutorConstants {
 	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
 		final String filename = getFileNameForDocument(documentType);
 		final TutorDocument tutorDocument = getTutorDocument(tutorId, filename);
+		removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystem(folderPathToUploadDocuments, tutorDocument.getFilename()));
 		return tutorDocument;
+	}
+	
+	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
+		tutorDocumentObj.setWhoActed(null);
+		tutorDocumentObj.setActionDate(null);
 	}
 	
 	private String getFileNameForDocument(final String documentType) {
@@ -281,5 +291,43 @@ public class TutorService implements TutorConstants {
 			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObject, delimiter);
 		}
 		return registeredTutorList;
+	}
+
+	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
+		final String filename = getFileNameForDocument(documentType);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("whoActed", userId);
+		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("filename", filename);
+		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'Y', WHO_ACTED = :whoActed, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
+		return getTutorDocuments(tutorId);
+	}
+	
+	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
+		final String filename = getFileNameForDocument(documentType);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("whoActed", userId);
+		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("filename", filename);
+		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'N', WHO_ACTED = :whoActed, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
+		return getTutorDocuments(tutorId);
+	}
+	
+	public void sendDocumentRejectionEmailToTutor(final Long tutorId, final String documentType, final String remarks) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("addressName", registeredTutorObj.getName());
+		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		attributes.put("documentType", documentType);
+		attributes.put("remarks", remarks);
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				null,
+				"Your " + documentType + " file has been rejected", 
+				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
 	}
 }

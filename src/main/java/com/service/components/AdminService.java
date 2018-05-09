@@ -62,13 +62,13 @@ public class AdminService implements AdminConstants {
 	public byte[] downloadAdminTutorRegistrationProfilePdf(final String tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tentativeTutorId", tentativeTutorId);
-		final BecomeTutor registeredTutorObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap, new BecomeTutorRowMapper());
-		if (null != registeredTutorObject) {
-			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, WHITESPACE+SEMICOLON+WHITESPACE);
-			replaceNullWithBlankRemarksInTutorRegistrationObject(registeredTutorObject);
+		final BecomeTutor tutorRegisterObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap, new BecomeTutorRowMapper());
+		if (null != tutorRegisterObject) {
+			replacePlaceHolderAndIdsFromTutorRegistrationObject(tutorRegisterObject, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInTutorRegistrationObject(tutorRegisterObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("registeredTutorObject", registeredTutorObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        attributes.put("tutorRegisterObject", tutorRegisterObject);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(TUTOR_REGISTER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}	
@@ -109,50 +109,50 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 		}
-		final List<BecomeTutor> registeredTutorList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
-		for (final BecomeTutor registeredTutorObject : registeredTutorList) {
+		final List<BecomeTutor> tutorRegisterList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
+		for (final BecomeTutor tutorRegisterObject : tutorRegisterList) {
 			// Get all lookup data and user ids back to original label and values
-			replacePlaceHolderAndIdsFromTutorRegistrationObject(registeredTutorObject, delimiter);
+			replacePlaceHolderAndIdsFromTutorRegistrationObject(tutorRegisterObject, delimiter);
 		}
-		return registeredTutorList;
+		return tutorRegisterList;
 	}
 	
-	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor registeredTutorObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		registeredTutorObject.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,registeredTutorObject.getGender(), false, delimiter));
-		registeredTutorObject.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,registeredTutorObject.getQualification(), false, delimiter));
-		registeredTutorObject.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,registeredTutorObject.getPrimaryProfession(), false, delimiter));
-		registeredTutorObject.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,registeredTutorObject.getTransportMode(), false, delimiter));
-		registeredTutorObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, registeredTutorObject.getStudentGrade(), true, delimiter));
-		registeredTutorObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, registeredTutorObject.getSubjects(), true, delimiter));
-		registeredTutorObject.setLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, registeredTutorObject.getLocations(), true, delimiter));
-		registeredTutorObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, registeredTutorObject.getPreferredTimeToCall(), true, delimiter));
-		registeredTutorObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, registeredTutorObject.getReference(), false, delimiter));
-		registeredTutorObject.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObject.getPreferredTeachingType(), true, delimiter));
-		registeredTutorObject.setWhoContacted(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoContacted()));
-		registeredTutorObject.setWhoVerified(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoVerified()));
-		registeredTutorObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoSuggestedForRecontact()));
-		registeredTutorObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoRecontacted()));
-		registeredTutorObject.setWhoSelected(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoSelected()));
-		registeredTutorObject.setWhoRejected(commonsService.getNameOfUserFromUserId(registeredTutorObject.getWhoRejected()));
-		registeredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsContacted()));
-		registeredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsAuthenticationVerified()));
-		registeredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsToBeRecontacted()));
-		registeredTutorObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsSelected()));
-		registeredTutorObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsRejected()));
-		registeredTutorObject.setReApplied(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getReApplied()));
-		registeredTutorObject.setIsDataMigrated(ApplicationUtils.setYesOrNoFromYN(registeredTutorObject.getIsDataMigrated()));
+	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor tutorRegisterObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		tutorRegisterObject.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,tutorRegisterObject.getGender(), false, delimiter));
+		tutorRegisterObject.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,tutorRegisterObject.getQualification(), false, delimiter));
+		tutorRegisterObject.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,tutorRegisterObject.getPrimaryProfession(), false, delimiter));
+		tutorRegisterObject.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,tutorRegisterObject.getTransportMode(), false, delimiter));
+		tutorRegisterObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, tutorRegisterObject.getStudentGrade(), true, delimiter));
+		tutorRegisterObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, tutorRegisterObject.getSubjects(), true, delimiter));
+		tutorRegisterObject.setLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, tutorRegisterObject.getLocations(), true, delimiter));
+		tutorRegisterObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, tutorRegisterObject.getPreferredTimeToCall(), true, delimiter));
+		tutorRegisterObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, tutorRegisterObject.getReference(), false, delimiter));
+		tutorRegisterObject.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, tutorRegisterObject.getPreferredTeachingType(), true, delimiter));
+		tutorRegisterObject.setWhoContacted(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoContacted()));
+		tutorRegisterObject.setWhoVerified(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoVerified()));
+		tutorRegisterObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoSuggestedForRecontact()));
+		tutorRegisterObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoRecontacted()));
+		tutorRegisterObject.setWhoSelected(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoSelected()));
+		tutorRegisterObject.setWhoRejected(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoRejected()));
+		tutorRegisterObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsContacted()));
+		tutorRegisterObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsAuthenticationVerified()));
+		tutorRegisterObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsToBeRecontacted()));
+		tutorRegisterObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsSelected()));
+		tutorRegisterObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsRejected()));
+		tutorRegisterObject.setReApplied(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getReApplied()));
+		tutorRegisterObject.setIsDataMigrated(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsDataMigrated()));
 	}
 	
-	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor registeredTutorObject) {
-		registeredTutorObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getContactedRemarks()));
-		registeredTutorObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getVerificationRemarks()));
-		registeredTutorObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSuggestionRemarks()));
-		registeredTutorObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRecontactedRemarks()));
-		registeredTutorObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSelectionRemarks()));
-		registeredTutorObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRejectionRemarks()));
+	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor tutorRegisterObject) {
+		tutorRegisterObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getContactedRemarks()));
+		tutorRegisterObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getVerificationRemarks()));
+		tutorRegisterObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getSuggestionRemarks()));
+		tutorRegisterObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRecontactedRemarks()));
+		tutorRegisterObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getSelectionRemarks()));
+		tutorRegisterObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRejectionRemarks()));
 	}
 	
-	public Map<String, Object> takeActionOnRegisteredTutors (
+	public Map<String, Object> takeActionOnTutorRegistration (
 			final String gridName, 
 			final String button, 
 			final String tentativeTutorId,
@@ -222,13 +222,13 @@ public class AdminService implements AdminConstants {
 	public byte[] downloadAdminTutorEnquiryProfilePdf(final String enquiryId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
-		final FindTutor enquiredTutorObject = applicationDao.find("SELECT * FROM FIND_TUTOR WHERE ENQUIRY_ID = :enquiryId", paramsMap, new FindTutorRowMapper());
-		if (null != enquiredTutorObject) {
-			replacePlaceHolderAndIdsFromTutorEnquiryObject(enquiredTutorObject, WHITESPACE+SEMICOLON+WHITESPACE);
-			replaceNullWithBlankRemarksInTutorEnquiryObject(enquiredTutorObject);
+		final FindTutor tutorEnquiryObject = applicationDao.find("SELECT * FROM FIND_TUTOR WHERE ENQUIRY_ID = :enquiryId", paramsMap, new FindTutorRowMapper());
+		if (null != tutorEnquiryObject) {
+			replacePlaceHolderAndIdsFromTutorEnquiryObject(tutorEnquiryObject, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInTutorEnquiryObject(tutorEnquiryObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("enquiredTutorObject", enquiredTutorObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(ENQUIRED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        attributes.put("tutorEnquiryObject", tutorEnquiryObject);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(TUTOR_ENQUIRY_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}
@@ -265,44 +265,44 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 		}
-		final List<FindTutor> enquiredTutorList = applicationDao.findAllWithoutParams(query.toString(), new FindTutorRowMapper());
-		for (final FindTutor enquiredTutorObject : enquiredTutorList) {
+		final List<FindTutor> tutorEnquiryList = applicationDao.findAllWithoutParams(query.toString(), new FindTutorRowMapper());
+		for (final FindTutor tutorEnquiryObject : tutorEnquiryList) {
 			// Get all lookup data and user ids back to original label and values
-			replacePlaceHolderAndIdsFromTutorEnquiryObject(enquiredTutorObject, delimiter);
+			replacePlaceHolderAndIdsFromTutorEnquiryObject(tutorEnquiryObject, delimiter);
 		}
-		return enquiredTutorList;
+		return tutorEnquiryList;
 	}
 	
-	private void replacePlaceHolderAndIdsFromTutorEnquiryObject(final FindTutor enquiredTutorObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		enquiredTutorObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiredTutorObject.getStudentGrade(), true, delimiter));
-		enquiredTutorObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiredTutorObject.getSubjects(), true, delimiter));
-		enquiredTutorObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, enquiredTutorObject.getPreferredTimeToCall(), true, delimiter));
-		enquiredTutorObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiredTutorObject.getLocation(), true, delimiter));
-		enquiredTutorObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, enquiredTutorObject.getReference(), false, delimiter));
-		enquiredTutorObject.setWhoContacted(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoContacted()));
-		enquiredTutorObject.setWhoVerified(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoVerified()));
-		enquiredTutorObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoSuggestedForRecontact()));
-		enquiredTutorObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRecontacted()));
-		enquiredTutorObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoSelected()));
-		enquiredTutorObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredTutorObject.getWhoRejected()));
-		enquiredTutorObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getSubscribedCustomer()));
-		enquiredTutorObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsContacted()));
-		enquiredTutorObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsAuthenticationVerified()));
-		enquiredTutorObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsToBeRecontacted()));
-		enquiredTutorObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsSelected()));
-		enquiredTutorObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(enquiredTutorObject.getIsRejected()));
+	private void replacePlaceHolderAndIdsFromTutorEnquiryObject(final FindTutor tutorEnquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		tutorEnquiryObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, tutorEnquiryObject.getStudentGrade(), true, delimiter));
+		tutorEnquiryObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, tutorEnquiryObject.getSubjects(), true, delimiter));
+		tutorEnquiryObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, tutorEnquiryObject.getPreferredTimeToCall(), true, delimiter));
+		tutorEnquiryObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, tutorEnquiryObject.getLocation(), true, delimiter));
+		tutorEnquiryObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, tutorEnquiryObject.getReference(), false, delimiter));
+		tutorEnquiryObject.setWhoContacted(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoContacted()));
+		tutorEnquiryObject.setWhoVerified(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoVerified()));
+		tutorEnquiryObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoSuggestedForRecontact()));
+		tutorEnquiryObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoRecontacted()));
+		tutorEnquiryObject.setWhoSelected(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoSelected()));
+		tutorEnquiryObject.setWhoRejected(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoRejected()));
+		tutorEnquiryObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getSubscribedCustomer()));
+		tutorEnquiryObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsContacted()));
+		tutorEnquiryObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsAuthenticationVerified()));
+		tutorEnquiryObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsToBeRecontacted()));
+		tutorEnquiryObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsSelected()));
+		tutorEnquiryObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsRejected()));
 	}
 	
-	private void replaceNullWithBlankRemarksInTutorEnquiryObject(final FindTutor registeredTutorObject) {
-		registeredTutorObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getContactedRemarks()));
-		registeredTutorObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getVerificationRemarks()));
-		registeredTutorObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSuggestionRemarks()));
-		registeredTutorObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRecontactedRemarks()));
-		registeredTutorObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getSelectionRemarks()));
-		registeredTutorObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(registeredTutorObject.getRejectionRemarks()));
+	private void replaceNullWithBlankRemarksInTutorEnquiryObject(final FindTutor tutorEnquiryObject) {
+		tutorEnquiryObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getContactedRemarks()));
+		tutorEnquiryObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getVerificationRemarks()));
+		tutorEnquiryObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getSuggestionRemarks()));
+		tutorEnquiryObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRecontactedRemarks()));
+		tutorEnquiryObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getSelectionRemarks()));
+		tutorEnquiryObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRejectionRemarks()));
 	}
 	
-	public Map<String, Object> takeActionOnEnquiredTutors (
+	public Map<String, Object> takeActionOnTutorEnquiry (
 			final String gridName, 
 			final String button, 
 			final String enquiryId,
@@ -373,13 +373,13 @@ public class AdminService implements AdminConstants {
 	public byte[] downloadAdminIndividualSubscriptionProfilePdf(final String tentativeSubscriptionId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-		final SubscribeWithUs enquiredSubscriptionObject = applicationDao.find("SELECT * FROM SUBSCRIBE_WITH_US WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId", paramsMap, new SubscribeWithUsRowMapper());
-		if (null != enquiredSubscriptionObject) {
-			replacePlaceHolderAndIdsFromSubscribeWithUsObject(enquiredSubscriptionObject, WHITESPACE+SEMICOLON+WHITESPACE);
-			replaceNullWithBlankRemarksInSubscribeWithUsObject(enquiredSubscriptionObject);
+		final SubscribeWithUs subscribeWithUsObject = applicationDao.find("SELECT * FROM SUBSCRIBE_WITH_US WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId", paramsMap, new SubscribeWithUsRowMapper());
+		if (null != subscribeWithUsObject) {
+			replacePlaceHolderAndIdsFromSubscribeWithUsObject(subscribeWithUsObject, WHITESPACE+SEMICOLON+WHITESPACE);
+			replaceNullWithBlankRemarksInSubscribeWithUsObject(subscribeWithUsObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("enquiredSubscriptionObject", enquiredSubscriptionObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(SUBSCRIPTION_INDIVIDUAL_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        attributes.put("subscribeWithUsObject", subscribeWithUsObject);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}
@@ -425,33 +425,33 @@ public class AdminService implements AdminConstants {
 		return subscribeWithUsList;
 	}
 	
-	private void replacePlaceHolderAndIdsFromSubscribeWithUsObject(final SubscribeWithUs enquiredSubscriptionObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		enquiredSubscriptionObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiredSubscriptionObject.getStudentGrade(), true, delimiter));
-		enquiredSubscriptionObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiredSubscriptionObject.getSubjects(), true, delimiter));
-		enquiredSubscriptionObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, enquiredSubscriptionObject.getPreferredTimeToCall(), true, delimiter));
-		enquiredSubscriptionObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiredSubscriptionObject.getLocation(), true, delimiter));
-		enquiredSubscriptionObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, enquiredSubscriptionObject.getReference(), false, delimiter));
-		enquiredSubscriptionObject.setWhoContacted(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoContacted()));
-		enquiredSubscriptionObject.setWhoVerified(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoVerified()));
-		enquiredSubscriptionObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSuggestedForRecontact()));
-		enquiredSubscriptionObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRecontacted()));
-		enquiredSubscriptionObject.setWhoSelected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoSelected()));
-		enquiredSubscriptionObject.setWhoRejected(commonsService.getNameOfUserFromUserId(enquiredSubscriptionObject.getWhoRejected()));
-		enquiredSubscriptionObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getSubscribedCustomer()));
-		enquiredSubscriptionObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsContacted()));
-		enquiredSubscriptionObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsAuthenticationVerified()));
-		enquiredSubscriptionObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsToBeRecontacted()));
-		enquiredSubscriptionObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsSelected()));
-		enquiredSubscriptionObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(enquiredSubscriptionObject.getIsRejected()));
+	private void replacePlaceHolderAndIdsFromSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		subscribeWithUsObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, subscribeWithUsObject.getStudentGrade(), true, delimiter));
+		subscribeWithUsObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, subscribeWithUsObject.getSubjects(), true, delimiter));
+		subscribeWithUsObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, subscribeWithUsObject.getPreferredTimeToCall(), true, delimiter));
+		subscribeWithUsObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscribeWithUsObject.getLocation(), true, delimiter));
+		subscribeWithUsObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, subscribeWithUsObject.getReference(), false, delimiter));
+		subscribeWithUsObject.setWhoContacted(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoContacted()));
+		subscribeWithUsObject.setWhoVerified(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoVerified()));
+		subscribeWithUsObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoSuggestedForRecontact()));
+		subscribeWithUsObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoRecontacted()));
+		subscribeWithUsObject.setWhoSelected(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoSelected()));
+		subscribeWithUsObject.setWhoRejected(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoRejected()));
+		subscribeWithUsObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getSubscribedCustomer()));
+		subscribeWithUsObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsContacted()));
+		subscribeWithUsObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsAuthenticationVerified()));
+		subscribeWithUsObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsToBeRecontacted()));
+		subscribeWithUsObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsSelected()));
+		subscribeWithUsObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsRejected()));
 	}
 	
-	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribedIndividualObject) {
-		subscribedIndividualObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getContactedRemarks()));
-		subscribedIndividualObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getVerificationRemarks()));
-		subscribedIndividualObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getSuggestionRemarks()));
-		subscribedIndividualObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getRecontactedRemarks()));
-		subscribedIndividualObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getSelectionRemarks()));
-		subscribedIndividualObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribedIndividualObject.getRejectionRemarks()));
+	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject) {
+		subscribeWithUsObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getContactedRemarks()));
+		subscribeWithUsObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getVerificationRemarks()));
+		subscribeWithUsObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getSuggestionRemarks()));
+		subscribeWithUsObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRecontactedRemarks()));
+		subscribeWithUsObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getSelectionRemarks()));
+		subscribeWithUsObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRejectionRemarks()));
 	}
 	
 	public Map<String, Object> takeActionOnSubscriptions (

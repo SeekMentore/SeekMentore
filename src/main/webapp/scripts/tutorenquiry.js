@@ -206,7 +206,7 @@ function takeAction(button) {
 	}
 	successMessage = 'Tutor Enquiry Admin action successfully taken.';
 	callbackAfterCommonSuccess = takeActionAfterSuccessCallback;
-	callWebservice('/rest/admin/takeActionOnEnquiredTutors', data, null, null, null, 'application/x-www-form-urlencoded');
+	callWebservice('/rest/admin/takeActionOnTutorEnquiry', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
 var takeActionAfterSuccessCallback = function(response) {

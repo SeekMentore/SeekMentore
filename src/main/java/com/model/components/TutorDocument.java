@@ -1,6 +1,7 @@
 package com.model.components;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import com.constants.components.SelectLookupConstants;
 
@@ -11,6 +12,10 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 	private Long tutorId;
 	private String fsKey;
 	private String filename;
+	private String isApproved;
+	private String whoActed;
+	private String remarks;
+	private Timestamp actionDate;
 	private byte[] content;
 	
 	public TutorDocument() {}
@@ -53,5 +58,37 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 
 	public void setContent(byte[] content) {
 		this.content = content;
+	}
+
+	public String getIsApproved() {
+		return isApproved;
+	}
+
+	public void setIsApproved(String isApproved) {
+		this.isApproved = isApproved;
+	}
+
+	public Timestamp getActionDate() {
+		return actionDate;
+	}
+
+	public void setActionDate(Timestamp actionDate) {
+		this.actionDate = actionDate;
+	}
+
+	public String getWhoActed() {
+		return whoActed;
+	}
+
+	public void setWhoActed(String whoActed) {
+		this.whoActed = whoActed;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }
