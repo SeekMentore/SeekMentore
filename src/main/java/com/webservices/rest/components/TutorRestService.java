@@ -270,6 +270,37 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@POST
+    public void downloadAdminReportRegisteredTutors (
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutors());
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+    public void downloadAdminIndividualRegisteredTutorProfilePdf (
+    		@FormParam("tutorId") final String tentativeTutorId,
+    		@FormParam("name") final String name,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF;
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminIndividualRegisteredTutorProfilePdf(tentativeTutorId));
+		}
+    }
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -283,6 +314,8 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF :
 			case REST_METHOD_NAME_LOAD_TUTOR_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_DETAILS :
 			case REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR :

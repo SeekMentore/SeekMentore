@@ -30,7 +30,7 @@
 			<webservice id="displayToBeRecontactedTutorRegistrations" url="/displayToBeRecontactedTutorRegistrations"></webservice>
 			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
 			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
-			<webservice id="displayRegisteredTutors" url="/displayRegisteredTutors"></webservice>
+			<webservice id="displayRegisteredTutorsFromTutorRegistrations" url="/displayRegisteredTutorsFromTutorRegistrations"></webservice>
 			<webservice id="takeActionOnTutorRegistration" url="/takeActionOnTutorRegistration"></webservice>
 			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
 			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
@@ -72,6 +72,8 @@
 			<webservice id="aprroveDocumentFromAdmin" url="/aprroveDocumentFromAdmin" pageAccessType="A"></webservice>
 			<webservice id="rejectDocumentFromAdmin" url="/rejectDocumentFromAdmin" pageAccessType="A"></webservice>
 			<webservice id="sendDocumentReminderEmail" url="/sendDocumentReminderEmail" pageAccessType="A"></webservice>
+			<webservice id="downloadAdminReportRegisteredTutors" url="/downloadAdminReportRegisteredTutors" pageAccessType="A"></webservice>
+			<webservice id="downloadAdminIndividualRegisteredTutorProfilePdf" url="/downloadAdminIndividualRegisteredTutorProfilePdf" pageAccessType="A"></webservice>
 		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>

@@ -239,7 +239,7 @@ function loadGrids() {
 	callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
 	callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
 	callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
-	callWebservice('/rest/admin/displayRegisteredTutors', null, showRegisteredTutorRecords);
+	callWebservice('/rest/admin/displayRegisteredTutorsFromTutorRegistrations', null, showRegisteredTutorRecords);
 }
 
 function downloadReport() {

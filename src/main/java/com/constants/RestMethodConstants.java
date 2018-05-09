@@ -25,7 +25,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS = "/displayToBeRecontactedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS = "/displaySelectedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS = "/displayRejectedTutorRegistrations";
-	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS = "/displayRegisteredTutors";
+	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS = "/displayRegisteredTutorsFromTutorRegistrations";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION = "/takeActionOnTutorRegistration";
 	// Registered Tutors
 	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
@@ -33,6 +33,8 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN = "/aprroveDocumentFromAdmin";
 	String REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN = "/rejectDocumentFromAdmin";
 	String REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN = "/sendDocumentReminderEmail";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF = "/downloadAdminIndividualRegisteredTutorProfilePdf";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS = "/downloadAdminReportRegisteredTutors";
 	// Tutor Enquiry
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF = "/downloadAdminTutorEnquiryProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES = "/downloadAdminReportTutorEnquiries";

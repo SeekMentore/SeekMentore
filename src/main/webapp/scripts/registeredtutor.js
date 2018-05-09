@@ -276,13 +276,13 @@ var actionAfterSuccessCallback = function(response) {
 
 function downloadReport() {
 	var form = document.getElementById('downloadForm');
-	form.action = ctxPath + '/rest/tutor/downloadReportRegisteredTutors';
+	form.action = ctxPath + '/rest/tutor/downloadAdminReportRegisteredTutors';
 	form.submit();
 }
 
 function downloadProfile() {
 	var form = document.getElementById('downloadForm');
-	form.action = ctxPath + '/rest/tutor/downloadRegisteredTutorProfilePdf';
+	form.action = ctxPath + '/rest/tutor/downloadAdminIndividualRegisteredTutorProfilePdf';
 	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentTutorRecord().tutorId);
 	$('#downloadForm-name').val(tutorNavigatorObject.getCurrentTutorRecord().name);
 	form.submit();

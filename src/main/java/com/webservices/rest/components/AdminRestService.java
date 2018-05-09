@@ -196,16 +196,16 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS)
+	@Path(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
-	public String displayRegisteredTutors (
+	public String displayRegisteredTutorsFromTutorRegistrations (
 			@Context final HttpServletRequest request
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS;
+		this.methodName = REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -656,7 +656,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : 
 			case REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : 
 			case REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : 
-			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS :
+			case REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS :
 				
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES :
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF :

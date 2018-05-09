@@ -5,8 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.constants.components.publicaccess.RegisteredTutorConstants;
+import com.model.ApplicationWorkbookObject;
 
-public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
+public class RegisteredTutor implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long tutorId;
@@ -224,5 +225,59 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants {
 
 	public void setDocuments(List<TutorDocument> documents) {
 		this.documents = documents;
+	}
+
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		switch (reportSwitch) {
+			case "Admin_Report" : {
+				return new Object[] {
+						"NAME",
+						"CONTACT_NUMBER",
+						"EMAIL_ID",
+						"DATE_OF_BIRTH",
+						"GENDER",
+						"QUALIFICATION",
+						"PRIMARY_PROFESSION",
+						"TRANSPORT_MODE",
+						"TEACHING_EXP",
+						"INTERESTED_STUDENT_GRADES",
+						"INTERESTED_SUBJECTS",
+						"COMFORTABLE_LOCATIONS",
+						"ADDITIONAL_DETAILS",
+						"RECORD_LAST_UPDATED",
+						"UPDATED_BY",
+						"USER_ID"
+					};
+			}
+		}
+		return new Object[] {};
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		switch (reportSwitch) {
+			case "Admin_Report" : {
+				return new Object[] {
+						this.name,
+						this.contactNumber,
+						this.emailId,
+						this.dateOfBirth,
+						this.gender,
+						this.qualification,
+						this.primaryProfession,
+						this.transportMode,
+						this.teachingExp,
+						this.interestedStudentGrades,
+						this.interestedSubjects,
+						this.comfortableLocations,
+						this.additionalDetails,
+						this.recordLastUpdated,
+						this.updatedBy,
+						this.userId
+					};
+			}
+		}
+		return new Object[] {};
 	}
 }

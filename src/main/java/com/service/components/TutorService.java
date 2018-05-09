@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
+import com.model.WorkbookReport;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
@@ -28,6 +30,7 @@ import com.utils.FileSystemUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
+import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_TUTOR_SERVICE)
 public class TutorService implements TutorConstants {
@@ -356,5 +359,16 @@ public class TutorService implements TutorConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		return response;
+	}
+
+	public byte[] downloadAdminReportRegisteredTutors() throws DataAccessException, InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		workbookReport.createSheet("REGISTERED_TUTORS", registeredTutorsList(WHITESPACE+SEMICOLON+WHITESPACE), RegisteredTutor.class);
+		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+
+	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final String tentativeTutorId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
