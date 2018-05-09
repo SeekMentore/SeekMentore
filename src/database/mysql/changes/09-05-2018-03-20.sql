@@ -7,6 +7,6 @@ ADD ACTION_DATE TIMESTAMP;
 
 ALTER TABLE TUTOR_DOCUMENTS
 ADD REMARKS VARCHAR(2000);
--- Executed
+-- Executed till here In Prod Do not write any more create new file
 
 
