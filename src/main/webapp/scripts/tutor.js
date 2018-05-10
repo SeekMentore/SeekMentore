@@ -76,7 +76,7 @@ function showLoadedRecord(response) {
 				} else if ('Y' == isApproved) {
 					$('#inputFilePhoto-status').html('Approved');
 				} else if ('N' == isApproved) {
-					$('#inputFilePhoto-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PROFILE_PHOTO\')">Rejected</a>');
+					$('#inputFilePhoto-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PROFILE_PHOTO\')">Asked for Re-Upload</a>');
 					$('#inputFilePhoto').removeClass('noscreen');
 					$('#inputFilePhoto-link').addClass('noscreen');
 					rejected = true;
@@ -90,7 +90,7 @@ function showLoadedRecord(response) {
 				} else if ('Y' == isApproved) {
 					$('#inputFilePan-status').html('Approved');
 				} else if ('N' == isApproved) {
-					$('#inputFilePan-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PAN_CARD\')">Rejected</a>');
+					$('#inputFilePan-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'PAN_CARD\')">Asked for Re-Upload</a>');
 					$('#inputFilePan').removeClass('noscreen');
 					$('#inputFilePan-link').addClass('noscreen');
 					rejected = true;
@@ -104,7 +104,7 @@ function showLoadedRecord(response) {
 				} else if ('Y' == isApproved) {
 					$('#inputFileAadhaarCard-status').html('Approved');
 				} else if ('N' == isApproved) {
-					$('#inputFileAadhaarCard-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'AADHAAR_CARD\')">Rejected</a>');
+					$('#inputFileAadhaarCard-status').html('<a href="javascript:void(0);" class="clickable-link-effect" onclick="showRejectedDetails('+i+', \'AADHAAR_CARD\')">Asked for Re-Upload</a>');
 					$('#inputFileAadhaarCard').removeClass('noscreen');
 					$('#inputFileAadhaarCard-link').addClass('noscreen');
 					rejected = true;
@@ -114,6 +114,9 @@ function showLoadedRecord(response) {
 		if (!rejected && tutorDocuments.length == 3) {
 			$('#upload-action-buttons').addClass('noscreen');
 			$('#upload-instructions').addClass('noscreen');
+		} else {
+			$('#upload-action-buttons').removeClass('noscreen');
+			$('#upload-instructions').removeClass('noscreen');
 		}
 	}
 }
@@ -121,7 +124,7 @@ function showLoadedRecord(response) {
 function showRejectedDetails(index, documentType) {
 	var tutorDocument = tutorDocuments[index];
 	var html = tutorDocument.remarks + '<br/><br/>' + '<a href="javascript:void(0)" onclick="downloadRejectionDocument(\''+documentType+'\')" id="rejection-popuplink" class="clickable-link-effect">Download Document</a>';
-	showNotificationModalWithModifiedHeader(html, 'Remarks for Rejection');
+	showNotificationModalWithModifiedHeader(html, 'Remarks for Re-Upload');
 }
 
 function prepareUpdateParams() {

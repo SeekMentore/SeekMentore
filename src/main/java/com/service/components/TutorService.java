@@ -342,7 +342,7 @@ public class TutorService implements TutorConstants {
 				registeredTutorObj.getEmailId(), 
 				null,
 				null,
-				"Your " + documentType + " file has been rejected", 
+				"Your " + documentType + " file has been asked for Re-upload", 
 				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}

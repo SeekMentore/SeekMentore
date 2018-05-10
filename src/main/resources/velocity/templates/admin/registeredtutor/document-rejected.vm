@@ -28,7 +28,7 @@ Hello $addressName,
 
 <br/><br/>
 <p>
-	Your uploaded document for - $documentType has been rejected due to below reasons.
+	Your uploaded document for - $documentType has been asked for Re-Upload due to below reasons.
 	<br/><br/>
 	$remarks
 </p>

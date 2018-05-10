@@ -101,7 +101,7 @@ public class SchedulerService implements SchedulerConstants {
 			LoggerUtils.logOnConsole("executeTutorRegisterJob");
 			final List<BecomeTutor> tutorObjList = tutorService.getSelectedTutorRegistrations(20);
 			for (final BecomeTutor tutorObj : tutorObjList) {
-				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(null, 4, 8, true, true, true, true, false, false, false, false, false));
+				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 				final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 				final RegisteredTutor registeredTutorObj = new RegisteredTutor();
 				registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase()+WHITESPACE+tutorObj.getLastName().toUpperCase());
