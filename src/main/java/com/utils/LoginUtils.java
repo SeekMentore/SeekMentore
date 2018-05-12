@@ -43,6 +43,9 @@ public class LoginUtils implements LoginConstants {
 			case "Tutor" : {
 				return type.cast(getCommonsService().getTutorFromDbUsingUserId(user.getUserId()));
 			}
+			case "Customer" : {
+				return type.cast(getCommonsService().getSubscribedCustomerFromDbUsingUserId(user.getUserId()));
+			}
 		}
 		return null;
 	}

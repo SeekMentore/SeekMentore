@@ -72,4 +72,10 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
 	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
 	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
+	//Customer Rest methods
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER = "/getDropdownListDataSubscribedCustomer";
+	String REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD = "/loadSubscribedCustomerRecord";
+	String REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS = "/updateSubscribedCustomerDetails";
+	String REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
+
 }

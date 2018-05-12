@@ -22,6 +22,7 @@ import com.model.Employee;
 import com.model.ErrorPacket;
 import com.model.User;
 import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.model.components.commons.SelectLookup;
 import com.model.mail.ApplicationMail;
 import com.model.mail.MailAttachment;
@@ -30,6 +31,7 @@ import com.model.rowmappers.EmployeeRowMapper;
 import com.model.rowmappers.MailAttachmentRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SelectLookupRowMapper;
+import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.UserRowMapper;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;
@@ -135,7 +137,16 @@ public class CommonsService implements CommonsConstants {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("Select R.*, 'Parent-Student' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
+			return applicationDao.find("Select R.*, 'Customer' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
+		}
+		return null;
+	}
+	
+	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (null != userId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", userId.toLowerCase());
+			return applicationDao.find("Select R.*, 'Customer' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new SubscribedCustomerRowMapper());
 		}
 		return null;
 	}

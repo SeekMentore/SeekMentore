@@ -6,12 +6,202 @@
 	<link rel="stylesheet" href="css/lib/w3.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="shortcut icon" href="favicon.ico" />
-<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
-<script src="scripts/utilities.js"></script>
-<script src="scripts/login.js"></script>
-<title>Insert title here</title>
+	<title>Seek Mentore - Tutor</title>
 </head>
 <body>
-Kar diya copy paste.. !!
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info">
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Menu</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="all-records-div" class="w3-row-padding">
+	<Br/>
+		<div id="details-div">
+			<BR/>
+			<div class="w3-row-padding">
+				<table align="center" class="all-records">
+					<tr class="header-panel">
+						<th>Your Current Details</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form id="details-update-form" method="post">
+				    <table align="center" class="all-records">
+				    	<tr>
+				    		<td>Name</td>
+				    		<td id="NAME"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    	<tr>
+				    		<td>Contact Number</td>
+				    		<td id="CONTACT_NUMBER"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Email Id</td>
+				    		<td id="EMAIL_ID"></td>
+				    		<td></td>
+				    	</tr>
+				       	<tr>
+				    		<td>Student Grades</td>
+				    		<td id="INTERESTED_STUDENT_GRADES"></td>
+				    		<td>
+				    			<select name="form-student-grades" id="form-student-grades" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Subjects</td>
+				    		<td id="INTERESTED_SUBJECTS"></td>
+				    		<td>
+				    			<select name="form-subjects" id="form-subjects" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Locations</td>
+				    		<td id="LOCATIONS"></td>
+				    		<td>
+				    			<select name="form-comfortable-locations" id="form-comfortable-locations" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Address Details</td>
+				    		<td id="ADDRESS_DETAILS" colspan="1"></td>
+                          <td colspan="3"><textarea rows="4" cols="60" name="form-address-details" id="form-address-details" placeholder="Provide updated address details."></textarea></td>
+				    		
+				    	</tr>
+				    	<tr>
+				    		<td>Additional Details</td>
+				    		<td id="ADDITIONAL_DETAILS" colspan="1"></td>
+				    		<td colspan="3"><textarea rows="4" cols="60" name="form-additional-details" id="form-additional-details" placeholder="Provide additional details about you."></textarea></td>
+				    	</tr>
+				    	<tr>
+							<td colspan = "2">
+								<button 
+									type="button" 
+									onClick="updateDetails()"
+									class="form-element submit-button button-green" >
+									Update Details
+								</button> 
+							</td>
+							<td>
+								<button  
+									type="button" 
+									onClick="resetDetails()"
+									class="form-element submit-button" >
+									Reset
+								</button> 
+							</td>
+						</tr>
+					</table>
+				</form>
+		   </div>
+		</div>
+		<div id="change-password-div" class="noscreen">
+			<Br/>
+			<div class="w3-row-padding">
+				<table align="center" class="all-records login">
+					<tr class="header-panel">
+						<th>Change Password Panel</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form method="POST" id="changepassword_form">
+					<table align="center" class="all-records login">
+				    	<tr>
+				    		<td><input type="password" id="old-password" class="form-element" name="old-password" placeholder="Old Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td><input type="password" id="new-password" class="form-element" name="new-password" placeholder="New Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td><input type="password" id="retypenew-password" class="form-element" name="retypenew-password" placeholder="Retype New Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td colspan="2" align="center">
+				    			<button 
+									type="button" 
+									onClick="changePassword()"
+									id="signin_submit"
+									class="form-element submit-button" >
+									Change Password
+								</button> 
+				    		</td>
+				    	</tr>
+				    	<tr>
+				    		<td>
+				    			<ins><b>Password Policy</b></ins> :
+				    			Your password should be minimum 4 and maximum 12 letters. 
+				    			Should contain at-least 1 Capital and at-least 1 Small Letter. 
+				    			It should not start or end with a Number or Special Character. 
+				    			Allowed special characters <b>!@#^*_?</b>
+			    			</td>
+				    	</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<BR/>
+<BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+	<input type="text" value="" size="10" name="documentType" id="downloadForm-documentType" />
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+ <!-- Modal content -->
+ <div class="modal-content">
+ 	<div id="alert-title"></div>
+   <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+   <hr class="modal-line" />
+   <p id="notification-popup-model-content-section"></p>
+   <hr class="modal-line" />
+   <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/changepassword.js"></script>
+<script src="scripts/customer.js"></script>
+<script>
+	loadDropdowns();
+</script>
 </body>
 </html>

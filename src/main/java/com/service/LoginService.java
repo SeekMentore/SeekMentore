@@ -90,7 +90,7 @@ public class LoginService implements LoginConstants {
 		switch(userType) {
 			case "Admin"          : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
 			case "Tutor"          : return commonsService.getUserFromTutorDbUsingUserId(userId);
-			case "Parent-Student" : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
+			case "Customer"       : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
 			default	: return null;
 		}
 	}
@@ -106,7 +106,7 @@ public class LoginService implements LoginConstants {
 				pageAccessTypes.add("M");
 				break;
 			}
-			case "Parent-Student" : {
+			case "Customer" : {
 				pageAccessTypes.add("C");
 				break;
 			}

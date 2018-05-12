@@ -83,7 +83,13 @@
 			<webservice id="changePassword" url="/changePassword"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
 		</page>
-		<page id="parentstudent" url="/customer.html" pageAccessType="C"></page>
+		<page id="customer" url="/customer.html" pageAccessType="C"></page>
+		<page id="customerRest" url="/rest/customer" pageAccessType="C">
+			<webservice id="loadSubscribedCustomerRecord" url="/loadSubscribedCustomerRecord"></webservice>
+			<webservice id="getDropdownListDataSubscribedCustomer" url="/getDropdownListDataSubscribedCustomer"></webservice>
+			<webservice id="updateSubscribedCustomerDetails" url="/updateSubscribedCustomerDetails"></webservice>
+			<webservice id="subscribedCustomersList" url="/subscribedCustomersList" pageAccessType="A"></webservice>		
+		</page> 
 	</pageList>
 	<pageList id="unsecured">
 		<page id="index" url="/"></page>
