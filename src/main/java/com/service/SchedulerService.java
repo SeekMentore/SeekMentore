@@ -18,9 +18,12 @@ import com.constants.SchedulerConstants;
 import com.dao.ApplicationDao;
 import com.model.ErrorPacket;
 import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.model.components.publicaccess.BecomeTutor;
+import com.model.components.publicaccess.FindTutor;
 import com.model.mail.ApplicationMail;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.ExceptionUtils;
@@ -43,6 +46,9 @@ public class SchedulerService implements SchedulerConstants {
 	
 	@Autowired
 	private transient TutorService tutorService;
+	
+	@Autowired
+	private transient CustomerService customerService;
 	
 	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
@@ -128,4 +134,32 @@ public class SchedulerService implements SchedulerConstants {
 			lockService.releaseLock("executeTutorRegisterJob", key);
 		}
 	}
+	public void executeSubscribedCustomerJob(final JobExecutionContext context) throws Exception {
+		final String key = lockService.lockObject("executeSubscribedCustomerJob");
+		if (null != key) {
+			LoggerUtils.logOnConsole("executeSubscribedCustomerJob");
+			final List<FindTutor> customerObjList = customerService.getNonSubscribedCustomer(20);
+			for (final FindTutor customerObj : customerObjList) {
+				final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
+				final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
+				final SubscribedCustomer subscribedCustomerObj = new SubscribedCustomer();
+				subscribedCustomerObj.setName(customerObj.getName().toUpperCase());
+				subscribedCustomerObj.setContactNumber(customerObj.getContactNumber());
+				subscribedCustomerObj.setEmailId(customerObj.getEmailId());
+				subscribedCustomerObj.setEnquiryID(customerObj.getEnquiryId());
+				subscribedCustomerObj.setStudentGrades(customerObj.getStudentGrade());
+				subscribedCustomerObj.setInterestedSubjects(customerObj.getSubjects());
+				subscribedCustomerObj.setLocation(customerObj.getLocation());
+				subscribedCustomerObj.setAdditionalDetails(customerObj.getAdditionalDetails());
+				subscribedCustomerObj.setAddressDetails(customerObj.getAddressDetails());
+				subscribedCustomerObj.setEncryptedPassword(encryptedTemporaryPassword);
+				subscribedCustomerObj.setUserId(customerObj.getEmailId());
+				customerService.feedSubscribedCustomerRecords(subscribedCustomerObj);
+				customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
+				customerService.updateFindTutorForDataMigrated(subscribedCustomerObj.getEnquiryID());
+			}
+			lockService.releaseLock("executeSubscribedCustomerJob", key);
+		}
+	}
+	
 }
