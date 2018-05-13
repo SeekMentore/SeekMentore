@@ -156,11 +156,11 @@ public class LoginService implements LoginConstants {
 		params.put("encryptedPassword", encryptedNewPassword);
 		switch(userType) {
 			case "Admin" : {
-				applicationDao.executeUpdate("UPDATE EMPLOYEE SET ENCYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				applicationDao.executeUpdate("UPDATE EMPLOYEE SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}
 			case "Tutor" : {
-				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}
 			default	: {
