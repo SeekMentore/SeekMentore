@@ -3,10 +3,10 @@ package com.model.components;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.constants.components.publicaccess.SubscribedCustomerConstants;
+import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
 
-public class SubscribedCustomer implements Serializable, SubscribedCustomerConstants, ApplicationWorkbookObject {
+public class SubscribedCustomer implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long customerId;

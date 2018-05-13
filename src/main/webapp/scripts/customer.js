@@ -37,8 +37,10 @@ function showLoadedRecord(response) {
 function prepareUpdateParams() {
 	var form = {
 			studentGrades           	: getAttributeValue('form-student-grades', true),
-			interestedSubjects			: getAttributeValue('form-subjects', true),
-			location 	            	: getAttributeValue('form-comfortable-locations', true)
+			interestedSubjects		: getAttributeValue('form-subjects', true),
+			location 	            	: getAttributeValue('form-comfortable-locations', true),
+			additionalDetails 		: getAttributeValue('form-additional-details', false),
+			addressDetails                  : getAttributeValue('form-address-details', false)
 		};
 	return form;
 }

@@ -1,10 +1,13 @@
 package com.service.components;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -12,20 +15,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.components.AdminConstants;
+import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
-import com.constants.components.publicaccess.SubscribedCustomerConstants;
+import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
+import com.model.components.SubscribedCustomer;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
+import com.model.components.publicaccess.FindTutor;
+import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.ApplicationUtils;
+import com.utils.FileSystemUtils;
+import com.utils.MailUtils;
+import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
+import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE)
-	public class CustomerService implements SubscribedCustomerConstants{
+	public class CustomerService implements CustomerConstants{
 
 	@Autowired
 	private transient ApplicationDao applicationDao;
+	
+	@Autowired
+	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@Autowired
 	private transient CommonsService commonsService;
@@ -103,6 +122,11 @@ import com.utils.ValidationUtils;
 		subscriberCustomerObj.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscriberCustomerObj.getLocation(), true, delimiter));
 	}
 	
+	private void replaceNullWithBlankRemarksInSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
+		subscriberCustomerObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAdditionalDetails()));
+		subscriberCustomerObj.setAddressDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAddressDetails()));
+	}
+	
 	public void removeAllSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
 		subscriberCustomerObj.setEnquiryID(null);
@@ -121,6 +145,16 @@ import com.utils.ValidationUtils;
 	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
 		tutorDocumentObj.setWhoActed(null);
 		tutorDocumentObj.setActionDate(null);
+	}
+	@Transactional
+	public List<FindTutor> getNonSubscribedCustomer(final int numberOfRecords) {
+		return applicationDao.findAllWithoutParams("SELECT * FROM FIND_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new FindTutorRowMapper());
+	}
+	@Transactional
+	public void updateFindTutorForDataMigrated(final Long enquiryId) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		applicationDao.executeUpdate("UPDATE FIND_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId", paramsMap);
 	}
 	
 	/*
@@ -145,5 +179,44 @@ import com.utils.ValidationUtils;
 		response.put("subscribedCustomerObj", subscribedCustomerObj);
 		return response;
 	}
+	
+	@Transactional
+	public List<FindTutor> getSelectedTutorRegistrations(final int numberOfRecords) {
+		return applicationDao.findAllWithoutParams("SELECT * FROM FIND_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new FindTutorRowMapper());
+	}
+	
+
+	@Transactional
+	public void feedSubscribedCustomerRecords(final SubscribedCustomer subscribedCustomerObj) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("name", subscribedCustomerObj.getName());
+		paramsMap.put("contactNumber", subscribedCustomerObj.getContactNumber());
+		paramsMap.put("emailId", subscribedCustomerObj.getEmailId());
+		paramsMap.put("enquiryId", subscribedCustomerObj.getEnquiryID());
+		paramsMap.put("studentGrades", subscribedCustomerObj.getStudentGrades());
+		paramsMap.put("subjects", subscribedCustomerObj.getInterestedSubjects());
+		paramsMap.put("location", subscribedCustomerObj.getLocation());
+		paramsMap.put("additionalDetails", subscribedCustomerObj.getAdditionalDetails());
+		paramsMap.put("addressDetails", subscribedCustomerObj.getAddressDetails());
+		paramsMap.put("encryptedPassword", subscribedCustomerObj.getEncryptedPassword());
+		paramsMap.put("userId", subscribedCustomerObj.getUserId());
+		applicationDao.executeUpdate("INSERT INTO SUBSCRIBED_CUSTOMER(NAME, CONTACT_NUMBER, EMAIL_ID, ENQUIRY_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID) VALUES(:name, :contactNumber, :emailId, :enquiryId, :studentGrades, :subjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId)", paramsMap);
+	}
+	
+	public void sendProfileGenerationEmailToCustomer(final SubscribedCustomer subscribedCustomerObj, final String temporaryPassword) throws Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("addressName", subscribedCustomerObj.getName());
+		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+		attributes.put("userId", subscribedCustomerObj.getUserId());
+		attributes.put("temporaryPassword", temporaryPassword);
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				null,
+				"Your Seek Mentore Student profile is created", 
+				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes),
+				null);
+	}
+
 	
 }
