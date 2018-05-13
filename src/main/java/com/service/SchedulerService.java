@@ -119,7 +119,7 @@ public class SchedulerService implements SchedulerConstants {
 				registeredTutorObj.setComfortableLocations(tutorObj.getLocations());
 				registeredTutorObj.setPreferredTeachingType(tutorObj.getPreferredTeachingType());
 				registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
-				registeredTutorObj.setEncyptedPassword(encryptedTemporaryPassword);
+				registeredTutorObj.setEncryptedPassword(encryptedTemporaryPassword);
 				registeredTutorObj.setUserId(tutorObj.getEmailId());
 				tutorService.feedRegisteredTutorRecords(registeredTutorObj);
 				tutorService.sendProfileGenerationEmailToTutor(registeredTutorObj, generateTemporaryPassword);

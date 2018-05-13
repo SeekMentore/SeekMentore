@@ -19,7 +19,7 @@ public class SubscribedCustomer implements Serializable, SubscribedCustomerConst
 	private String location;
 	private String additionalDetails;
 	private String addressDetails;
-	private String encyptedPassword;
+	private String encryptedPassword;
 	private String userId;
 	private Date recordLastUpdated;
 	private String updatedBy;
@@ -38,7 +38,7 @@ public class SubscribedCustomer implements Serializable, SubscribedCustomerConst
 		newInstance.location = location;
 		newInstance.additionalDetails = additionalDetails;
 		newInstance.addressDetails = addressDetails;
-		newInstance.encyptedPassword = encyptedPassword;
+		newInstance.encryptedPassword = encryptedPassword;
 		newInstance.userId = userId;
 		newInstance.recordLastUpdated = recordLastUpdated;
 		newInstance.updatedBy = updatedBy;
@@ -90,7 +90,7 @@ public class SubscribedCustomer implements Serializable, SubscribedCustomerConst
 	}
 
 	public void setStudentGrades(String studentGrades) {
-		studentGrades = studentGrades;
+		this.studentGrades = studentGrades;
 	}
 
 	public String getInterestedSubjects() {
@@ -125,12 +125,12 @@ public class SubscribedCustomer implements Serializable, SubscribedCustomerConst
 		this.addressDetails = addressDetails;
 	}
 
-	public String getEncyptedPassword() {
-		return encyptedPassword;
+	public String getEncryptedPassword() {
+		return encryptedPassword;
 	}
 
-	public void setEncyptedPassword(String encyptedPassword) {
-		this.encyptedPassword = encyptedPassword;
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 
 	public String getUserId() {

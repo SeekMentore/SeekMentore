@@ -12,7 +12,7 @@ import com.utils.ExceptionUtils;
 
 public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer>, SubscribedCustomerConstants {
 
-	@Override
+	@Override 
 	public SubscribedCustomer mapRow(ResultSet row, int rowNum) throws SQLException {
 		final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
 		subscribedCustomer.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, "CUSTOMER_ID", Long.class));
@@ -27,7 +27,7 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDRESS_DETAILS", String.class));
 		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, "RECORD_LAST_UPDATED", Date.class));
 		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
-		subscribedCustomer.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCYPTED_PASSWORD", String.class));
+		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
 		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, "UPDATED_BY", String.class));
 		return subscribedCustomer;
 	}

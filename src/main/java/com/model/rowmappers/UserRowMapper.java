@@ -16,7 +16,7 @@ public class UserRowMapper implements RowMapper<User> {
 		user.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, "NAME", String.class));
 		user.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
 		user.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_TYPE", String.class));
-		user.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCYPTED_PASSWORD", String.class));
+		user.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
 		return user;
 	}
 

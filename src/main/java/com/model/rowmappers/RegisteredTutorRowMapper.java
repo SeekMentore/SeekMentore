@@ -31,7 +31,7 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 		registeredTutor.setPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, "PREFERRED_TEACHING_TYPE", String.class));
 		registeredTutor.setComfortableLocations(ExceptionUtils.exceptionHandlerForRowMapper(row, "COMFORTABLE_LOCATIONS", String.class));
 		registeredTutor.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDITIONAL_DETAILS", String.class));
-		registeredTutor.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCYPTED_PASSWORD", String.class));
+		registeredTutor.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
 		registeredTutor.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, "RECORD_LAST_UPDATED", Date.class));
 		registeredTutor.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
 		registeredTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, "UPDATED_BY", String.class));

@@ -10,7 +10,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
@@ -22,12 +22,11 @@ import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
+
+@Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_CUSTOMER) 
 public class CustomerRestService extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
-	private Long customerId;
-	private String remarks;
-	private String name;
 	
 	@Path(REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})

@@ -17,6 +17,7 @@ public class EmployeeRowMapper implements RowMapper<Employee> {
 		employee.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, "NAME", String.class));
 		employee.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
 		employee.setEmailDomain(ExceptionUtils.exceptionHandlerForRowMapper(row, "EMAIL_DOMAIN", String.class));
+		employee.setEncyptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
 		employee.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_TYPE", String.class));
 		return employee;
 	}

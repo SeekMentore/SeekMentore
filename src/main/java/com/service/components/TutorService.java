@@ -93,9 +93,9 @@ public class TutorService implements TutorConstants {
 		paramsMap.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
 		paramsMap.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
 		paramsMap.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
-		paramsMap.put("encyptedPassword", registeredTutorObj.getEncyptedPassword());
+		paramsMap.put("encryptedPassword", registeredTutorObj.getEncryptedPassword());
 		paramsMap.put("userId", registeredTutorObj.getUserId());
-		applicationDao.executeUpdate("INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encyptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)", paramsMap);
 	}
 	
 	public void sendProfileGenerationEmailToTutor(final RegisteredTutor registeredTutorObj, final String temporaryPassword) throws Exception {
@@ -258,7 +258,7 @@ public class TutorService implements TutorConstants {
 	public void removeAllSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
 		registeredTutorObj.setTutorId(null);
 		registeredTutorObj.setTentativeTutorId(null);
-		registeredTutorObj.setEncyptedPassword(null);
+		registeredTutorObj.setEncryptedPassword(null);
 		registeredTutorObj.setUserId(null);
 		registeredTutorObj.setRecordLastUpdated(null);
 		registeredTutorObj.setUpdatedBy(null);
@@ -266,7 +266,7 @@ public class TutorService implements TutorConstants {
 	
 	public void removeUltraSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
 		registeredTutorObj.setTentativeTutorId(null);
-		registeredTutorObj.setEncyptedPassword(null);
+		registeredTutorObj.setEncryptedPassword(null);
 	}
 
 	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {

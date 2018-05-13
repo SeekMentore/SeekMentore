@@ -1,13 +1,10 @@
 package com.service.components;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,37 +12,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
-import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
-import com.constants.components.TutorConstants;
 import com.constants.components.publicaccess.SubscribedCustomerConstants;
 import com.dao.ApplicationDao;
-import com.model.WorkbookReport;
-import com.model.components.RegisteredTutor;
-import com.model.components.SubscribedCustomer;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
-import com.model.components.publicaccess.FindTutor;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
-import com.model.rowmappers.SubscribedCustomerRowMapper;
-import com.service.JNDIandControlConfigurationLoadService;
-import com.utils.ApplicationUtils;
-import com.utils.FileSystemUtils;
-import com.utils.MailUtils;
-import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
-import com.utils.VelocityUtils;
-import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE)
 	public class CustomerService implements SubscribedCustomerConstants{
 
 	@Autowired
 	private transient ApplicationDao applicationDao;
-	
-	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@Autowired
 	private transient CommonsService commonsService;
@@ -123,15 +103,10 @@ import com.utils.WorkbookUtils;
 		subscriberCustomerObj.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscriberCustomerObj.getLocation(), true, delimiter));
 	}
 	
-	private void replaceNullWithBlankRemarksInSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
-		subscriberCustomerObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAdditionalDetails()));
-		subscriberCustomerObj.setAddressDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAddressDetails()));
-	}
-	
 	public void removeAllSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
 		subscriberCustomerObj.setEnquiryID(null);
-		subscriberCustomerObj.setEncyptedPassword(null);
+		subscriberCustomerObj.setEncryptedPassword(null);
 		subscriberCustomerObj.setUserId(null);
 		subscriberCustomerObj.setRecordLastUpdated(null);
 		subscriberCustomerObj.setUpdatedBy(null);
@@ -139,7 +114,7 @@ import com.utils.WorkbookUtils;
 	
 	public void removeUltraSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
-		subscriberCustomerObj.setEncyptedPassword(null);
+		subscriberCustomerObj.setEncryptedPassword(null);
 		subscriberCustomerObj.setEnquiryID(null);
 	}
 

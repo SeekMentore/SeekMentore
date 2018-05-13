@@ -10,6 +10,7 @@ public class Employee implements Serializable {
 	private String name;
 	private String userId;
 	private String emailDomain;
+	private String encyptedPassword;
 	private String userType;
 	
 	public Employee getACopy() {
@@ -60,6 +61,14 @@ public class Employee implements Serializable {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+
+	public String getEncyptedPassword() {
+		return encyptedPassword;
+	}
+
+	public void setEncyptedPassword(String encyptedPassword) {
+		this.encyptedPassword = encyptedPassword;
 	}
 	
 }

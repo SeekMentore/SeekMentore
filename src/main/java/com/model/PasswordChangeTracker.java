@@ -13,8 +13,8 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 	private Timestamp changeTime;
 	private String userType;
 	private String userId;
-	private String encyptedPasswordOld;
-	private String encyptedPasswordNew;
+	private String encryptedPasswordOld;
+	private String encryptedPasswordNew;
 	
 	public PasswordChangeTracker() {}
 
@@ -50,20 +50,20 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 		this.changeTime = changeTime;
 	}
 
-	public String getEncyptedPasswordOld() {
-		return encyptedPasswordOld;
+	public String getEncryptedPasswordOld() {
+		return encryptedPasswordOld;
 	}
 
-	public void setEncyptedPasswordOld(String encyptedPasswordOld) {
-		this.encyptedPasswordOld = encyptedPasswordOld;
+	public void setEncryptedPasswordOld(String encryptedPasswordOld) {
+		this.encryptedPasswordOld = encryptedPasswordOld;
 	}
 
-	public String getEncyptedPasswordNew() {
-		return encyptedPasswordNew;
+	public String getEncryptedPasswordNew() {
+		return encryptedPasswordNew;
 	}
 
-	public void setEncyptedPasswordNew(String encyptedPasswordNew) {
-		this.encyptedPasswordNew = encyptedPasswordNew;
+	public void setEncryptedPasswordNew(String encryptedPasswordNew) {
+		this.encryptedPasswordNew = encryptedPasswordNew;
 	}
 	
 }

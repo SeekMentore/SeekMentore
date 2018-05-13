@@ -25,7 +25,7 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 	private String interestedSubjects;
 	private String comfortableLocations;
 	private String additionalDetails;
-	private String encyptedPassword;
+	private String encryptedPassword;
 	private String userId;
 	private Date recordLastUpdated;
 	private String updatedBy;
@@ -51,7 +51,7 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 		newInstance.interestedSubjects = interestedSubjects;
 		newInstance.comfortableLocations = comfortableLocations;
 		newInstance.additionalDetails = additionalDetails;
-		newInstance.encyptedPassword = encyptedPassword;
+		newInstance.encryptedPassword = encryptedPassword;
 		newInstance.userId = userId;
 		newInstance.recordLastUpdated = recordLastUpdated;
 		newInstance.updatedBy = updatedBy;
@@ -147,12 +147,12 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 		this.additionalDetails = additionalDetails;
 	}
 
-	public String getEncyptedPassword() {
-		return encyptedPassword;
+	public String getEncryptedPassword() {
+		return encryptedPassword;
 	}
 
-	public void setEncyptedPassword(String encyptedPassword) {
-		this.encyptedPassword = encyptedPassword;
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 
 	public String getUserId() {
