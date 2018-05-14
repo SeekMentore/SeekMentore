@@ -4,11 +4,11 @@ customerListMap.selectedGrid = 'none';
 function createCustomerNavigatorObject(customerListResponse) {
 	var obj =	{
 		currentIndex 	: 0,
-		customerList		: customerListResponse,
+		customerList	: customerListResponse,
 		
 		getCurrentCustomerRecord	: function() {
-			if (null != this.customerListResponse && this.customerListResponse.length > 0)
-				return this.customerListResponse[this.currentIndex];
+			if (null != this.customerList && this.customerList.length > 0)
+				return this.customerList[this.currentIndex];
 			else 
 				return null;
 		},
@@ -17,13 +17,13 @@ function createCustomerNavigatorObject(customerListResponse) {
 			if (this.currentIndex > 0) {
 				this.currentIndex--;
 			} else {
-				this.currentIndex = this.customerListResponse.length - 1;
+				this.currentIndex = this.customerList.length - 1;
 			}
 			return this.getCurrentCustomerRecord();
 		},
 		
 		nextCustomerRecord			: function() {
-			if (this.currentIndex < this.customerListResponse.length - 1) {
+			if (this.currentIndex < this.customerList.length - 1) {
 				this.currentIndex++;
 			} else {
 				this.currentIndex = 0;
@@ -31,8 +31,8 @@ function createCustomerNavigatorObject(customerListResponse) {
 			return this.getCurrentCustomerRecord();
 		},
 		
-		getCurrentCustomerRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.customerListResponse.length) {
+		getParticularCustomerRecord	: function(recordNumber) {
+			if (recordNumber >= 0 && recordNumber < this.customerList.length) {
 				this.currentIndex = recordNumber;
 				return this.getCurrentCustomerRecord();
 			}
@@ -40,19 +40,19 @@ function createCustomerNavigatorObject(customerListResponse) {
 		},
 		
 		getList : function() {
-			return this.customerListResponse;
+			return this.customerList;
 		},
 		
 		getRecordCount : function() {
-			if (null != this.customerListResponse && this.customerListResponse.length > 0)
-				return this.customerListResponse.length;
+			if (null != this.customerList && this.customerList.length > 0)
+				return this.customerList.length;
 			else 
 				return 0;
 		},
 		
 		getListItem : function(index) {
-			if (null != this.customerListResponse && this.customerListResponse.length > 0)
-				return this.customerListResponse[index];
+			if (null != this.customerList && this.customerList.length > 0)
+				return this.customerList[index];
 			else 
 				return null;
 		}
@@ -61,14 +61,17 @@ function createCustomerNavigatorObject(customerListResponse) {
 }
 
 function showCustomerWithPendingEnquiries(response) {
+	window.pending = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'customers-with-pending-enquiries');
 }
 
 function showCustomerWithMappedEnquiries(response) {
+	window.mapped = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'customers-with-mapped-enquiries');
 }
 
 function showCustomerWithAbandonedEnquiries(response) {
+	window.abandoned = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'customers-with-abandoned-enquiries');
 }
 
@@ -85,7 +88,7 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 		html +='</tr>';
 	}
 	$('#'+gridName+'-records').html(html);
-	$('#'+gridName+'-total-records').html('Total Records = ' + tutorNavigatorObject.getRecordCount());
+	$('#'+gridName+'-total-records').html('Total Records = ' + customerNavigatorObject.getRecordCount());
 }
 
 function hideAllCustomersEnquiriesPage() {
@@ -107,21 +110,21 @@ function openTutorRecord(customerObj) {
 		$('#ADDRESS_DETAILS').html(showValue(customerObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(customerObj.additionalDetails));
 		
-		replacePlaceHoldersForEmailPanel(showValue(tutorObj.emailId), showValue(customerObj.name));
+		replacePlaceHoldersForEmailPanel(showValue(customerObj.emailId), showValue(customerObj.name));
 	} 
 }
 
 function previousCustomerRecord() {
-	openTutorRecord(tutorListMap[customerListMap.selectedGrid].previousCustomerRecord());
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].previousCustomerRecord());
 }
 
 function nextCustomerRecord() {
-	openTutorRecord(tutorListMap[customerListMap.selectedGrid].nextCustomerRecord());
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].nextCustomerRecord());
 }
 
 function getParticularCustomerRecord(gridName, recordNumber) {
 	customerListMap.selectedGrid = gridName;
-	openTutorRecord(customerListMap[customerListMap.selectedGrid].getCurrentCustomerRecord(recordNumber));
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].getParticularCustomerRecord(recordNumber));
 }
 
 function loadGrids() {
