@@ -151,4 +151,63 @@ function getDateValue(value) {
 	return null;
 }
 
+function createNavigatorObject(inputList) {
+	var obj =	{
+		currentIndex 	: 0,
+		list			: inputList,
+		
+		getCurrentRecord	: function() {
+			if (null != this.list && this.list.length > 0)
+				return this.list[this.currentIndex];
+			else 
+				return null;
+		},
+		
+		previousRecord		: function() {
+			if (this.currentIndex > 0) {
+				this.currentIndex--;
+			} else {
+				this.currentIndex = this.list.length - 1;
+			}
+			return this.getCurrentRecord();
+		},
+		
+		nextRecord			: function() {
+			if (this.currentIndex < this.list.length - 1) {
+				this.currentIndex++;
+			} else {
+				this.currentIndex = 0;
+			}
+			return this.getCurrentRecord();
+		},
+		
+		getParticularRecord	: function(recordNumber) {
+			if (recordNumber >= 0 && recordNumber < this.list.length) {
+				this.currentIndex = recordNumber;
+				return this.getCurrentRecord();
+			}
+			return null;
+		},
+		
+		getList : function() {
+			return this.list;
+		},
+		
+		getRecordCount : function() {
+			if (null != this.list && this.list.length > 0)
+				return this.list.length;
+			else 
+				return 0;
+		},
+		
+		getListItem : function(index) {
+			if (null != this.list && this.list.length > 0)
+				return this.list[index];
+			else 
+				return null;
+		}
+	}
+	return obj;
+}
+
 readGetParameters();

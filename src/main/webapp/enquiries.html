@@ -145,12 +145,6 @@
 			<table align="center" class="">
 				<tr>
 					<th class="center-align">
-						<button 
-							type="button" 
-							onClick="downloadProfile()"
-							class="form-element submit-button button-green" >
-							Download Tutor Profile
-						</button> 
 					</th>
 				</tr>
 			</table>
@@ -165,6 +159,48 @@
 		</table>
 	</div>
 	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records no-border">
+			<tr>
+				<th>
+					<a href="admin.html">&lt;&lt;Back to Admin</a> 
+				</th>
+				<th class="center-align">
+					<button 
+						type="button" 
+						onClick="downloadReport()"
+						class="form-element submit-button button-green" >
+						Download Report
+					</button> 
+				</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<div id="all-enquiries-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>All Enquiries</th>
+					<th id="all-enquiries-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Subject</th>
+						<th>Grade</th>
+						<th>Location</th>
+					</tr>
+				</thead>
+				<tbody id="all-enquiries-tutor-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<BR/>
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">

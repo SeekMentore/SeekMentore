@@ -1,70 +1,11 @@
-var tutorNavigatorObject;
-
-function createTutorNavigatorObject(tutorListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		tutorList		: tutorListResponse,
-		
-		getCurrentTutorRecord	: function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousTutorRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.tutorList.length - 1;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		nextTutorRecord			: function() {
-			if (this.currentIndex < this.tutorList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		getParticularTutorRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.tutorList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentTutorRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.tutorList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
+var tutorNavigatorObject = new Object();
 
 function showRegisteredTutors(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response);
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response) {
-	tutorNavigatorObject = createTutorNavigatorObject(response);
+	tutorNavigatorObject = createNavigatorObject(response);
 	var html ='';
 	for (var i=0;i < tutorNavigatorObject.getRecordCount(); i++) {
 		var tutorObj = tutorNavigatorObject.getListItem(i);
@@ -79,15 +20,15 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response) {
 }
 
 function previousTutorRecord() {
-	openTutorRecord(tutorNavigatorObject.previousTutorRecord());
+	openTutorRecord(tutorNavigatorObject.previousRecord());
 }
 
 function nextTutorRecord() {
-	openTutorRecord(tutorNavigatorObject.nextTutorRecord());
+	openTutorRecord(tutorNavigatorObject.nextRecord());
 }
 
 function getParticularTutorRecord(recordNumber) {
-	openTutorRecord(tutorNavigatorObject.getParticularTutorRecord(recordNumber));
+	openTutorRecord(tutorNavigatorObject.getParticularRecord(recordNumber));
 }
 
 function hideTutorAllRecordsPage() {
@@ -129,7 +70,7 @@ function openTutorRecord(tutorObj) {
 
 var documentTypeIndexMap = new Object();
 function prepareDocumentSection() {
-	var tutorDocuments = tutorNavigatorObject.getCurrentTutorRecord().documents;
+	var tutorDocuments = tutorNavigatorObject.getCurrentRecord().documents;
 	$('#inputFilePhoto-absent').removeClass('noscreen');
 	$('.inputFilePhoto-reminder').removeClass('noscreen');
 	$('#inputFilePhoto-link').addClass('noscreen');

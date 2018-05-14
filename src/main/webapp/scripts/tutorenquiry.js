@@ -1,65 +1,6 @@
 var enquiryListMap = new Object();
 enquiryListMap.selectedGrid = 'none';
 
-function createEnquiryNavigatorObject(enquiryListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		enquiryList		: enquiryListResponse,
-		
-		getCurrentEnquiryRecord	: function() {
-			if (null != this.enquiryList && this.enquiryList.length > 0)
-				return this.enquiryList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousEnquiryRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.enquiryList.length - 1;
-			}
-			return this.getCurrentEnquiryRecord();
-		},
-		
-		nextEnquiryRecord			: function() {
-			if (this.currentIndex < this.enquiryList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentEnquiryRecord();
-		},
-		
-		getParticularEnquiryRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.enquiryList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentEnquiryRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.enquiryList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.enquiryList && this.enquiryList.length > 0)
-				return this.enquiryList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.enquiryList && this.enquiryList.length > 0)
-				return this.enquiryList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
-
 function showNonContactedEnquiryRecords(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
@@ -89,7 +30,7 @@ function showRejectedEnquiryRecords(response) {
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
-	enquiryListMap[gridName] = createEnquiryNavigatorObject(response);
+	enquiryListMap[gridName] = createNavigatorObject(response);
 	var enquiryNavigatorObject = enquiryListMap[gridName];
 	var html ='';
 	for (var i=0;i < enquiryNavigatorObject.getRecordCount(); i++) {
@@ -105,16 +46,16 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 }
 
 function previousEnquiryRecord() {
-	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].previousEnquiryRecord());
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].previousRecord());
 }
 
 function nextEnquiryRecord() {
-	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].nextEnquiryRecord());
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].nextRecord());
 }
 
 function getParticularEnquiryRecord(gridName, recordNumber) {
 	enquiryListMap.selectedGrid = gridName;
-	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].getParticularEnquiryRecord(recordNumber));
+	openEnquiryRecord(enquiryListMap[enquiryListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function hideEnquiryAllRecordsPage() {

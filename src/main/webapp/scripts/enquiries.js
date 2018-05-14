@@ -1,65 +1,6 @@
 var customerListMap = new Object();
 customerListMap.selectedGrid = 'none';
 
-function createCustomerNavigatorObject(customerListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		customerList	: customerListResponse,
-		
-		getCurrentCustomerRecord	: function() {
-			if (null != this.customerList && this.customerList.length > 0)
-				return this.customerList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousCustomerRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.customerList.length - 1;
-			}
-			return this.getCurrentCustomerRecord();
-		},
-		
-		nextCustomerRecord			: function() {
-			if (this.currentIndex < this.customerList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentCustomerRecord();
-		},
-		
-		getParticularCustomerRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.customerList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentCustomerRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.customerList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.customerList && this.customerList.length > 0)
-				return this.customerList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.customerList && this.customerList.length > 0)
-				return this.customerList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
-
 function showCustomerWithPendingEnquiries(response) {
 	window.pending = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'customers-with-pending-enquiries');
@@ -76,7 +17,7 @@ function showCustomerWithAbandonedEnquiries(response) {
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
-	customerListMap[gridName] = createCustomerNavigatorObject(response);
+	customerListMap[gridName] = createNavigatorObject(response);
 	var customerNavigatorObject = customerListMap[gridName];
 	var html ='';
 	for (var i=0;i < customerNavigatorObject.getRecordCount(); i++) {
@@ -115,16 +56,16 @@ function openTutorRecord(customerObj) {
 }
 
 function previousCustomerRecord() {
-	openTutorRecord(customerListMap[customerListMap.selectedGrid].previousCustomerRecord());
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].previousRecord());
 }
 
 function nextCustomerRecord() {
-	openTutorRecord(customerListMap[customerListMap.selectedGrid].nextCustomerRecord());
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].nextRecord());
 }
 
 function getParticularCustomerRecord(gridName, recordNumber) {
 	customerListMap.selectedGrid = gridName;
-	openTutorRecord(customerListMap[customerListMap.selectedGrid].getParticularCustomerRecord(recordNumber));
+	openTutorRecord(customerListMap[customerListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function loadGrids() {

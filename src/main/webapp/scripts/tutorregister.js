@@ -1,65 +1,6 @@
 var tutorListMap = new Object();
 tutorListMap.selectedGrid = 'none';
 
-function createTutorNavigatorObject(tutorListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		tutorList		: tutorListResponse,
-		
-		getCurrentTutorRecord	: function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousTutorRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.tutorList.length - 1;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		nextTutorRecord			: function() {
-			if (this.currentIndex < this.tutorList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		getParticularTutorRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.tutorList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentTutorRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.tutorList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
-
 function showNonContactedTutorRecords(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
@@ -93,7 +34,7 @@ function showRegisteredTutorRecords(response) {
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
-	tutorListMap[gridName] = createTutorNavigatorObject(response);
+	tutorListMap[gridName] = createNavigatorObject(response);
 	var tutorNavigatorObject = tutorListMap[gridName];
 	var html ='';
 	for (var i=0;i < tutorNavigatorObject.getRecordCount(); i++) {
@@ -109,16 +50,16 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 }
 
 function previousTutorRecord() {
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].previousTutorRecord());
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].previousRecord());
 }
 
 function nextTutorRecord() {
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].nextTutorRecord());
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].nextRecord());
 }
 
 function getParticularTutorRecord(gridName, recordNumber) {
 	tutorListMap.selectedGrid = gridName;
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].getParticularTutorRecord(recordNumber));
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function hideTutorAllRecordsPage() {
