@@ -20,8 +20,9 @@
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
 		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
-		<page id="subscribewithusadmin" url="/subscribewithusadmin.html" pageAccessType="A"></page>
+		<page id="subscribewithus" url="/subscribewithus.html" pageAccessType="A"></page>
 		<page id="registeredtutor" url="/registeredtutor.html" pageAccessType="A"></page>
+		<page id="enquiries" url="/enquiries.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
@@ -60,6 +61,12 @@
 			<webservice id="downloadAdminReportSubscriptions" url="/downloadAdminReportSubscriptions"></webservice>
 			<webservice id="downloadAdminIndividualSubscriptionProfilePdf" url="/downloadAdminIndividualSubscriptionProfilePdf"></webservice>
 			<!-- Subscription Admin -->
+		</page>
+		<page id="enquiryRest" url="/rest/enquiry" pageAccessType="A">
+			<!-- Customer Enquiry Admin -->
+			<webservice id="displayCustomerWithPendingEnquiries" url="/displayCustomerWithPendingEnquiries"></webservice>
+			<webservice id="displayCustomerWithMappedEnquiries" url="/displayCustomerWithMappedEnquiries"></webservice>
+			<webservice id="displayCustomerWithAbandonedEnquiries" url="/displayCustomerWithAbandonedEnquiries"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">

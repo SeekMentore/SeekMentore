@@ -1,13 +1,10 @@
 package com.service.components;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,27 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
-import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
-import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
-import com.model.components.SubscribedCustomer;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.FindTutor;
 import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
-import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
-import com.utils.ApplicationUtils;
-import com.utils.FileSystemUtils;
 import com.utils.MailUtils;
-import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
-import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE)
 	public class CustomerService implements CustomerConstants{
@@ -122,11 +111,6 @@ import com.utils.WorkbookUtils;
 		subscriberCustomerObj.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscriberCustomerObj.getLocation(), true, delimiter));
 	}
 	
-	private void replaceNullWithBlankRemarksInSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
-		subscriberCustomerObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAdditionalDetails()));
-		subscriberCustomerObj.setAddressDetails(ApplicationUtils.returnBlankIfStringNull(subscriberCustomerObj.getAddressDetails()));
-	}
-	
 	public void removeAllSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
 		subscriberCustomerObj.setEnquiryID(null);
@@ -187,7 +171,7 @@ import com.utils.WorkbookUtils;
 	
 
 	@Transactional
-	public void feedSubscribedCustomerRecords(final SubscribedCustomer subscribedCustomerObj) {
+	public Long feedSubscribedCustomerRecords(final SubscribedCustomer subscribedCustomerObj) {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("name", subscribedCustomerObj.getName());
 		paramsMap.put("contactNumber", subscribedCustomerObj.getContactNumber());
@@ -200,7 +184,7 @@ import com.utils.WorkbookUtils;
 		paramsMap.put("addressDetails", subscribedCustomerObj.getAddressDetails());
 		paramsMap.put("encryptedPassword", subscribedCustomerObj.getEncryptedPassword());
 		paramsMap.put("userId", subscribedCustomerObj.getUserId());
-		applicationDao.executeUpdate("INSERT INTO SUBSCRIBED_CUSTOMER(NAME, CONTACT_NUMBER, EMAIL_ID, ENQUIRY_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID) VALUES(:name, :contactNumber, :emailId, :enquiryId, :studentGrades, :subjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId)", paramsMap);
+		return applicationDao.insertAndReturnGeneratedKey("INSERT INTO SUBSCRIBED_CUSTOMER(NAME, CONTACT_NUMBER, EMAIL_ID, ENQUIRY_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID) VALUES(:name, :contactNumber, :emailId, :enquiryId, :studentGrades, :subjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId)", paramsMap);
 	}
 	
 	public void sendProfileGenerationEmailToCustomer(final SubscribedCustomer subscribedCustomerObj, final String temporaryPassword) throws Exception {
@@ -213,7 +197,7 @@ import com.utils.WorkbookUtils;
 				subscribedCustomerObj.getEmailId(), 
 				null,
 				null,
-				"Your Seek Mentore Student profile is created", 
+				"Your Seek Mentore Customer profile is created", 
 				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes),
 				null);
 	}

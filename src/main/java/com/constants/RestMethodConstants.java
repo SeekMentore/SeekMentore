@@ -57,6 +57,10 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS = "/displaySelectedSubscriptions";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS = "/displayRejectedSubscriptions";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS = "/takeActionOnSubscriptions";
+	// Enquiry
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES = "/displayCustomerWithPendingEnquiries";
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES = "/displayCustomerWithMappedEnquiries";
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES = "/displayCustomerWithAbandonedEnquiries";
 	// Send Email
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods

@@ -79,7 +79,7 @@ public class ApplicationDao implements ApplicationConstants {
 		namedParameterJdbcTemplate.update(query, parameters);
     }
 	
-	public long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
+	public Long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -88,7 +88,7 @@ public class ApplicationDao implements ApplicationConstants {
 		namedParameterJdbcTemplate.update(query, parameters, keyHolder);
 		if (null != keyHolder.getKey())
 			return keyHolder.getKey().longValue();
-		return 0;
+		return null;
 	}
 	
 	private SqlParameterSource getSqlParameterSource(final Map<String, Object> params, final StringBuilder paramsString) {

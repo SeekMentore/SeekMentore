@@ -1,8 +1,8 @@
 package com.model.rowmappers;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -20,7 +20,7 @@ public class TutorDocumentRowMapper implements RowMapper<TutorDocument> {
 		tutorDocument.setFilename(ExceptionUtils.exceptionHandlerForRowMapper(row, "FILENAME", String.class));
 		tutorDocument.setIsApproved(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_APPROVED", String.class));
 		tutorDocument.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHO_ACTED", String.class));
-		tutorDocument.setActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ACTION_DATE", Timestamp.class));
+		tutorDocument.setActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ACTION_DATE", Date.class));
 		tutorDocument.setRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "REMARKS", String.class));
 		return tutorDocument;
 	}

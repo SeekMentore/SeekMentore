@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Admin - Enquiry Mapper</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info">
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Register</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithus.html" >Subscribe With Us</a>
+		    <a href="registeredtutor.html" >Registered Tutor</a>
+		    <a href="ennquiries.html" >All Enquiries</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="all-customers-with-enquiries-div">
+	<div id="download-report-div" class="w3-row-padding">
+		<Br/>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records no-border">
+				<tr>
+					<th>
+						<a href="admin.html">&lt;&lt;Back to Admin</a> 
+					</th>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="downloadReport()"
+							class="form-element submit-button button-green" >
+							Download Report
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">All Customer Enquiries Admin</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<div id="customers-with-pending-enquiries-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Customers With Pending Enquiries</th>
+					<th id="customers-with-pending-enquiries-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email Id</th>
+						<th>Contact Number</th>
+					</tr>
+				</thead>
+				<tbody id="customers-with-pending-enquiries-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="customers-with-mapped-enquiries-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Customers With Mapped Enquiries</th>
+					<th id="customers-with-mapped-enquiries-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email Id</th>
+						<th>Contact Number</th>
+					</tr>
+				</thead>
+				<tbody id="customers-with-mapped-enquiries-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="customers-with-abandoned-enquiries-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Customers With Abandoned Enquiries</th>
+					<th id="customers-with-abandoned-enquiries-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email Id</th>
+						<th>Contact Number</th>
+					</tr>
+				</thead>
+				<tbody id="customers-with-abandoned-enquiries-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div id="particular-customer-all-enquiries-div">
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousCustomerRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllCustomersEnquiriesPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextCustomerRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+	    <table align="center" class="all-records">
+	    	<tr>
+	    		<td>Name</td>
+	    		<td id="NAME"></td>
+	    	</tr>
+	    	<tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td id="CONTACT_NUMBER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td id="EMAIL_ID"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Address Details</td>
+	    		<td id="ADDRESS_DETAILS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td id="ADDITIONAL_DETAILS"></td>
+	    	</tr>
+		</table>
+   </div>
+</div>
+<BR/>
+<BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+  <!-- Modal content -->
+  <div class="modal-content">
+  	<div id="alert-title"></div>
+    <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+    <hr class="modal-line" />
+    <p id="notification-popup-model-content-section"></p>
+    <hr class="modal-line" />
+    <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/admin.js"></script>
+<script src="scripts/enquiries.js"></script>
+<script>
+	loadGrids();
+</script>
+</body>
+</html>

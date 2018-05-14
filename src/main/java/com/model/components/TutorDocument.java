@@ -1,7 +1,7 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.constants.components.SelectLookupConstants;
 
@@ -15,7 +15,7 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 	private String isApproved;
 	private String whoActed;
 	private String remarks;
-	private Timestamp actionDate;
+	private Date actionDate;
 	private byte[] content;
 	
 	public TutorDocument() {}
@@ -68,11 +68,11 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 		this.isApproved = isApproved;
 	}
 
-	public Timestamp getActionDate() {
+	public Date getActionDate() {
 		return actionDate;
 	}
 
-	public void setActionDate(Timestamp actionDate) {
+	public void setActionDate(Date actionDate) {
 		this.actionDate = actionDate;
 	}
 

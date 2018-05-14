@@ -1,5 +1,5 @@
 USE SEEK_MENTORE;
 
-ALTER table FIND_TUTOR add column IS_DATA_MIGRATED varchar(2);
-ALTER table FIND_TUTOR add column WHEN_MIGRATED timestamp;
+ALTER table FIND_TUTOR ADD COLUMN IS_DATA_MIGRATED VARCHAR(2);
+ALTER table FIND_TUTOR ADD COLUMN WHEN_MIGRATED TIMESTAMP;
 -- Executed till here In Prod Do not write any more create new file
