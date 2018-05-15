@@ -39,11 +39,15 @@ a {
 	border : 0px solid #000000 !important;
 }
 
+.responsive-width {
+	max-width: 50em !important;
+}
+
 table.all-records {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    max-width: 50em;
+    max-width: 70em;
     border: 1px solid #ddd;
 }
 

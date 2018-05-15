@@ -70,6 +70,7 @@
 			<webservice id="displayAllEnquiriesForParticularCustomer" url="/displayAllEnquiriesForParticularCustomer"></webservice>
 			<webservice id="getDropdownListDataForEnquiryDetails" url="/getDropdownListDataForEnquiryDetails"></webservice>
 			<webservice id="updateEnquiryDetails" url="/updateEnquiryDetails"></webservice>
+			<webservice id="displayAllEligibleTutors" url="/displayAllEligibleTutors"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">

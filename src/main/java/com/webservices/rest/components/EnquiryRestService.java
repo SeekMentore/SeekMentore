@@ -37,6 +37,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	private HttpServletRequest request;
 	private Long customerId;
 	private Long enquiryId;
+	private Long[] selectedEligibleTutorIdArray;
 	
 	@Path(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -131,6 +132,40 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_MAP_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String mapTutors (
+			@FormParam("enquiryId") final Long enquiryId,
+			@FormParam("selectedEligibleTutorIdSemicolonSeparatedList") final String selectedEligibleTutorIdSemicolonSeparatedList,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_MAP_TUTORS;
+		this.enquiryId = enquiryId;
+		this.selectedEligibleTutorId = selectedEligibleTutorIdSemicolonSeparatedList.split(SEMICOLON);
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String displayAllEligibleTutors (
+			@FormParam("enquiryId") final Long enquiryId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS;
+		this.enquiryId = enquiryId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
 	public EnquiryService getEnquiryService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE, EnquiryService.class);
 	}
@@ -156,7 +191,8 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 				handleParticularCustomerActionSecurity();
 				break;
 			}
-			case REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS : {
+			case REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS :
+			case REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS : {
 				handleParticularEnquirySecurity();
 				break;
 			}

@@ -1,6 +1,7 @@
 var customerListMap = new Object();
 customerListMap.selectedGrid = 'none';
 var particularCustomerEnquiryNavigatiorObject = new Object();
+var selectedEligibleTutorId = '';
 
 function showCustomerWithPendingEnquiries(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectListForCustomers(response, 'customers-with-pending-enquiries');
@@ -16,6 +17,10 @@ function showCustomerWithAbandonedEnquiries(response) {
 
 function showAllEnquiriesForParticularCustomer(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectListForEnquiries(response);
+}
+
+function showAllEligibleTutors(response) {
+	prepareHTMLToFillGridForEligibleTutors(response);
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectListForCustomers(response, gridName) {
@@ -47,6 +52,68 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectListForEnquiries(response)
 	}
 	$('#all-enquiries-records').html(html);
 	$('#all-enquiries-total-records').html('Total Records = ' + particularCustomerEnquiryNavigatiorObject.getRecordCount());
+}
+
+function prepareHTMLToFillGridForEligibleTutors(response) {
+	selectedEligibleTutorId = '';
+	var eligibleTutorListWithSubjectGradeLocationTeachingType = response.eligibleTutorListWithSubjectGradeLocationTeachingType;
+	var eligibleTutorListWithSubjectGradeLocation = response.eligibleTutorListWithSubjectGradeLocation;
+	var eligibleTutorListWithSubjectGrade = response.eligibleTutorListWithSubjectGrade;
+	var html ='';
+	for (var i=0;i < eligibleTutorListWithSubjectGradeLocationTeachingType.length; i++) {
+		var tutorObj = eligibleTutorListWithSubjectGradeLocationTeachingType[i];
+		html +='<tr>';
+		html += '<td>'+showValue(tutorObj.name)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedSubjects)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedStudentGrades)+ '</td>';
+		html += '<td>'+showValue(tutorObj.teachingExp)+ '</td>';
+		html += '<td>'+showValue(tutorObj.comfortableLocations)+ '</td>';
+		html += '<td>'+showValue(tutorObj.preferredTeachingType)+ '</td>';
+		html += '<td><input type="checkbox" onclick="toggleTutorIdForMapping(this,\''+tutorObj.tutorId+'\')" /></td>';
+		html +='</tr>';
+	}
+	$('#all-enquiries-records').html(html);
+	$('#all-eligible-tutors-with-subject-grade-location-and-teachingtype-total-records').html('Total Records = ' + eligibleTutorListWithSubjectGradeLocationTeachingType.length);
+	
+	var html ='';
+	for (var i=0;i < eligibleTutorListWithSubjectGradeLocation.length; i++) {
+		var tutorObj = eligibleTutorListWithSubjectGradeLocation[i];
+		html +='<tr>';
+		html += '<td>'+showValue(tutorObj.name)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedSubjects)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedStudentGrades)+ '</td>';
+		html += '<td>'+showValue(tutorObj.teachingExp)+ '</td>';
+		html += '<td>'+showValue(tutorObj.comfortableLocations)+ '</td>';
+		html += '<td>'+showValue(tutorObj.preferredTeachingType)+ '</td>';
+		html += '<td><input type="checkbox" onclick="toggleTutorIdForMapping(this,\''+tutorObj.tutorId+'\')" /></td>';
+		html +='</tr>';
+	}
+	$('#all-eligible-tutors-with-subject-grade-and-location-records').html(html);
+	$('#all-eligible-tutors-with-subject-grade-and-location-total-records').html('Total Records = ' + eligibleTutorListWithSubjectGradeLocation.length);
+	
+	var html ='';
+	for (var i=0;i < eligibleTutorListWithSubjectGrade.length; i++) {
+		var tutorObj = eligibleTutorListWithSubjectGrade[i];
+		html +='<tr>';
+		html += '<td>'+showValue(tutorObj.name)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedSubjects)+ '</td>';
+		html += '<td>'+showValue(tutorObj.interestedStudentGrades)+ '</td>';
+		html += '<td>'+showValue(tutorObj.teachingExp)+ '</td>';
+		html += '<td>'+showValue(tutorObj.comfortableLocations)+ '</td>';
+		html += '<td>'+showValue(tutorObj.preferredTeachingType)+ '</td>';
+		html += '<td><input type="checkbox" onclick="toggleTutorIdForMapping(this,\''+tutorObj.tutorId+'\')" /></td>';
+		html +='</tr>';
+	}
+	$('#all-eligible-tutors-with-subject-and-grade-records').html(html);
+	$('#all-eligible-tutors-with-subject-and-grade-total-records').html('Total Records = ' + eligibleTutorListWithSubjectGrade.length);
+}
+
+function toggleTutorIdForMapping(obj, tutorId) {
+	if (obj.checked) {
+		selectedEligibleTutorId += tutorId + ';';
+	} else {
+		selectedEligibleTutorId = selectedEligibleTutorId.replace(tutorId + ';', '');
+	}
 }
 
 function hideAllCustomersEnquiriesPage() {
@@ -135,6 +202,8 @@ function openEnquiryRecord(enquiryObject) {
 		$('#ENQUIRY_DETAILS_WHO_ACTED').html(showValue(enquiryObject.whoActed));
 		$('#ENQUIRY_DETAILS_LAST_ACTION_DATE').html(showValue(enquiryObject.lastActionDate));
 		$('#ENQUIRY_DETAILS_ADMIN_REMARKS').html(showValue(enquiryObject.adminRemarks));
+		
+		loadEligibleTutors();
 	} 
 }
 
@@ -192,6 +261,28 @@ function loadBackParticularCustomerAllEnquiries() {
 function resetEnquiryDetails() {
 	var form = document.getElementById('details-update-form');
 	form.reset();
+}
+
+function loadEligibleTutors() {
+	var data = { 
+		enquiryId: particularCustomerEnquiryNavigatiorObject.getCurrentRecord().enquiryId
+	}
+	callWebservice('/rest/enquiry/displayAllEligibleTutors', data, showAllEligibleTutors, null, null, 'application/x-www-form-urlencoded');
+}
+
+function mapTutors() {
+	var data = { 
+		enquiryId: particularCustomerEnquiryNavigatiorObject.getCurrentRecord().enquiryId,
+		selectedEligibleTutorIdSemicolonSeparatedList : selectedEligibleTutorId
+	}
+	successMessage = 'Tutors Mapped successfully.';
+	callbackAfterCommonSuccess = showAllMappedTutors;
+	callWebservice('/rest/enquiry/mapTutors', data, showAllMappedTutors, null, null, 'application/x-www-form-urlencoded');
+}
+
+function refreshTutorLists(response) {
+	showAllMappedTutors(response);
+	loadEligibleTutors();
 }
 
 function downloadReport() {

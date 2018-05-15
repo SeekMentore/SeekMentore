@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,11 @@ import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.EnquiryObject;
+import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.commons.SelectLookup;
 import com.model.rowmappers.EnquiryObjectRowMapper;
+import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.utils.ValidationUtils;
 
@@ -35,6 +38,9 @@ import com.utils.ValidationUtils;
 	
 	@Autowired
 	private transient CommonsService commonsService;
+	
+	@Autowired
+	private transient TutorService tutorService;
 	
 	@PostConstruct
 	public void init() {}
@@ -190,6 +196,54 @@ import com.utils.ValidationUtils;
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		}
+		return response;
+	}
+	
+	public Map<String, Object> displayAllEligibleTutors(final Long enquiryId, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%')", paramsMap, new RegisteredTutorRowMapper());
+		final EnquiryObject enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
+		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
+		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocationTeachingType = new ArrayList<RegisteredTutor>();
+		for (final RegisteredTutor eligibleTutorObject : eligibleTutorList) {
+			Boolean locationMatch = false;
+			Boolean teachingTypeMatch = false;
+			if (ValidationUtils.validatePlainNotNullAndEmptyTextString(enquiryObject.getLocationDetails())) {
+				final String[] locations = enquiryObject.getLocationDetails().split(SEMICOLON);
+				for (final String location : locations) {
+					if (eligibleTutorObject.getComfortableLocations().indexOf(location) != -1) {
+						locationMatch = true;
+						break;
+					}
+				}
+			}
+			if (locationMatch) {
+				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(enquiryObject.getPreferredTeachingType())) {
+					final String[] teachingTypes = enquiryObject.getPreferredTeachingType().split(SEMICOLON);
+					for (final String teachingType : teachingTypes) {
+						if (eligibleTutorObject.getPreferredTeachingType().indexOf(teachingType) != -1) {
+							teachingTypeMatch = true;
+							break;
+						}
+					}
+				}
+			}
+			tutorService.replacePlaceHolderAndIdsFromRegisteredTutorObject(eligibleTutorObject, delimiter);
+			tutorService.removeUltraSensitiveInformationFromRegisteredTutorObject(eligibleTutorObject);
+			if (teachingTypeMatch) {
+				eligibleTutorListWithSubjectGradeLocationTeachingType.add(eligibleTutorObject);
+			} else if (locationMatch) {
+				eligibleTutorListWithSubjectGradeLocation.add(eligibleTutorObject);
+			} else {
+				eligibleTutorListWithSubjectGrade.add(eligibleTutorObject);
+			}
+		}
+		final Map<String, Object> response = new HashMap<String, Object>();
+		response.put("eligibleTutorListWithSubjectGrade", eligibleTutorListWithSubjectGrade);
+		response.put("eligibleTutorListWithSubjectGradeLocation", eligibleTutorListWithSubjectGradeLocation);
+		response.put("eligibleTutorListWithSubjectGradeLocationTeachingType", eligibleTutorListWithSubjectGradeLocationTeachingType);
 		return response;
 	}
 }
