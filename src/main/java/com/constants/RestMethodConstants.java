@@ -61,6 +61,9 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES = "/displayCustomerWithPendingEnquiries";
 	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES = "/displayCustomerWithMappedEnquiries";
 	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES = "/displayCustomerWithAbandonedEnquiries";
+	String REST_METHOD_NAME_DISPLAY_ALL_ENQUIRIES_FOR_PARTICULAR_CUSTOMER = "/displayAllEnquiriesForParticularCustomer";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FOR_ENQUIRY_DETAILS = "/getDropdownListDataForEnquiryDetails";
+	String REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS = "/updateEnquiryDetails";
 	// Send Email
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods

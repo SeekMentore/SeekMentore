@@ -67,6 +67,9 @@
 			<webservice id="displayCustomerWithPendingEnquiries" url="/displayCustomerWithPendingEnquiries"></webservice>
 			<webservice id="displayCustomerWithMappedEnquiries" url="/displayCustomerWithMappedEnquiries"></webservice>
 			<webservice id="displayCustomerWithAbandonedEnquiries" url="/displayCustomerWithAbandonedEnquiries"></webservice>
+			<webservice id="displayAllEnquiriesForParticularCustomer" url="/displayAllEnquiriesForParticularCustomer"></webservice>
+			<webservice id="getDropdownListDataForEnquiryDetails" url="/getDropdownListDataForEnquiryDetails"></webservice>
+			<webservice id="updateEnquiryDetails" url="/updateEnquiryDetails"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">

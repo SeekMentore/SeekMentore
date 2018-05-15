@@ -142,31 +142,6 @@ function prepareUpdateParams() {
 	return form;
 }
 
-function getAttributeValue(id, isArray) {
-	var element = $('#'+id);
-	var value;
-	if (null != element) {
-		if (isArray) {
-			if (element.val().length > 0) {
-				value = '';
-			}
-			for (var i = 0; i < element.val().length; i++) {
-				value += element.val()[i];
-				if (i != element.val().length - 1) {
-					value += ';';
-				}
-			}
-		} else {
-			value = element.val().trim();
-		}
-		if (null != value && value.trim() != '') {
-			return value;
-		}
-		return null;
-	} 
-	return null;
-}
-
 function loadBecomeTutorDropdowns(response) {
 	var qualificationSelectHTML = createSelectOptionOutOfSelectLookupArray(response.qualificationLookUp);
 	$('#form-qualification').html($('#form-qualification').html() + qualificationSelectHTML);
@@ -190,32 +165,6 @@ function loadBecomeTutorDropdowns(response) {
 	$('#form-preferred-teaching-type').html($('#form-preferred-teaching-type').html() + preferredTeachingTypeHTML);
 	
 	loadRecord();
-}
-
-function createSelectOptionOutOfSelectLookupArray(lookupArray) {
-	var html = '';
-	var previousCategory = null;
-	var categoryOpen = false;
-	for(var i = 0; i < lookupArray.length; i++) {		
-		var selectLookupItem = lookupArray[i];
-		var currentCategory = selectLookupItem.category;
-		if (previousCategory != currentCategory) {
-			if (null != previousCategory) {
-				categoryOpen = false;
-				html += '</optgroup>';
-			}
-			if (null != currentCategory) {
-				categoryOpen = true;
-				html += '<optgroup label="' + currentCategory + '">';
-			}
-		}
-		html += '<option value="' + selectLookupItem.value + '">' + selectLookupItem.label + '</option>';
-		previousCategory = currentCategory;
-	}
-	if (categoryOpen) {
-		html += '</optgroup>';
-	}
-	return html;
 }
 
 function loadRecord() {

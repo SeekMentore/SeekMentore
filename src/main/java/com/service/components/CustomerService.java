@@ -125,6 +125,10 @@ import com.utils.VelocityUtils;
 		subscriberCustomerObj.setEncryptedPassword(null);
 		subscriberCustomerObj.setEnquiryID(null);
 	}
+	
+	public void removePasswordFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
+		subscriberCustomerObj.setEncryptedPassword(null);
+	}
 
 	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
 		tutorDocumentObj.setWhoActed(null);

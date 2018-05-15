@@ -30,6 +30,7 @@ public class EnquiryObjectRowMapper implements RowMapper<EnquiryObject> {
 		enquiryObject.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDRESS_DETAILS", String.class));
 		enquiryObject.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDITIONAL_DETAILS", String.class));
 		enquiryObject.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHO_ACTED", String.class));
+		enquiryObject.setPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, "PREFERRED_TEACHING_TYPE", String.class));
 		return enquiryObject;
 	}
 

@@ -25,6 +25,7 @@ public class EnquiryObject implements Serializable, CustomerConstants, Applicati
 	private String addressDetails;
 	private String additionalDetails;
 	private String whoActed;
+	private String preferredTeachingType;
 	
 	public EnquiryObject() {}
 
@@ -154,6 +155,14 @@ public class EnquiryObject implements Serializable, CustomerConstants, Applicati
 
 	public void setAdditionalDetails(String additionalDetails) {
 		this.additionalDetails = additionalDetails;
+	}
+
+	public String getPreferredTeachingType() {
+		return preferredTeachingType;
+	}
+
+	public void setPreferredTeachingType(String preferredTeachingType) {
+		this.preferredTeachingType = preferredTeachingType;
 	}
 
 	@Override

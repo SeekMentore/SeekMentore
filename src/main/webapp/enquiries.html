@@ -160,47 +160,12 @@
 	</div>
 	<Br/>
 	<div class="w3-row-padding">
-		<table align="center" class="all-records no-border">
-			<tr>
-				<th>
-					<a href="admin.html">&lt;&lt;Back to Admin</a> 
-				</th>
-				<th class="center-align">
-					<button 
-						type="button" 
-						onClick="downloadReport()"
-						class="form-element submit-button button-green" >
-						Download Report
-					</button> 
-				</th>
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Customer Details</th>
 			</tr>
 		</table>
 	</div>
-	<Br/>
-	<div id="all-enquiries-div" class="w3-row-padding">
-		<div class="w3-row-padding">
-			<table align="center" class="all-records">
-				<tr class="header-panel">
-					<th>All Enquiries</th>
-					<th id="all-enquiries-total-records" class="total-records"></th>
-				</tr>
-			</table>
-		</div>
-		<div class="w3-row-padding">
-			<table align="center" class="all-records">
-				<thead>
-					<tr>
-						<th>Subject</th>
-						<th>Grade</th>
-						<th>Location</th>
-					</tr>
-				</thead>
-				<tbody id="all-enquiries-tutor-records">
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<BR/>
 	<div class="w3-row-padding">
 		<table align="center" class="all-records">
 			<tr class="header-panel">
@@ -235,8 +200,231 @@
 	    	</tr>
 		</table>
    </div>
+   <div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousCustomerRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllCustomersEnquiriesPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextCustomerRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <BR/>
+   <div id="all-enquiries-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>All Enquiries for this Customer</th>
+					<th id="all-enquiries-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Subject</th>
+						<th>Grade</th>
+						<th>Location</th>
+					</tr>
+				</thead>
+				<tbody id="all-enquiries-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 <BR/>
+<div id="particular-customer-particular-enquiry-div" class="noscreen">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">All Customer Enquiries Admin</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Customer Basic Info</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Contact Number</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="BASIC_INFO-NAME"></td>
+					<td id="BASIC_INFO-CONTACT_NUMBER"></td>
+					<td id="BASIC_INFO-EMAIL_ID"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Enquiry Details</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousEnquiryRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllEnquiriesParticularCustomerPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextEnquiryRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+   		<form id="details-update-form" method="post">
+		    <table align="center" class="all-records">
+		    	<tr>
+		    		<td>Subject</td>
+		    		<td id="ENQUIRY_DETAILS_SUBJECT"></td>
+		    		<td>
+		    			<select name="form-subject" id="form-subject" class="form-element">
+							<option value="">Subject</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    	<tr>
+		    		<td>Grade</td>
+		    		<td id="ENQUIRY_DETAILS_GRADE"></td>
+		    		<td>
+		    			<select name="form-grade" id="form-grade" class="form-element">
+							<option value="">Grade</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Location Details</td>
+		    		<td id="ENQUIRY_DETAILS_LOCATION_DETAILS"></td>
+		    		<td>
+		    			<select name="form-locations" id="form-locations" class="form-element form-multiple-select-element" multiple>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Address Details</td>
+		    		<td id="ENQUIRY_DETAILS_ADDRESS_DETAILS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-address-details" id="form-address-details" placeholder="Provide address details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Preferred Teaching Type</td>
+		    		<td id="ENQUIRY_DETAILS_PREFERRED_TEACHING_TYPE"></td>
+		    		<td>
+		    			<select name="form-preferred-teaching-type" id="form-preferred-teaching-type" class="form-element form-multiple-select-element" multiple>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Quoted Client Rate</td>
+		    		<td id="ENQUIRY_DETAILS_QUOTED_CLIENT_RATE"></td>
+		    		<td><input type="number" id="form-quoted-client-rate" class="form-element" name="form-quoted-client-rate" placeholder="Qouted Rate"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Negotiated Client Rate</td>
+		    		<td id="ENQUIRY_DETAILS_NEGOTIATED_CLIENT_RATE"></td>
+		    		<td><input type="number" id="form-negotiated-client-rate" class="form-element" name="form-negotiated-client-rate" placeholder="Negociated Rate"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Client Negotiation Remarks</td>
+		    		<td id="ENQUIRY_DETAILS_CLEINT_NEGOTIATION_REMARKS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-negotiation-details" id="form-negotiation-details" placeholder="Provide any negotiation details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Mapped</td>
+		    		<td id="ENQUIRY_DETAILS_IS_MAPPED"></td>
+		    		<td></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Match Status</td>
+		    		<td id="ENQUIRY_DETAILS_MATCH_STATUS"></td>
+		    		<td></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Name</td>
+		    		<td id="ENQUIRY_DETAILS_TUTOR_NAME" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Email</td>
+		    		<td id="ENQUIRY_DETAILS_TUTOR_EMAIL" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Contact Number</td>
+		    		<td id="ENQUIRY_DETAILS_TUTOR_CONTACT_NUMBER" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Additional Details</td>
+		    		<td id="ENQUIRY_DETAILS_ADDITIONAL_DETAILS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-additional-details" id="form-additional-details" placeholder="Provide any additional details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Who Acted</td>
+		    		<td id="ENQUIRY_DETAILS_WHO_ACTED" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Last Action Date</td>
+		    		<td id="ENQUIRY_DETAILS_LAST_ACTION_DATE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Remarks</td>
+		    		<td id="ENQUIRY_DETAILS_ADMIN_REMARKS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks" id="form-admin-remarks" placeholder="Provide any Admin Remarks."></textarea></td>
+		    	</tr>
+		    	<tr>
+					<th colspan="2">
+						<button 
+							type="button" 
+							onClick="updateEnquiryDetails()"
+							class="form-element submit-button button-green" >
+							Update Enquiry
+						</button> 
+					</th>
+					<td>
+						<button 
+							type="button" 
+							onClick="resetEnquiryDetails()"
+							class="form-element submit-button" >
+							Reset
+						</button> 
+					</td>
+				</tr>
+			</table>
+   		</form>
+   </div>
+   <div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousEnquiryRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllEnquiriesParticularCustomerPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextEnquiryRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <BR/>
+</div>
 <BR/>
 <form 
 	id="downloadForm" 
