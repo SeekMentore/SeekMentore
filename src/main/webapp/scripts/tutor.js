@@ -31,7 +31,6 @@ function showUploadSection() {
 }
 
 function showDetailsSection() {
-	$('#documents-div').addClass('noscreen');
 	$('#change-password-div').addClass('noscreen');
 	$('#details-div').removeClass('noscreen');
 }

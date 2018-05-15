@@ -37,10 +37,10 @@ function showLoadedRecord(response) {
 function prepareUpdateParams() {
 	var form = {
 			studentGrades           	: getAttributeValue('form-student-grades', true),
-			interestedSubjects		: getAttributeValue('form-subjects', true),
+			interestedSubjects			: getAttributeValue('form-subjects', true),
 			location 	            	: getAttributeValue('form-comfortable-locations', true),
-			additionalDetails 		: getAttributeValue('form-additional-details', false),
-			addressDetails                  : getAttributeValue('form-address-details', false)
+			additionalDetails 			: getAttributeValue('form-additional-details', false),
+			addressDetails              : getAttributeValue('form-address-details', false)
 		};
 	return form;
 }
@@ -73,7 +73,7 @@ function getAttributeValue(id, isArray) {
 function loadSubscribedDropdowns(response) {
 	var studentGradeSelectHTML = createSelectOptionOutOfSelectLookupArray(response.studentGradeLookUp);
 	$('#form-student-grades').html($('#form-student-grades').html() + studentGradeSelectHTML);
-	
+
 	var subjectsSelectHTML = createSelectOptionOutOfSelectLookupArray(response.subjectsLookUp);
 	$('#form-subjects').html($('#form-subjects').html() + subjectsSelectHTML);
 	
@@ -117,7 +117,11 @@ function loadDropdowns() {
 	callWebservice('/rest/customer/getDropdownListDataSubscribedCustomer', null, loadSubscribedDropdowns);
 }
 
-
+function showDetailsSection() {
+	$('#documents-div').addClass('noscreen');
+	$('#change-password-div').addClass('noscreen');
+	$('#details-div').removeClass('noscreen');
+}
 
 var success = queryParams['success'];
 if (null != success) {

@@ -163,6 +163,10 @@ public class LoginService implements LoginConstants {
 				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}
+			case "Customer" : {
+				applicationDao.executeUpdate("UPDATE SUBSCRIBED_CUSTOMER SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				break;
+			}
 			default	: {
 				throw new ApplicationException("Invalid Usertype " + userType);
 			}

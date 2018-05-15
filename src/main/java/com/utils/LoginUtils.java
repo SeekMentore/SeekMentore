@@ -15,6 +15,7 @@ import com.model.Employee;
 import com.model.LogonTracker;
 import com.model.User;
 import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.service.LoginService;
 import com.service.components.CommonsService;
 import com.utils.context.AppContext;
@@ -84,6 +85,10 @@ public class LoginUtils implements LoginConstants {
 			case "Tutor" : {
 				final RegisteredTutor registeredTutor = RegisteredTutor.class.cast(getUserTypeObject(httpRequest, RegisteredTutor.class));
 				return registeredTutor.getEmailId();
+			}
+			case "Customer" : {
+				final SubscribedCustomer subscribedCustomer = SubscribedCustomer.class.cast(getUserTypeObject(httpRequest, SubscribedCustomer.class));
+				return subscribedCustomer.getEmailId();
 			}
 		}
 		throw new ApplicationException("No Email Id in Session");
