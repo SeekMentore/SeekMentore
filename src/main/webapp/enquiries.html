@@ -599,6 +599,289 @@
 	</div>
 </div>
 <BR/>
+<div id="particular-customer-particular-enquiry-particular-mapped-tutor-div" class="noscreen">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">All Customer Enquiries Admin</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Customer Basic Info</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Contact Number</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="BASIC_INFO-2-NAME"></td>
+					<td id="BASIC_INFO-2-CONTACT_NUMBER"></td>
+					<td id="BASIC_INFO-2-EMAIL_ID"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Enquiry Basic Info</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Subject</th>
+					<th>Grade</th>
+					<th>Location</th>
+					<th>Preferred Teaching Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="BASIC_INFO-ENQUIRY_SUBJECT"></td>
+					<td id="BASIC_INFO-ENQUIRY_GRADE"></td>
+					<td id="BASIC_INFO-ENQUIRY_LOCATION"></td>
+					<td id="BASIC_INFO-ENQUIRY_TEACHING_TYPE"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousTutorMapperRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showParticularEnquiryAllMappedAndEligibleTutorsPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextTutorMapperRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+   		<form id="details-update-form" method="post">
+		    <table align="center" class="all-records">
+		    	<tr>
+		    		<td>Tutor Name</td>
+		    		<td id="TUTOR_MAPPER_TUTOR_NAME" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Email</td>
+		    		<td id="TUTOR_MAPPER_TUTOR_EMAIL" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Contact Number</td>
+		    		<td id="TUTOR_MAPPER_TUTOR_CONTACT_NUMBER" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Mapping Status</td>
+		    		<td id="MAPPING_STATUS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Quoted Tutor Rate</td>
+		    		<td id="QUOTED_TUTOR_RATE"></td>
+		    		<td><input type="number" id="form-quoted-tutor-rate" class="form-element" name="form-quoted-tutor-rate" placeholder="Qouted Rate"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Negotiated Tutor Rate</td>
+		    		<td id="NEGOTIATED_RATE_WITH_TUTOR"></td>
+		    		<td><input type="number" id="form-negotiated-tutor-rate" class="form-element" name="form-negotiated-tutor-rate" placeholder="Negociated Rate"/></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Negotiation Remarks</td>
+		    		<td id="TUTOR_NEGOTIATION_REMARKS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-negotiated-tutor-remarks" id="form-negotiated-tutor-remarks" placeholder="Provide negotiation details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Tutor Contacted</td>
+		    		<td id="IS_TUTOR_CONTACTED"></td>
+		    		<td>
+		    			<select name="form-is-tutor-contacted" id="form-is-tutor-contacted" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Contacted Date</td>
+		    		<td id="TUTOR_CONTACTED_DATE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Tutor Agreed</td>
+		    		<td id="IS_TUTOR_AGREED"></td>
+		    		<td>
+		    			<select name="form-is-tutor-agreed" id="form-is-tutor-agreed" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Tutor Rejection Valid</td>
+		    		<td id="IS_TUTOR_REJECTION_VALID"></td>
+		    		<td>
+		    			<select name="form-is-tutor-rejection-valid" id="form-is-tutor-rejection-valid" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Tutor Rejection Validity Remarks</td>
+		    		<td id="ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-tutor-rejection-validity-remarks" id="form-admin-tutor-rejection-validity-remarks" placeholder="Provide admin tutor rejection validity details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Tutor Response</td>
+		    		<td id="TUTOR_RESPONSE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-tutor-response" id="form-tutor-response" placeholder="Provide tutor response."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Remarks For Tutor</td>
+		    		<td id="ADMIN_REMARKS_FOR_TUTOR" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks-for-tutor" id="form-admin-remarks-for-tutor" placeholder="Provide admin remarks for tutor."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Client Contacted</td>
+		    		<td id="IS_CLIENT_CONTACTED"></td>
+		    		<td>
+		    			<select name="form-is-client-contacted" id="form-is-client-contacted" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Client Contacted Date</td>
+		    		<td id="CLIENT_CONTACTED_DATE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Client Agreed</td>
+		    		<td id="IS_CLIENT_AGREED"></td>
+		    		<td>
+		    			<select name="form-is-client-agreed" id="form-is-client-agreed" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Client Rejection Valid</td>
+		    		<td id="IS_CLIENT_REJECTION_VALID"></td>
+		    		<td>
+		    			<select name="form-is-client-rejection-valid" id="form-is-client-rejection-valid" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Client Rejection Validity Remarks</td>
+		    		<td id="ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-client-rejection-validity-remarks" id="form-admin-client-rejection-validity-remarks" placeholder="Provide admin client rejection validity details."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Client Response</td>
+		    		<td id="CLIENT_RESPONSE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-client-response" id="form-client-response" placeholder="Provide client response."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Remarks For Client</td>
+		    		<td id="ADMIN_REMARKS_FOR_CLIENT" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks-for-client" id="form-admin-remarks-for-client" placeholder="Provide admin remarks for client."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Action Date</td>
+		    		<td id="ADMIN_ACTION_DATE" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Admin Action Remarks</td>
+		    		<td id="ADMIN_ACTION_REMARKS" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-action-remarks" id="form-admin-action-remarks" placeholder="Provide any Admin Action Remarks."></textarea></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Who Acted</td>
+		    		<td id="WHO_ACTED" colspan="2"></td>
+		    	</tr>
+		    	<tr>
+		    		<td>Is Demo Scheduled</td>
+		    		<td id="IS_DEMO_SCHEDULED"></td>
+		    		<td>
+		    			<select name="form-is-client-agreed" id="form-is-demo-scheduled" class="form-element">
+		    				<option value="N">No</option>
+		    				<option value="Y">Yes</option>
+						</select>
+					</td>
+		    	</tr>
+		    	<tr>
+		    		<td>Demo Time & Date</td>
+		    		<td id="DEMO_TIME_AND_DATE"></td>
+		    		<td>
+		    			<input type="date" name="form-demo-date" id="form-demo-date" class="form-element"/>
+		    			<input type="time" name="form-demo-time" id="form-demo-time" class="form-element">
+					</td>
+		    	</tr>
+		    	<tr>
+					<th colspan="2">
+						<button 
+							type="button" 
+							onClick="updateTutorMapperDetails()"
+							class="form-element submit-button button-green" >
+							Update Tutor Mapper Record
+						</button> 
+					</th>
+					<td>
+						<button 
+							type="button" 
+							onClick="resetTutorMappeDetails()"
+							class="form-element submit-button" >
+							Reset
+						</button> 
+					</td>
+				</tr>
+			</table>
+   		</form>
+   </div>
+   <div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousTutorMapperRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showParticularEnquiryAllMappedAndEligibleTutorsPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextTutorMapperRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+</div>
 <form 
 	id="downloadForm" 
   	target="ifrDownload" 

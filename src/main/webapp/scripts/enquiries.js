@@ -194,6 +194,9 @@ function openCustomerRecord(customerObj) {
 		$('#BASIC_INFO-NAME').html(showValue(customerObj.name));
 		$('#BASIC_INFO-CONTACT_NUMBER').html(showValue(customerObj.contactNumber));
 		$('#BASIC_INFO-EMAIL_ID').html(showValue(customerObj.emailId));
+		$('#BASIC_INFO-2-NAME').html(showValue(customerObj.name));
+		$('#BASIC_INFO-2-CONTACT_NUMBER').html(showValue(customerObj.contactNumber));
+		$('#BASIC_INFO-2-EMAIL_ID').html(showValue(customerObj.emailId));
 		$('#ADDRESS_DETAILS').html(showValue(customerObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(customerObj.additionalDetails));
 		
@@ -249,6 +252,10 @@ function openEnquiryRecord(enquiryObject) {
 		$('#ENQUIRY_DETAILS_WHO_ACTED').html(showValue(enquiryObject.whoActed));
 		$('#ENQUIRY_DETAILS_LAST_ACTION_DATE').html(showValue(enquiryObject.lastActionDate));
 		$('#ENQUIRY_DETAILS_ADMIN_REMARKS').html(showValue(enquiryObject.adminRemarks));
+		$('#BASIC_INFO-ENQUIRY_SUBJECT').html(showValue(enquiryObject.subject));
+		$('#BASIC_INFO-ENQUIRY_GRADE').html(showValue(enquiryObject.grade));
+		$('#BASIC_INFO-ENQUIRY_LOCATION').html(showValue(enquiryObject.locationDetails));
+		$('#BASIC_INFO-ENQUIRY_TEACHING_TYPE').html(showValue(enquiryObject.preferredTeachingType));
 		
 		loadMappedTutors();
 		loadEligibleTutors();
@@ -263,9 +270,50 @@ function nextTutorMapperRecord() {
 	openTutorMapperRecord(particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].nextRecord());
 }
 
-function getParticularTutorMapperRecord(recordNumber) {
+function getParticularTutorMapperRecord(gridName, recordNumber) {
 	particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid = gridName;
 	openTutorMapperRecord(particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].getParticularRecord(recordNumber));
+}
+
+function hideParticularEnquiryAllMappedAndEligibleTutorsPage() {
+	$('#particular-customer-particular-enquiry-particular-mapped-tutor-div').removeClass('noscreen');
+	$('#particular-customer-particular-enquiry-div').addClass('noscreen');
+}
+
+function showParticularEnquiryAllMappedAndEligibleTutorsPage() {
+	$('#particular-customer-particular-enquiry-div').removeClass('noscreen');
+	$('#particular-customer-particular-enquiry-particular-mapped-tutor-div').addClass('noscreen');
+}
+
+function openTutorMapperRecord(tutorMapperObject) {
+	hideParticularEnquiryAllMappedAndEligibleTutorsPage();
+	if (null != tutorMapperObject) {
+		$('#TUTOR_MAPPER_TUTOR_NAME').html(showValue(tutorMapperObject.tutorName));
+		$('#TUTOR_MAPPER_TUTOR_EMAIL').html(showValue(tutorMapperObject.tutorEmail));
+		$('#TUTOR_MAPPER_TUTOR_CONTACT_NUMBER').html(showValue(tutorMapperObject.tutorContactNumber));
+		$('#MAPPING_STATUS').html(showValue(tutorMapperObject.mappingStatus));
+		$('#QUOTED_TUTOR_RATE').html(showValue(tutorMapperObject.quotedTutorRate));
+		$('#NEGOTIATED_RATE_WITH_TUTOR').html(showValue(tutorMapperObject.negotiatedRateWithTutor));
+		$('#TUTOR_NEGOTIATION_REMARKS').html(showValue(tutorMapperObject.tutorNegotiationRemarks));
+		$('#IS_TUTOR_CONTACTED').html(showValue(tutorMapperObject.isTutorContacted));
+		$('#TUTOR_CONTACTED_DATE').html(showValue(tutorMapperObject.tutorContactedDate));
+		$('#IS_TUTOR_AGREED').html(showValue(tutorMapperObject.isTutorAgreed));
+		$('#IS_TUTOR_REJECTION_VALID').html(showValue(tutorMapperObject.isTutorRejectionValid));
+		$('#ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE').html(showValue(tutorMapperObject.adminTutorRejectionValidityResponse));
+		$('#TUTOR_RESPONSE').html(showValue(tutorMapperObject.tutorResponse));
+		$('#ADMIN_REMARKS_FOR_TUTOR').html(showValue(tutorMapperObject.adminRemarksForTutor));
+		$('#IS_CLIENT_CONTACTED').html(showValue(tutorMapperObject.isClientContacted));
+		$('#CLIENT_CONTACTED_DATE').html(showValue(tutorMapperObject.clientContactedDate));
+		$('#IS_CLIENT_AGREED').html(showValue(tutorMapperObject.isClientAgreed));
+		$('#IS_CLIENT_REJECTION_VALID').html(showValue(tutorMapperObject.isClientRejectionValid));
+		$('#ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE').html(showValue(tutorMapperObject.adminClientRejectionValidityResponse));
+		$('#CLIENT_RESPONSE').html(showValue(tutorMapperObject.clientResponse));
+		$('#ADMIN_REMARKS_FOR_CLIENT').html(showValue(tutorMapperObject.adminRemarksForClient));
+		$('#ADMIN_ACTION_DATE').html(showValue(tutorMapperObject.adminActionDate));
+		$('#ADMIN_ACTION_REMARKS').html(showValue(tutorMapperObject.adminActionRemarks));
+		$('#WHO_ACTED').html(showValue(tutorMapperObject.whoActed));
+		$('#IS_DEMO_SCHEDULED').html(showValue(tutorMapperObject.isDemoScheduled));
+	} 
 }
 
 function loadEnquiryDetailsDropdowns(response) {
