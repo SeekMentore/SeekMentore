@@ -26,9 +26,6 @@ function showLoadedRecord(response) {
 		$('#NAME').html(showValue(subscribedCustomerObj.name));
 		$('#CONTACT_NUMBER').html(showValue(subscribedCustomerObj.contactNumber));
 		$('#EMAIL_ID').html(showValue(subscribedCustomerObj.emailId));
-		$('#INTERESTED_STUDENT_GRADES').html(showValue(subscribedCustomerObj.studentGrades));
-		$('#INTERESTED_SUBJECTS').html(showValue(subscribedCustomerObj.interestedSubjects));
-		$('#LOCATIONS').html(showValue(subscribedCustomerObj.location));
 		$('#ADDRESS_DETAILS').html(showValue(subscribedCustomerObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(subscribedCustomerObj.additionalDetails));
 	} 
@@ -36,9 +33,6 @@ function showLoadedRecord(response) {
 
 function prepareUpdateParams() {
 	var form = {
-			studentGrades           	: getAttributeValue('form-student-grades', true),
-			interestedSubjects			: getAttributeValue('form-subjects', true),
-			location 	            	: getAttributeValue('form-comfortable-locations', true),
 			additionalDetails 			: getAttributeValue('form-additional-details', false),
 			addressDetails              : getAttributeValue('form-address-details', false)
 		};
@@ -71,19 +65,19 @@ function getAttributeValue(id, isArray) {
 }
 
 function loadSubscribedDropdowns(response) {
-	var studentGradeSelectHTML = createSelectOptionOutOfSelectLookupArray(response.studentGradeLookUp);
+	/*var studentGradeSelectHTML = createSelectOptionOutOfSelectLookupArray(response.studentGradeLookUp);
 	$('#form-student-grades').html($('#form-student-grades').html() + studentGradeSelectHTML);
 
 	var subjectsSelectHTML = createSelectOptionOutOfSelectLookupArray(response.subjectsLookUp);
 	$('#form-subjects').html($('#form-subjects').html() + subjectsSelectHTML);
 	
 	var locationsSelectHTML = createSelectOptionOutOfSelectLookupArray(response.locationsLookUp);
-	$('#form-comfortable-locations').html($('#form-comfortable-locations').html() + locationsSelectHTML);	
+	$('#form-comfortable-locations').html($('#form-comfortable-locations').html() + locationsSelectHTML);	*/
 	
 	loadRecord();
 }
 
-function createSelectOptionOutOfSelectLookupArray(lookupArray) {
+/*function createSelectOptionOutOfSelectLookupArray(lookupArray) {
 	var html = '';
 	var previousCategory = null;
 	var categoryOpen = false;
@@ -107,15 +101,15 @@ function createSelectOptionOutOfSelectLookupArray(lookupArray) {
 		html += '</optgroup>';
 	}
 	return html;
-}
+}*/
 
 function loadRecord() {
 	callWebservice('/rest/customer/loadSubscribedCustomerRecord', null, showLoadedRecord);
 }
 
-function loadDropdowns() {
+/*function loadDropdowns() {
 	callWebservice('/rest/customer/getDropdownListDataSubscribedCustomer', null, loadSubscribedDropdowns);
-}
+}*/
 
 function showDetailsSection() {
 	$('#documents-div').addClass('noscreen');
