@@ -1,8 +1,10 @@
 package com.webservices.rest.components;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -37,7 +39,8 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	private HttpServletRequest request;
 	private Long customerId;
 	private Long enquiryId;
-	private Long[] selectedEligibleTutorIdArray;
+	private String selectedEligibleTutorIdSemicolonSeparatedList;
+	private String selectedTutorMappedIdSemicolonSeparatedList;
 	
 	@Path(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -89,13 +92,14 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	@POST
 	public String displayAllEnquiriesForParticularCustomer (
 			@FormParam("customerId") final Long customerId,
+			@FormParam("grid") final String grid,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DISPLAY_ALL_ENQUIRIES_FOR_PARTICULAR_CUSTOMER;
 		this.customerId = customerId;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllEnquiriesForParticularCustomer(customerId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getEnquiryService().displayAllEnquiriesForParticularCustomer(customerId, grid, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
@@ -132,24 +136,6 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_MAP_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
-	@POST
-	public String mapTutors (
-			@FormParam("enquiryId") final Long enquiryId,
-			@FormParam("selectedEligibleTutorIdSemicolonSeparatedList") final String selectedEligibleTutorIdSemicolonSeparatedList,
-			@Context final HttpServletRequest request
-	) throws Exception {
-		this.methodName = REST_METHOD_NAME_MAP_TUTORS;
-		this.enquiryId = enquiryId;
-		this.selectedEligibleTutorId = selectedEligibleTutorIdSemicolonSeparatedList.split(SEMICOLON);
-		doSecurity(request);
-		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
-		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
-	}
-	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
@@ -162,6 +148,84 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		doSecurity(request);
 		if (this.securityPassed) {
 			return convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_MAP_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String mapTutors (
+			@FormParam("enquiryId") final Long enquiryId,
+			@FormParam("selectedEligibleTutorIdSemicolonSeparatedList") final String selectedEligibleTutorIdSemicolonSeparatedList,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_MAP_TUTORS;
+		this.enquiryId = enquiryId;
+		this.selectedEligibleTutorIdSemicolonSeparatedList = selectedEligibleTutorIdSemicolonSeparatedList;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final List<Long> tutorIdList = new ArrayList<Long>();
+			for (final String tutorId: selectedEligibleTutorIdSemicolonSeparatedList.split(SEMICOLON)) {
+				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorId)) {
+					tutorIdList.add(Long.parseLong(tutorId));
+				}
+			}
+			return convertObjToJSONString(getEnquiryService().mapTutors(enquiryId, tutorIdList), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String displayAllMappedDemoPendingTutors (
+			@FormParam("enquiryId") final Long enquiryId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS;
+		this.enquiryId = enquiryId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_UNMAP_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String unmapTutors (
+			@FormParam("selectedTutorMappedIdSemicolonSeparatedList") final String selectedTutorMappedIdSemicolonSeparatedList,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UNMAP_TUTORS;
+		this.selectedTutorMappedIdSemicolonSeparatedList = selectedTutorMappedIdSemicolonSeparatedList;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final List<Long> tutorMapperIdList = new ArrayList<Long>();
+			for (final String tutorMapperId: selectedTutorMappedIdSemicolonSeparatedList.split(SEMICOLON)) {
+				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperId)) {
+					tutorMapperIdList.add(Long.parseLong(tutorMapperId));
+				}
+			}
+			return convertObjToJSONString(getEnquiryService().unmapTutors(tutorMapperIdList), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String displayAllMappedDemoScheduledTutors (
+			@FormParam("enquiryId") final Long enquiryId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS;
+		this.enquiryId = enquiryId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} 
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
@@ -192,8 +256,18 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 				break;
 			}
 			case REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS :
-			case REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS : {
+			case REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS :
+			case REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS : 
+			case REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS : {
 				handleParticularEnquirySecurity();
+				break;
+			}
+			case REST_METHOD_NAME_MAP_TUTORS : {
+				handleParticularEnquiryTutorMappingSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UNMAP_TUTORS : {
+				handleParticularEnquiryTutorUnMappingSecurity();
 				break;
 			}
 		}
@@ -223,6 +297,47 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_ENQUIRY_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleParticularEnquiryTutorMappingSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.enquiryId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_ENQUIRY_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.selectedEligibleTutorIdSemicolonSeparatedList)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_ID_LIST,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleParticularEnquiryTutorUnMappingSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.selectedTutorMappedIdSemicolonSeparatedList)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID_LIST,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}

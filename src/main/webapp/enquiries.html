@@ -450,7 +450,7 @@
 						<th>Exp</th>
 						<th>Locations</th>
 						<th>Teaching Type</th>
-						<th>Map</th>
+						<th>Select</th>
 					</tr>
 				</thead>
 				<tbody id="all-eligible-tutors-with-subject-grade-location-and-teachingtype-records">
@@ -477,7 +477,7 @@
 						<th>Exp</th>
 						<th>Locations</th>
 						<th>Teaching Type</th>
-						<th>Map</th>
+						<th>Select</th>
 					</tr>
 				</thead>
 				<tbody id="all-eligible-tutors-with-subject-grade-and-location-records">
@@ -504,7 +504,7 @@
 						<th>Exp</th>
 						<th>Locations</th>
 						<th>Teaching Type</th>
-						<th>Map</th>
+						<th>Select</th>
 					</tr>
 				</thead>
 				<tbody id="all-eligible-tutors-with-subject-and-grade-records">
@@ -525,6 +525,77 @@
 				</th>
 			</tr>
 		</table>
+	</div>
+	<BR/>
+  	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Mapped Tutors</th>
+			</tr>
+		</table>
+	</div>
+   <div id="all-mapped-tutors-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Demo Pending</th>
+					<th id="all-mapped-pending-tutors-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Contact Number</th>
+						<th>Mapping Status</th>
+						<th>Select</th>
+					</tr>
+				</thead>
+				<tbody id="all-mapped-pending-tutors-records">
+				</tbody>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records no-border">
+				<tr>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="unmapTutors()"
+							class="form-element submit-button button-green" >
+							Unmap Tutors
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div id="all-mapped-scheduled-tutors-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Demo Scheduled</th>
+					<th id="all-mapped-scheduled-tutors-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Contact Number</th>
+						<th>Mapping Status</th>
+					</tr>
+				</thead>
+				<tbody id="all-mapped-scheduled-tutors-records">
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 <BR/>

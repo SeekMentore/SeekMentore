@@ -21,15 +21,17 @@ import com.model.User;
 import com.model.components.EnquiryObject;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
+import com.model.components.TutorMapper;
 import com.model.components.commons.SelectLookup;
 import com.model.rowmappers.EnquiryObjectRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.model.rowmappers.TutorMapperRowMapper;
 import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE)
-	public class EnquiryService implements EnquiryConstants {
-
+public class EnquiryService implements EnquiryConstants {
+	
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
@@ -64,15 +66,15 @@ import com.utils.ValidationUtils;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES : {
-				paramsMap.put("matchStatus", "PENDING");
+				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES : {
-				paramsMap.put("matchStatus", "MAPPED");
+				paramsMap.put("matchStatus", MATCH_STATUS_MAPPED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES : {
-				paramsMap.put("matchStatus", "ABANDONED");
+				paramsMap.put("matchStatus", MATCH_STATUS_ABANDONED);
 				break;
 			}
 		}
@@ -83,15 +85,25 @@ import com.utils.ValidationUtils;
 		}
 		return customersEnquiryList;
 	}
-
-	public List<EnquiryObject> displayAllEnquiriesForParticularCustomer(final Long customerId, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	
+	public List<EnquiryObject> displayAllEnquiriesForParticularCustomer(final Long customerId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("matchStatus", getMatchStatusFromGridName(grid));
 		paramsMap.put("customerId", customerId);
-		final List<EnquiryObject> ernquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId", paramsMap, new EnquiryObjectRowMapper());
+		final List<EnquiryObject> ernquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
 		for (final EnquiryObject ernquiryObject : ernquiryObjectList) {
 			replacePlaceHolderAndIdsFromEnquiryObject(ernquiryObject, delimiter);
 		}
 		return ernquiryObjectList;
+	}
+	
+	private String getMatchStatusFromGridName(final String grid) {
+		switch(grid) {
+			case "customers-with-pending-enquiries" : return MATCH_STATUS_PENDING;
+			case "customers-with-mapped-enquiries" : return MATCH_STATUS_PENDING;
+			case "customers-with-abandoned-enquiries" : return MATCH_STATUS_PENDING;
+			default : return null;
+		}
 	}
 	
 	public void replacePlaceHolderAndIdsFromEnquiryObject(final EnquiryObject enquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -100,6 +112,14 @@ import com.utils.ValidationUtils;
 		enquiryObject.setLocationDetails(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiryObject.getLocationDetails(), true, delimiter));
 		enquiryObject.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, enquiryObject.getPreferredTeachingType(), true, delimiter));
 		enquiryObject.setWhoActed(commonsService.getNameOfUserFromUserId(enquiryObject.getWhoActed()));
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(enquiryObject.getTutorId())) {
+			final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(enquiryObject.getTutorId());
+			if (null != registeredTutorObj) {
+				enquiryObject.setTutorName(registeredTutorObj.getName());
+				enquiryObject.setTutorContactNumber(registeredTutorObj.getContactNumber());
+				enquiryObject.setTutorEmail(registeredTutorObj.getEmailId());
+			}
+		}
 	}
 	
 	public Map<String, List<SelectLookup>> getDropdownListData() {
@@ -110,7 +130,7 @@ import com.utils.ValidationUtils;
 		mapListSelectLookup.put("preferredTeachingTypeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP));
 		return mapListSelectLookup;
 	}
-
+	
 	@Transactional
 	public Map<String, Object> updateEnquiryDetails(final EnquiryObject enquiryObject, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
@@ -202,7 +222,7 @@ import com.utils.ValidationUtils;
 	public Map<String, Object> displayAllEligibleTutors(final Long enquiryId, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
-		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%')", paramsMap, new RegisteredTutorRowMapper());
+		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.TUTOR_ID NOT IN (SELECT DISTINCT TUTOR_ID FROM TUTOR_MAPPER WHERE ENQUIRY_ID = :enquiryId)", paramsMap, new RegisteredTutorRowMapper());
 		final EnquiryObject enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
@@ -244,6 +264,54 @@ import com.utils.ValidationUtils;
 		response.put("eligibleTutorListWithSubjectGrade", eligibleTutorListWithSubjectGrade);
 		response.put("eligibleTutorListWithSubjectGradeLocation", eligibleTutorListWithSubjectGradeLocation);
 		response.put("eligibleTutorListWithSubjectGradeLocationTeachingType", eligibleTutorListWithSubjectGradeLocationTeachingType);
+		return response;
+	}
+	
+	public List<TutorMapper> displayAllMappedTutors(final Long enquiryId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS : {
+				paramsMap.put("mappingStatus", MATCH_STATUS_PENDING);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS : {
+				paramsMap.put("mappingStatus", "SCHEDULED");
+				break;
+			}
+		}
+		final List<TutorMapper> tutorMapperObjectList =  applicationDao.findAll("SELECT * FROM TUTOR_MAPPER E WHERE E.ENQUIRY_ID = :enquiryId AND E.MAPPING_STATUS = :mappingStatus", paramsMap, new TutorMapperRowMapper());
+		for (final TutorMapper tutorMapperObject : tutorMapperObjectList) {
+			final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+			tutorMapperObject.setTutorName(registeredTutorObj.getName());
+			tutorMapperObject.setTutorContactNumber(registeredTutorObj.getContactNumber());
+			tutorMapperObject.setTutorEmail(registeredTutorObj.getEmailId());
+		}
+		return tutorMapperObjectList;
+	}
+	
+	public Map<String, Object> mapTutors(final Long enquiryId, final List<Long> tutorIdList) {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		for (final Long tutorId : tutorIdList) {
+			paramsMap.put("tutorId", tutorId);
+			applicationDao.executeUpdate("INSERT INTO TUTOR_MAPPER(ENQUIRY_ID, TUTOR_ID, MAPPING_STATUS) VALUES(:enquiryId, :tutorId, 'PENDING')", paramsMap);
+		}
+		return response;
+	}
+	
+	public Map<String, Object> unmapTutors(final List<Long> tutorMapperIdList) {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		for (final Long tutorMapperId : tutorMapperIdList) {
+			paramsMap.put("tutorMapperId", tutorMapperId);
+			applicationDao.executeUpdate("DELETE FROM TUTOR_MAPPER WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
+		}
 		return response;
 	}
 }

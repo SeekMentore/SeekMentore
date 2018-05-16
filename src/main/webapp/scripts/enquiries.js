@@ -1,7 +1,10 @@
 var customerListMap = new Object();
 customerListMap.selectedGrid = 'none';
 var particularCustomerEnquiryNavigatiorObject = new Object();
+var particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap = new Object();
+particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid = 'none';
 var selectedEligibleTutorId = '';
+var selectedTutorMappedId = '';
 
 function showCustomerWithPendingEnquiries(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectListForCustomers(response, 'customers-with-pending-enquiries');
@@ -21,6 +24,14 @@ function showAllEnquiriesForParticularCustomer(response) {
 
 function showAllEligibleTutors(response) {
 	prepareHTMLToFillGridForEligibleTutors(response);
+}
+
+function showAllMappedDemoPendingTutors(response) {
+	prepareHTMLToFillGridForMappedTutors(response, 'all-mapped-pending-tutors');
+}
+
+function showAllMappedDemoScheduledTutors(response) {
+	prepareHTMLToFillGridForMappedTutors(response, 'all-mapped-scheduled-tutors');
 }
 
 function prepareHTMLToFillGridAndSetMapNavigatorObjectListForCustomers(response, gridName) {
@@ -108,11 +119,46 @@ function prepareHTMLToFillGridForEligibleTutors(response) {
 	$('#all-eligible-tutors-with-subject-and-grade-total-records').html('Total Records = ' + eligibleTutorListWithSubjectGrade.length);
 }
 
+function prepareHTMLToFillGridForMappedTutors(response, gridName) {
+	selectedTutorMappedId = '';
+	particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[gridName] = createNavigatorObject(response);
+	var particularCustomerParticularEnquiryTutorMapperNavigatiorObject = particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[gridName];
+	var html ='';
+	for (var i=0;i < particularCustomerParticularEnquiryTutorMapperNavigatiorObject.getRecordCount(); i++) {
+		var tutorMapperObject = particularCustomerParticularEnquiryTutorMapperNavigatiorObject.getListItem(i);
+		html +='<tr>';
+		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorMapperRecord(\''+gridName+'\', '+i+')">'+showValue(tutorMapperObject.tutorName)+ '</a></td>';
+		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorMapperRecord(\''+gridName+'\', '+i+')">'+showValue(tutorMapperObject.tutorEmail)+ '</a></td>';
+		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorMapperRecord(\''+gridName+'\', '+i+')">'+showValue(tutorMapperObject.tutorContactNumber)+ '</a></td>';
+		html += '<td><a href="javascript:void(0);" onclick="getParticularTutorMapperRecord(\''+gridName+'\', '+i+')">'+showValue(tutorMapperObject.mappingStatus)+ '</a></td>';
+		if (gridName == 'all-mapped-pending-tutors') {
+			html += '<td><input type="checkbox" onclick="toggleTutorMapperIdForUnMapping(this,\''+tutorMapperObject.tutorMapperId+'\')" /></td>';
+		}
+		html +='</tr>';
+	}
+	$('#'+gridName+'-records').html(html);
+	$('#'+gridName+'-total-records').html('Total Records = ' + particularCustomerParticularEnquiryTutorMapperNavigatiorObject.getRecordCount());
+	if (particularCustomerParticularEnquiryTutorMapperNavigatiorObject.getRecordCount() > 0) {
+		$('#form-subject').prop('disabled',true);
+		$('#form-grade').prop('disabled',true);
+		$('#form-locations').prop('disabled',true);
+		$('#form-preferred-teaching-type').prop('disabled',true);
+	}
+}
+
 function toggleTutorIdForMapping(obj, tutorId) {
 	if (obj.checked) {
 		selectedEligibleTutorId += tutorId + ';';
 	} else {
 		selectedEligibleTutorId = selectedEligibleTutorId.replace(tutorId + ';', '');
+	}
+}
+
+function toggleTutorMapperIdForUnMapping(obj, tutorMapperId) {
+	if (obj.checked) {
+		selectedTutorMappedId += tutorMapperId + ';';
+	} else {
+		selectedTutorMappedId = selectedTutorMappedId.replace(tutorMapperId + ';', '');
 	}
 }
 
@@ -154,7 +200,8 @@ function openCustomerRecord(customerObj) {
 		replacePlaceHoldersForEmailPanel(showValue(customerObj.emailId), showValue(customerObj.name));
 		
 		var data = { 
-			customerId: customerObj.customerId
+			customerId: customerObj.customerId,
+			grid	: customerListMap.selectedGrid
 		}
 		callWebservice('/rest/enquiry/displayAllEnquiriesForParticularCustomer', data, showAllEnquiriesForParticularCustomer, null, null, 'application/x-www-form-urlencoded');
 	} 
@@ -203,8 +250,22 @@ function openEnquiryRecord(enquiryObject) {
 		$('#ENQUIRY_DETAILS_LAST_ACTION_DATE').html(showValue(enquiryObject.lastActionDate));
 		$('#ENQUIRY_DETAILS_ADMIN_REMARKS').html(showValue(enquiryObject.adminRemarks));
 		
+		loadMappedTutors();
 		loadEligibleTutors();
 	} 
+}
+
+function previousTutorMapperRecord() {
+	openTutorMapperRecord(particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].previousRecord());
+}
+
+function nextTutorMapperRecord() {
+	openTutorMapperRecord(particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].nextRecord());
+}
+
+function getParticularTutorMapperRecord(recordNumber) {
+	particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid = gridName;
+	openTutorMapperRecord(particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function loadEnquiryDetailsDropdowns(response) {
@@ -270,18 +331,35 @@ function loadEligibleTutors() {
 	callWebservice('/rest/enquiry/displayAllEligibleTutors', data, showAllEligibleTutors, null, null, 'application/x-www-form-urlencoded');
 }
 
+function loadMappedTutors() {
+	var data = { 
+		enquiryId: particularCustomerEnquiryNavigatiorObject.getCurrentRecord().enquiryId
+	}
+	callWebservice('/rest/enquiry/displayAllMappedDemoPendingTutors', data, showAllMappedDemoPendingTutors, null, null, 'application/x-www-form-urlencoded');
+	callWebservice('/rest/enquiry/displayAllMappedDemoScheduledTutors', data, showAllMappedDemoScheduledTutors, null, null, 'application/x-www-form-urlencoded');
+}
+
 function mapTutors() {
 	var data = { 
 		enquiryId: particularCustomerEnquiryNavigatiorObject.getCurrentRecord().enquiryId,
 		selectedEligibleTutorIdSemicolonSeparatedList : selectedEligibleTutorId
 	}
 	successMessage = 'Tutors Mapped successfully.';
-	callbackAfterCommonSuccess = showAllMappedTutors;
-	callWebservice('/rest/enquiry/mapTutors', data, showAllMappedTutors, null, null, 'application/x-www-form-urlencoded');
+	callbackAfterCommonSuccess = refreshTutorLists;
+	callWebservice('/rest/enquiry/mapTutors', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
-function refreshTutorLists(response) {
-	showAllMappedTutors(response);
+function unmapTutors() {
+	var data = { 
+			selectedTutorMappedIdSemicolonSeparatedList : selectedTutorMappedId
+	}
+	successMessage = 'Tutors unmapped successfully.';
+	callbackAfterCommonSuccess = refreshTutorLists;
+	callWebservice('/rest/enquiry/unmapTutors', data, null, null, null, 'application/x-www-form-urlencoded');
+}
+
+function refreshTutorLists() {
+	loadMappedTutors();
 	loadEligibleTutors();
 }
 

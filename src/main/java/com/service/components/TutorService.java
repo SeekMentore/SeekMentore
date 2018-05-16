@@ -329,9 +329,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	public void sendDocumentRejectionEmailToTutor(final Long tutorId, final String documentType, final String remarks) throws Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
-		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", registeredTutorObj.getName());
 		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
@@ -347,11 +345,15 @@ public class TutorService implements TutorConstants {
 				null);
 	}
 	
-	public Map<String, Object> sendDocumentReminderEmailToTutor(final Long tutorId, final String documentType) throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>(); 
+	public RegisteredTutor getRegisteredTutorObject(final Long tutorId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+	}
+	
+	public Map<String, Object> sendDocumentReminderEmailToTutor(final Long tutorId, final String documentType) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", registeredTutorObj.getName());
 		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
@@ -376,9 +378,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final Long tutorId) throws JAXBException, URISyntaxException, Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
-		final RegisteredTutor registeredTutorObj = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
+		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
 		if (null != registeredTutorObj) {
 			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInRegisteredTutorObject(registeredTutorObj);

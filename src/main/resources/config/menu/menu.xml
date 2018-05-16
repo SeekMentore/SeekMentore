@@ -71,6 +71,10 @@
 			<webservice id="getDropdownListDataForEnquiryDetails" url="/getDropdownListDataForEnquiryDetails"></webservice>
 			<webservice id="updateEnquiryDetails" url="/updateEnquiryDetails"></webservice>
 			<webservice id="displayAllEligibleTutors" url="/displayAllEligibleTutors"></webservice>
+			<webservice id="mapTutors" url="/mapTutors"></webservice>
+			<webservice id="displayAllMappedDemoPendingTutors" url="/displayAllMappedDemoPendingTutors"></webservice>
+			<webservice id="unmapTutors" url="/unmapTutors"></webservice>
+			<webservice id="displayAllMappedDemoScheduledTutors" url="/displayAllMappedDemoScheduledTutors"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">

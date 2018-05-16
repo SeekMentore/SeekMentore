@@ -20,6 +20,9 @@ public class EnquiryObject implements Serializable, CustomerConstants, Applicati
 	private Date lastActionDate;
 	private String matchStatus;
 	private Long tutorId;
+	private String tutorName;
+	private String tutorEmail;
+	private String tutorContactNumber;
 	private String adminRemarks;
 	private String locationDetails;
 	private String addressDetails;
@@ -163,6 +166,30 @@ public class EnquiryObject implements Serializable, CustomerConstants, Applicati
 
 	public void setPreferredTeachingType(String preferredTeachingType) {
 		this.preferredTeachingType = preferredTeachingType;
+	}
+
+	public String getTutorName() {
+		return tutorName;
+	}
+
+	public void setTutorName(String tutorName) {
+		this.tutorName = tutorName;
+	}
+
+	public String getTutorEmail() {
+		return tutorEmail;
+	}
+
+	public void setTutorEmail(String tutorEmail) {
+		this.tutorEmail = tutorEmail;
+	}
+
+	public String getTutorContactNumber() {
+		return tutorContactNumber;
+	}
+
+	public void setTutorContactNumber(String tutorContactNumber) {
+		this.tutorContactNumber = tutorContactNumber;
 	}
 
 	@Override
