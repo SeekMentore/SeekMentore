@@ -14,8 +14,23 @@
 	  <img src="images/company-logo-complete.png" />
   </div>
   <div class="user-info">
-	  <div id="employee-name">Welcome - </div>
-	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Register</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithus.html" >Subscribe With Us</a>
+		    <a href="registeredtutor.html" >Registered Tutor</a>
+		    <a href="enquiries.html" >All Enquiries</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
   </div>
 </div>
 <div class="banner-separator"></div>
@@ -33,7 +48,7 @@
 					<button 
 						type="button" 
 						onClick="downloadReport()"
-						class="login-form-element submit-button button-green" >
+						class="form-element submit-button button-green" >
 						Download Report
 					</button> 
 				</th>
@@ -219,6 +234,30 @@
 		</table>
 	</div>
 </div>
+<div id="registered-all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Registered Tutors</th>
+				<th id="registered-total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="registered-tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
 <div id="selected-record-div" class="w3-row-padding noscreen">
 <BR/>
 	<div id="download-profile-div" class="w3-row-padding">
@@ -229,7 +268,7 @@
 						<button 
 							type="button" 
 							onClick="downloadProfile()"
-							class="login-form-element submit-button button-green" >
+							class="form-element submit-button button-green" >
 							Download Tutor Profile
 						</button> 
 					</th>
@@ -323,6 +362,14 @@
 	    	<tr>
 	    		<td>Preferred Time To Call</td>
 	    		<td id="PREFERRED_TIME_TO_CALL"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td id="REFERENCE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td id="PREFERRED_TEACHING_TYPE"></td>
 	    	</tr>
 	    	<tr>
 	    		<td>Additional Details</td>
@@ -436,6 +483,14 @@
 	    		<td>Record Last Updated</td>
 	    		<td id="RECORD_LAST_UPDATED"></td>
 	    	</tr>
+	    	<tr>
+	    		<td>Is Data Migrated</td>
+	    		<td id="IS_DATA_MIGRATED"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>When Migrated</td>
+	    		<td id=WHEN_MIGRATED></td>
+	    	</tr>
 		</table>
    </div>
    <div id="remarks-div" class="w3-row-padding">
@@ -454,7 +509,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('contacted')"
-					class="login-form-element submit-button button-green" >
+					class="form-element submit-button button-green" >
 					Contacted
 				</button> 
 			</td>
@@ -462,7 +517,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('recontact')"
-					class="login-form-element submit-button" >
+					class="form-element submit-button" >
 					Re-contact
 				</button> 
 			</td>
@@ -470,7 +525,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Reject
 				</button> 
 			</td>
@@ -484,7 +539,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('verify')"
-					class="login-form-element submit-button button-green" >
+					class="form-element submit-button button-green" >
 					Verify
 				</button> 
 			</td>
@@ -492,7 +547,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('failverify')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Fail Verification
 				</button> 
 			</td>
@@ -500,7 +555,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Reject
 				</button> 
 			</td>
@@ -514,7 +569,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('select')"
-					class="login-form-element submit-button button-green" >
+					class="form-element submit-button button-green" >
 					Select
 				</button> 
 			</td>
@@ -522,7 +577,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Reject
 				</button> 
 			</td>
@@ -536,7 +591,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reverify')"
-					class="login-form-element submit-button button-green" >
+					class="form-element submit-button button-green" >
 					Re-verify
 				</button> 
 			</td>
@@ -544,7 +599,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Reject
 				</button> 
 			</td>
@@ -558,7 +613,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('recontacted')"
-					class="login-form-element submit-button button-green" >
+					class="form-element submit-button button-green" >
 					Recontacted
 				</button> 
 			</td>
@@ -566,7 +621,7 @@
 				<button 
 					type="button" 
 					onClick="takeAction('reject')"
-					class="login-form-element submit-button button-red" >
+					class="form-element submit-button button-red" >
 					Reject
 				</button> 
 			</td>
@@ -657,7 +712,7 @@
 						<button 
 							type="button" 
 							onClick="sendEmail()"
-							class="login-form-element submit-button button-green" >
+							class="form-element submit-button button-green" >
 							Send Email
 						</button> 
 					</td>
@@ -665,7 +720,7 @@
 						<button 
 							type="button" 
 							onClick="resetEmail()"
-							class="login-form-element submit-button" >
+							class="form-element submit-button" >
 							Reset
 						</button> 
 					</td>
@@ -707,6 +762,7 @@
 </div>
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
 <script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
 <script src="scripts/admin.js"></script>
 <script src="scripts/tutorregister.js"></script>
 <script>

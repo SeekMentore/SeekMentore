@@ -33,7 +33,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_TENTATIVE_TUTOR_ID, unique = true, nullable = false)
-	private long tentativeTutorId;
+	private Long tentativeTutorId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_APPLICATION_DATE, length = 10, nullable = false)
@@ -71,7 +71,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private String transportMode;
 	
 	@Column(name = COLUMN_NAME_TEACHING_EXPERIENCE, nullable = false)
-	private int teachingExp;
+	private Integer teachingExp;
 	
 	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
 	private String studentGrade;
@@ -164,7 +164,13 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private String rejectionRemarks;
 	
 	@Column(name = COLUMN_NAME_REJECTION_COUNT)
-	private int rejectionCount;
+	private Integer rejectionCount;
+	
+	@Column(name = COLUMN_NAME_REFERENCE)
+	private String reference;
+	
+	@Column(name = COLUMN_NAME_PREFERRED_TEACHING_TYPE)
+	private String preferredTeachingType;
 	
 	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
@@ -191,7 +197,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String qualification,
 			String primaryProfession,
 			String transportMode,
-			int teachingExp,
+			Integer teachingExp,
 			String studentGrade,
 			String subjects,
 			String locations,
@@ -220,9 +226,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			String whoRejected,
 			Date rejectionDate,
 			String rejectionRemarks,
-			int rejectionCount,
+			Integer rejectionCount,
 			String reApplied,
 			Date previousApplicationDate,
+			String reference,
+			String preferredTeachingType,
 			Date recordLastUpdated
 	) {
 		this.applicationDate = applicationDate;
@@ -267,15 +275,17 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionRemarks = rejectionRemarks;
 		this.rejectionCount = rejectionCount;
 		this.reApplied = reApplied;
+		this.reference = reference;
+		this.preferredTeachingType = preferredTeachingType;
 		this.previousApplicationDate = previousApplicationDate;
 		this.recordLastUpdated = recordLastUpdated;
 	}
 
-	public long getTentativeTutorId() {
+	public Long getTentativeTutorId() {
 		return tentativeTutorId;
 	}
 
-	public void setTentativeTutorId(long tentativeTutorId) {
+	public void setTentativeTutorId(Long tentativeTutorId) {
 		this.tentativeTutorId = tentativeTutorId;
 	}
 
@@ -351,11 +361,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.transportMode = transportMode;
 	}
 
-	public int getTeachingExp() {
+	public Integer getTeachingExp() {
 		return teachingExp;
 	}
 
-	public void setTeachingExp(int teachingExp) {
+	public void setTeachingExp(Integer teachingExp) {
 		this.teachingExp = teachingExp;
 	}
 
@@ -599,11 +609,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.rejectionRemarks = rejectionRemarks;
 	}
 
-	public int getRejectionCount() {
+	public Integer getRejectionCount() {
 		return rejectionCount;
 	}
 
-	public void setRejectionCount(int rejectionCount) {
+	public void setRejectionCount(Integer rejectionCount) {
 		this.rejectionCount = rejectionCount;
 	}
 
@@ -631,6 +641,22 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.recordLastUpdated = recordLastUpdated;
 	}
 	
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	public String getPreferredTeachingType() {
+		return preferredTeachingType;
+	}
+
+	public void setPreferredTeachingType(String preferredTeachingType) {
+		this.preferredTeachingType = preferredTeachingType;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
@@ -652,6 +678,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, this.subjects));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATIONS, this.locations));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, this.preferredTimeToCall));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, this.reference));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TEACHING_TYPE, this.preferredTeachingType));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, this.isContacted));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, this.whoContacted));
@@ -705,6 +733,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_SUBJECTS,
 						COLUMN_NAME_LOCATIONS,
 						COLUMN_NAME_PREFERRED_TIME_TO_CALL,
+						COLUMN_NAME_REFERENCE,
+						COLUMN_NAME_PREFERRED_TEACHING_TYPE,
 						COLUMN_NAME_ADDITIONAL_DETAILS,
 						COLUMN_NAME_IS_CONTACTED,
 						COLUMN_NAME_WHO_CONTACTED,
@@ -732,7 +762,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_REJECTION_COUNT,
 						COLUMN_NAME_RE_APPLIED,
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
-						COLUMN_NAME_RECORD_LAST_UPDATED,
+						COLUMN_NAME_RECORD_LAST_UPDATED
 					};
 			}
 		}
@@ -760,6 +790,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.subjects,
 						this.locations,
 						this.preferredTimeToCall,
+						this.reference,
+						this.preferredTeachingType,
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
@@ -787,7 +819,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.rejectionCount,
 						this.reApplied,
 						this.previousApplicationDate,
-						this.recordLastUpdated,
+						this.recordLastUpdated
 				};
 			}
 		}

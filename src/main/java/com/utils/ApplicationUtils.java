@@ -77,6 +77,17 @@ public class ApplicationUtils implements ApplicationConstants {
 		return sizeResponse;
 	}
 	
+	public static String getStringFromCharacterArray(final Character[] array) {
+		String value = null;
+		if (null != array && array.length > 0) {
+			value = EMPTY_STRING;
+			for (Character character : array) {
+				value += Character.toString((char)character);
+			}
+		}
+		return value;
+	}
+	
 	/**
      * System Encoder and Decoder for sending complex binary data 
      */

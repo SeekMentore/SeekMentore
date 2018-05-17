@@ -1,5 +1,6 @@
 package com.model.rowmappers;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -7,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.components.publicaccess.BecomeTutor;
+import com.utils.ExceptionUtils;
 
 public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutorConstants {
 
@@ -30,6 +32,8 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setSubjects(row.getString(COLUMN_NAME_SUBJECTS));
 		becomeTutor.setLocations(row.getString(COLUMN_NAME_LOCATIONS));
 		becomeTutor.setPreferredTimeToCall(row.getString(COLUMN_NAME_PREFERRED_TIME_TO_CALL));
+		becomeTutor.setReference(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_REFERENCE, String.class));
+		becomeTutor.setPreferredTeachingType(row.getString(COLUMN_NAME_PREFERRED_TEACHING_TYPE));
 		becomeTutor.setAdditionalDetails(row.getString(COLUMN_NAME_ADDITIONAL_DETAILS));
 		becomeTutor.setIsContacted(row.getString(COLUMN_NAME_IS_CONTACTED));
 		becomeTutor.setWhoContacted(row.getString(COLUMN_NAME_WHO_CONTACTED));
@@ -58,6 +62,8 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setReApplied(row.getString(COLUMN_NAME_RE_APPLIED));
 		becomeTutor.setPreviousApplicationDate(row.getDate(COLUMN_NAME_PREVIOUS_APPLICATION_DATE));
 		becomeTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
+		becomeTutor.setIsDataMigrated(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_DATA_MIGRATED", String.class));
+		becomeTutor.setWhenMigrated(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHEN_MIGRATED", Date.class));
 		return becomeTutor;
 	}
 

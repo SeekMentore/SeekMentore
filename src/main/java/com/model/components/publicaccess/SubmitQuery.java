@@ -32,7 +32,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_QUERY_ID, unique = true, nullable = false)
-	private long queryId;
+	private Long queryId;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = COLUMN_NAME_QUERY_REQUESTED_DATE, length = 10, nullable = false)
@@ -141,11 +141,11 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.contactedDate = contactedDate;
 	}
 
-	public long getQueryId() {
+	public Long getQueryId() {
 		return queryId;
 	}
 
-	public void setQueryId(long queryId) {
+	public void setQueryId(Long queryId) {
 		this.queryId = queryId;
 	}
 

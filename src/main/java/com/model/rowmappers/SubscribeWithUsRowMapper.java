@@ -23,6 +23,9 @@ public class SubscribeWithUsRowMapper implements RowMapper<SubscribeWithUs>, Sub
 		subscribeWithUs.setStudentGrade(row.getString(COLUMN_NAME_STUDENT_GRADE));
 		subscribeWithUs.setSubjects(row.getString(COLUMN_NAME_SUBJECTS));
 		subscribeWithUs.setPreferredTimeToCall(row.getString(COLUMN_NAME_PREFERRED_TIME_TO_CALL));
+		subscribeWithUs.setLocation(row.getString(COLUMN_NAME_LOCATION));
+		subscribeWithUs.setReference(row.getString(COLUMN_NAME_REFERENCE));
+		subscribeWithUs.setAddressDetails(row.getString(COLUMN_NAME_ADDRESS_DETAILS));
 		subscribeWithUs.setAdditionalDetails(row.getString(COLUMN_NAME_ADDITIONAL_DETAILS));
 		subscribeWithUs.setSubscribedCustomer(row.getString(COLUMN_NAME_SUBSCRIBED_CUSTOMER));
 		subscribeWithUs.setIsContacted(row.getString(COLUMN_NAME_IS_CONTACTED));

@@ -1,13 +1,3 @@
-var user;
-function showUserInfo(response) {
-	user = response;
-	$('#employee-name').html($('#employee-name').html() + user.name);
-}
-
-function showValue(val) {
-	return (null != val) ? val : '';
-}
-
 function replaceEmailPanelStaticHolders() {
 	$('#email-regards-username').html(user.name);
 }
@@ -32,5 +22,3 @@ function resetEmail() {
 	var form = document.getElementById('email-form');
 	form.reset();
 }
-
-callWebservice('/rest/commons/getUser', null, showUserInfo);

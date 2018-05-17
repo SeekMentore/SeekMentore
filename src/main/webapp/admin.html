@@ -14,8 +14,23 @@
 	  <img src="images/company-logo-complete.png" />
   </div>
   <div class="user-info">
-	  <div id="employee-name">Welcome - </div>
-	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Register</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithus.html" >Subscribe With Us</a>
+		    <a href="registeredtutor.html" >Registered Tutor</a>
+		    <a href="enquiries.html" >All Enquiries</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
   </div>
 </div>
 <div class="banner-separator"></div>
@@ -32,7 +47,7 @@
 			Tutor Enquiry
 		</div>
 	</a>
-	<a href="subscribewithusadmin.html">
+	<a href="subscribewithus.html">
 		<div class="w3-third w3-container admin-panel-cards">
 			Subscription Enquiry
 		</div>
@@ -61,6 +76,7 @@
 </div>
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
 <script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
 <script src="scripts/admin.js"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ public class Webservice implements Serializable {
 	private String id;
 	private String url;
 	private String additionalAccessFunction;
+	private String pageAccessType;
 	
 	public String getId() {
 		return id;
@@ -36,5 +37,14 @@ public class Webservice implements Serializable {
 	@XmlAttribute
 	public void setAdditionalAccessFunction(String additionalAccessFunction) {
 		this.additionalAccessFunction = additionalAccessFunction;
+	}
+	
+	public String getPageAccessType() {
+		return pageAccessType;
+	}
+
+	@XmlAttribute
+	public void setPageAccessType(String pageAccessType) {
+		this.pageAccessType = pageAccessType;
 	}
 }

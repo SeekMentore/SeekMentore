@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Admin - Registered Tutor</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info">
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Register</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithus.html" >Subscribe With Us</a>
+		    <a href="registeredtutor.html" >Registered Tutor</a>
+		    <a href="enquiries.html" >All Enquiries</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="download-report-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records no-border">
+			<tr>
+				<th>
+					<a href="admin.html">&lt;&lt;Back to Admin</a> 
+				</th>
+				<th class="center-align">
+					<button 
+						type="button" 
+						onClick="downloadReport()"
+						class="form-element submit-button button-green" >
+						Download Report
+					</button> 
+				</th>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="header-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Registered Tutor Admin</th>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="all-records-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th>Registered Tutors</th>
+				<th id="total-records" class="total-records"></th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email Id</th>
+					<th>Contact Number</th>
+				</tr>
+			</thead>
+			<tbody id="tutor-records">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div id="selected-record-div" class="w3-row-padding noscreen">
+<BR/>
+	<div id="download-profile-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="">
+				<tr>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="downloadProfile()"
+							class="form-element submit-button button-green" >
+							Download Tutor Profile
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+  <BR/>
+  <div id="selected-header-div" class="w3-row-padding">
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Registered Tutor Admin</th>
+			</tr>
+		</table>
+	</div>
+</div>
+<BR/>
+<div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+<div id="documents-div">
+			<div class="w3-row-padding">
+				<table align="center" class="all-records">
+					<tr class="header-panel">
+						<th>Uploaded Documents</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form id="document-upload-form" method="post" enctype="multipart/form-data">
+					<table align="center" class="all-records">
+						<tbody>
+							<tr>
+								<td>Photograph</td>
+								<td>
+									<p id="inputFilePhoto-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('PROFILE_PHOTO')" id="inputFilePhoto-link" class="clickable-link-effect noscreen">Download Photograph</a>
+									<p id="inputFilePhoto-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFilePhoto-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('PROFILE_PHOTO')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFilePhoto-approved noscreen" colspan="2">
+									<p>Approved
+									<a href="javascript:void(0)" onclick="showDocumentDetails('PROFILE_PHOTO')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFilePhoto-rejected noscreen" colspan="2">
+									<p>Rejected
+									<a href="javascript:void(0)" onclick="showDocumentDetails('PROFILE_PHOTO')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFilePhoto-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('PROFILE_PHOTO')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFilePhoto-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('PROFILE_PHOTO')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+							<tr>
+								<td>PAN card</td>
+								<td>
+									<p id="inputFilePan-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('PAN_CARD')" id="inputFilePan-link" class="clickable-link-effect noscreen">Download PAN card</a>
+									<p id="inputFilePan-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFilePan-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('PAN_CARD')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFilePan-approved noscreen" colspan="2">
+									<p>Approved
+									<a href="javascript:void(0)" onclick="showDocumentDetails('PAN_CARD')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFilePan-rejected noscreen" colspan="2">
+									<p>Rejected
+									<a href="javascript:void(0)" onclick="showDocumentDetails('PAN_CARD')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFilePan-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('PAN_CARD')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFilePan-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('PAN_CARD')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+							<tr>
+								<td>Aadhaar card</td>
+								<td>
+									<p id="inputFileAadhaarCard-absent">Not Uploaded</p>
+									<a href="javascript:void(0)" onclick="downloadDocument('AADHAAR_CARD')" id="inputFileAadhaarCard-link" class="clickable-link-effect noscreen">Download Aadhaar card</a>
+									<p id="inputFileAadhaarCard-downloading" class="noscreen">Downloading...</a>
+								</td>
+								<td class="inputFileAadhaarCard-reminder" colspan="2">
+									<button 
+										type="button" 
+										onClick="sendReminderEmail('AADHAAR_CARD')"
+										class="form-element submit-button" >
+										Send Reminder Email
+									</button>
+								</td>
+								<td class="inputFileAadhaarCard-approved noscreen" colspan="2">
+									<p>Approved
+									<a href="javascript:void(0)" onclick="showDocumentDetails('AADHAAR_CARD')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFileAadhaarCard-rejected noscreen" colspan="2">
+									<p>Rejected
+									<a href="javascript:void(0)" onclick="showDocumentDetails('AADHAAR_CARD')" class="clickable-link-effect">Details</a></p>
+								</td>
+								<td class="inputFileAadhaarCard-action">
+									<button 
+										type="button" 
+										onClick="approveDocument('AADHAAR_CARD')"
+										class="form-element submit-button button-green" >
+										Approve
+									</button> 
+								</td>
+								<td class="inputFileAadhaarCard-action">
+									<button 
+										type="button" 
+										onClick="rejectDocument('AADHAAR_CARD')"
+										class="form-element submit-button button-red" >
+										Reject
+									</button> 
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div id="remarks-div" class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr>
+			<td>
+				<textarea rows="4" cols="76" id="remarks" placeholder="Provide remarks."></textarea>
+			</td>
+		</tr>
+	</table>
+   </div>
+		<div class="w3-row-padding">
+				<table align="center" class="all-records">
+					<tr class="header-panel">
+						<th>Tutor Details</th>
+					</tr>
+				</table>
+			</div>
+   <div class="w3-row-padding">
+	    <table align="center" class="all-records">
+	    	<tr>
+	    		<td>Name</td>
+	    		<td id="NAME"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Date of Birth</td>
+	    		<td id="DATE_OF_BIRTH"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td id="CONTACT_NUMBER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td id="EMAIL_ID"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Gender</td>
+	    		<td id="GENDER"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Qualification</td>
+	    		<td id="QUALIFICATION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Primary Profession</td>
+	    		<td id="PRIMARY_PROFESSION"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Transport Mode</td>
+	    		<td id="TRANSPORT_MODE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Teaching Experience</td>
+	    		<td id="TEACHING_EXP"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Interested Student Grades</td>
+	    		<td id="INTERESTED_STUDENT_GRADES"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Interested Subjects</td>
+	    		<td id="INTERESTED_SUBJECTS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Comfortable Locations</td>
+	    		<td id="COMFORTABLE_LOCATIONS"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td id="PREFERRED_TEACHING_TYPE"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td id="ADDITIONAL_DETAILS"></td>
+	    	</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th><a href="javascript:void(0);" onclick="previousTutorRecord()">&lt;&lt; Previous</a></th>
+			<th><a href="javascript:void(0);" onclick="showTutorAllRecordsPage()">Back to all records</a></th>
+			<th ><a href="javascript:void(0);" onclick="nextTutorRecord()">Next &gt;&gt;</a></th>
+		</tr>
+	</table>
+   </div>
+   <div id="send-email-div" class="w3-row-padding">
+   <br/>
+	   <form id="email-form" target="ifrDownload" method="post" enctype="multipart/form-data">
+			   	<input type="hidden" name="recepientEmailId" id="recepientEmailId"/>
+			   	<input type="hidden" name="email-salutation-name" id="email-salutation-name" />
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th class="center-align" colspan="2">Email Panel</th>
+				</tr>
+				<tr>
+					<td>
+						To -
+					</td>
+					<td id="recepientEmailId-text">
+						$RECEPIENT_EMAIL
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Subject
+					</td>
+					<td>
+						<input type="text" name="email-subject" id="email-subject" size="70" placeholder="Please enter subject here."/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Hello
+					</td>
+					<td id="salutationText">
+						$TUTOR_NAME
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea rows="6" cols="76" id="emailText" name="emailText" placeholder="Please enter email body here."></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Thanks & Regards,
+						<br/><p id="email-regards-username">$USER_NAME</p>
+						<br/>&lt;Company Contact Information&gt;
+					</td>
+				</tr>
+			</table>
+			<table align="center" class="all-records">
+				<tr>
+					<td colspan="2">
+						Attach Files &lt;Maximum 4 files to be attached&gt;
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File 1: <input type="file" name="inputFile_1" name="inputFile_1" size="25" accept=".pdf" />
+					</td>
+					<td>
+						File 2: <input type="file" name="inputFile_2" name="inputFile_2" size="25" accept=".pdf" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File 3: <input type="file" name="inputFile_3" name="inputFile_3" size="25" accept=".pdf" />
+					</td>
+					<td>
+						File 4: <input type="file" name="inputFile_4" name="inputFile_4" size="25" accept=".pdf" />
+					</td>
+				</tr>
+			</table>
+			<table align="center" class="all-records">
+				<tr>
+					<td>
+						<button 
+							type="button" 
+							onClick="sendEmail()"
+							class="form-element submit-button button-green" >
+							Send Email
+						</button> 
+					</td>
+					<td>
+						<button 
+							type="button" 
+							onClick="resetEmail()"
+							class="form-element submit-button" >
+							Reset
+						</button> 
+					</td>
+				</tr>
+			</table>
+	   </form>
+   </div>
+</div>
+<BR/>
+<BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+	<input type="text" value="" size="10" name="tutorId" id="downloadForm-tutorId" />
+	<input type="text" value="" size="10" name="documentType" id="downloadForm-documentType" />
+	<input type="text" value="" size="10" name="name" id="downloadForm-name" />
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+  <!-- Modal content -->
+  <div class="modal-content">
+  	<div id="alert-title"></div>
+    <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+    <hr class="modal-line" />
+    <p id="notification-popup-model-content-section"></p>
+    <hr class="modal-line" />
+    <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/admin.js"></script>
+<script src="scripts/registeredtutor.js"></script>
+<script>
+	loadGrids();
+</script>
+</body>
+</html>

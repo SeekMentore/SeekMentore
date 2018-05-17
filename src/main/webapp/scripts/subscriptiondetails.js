@@ -14,12 +14,10 @@ function loadGrids() {
 }
 
 function showNonContactedSubscriptions(response){
-	
     prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
 
 function showNonVerifiedSubscriptions(response){
-	window.a = response;
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_verified');
 }
 
@@ -43,67 +41,8 @@ function showRejectedSubscriptions(response){
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
 
-function createSubscriptionNavigatorObject(subscriptionListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		subscriptionList		: subscriptionListResponse,
-		
-		getCurrentSubscribedRecord	: function() {
-			if (null != this.subscriptionList && this.subscriptionList.length > 0)
-				return this.subscriptionList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousSubscribedRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.subscriptionList.length - 1;
-			}
-			return this.getCurrentSubscribedRecord();
-		},
-		
-		nextSubscribedRecord			: function() {
-			if (this.currentIndex < this.subscriptionList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentSubscribedRecord();
-		},
-		
-		getParticularSubscribedRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.subscriptionList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentSubscribedRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.subscriptionList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.subscriptionList && this.subscriptionList.length > 0)
-				return this.subscriptionList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.subscriptionList && this.subscriptionList.length > 0)
-				return this.subscriptionList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
-
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
-	subscriptionListMap[gridName] = createSubscriptionNavigatorObject(response);
+	subscriptionListMap[gridName] = createNavigatorObject(response);
 	var subscriptionNavigatorObject = subscriptionListMap[gridName];
 	var html ='';
 	for (var i=0;i < subscriptionNavigatorObject.getRecordCount(); i++) {
@@ -119,16 +58,16 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 }
 
 function previousSubscribedRecord() {
-	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].previousSubscribedRecord());
+	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].previousRecord());
 }
 
 function nextSubscribedRecord() {
-	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].nextSubscribedRecord());
+	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].nextRecord());
 }
 
 function getParticularSubscribedRecord(gridName, recordNumber) {
 	subscriptionListMap.selectedGrid = gridName;
-	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].getParticularSubscribedRecord(recordNumber));
+	openSubscribedRecord(subscriptionListMap[subscriptionListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function hideSubscriptionAllRecordsPage() {
@@ -177,7 +116,11 @@ function openSubscribedRecord(subscriptionObj) {
 		$('#STUDENT_GRADE').html(showValue(subscriptionObj.studentGrade));
 		$('#SUBJECTS').html(showValue(subscriptionObj.subjects));
 		$('#PREFERRED_TIME_TO_CALL').html(showValue(subscriptionObj.preferredTimeToCall));
+		$('#LOCATION').html(showValue(subscriptionObj.location));
+		$('#REFERENCE').html(showValue(subscriptionObj.reference));
+		$('#ADDRESS_DETAILS').html(showValue(subscriptionObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(subscriptionObj.additionalDetails));
+		$('#SUBSCRIBED_CUSTOMER').html(showValue(subscriptionObj.subscribedCustomer));
 		$('#IS_CONTACTED').html(showValue(subscriptionObj.isContacted));
 		$('#WHO_CONTACTED').html(showValue(subscriptionObj.whoContacted));
 		$('#CONTACTED_DATE').html(showValue(subscriptionObj.contactedDate));

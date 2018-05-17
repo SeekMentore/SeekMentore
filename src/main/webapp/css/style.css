@@ -26,6 +26,11 @@ a {
 	font-size: 1.2em;
 }
 
+.clickable-link-effect {
+	text-decoration: underline !important;
+	color: blue !important;
+}
+
 .banner-separator {
 	clear:both;
 }
@@ -34,11 +39,15 @@ a {
 	border : 0px solid #000000 !important;
 }
 
+.responsive-width {
+	max-width: 50em !important;
+}
+
 table.all-records {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
-    max-width: 50em;
+    max-width: 70em;
     border: 1px solid #ddd;
 }
 
@@ -46,13 +55,22 @@ table.login {
     max-width: 25em !important;
 }
 
-.login-form-element {
+.form-element {
 	width: 100%;
 	height: 3em;
 }
 
-#logout-link {
-	text-align : right;
+.form-multiple-select-element {
+	height: 7em !important;
+}
+
+.menu-dropdown-div {
+	float: left;
+	padding-right: 1em;
+}
+
+.info-div {
+	float: right;
 }
 
 tr.header-panel {
@@ -225,3 +243,43 @@ table.all-records tr:nth-child(even){background-color: #f2f2f2}
 	  0% { transform: rotate(0deg); }
 	  100% { transform: rotate(360deg); }
 	}
+	
+.dropbtn {
+    background-color: #67BCD7;
+    width: 10em;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+}
+
+.menu-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 200px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.menu-dropdown a:hover {background-color: #ddd}
+
+.show {display:block;}

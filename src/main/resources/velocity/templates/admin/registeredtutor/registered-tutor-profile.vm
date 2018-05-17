@@ -1,0 +1,101 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+		<h3 align="center">Tutor Profile</h3>
+		<br/>
+		<table align="center">
+			<tr>
+	    		<td>Name</td>
+	    		<td>$registeredTutorObj.name</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Date of Birth</td>
+	    		<td>$registeredTutorObj.dateOfBirth</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td>$registeredTutorObj.contactNumber</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td>$registeredTutorObj.emailId</td>
+	    	</tr>
+	    	<tr>
+	    		<td>User Id</td>
+	    		<td>$registeredTutorObj.userId</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Gender</td>
+	    		<td>$registeredTutorObj.gender</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Qualification</td>
+	    		<td>$registeredTutorObj.qualification</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Primary Profession</td>
+	    		<td>$registeredTutorObj.primaryProfession</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Transport Mode</td>
+	    		<td>$registeredTutorObj.transportMode</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Teaching Experience</td>
+	    		<td>$registeredTutorObj.teachingExp</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Interested Student Grades</td>
+	    		<td>$registeredTutorObj.interestedStudentGrades</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Interested Subjects</td>
+	    		<td>$registeredTutorObj.interestedSubjects</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Comfortable Locations</td>
+	    		<td>$registeredTutorObj.comfortableLocations</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td>$registeredTutorObj.preferredTeachingType</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td>$registeredTutorObj.additionalDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Record Last Updated</td>
+	    		<td>$registeredTutorObj.recordLastUpdated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Updated By</td>
+	    		<td>$registeredTutorObj.updatedBy</td>
+	    	</tr>
+		</table>
+
+</body>
+</html>

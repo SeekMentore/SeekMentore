@@ -1,65 +1,6 @@
 var tutorListMap = new Object();
 tutorListMap.selectedGrid = 'none';
 
-function createTutorNavigatorObject(tutorListResponse) {
-	var obj =	{
-		currentIndex 	: 0,
-		tutorList		: tutorListResponse,
-		
-		getCurrentTutorRecord	: function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[this.currentIndex];
-			else 
-				return null;
-		},
-		
-		previousTutorRecord		: function() {
-			if (this.currentIndex > 0) {
-				this.currentIndex--;
-			} else {
-				this.currentIndex = this.tutorList.length - 1;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		nextTutorRecord			: function() {
-			if (this.currentIndex < this.tutorList.length - 1) {
-				this.currentIndex++;
-			} else {
-				this.currentIndex = 0;
-			}
-			return this.getCurrentTutorRecord();
-		},
-		
-		getParticularTutorRecord	: function(recordNumber) {
-			if (recordNumber >= 0 && recordNumber < this.tutorList.length) {
-				this.currentIndex = recordNumber;
-				return this.getCurrentTutorRecord();
-			}
-			return null;
-		},
-		
-		getList : function() {
-			return this.tutorList;
-		},
-		
-		getRecordCount : function() {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList.length;
-			else 
-				return 0;
-		},
-		
-		getListItem : function(index) {
-			if (null != this.tutorList && this.tutorList.length > 0)
-				return this.tutorList[index];
-			else 
-				return null;
-		}
-	}
-	return obj;
-}
-
 function showNonContactedTutorRecords(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'non_contacted');
 }
@@ -88,8 +29,12 @@ function showRejectedTutorRecords(response) {
 	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'rejected');
 }
 
+function showRegisteredTutorRecords(response) {
+	prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, 'registered');
+}
+
 function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
-	tutorListMap[gridName] = createTutorNavigatorObject(response);
+	tutorListMap[gridName] = createNavigatorObject(response);
 	var tutorNavigatorObject = tutorListMap[gridName];
 	var html ='';
 	for (var i=0;i < tutorNavigatorObject.getRecordCount(); i++) {
@@ -105,16 +50,16 @@ function prepareHTMLToFillGridAndSetMapNavigatorObjectList(response, gridName) {
 }
 
 function previousTutorRecord() {
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].previousTutorRecord());
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].previousRecord());
 }
 
 function nextTutorRecord() {
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].nextTutorRecord());
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].nextRecord());
 }
 
 function getParticularTutorRecord(gridName, recordNumber) {
 	tutorListMap.selectedGrid = gridName;
-	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].getParticularTutorRecord(recordNumber));
+	openTutorRecord(tutorListMap[tutorListMap.selectedGrid].getParticularRecord(recordNumber));
 }
 
 function hideTutorAllRecordsPage() {
@@ -128,6 +73,7 @@ function hideTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').addClass('noscreen');
 	$('#selected-all-records-div').addClass('noscreen');
 	$('#rejected-all-records-div').addClass('noscreen');
+	$('#registered-all-records-div').addClass('noscreen');
 	$('#header-div').addClass('noscreen');
 	$('#'+tutorListMap.selectedGrid+'-action-section').removeClass('noscreen');
 	var obj = document.getElementById(tutorListMap.selectedGrid+'-action-section');
@@ -148,6 +94,7 @@ function showTutorAllRecordsPage() {
 	$('#to_be_recontacted-all-records-div').removeClass('noscreen');
 	$('#selected-all-records-div').removeClass('noscreen');
 	$('#rejected-all-records-div').removeClass('noscreen');
+	$('#registered-all-records-div').removeClass('noscreen');
 	$('#header-div').removeClass('noscreen');
 }
 
@@ -170,6 +117,8 @@ function openTutorRecord(tutorObj) {
 		$('#SUBJECTS').html(showValue(tutorObj.subjects));
 		$('#LOCATIONS').html(showValue(tutorObj.locations));
 		$('#PREFERRED_TIME_TO_CALL').html(showValue(tutorObj.preferredTimeToCall));
+		$('#REFERENCE').html(showValue(tutorObj.reference));
+		$('#PREFERRED_TEACHING_TYPE').html(showValue(tutorObj.preferredTeachingType));
 		$('#ADDITIONAL_DETAILS').html(showValue(tutorObj.additionalDetails));
 		$('#IS_CONTACTED').html(showValue(tutorObj.isContacted));
 		$('#WHO_CONTACTED').html(showValue(tutorObj.whoContacted));
@@ -198,6 +147,8 @@ function openTutorRecord(tutorObj) {
 		$('#RE_APPLIED').html(showValue(tutorObj.reApplied));
 		$('#PREVIOUS_APPLICATION_DATE').html(showValue(tutorObj.previousApplicationDate));
 		$('#RECORD_LAST_UPDATED').html(showValue(tutorObj.recordLastUpdated));
+		$('#IS_DATA_MIGRATED').html(showValue(tutorObj.isDataMigrated));
+		$('#WHEN_MIGRATED').html(showValue(tutorObj.whenMigrated));
 		
 		replacePlaceHoldersForEmailPanel(showValue(tutorObj.emailId), showValue(tutorObj.firstName)+' '+showValue(tutorObj.lastName));
 	} 
@@ -212,7 +163,7 @@ function takeAction(button) {
 	}
 	successMessage = 'Tutor Registration Admin action successfully taken.';
 	callbackAfterCommonSuccess = takeActionAfterSuccessCallback;
-	callWebservice('/rest/admin/takeActionOnRegisteredTutors', data, null, null, null, 'application/x-www-form-urlencoded');
+	callWebservice('/rest/admin/takeActionOnTutorRegistration', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
 var takeActionAfterSuccessCallback = function(response) {
@@ -229,6 +180,7 @@ function loadGrids() {
 	callWebservice('/rest/admin/displayToBeRecontactedTutorRegistrations', null, showToBeRecontactedTutorRecords);
 	callWebservice('/rest/admin/displaySelectedTutorRegistrations', null, showSelectedTutorRecords);
 	callWebservice('/rest/admin/displayRejectedTutorRegistrations', null, showRejectedTutorRecords);
+	callWebservice('/rest/admin/displayRegisteredTutorsFromTutorRegistrations', null, showRegisteredTutorRecords);
 }
 
 function downloadReport() {

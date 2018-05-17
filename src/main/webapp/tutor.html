@@ -13,9 +13,21 @@
   <div class="company-logo">
 	  <img src="images/company-logo-complete.png" />
   </div>
-  <div class="user-info noscreen">
-	  <div id="employee-name">Welcome - </div>
-	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  <div class="user-info">
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Menu</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="javascript:void(0);" onclick="showDetailsSection()">My Details</a>
+		    <a href="javascript:void(0);" onclick="showUploadSection()">My Documents</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
   </div>
 </div>
 <div class="banner-separator"></div>
@@ -24,35 +36,270 @@
 <div id="all-records-div" class="w3-row-padding">
 	<Br/>
 	<div class="w3-row-padding">
-		<table align="center" class="all-records login">
-			<tr class="header-panel">
-				<th>Login Panel</th>
-			</tr>
-		</table>
-	</div>
-	<div class="w3-row-padding">
-		<form id="document-upload-form" method="post" enctype="multipart/form-data">
-			Tutor Id<input type="text" value="" size="10" name="tutorId" id="tutorId" />
-			PAN: <input type="file" name="inputFilePan" name="inputFilePan" size="25" accept=".pdf" />
-			DL: <input type="file" name="inputFileDriverLicense" name="inputFileDriverLicense" size="25" accept=".pdf" />
-			AADHAAR CARD: <input type="file" name="inputFileAadhaarCard" name="inputFileAadhaarCard" size="25" accept=".pdf" />
-			<button 
-				type="button" 
-				onClick="uploadDocuments()"
-				class="login-form-element submit-button button-green" >
-				Upload Documents
-			</button> 
-			<button 
-				type="button" 
-				onClick="resetDocuments()"
-				class="login-form-element submit-button" >
-				Reset
-			</button> 
-		</form>
+		<div id="documents-div">
+			<Br/>
+			<div class="w3-row-padding">
+				<table align="center" class="all-records responsive-width">
+					<tr class="header-panel">
+						<th>Please Upload Documents</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form id="document-upload-form" method="post" enctype="multipart/form-data">
+					<table align="center" class="all-records responsive-width">
+						<tbody>
+							<tr>
+								<td>Photograph</td>
+								<td>
+									<input type="file" class="form-element" name="inputFilePhoto" id="inputFilePhoto" size="25" accept=".jpg" />
+									<a href="javascript:void(0)" onclick="downloadDocument('PROFILE_PHOTO')" id="inputFilePhoto-link" class="clickable-link-effect noscreen">Download Photograph</a>
+									<span id="inputFilePhoto-downloading" class="noscreen">Downloading...</span>
+								</td>
+								<td>
+									<span id="inputFilePhoto-status" class="noscreen"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>PAN card</td>
+								<td>
+									<input type="file" class="form-element" name="inputFilePan" id="inputFilePan" size="25" accept=".pdf" />
+									<a href="javascript:void(0)" onclick="downloadDocument('PAN_CARD')" id="inputFilePan-link" class="clickable-link-effect noscreen">Download PAN card</a>
+									<span id="inputFilePan-downloading" class="noscreen">Downloading...</span>
+								</td>
+								<td>
+									<span id="inputFilePan-status" class="noscreen"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>Aadhaar card</td>
+								<td>
+									<input type="file" class="form-element" name="inputFileAadhaarCard" id="inputFileAadhaarCard" size="25" accept=".pdf" />
+									<a href="javascript:void(0)" onclick="downloadDocument('AADHAAR_CARD')" id="inputFileAadhaarCard-link" class="clickable-link-effect noscreen">Download Aadhaar card</a>
+									<span id="inputFileAadhaarCard-downloading" class="noscreen">Downloading...</span>
+								</td>
+								<td>
+									<span id="inputFileAadhaarCard-status" class="noscreen"></span>
+								</td>
+							</tr>
+					</table>
+					<table align="center" class="all-records responsive-width">
+							<tr id="upload-action-buttons">
+								<th>
+									<button 
+										type="button" 
+										onClick="uploadDocuments()"
+										class="form-element submit-button button-green" >
+										Upload Documents
+									</button> 
+								</th>
+								<td>
+									<button 
+										type="button" 
+										onClick="resetDocuments()"
+										class="form-element submit-button" >
+										Reset
+									</button> 
+								</td>
+							</tr>
+							<tr id="upload-instructions">
+				    			<td colspan="2">
+					    			<ins>Instructions</ins> :
+					    			Please upload only ".jpg" files for Photograph. Please upload only ".pdf" for PAN & Aadhaar card.
+				    			</td>
+					    	</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		<div id="details-div" class="noscreen">
+			<BR/>
+			<div class="w3-row-padding">
+				<table align="center" class="all-records responsive-width">
+					<tr class="header-panel">
+						<th>Your Current Details</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form id="details-update-form" method="post">
+				    <table align="center" class="all-records responsive-width">
+				    	<tr>
+				    		<td>Name</td>
+				    		<td id="NAME"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Date of Birth</td>
+				    		<td id="DATE_OF_BIRTH"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Contact Number</td>
+				    		<td id="CONTACT_NUMBER"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Email Id</td>
+				    		<td id="EMAIL_ID"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Gender</td>
+				    		<td id="GENDER"></td>
+				    		<td></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Qualification</td>
+				    		<td id="QUALIFICATION"></td>
+				    		<td>
+				    			<select name="form-qualification" id="form-qualification" class="form-element">
+									<option value="">Qualification</option>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Primary Profession</td>
+				    		<td id="PRIMARY_PROFESSION"></td>
+				    		<td>
+				    			<select name="form-primary-profession" id="form-primary-profession" class="form-element">
+									<option value="">Primary Profession</option>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Transport Mode</td>
+				    		<td id="TRANSPORT_MODE"></td>
+				    		<td>
+				    			<select name="form-transport-mode" id="form-transport-mode" class="form-element">
+									<option value="">Transport Mode</option>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Teaching Experience</td>
+				    		<td id="TEACHING_EXP"></td>
+				    		<td><input type="number" id="form-teaching-experience" class="form-element" name="form-teaching-experience" placeholder="Teaching Experience"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td>Interested Student Grades</td>
+				    		<td id="INTERESTED_STUDENT_GRADES"></td>
+				    		<td>
+				    			<select name="form-student-grades" id="form-student-grades" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Interested Subjects</td>
+				    		<td id="INTERESTED_SUBJECTS"></td>
+				    		<td>
+				    			<select name="form-subjects" id="form-subjects" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Comfortable Locations</td>
+				    		<td id="COMFORTABLE_LOCATIONS"></td>
+				    		<td>
+				    			<select name="form-comfortable-locations" id="form-comfortable-locations" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Preferred Teaching Type</td>
+				    		<td id="PREFERRED_TEACHING_TYPE"></td>
+				    		<td>
+				    			<select name="form-preferred-teaching-type" id="form-preferred-teaching-type" class="form-element form-multiple-select-element" multiple>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    		<td>Additional Details</td>
+				    		<td id="ADDITIONAL_DETAILS" colspan="2"></td>
+				    	</tr>
+				    	<tr>
+				    		<td colspan="3"><textarea rows="4" cols="65" name="form-additional-details" id="form-additional-details" placeholder="Provide any additional details about you."></textarea></td>
+				    	</tr>
+				    	<tr>
+							<th colspan="2">
+								<button 
+									type="button" 
+									onClick="updateDetails()"
+									class="form-element submit-button button-green" >
+									Update Details
+								</button> 
+							</th>
+							<td>
+								<button 
+									type="button" 
+									onClick="resetDetails()"
+									class="form-element submit-button" >
+									Reset
+								</button> 
+							</td>
+						</tr>
+					</table>
+				</form>
+		   </div>
+		</div>
+		<div id="change-password-div" class="noscreen">
+			<Br/>
+			<div class="w3-row-padding">
+				<table align="center" class="all-records responsive-width login">
+					<tr class="header-panel">
+						<th>Change Password Panel</th>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-row-padding">
+				<form method="POST" id="changepassword_form">
+					<table align="center" class="all-records responsive-width login">
+				    	<tr>
+				    		<td><input type="password" id="old-password" class="form-element" name="old-password" placeholder="Old Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td><input type="password" id="new-password" class="form-element" name="new-password" placeholder="New Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td><input type="password" id="retypenew-password" class="form-element" name="retypenew-password" placeholder="Retype New Password"/></td>
+				    	</tr>
+				    	<tr>
+				    		<td colspan="2" align="center">
+				    			<button 
+									type="button" 
+									onClick="changePassword()"
+									id="signin_submit"
+									class="form-element submit-button" >
+									Change Password
+								</button> 
+				    		</td>
+				    	</tr>
+				    	<tr>
+				    		<td>
+				    			<ins><b>Password Policy</b></ins> :
+				    			Your password should be minimum 4 and maximum 16 letters. 
+				    			Should Not contain blanks.
+				    			Permitted special characters are <b>!@#^*_?</b>
+			    			</td>
+				    	</tr>
+					</table>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 <BR/>
 <BR/>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+	<input type="text" value="" size="10" name="documentType" id="downloadForm-documentType" />
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
 <!-- The Modal -->
 <div id="notification-popup-modal" class="modal noscreen">
  <!-- Modal content -->
@@ -74,6 +321,11 @@
 </div>
 <script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
 <script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/changepassword.js"></script>
 <script src="scripts/tutor.js"></script>
+<script>
+	loadDropdowns();
+</script>
 </body>
 </html>

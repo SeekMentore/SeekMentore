@@ -4,6 +4,7 @@
 		G - General Access only Public Rest URL's & Commons URL
 		M - Mentor Access
 		P - Professional Team Access
+		C - Customer Access
 		A - Admin Access
 		S - Super/all Access
 		D - Development Team Access
@@ -18,8 +19,10 @@
 		</page> -->
 		<page id="admin" url="/admin.html" pageAccessType="A"></page>
 		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
-		<page id="subscribewithusadmin" url="/subscribewithusadmin.html" pageAccessType="A"></page>
 		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
+		<page id="subscribewithus" url="/subscribewithus.html" pageAccessType="A"></page>
+		<page id="registeredtutor" url="/registeredtutor.html" pageAccessType="A"></page>
+		<page id="enquiries" url="/enquiries.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
@@ -29,7 +32,8 @@
 			<webservice id="displayToBeRecontactedTutorRegistrations" url="/displayToBeRecontactedTutorRegistrations"></webservice>
 			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
 			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
-			<webservice id="takeActionOnRegisteredTutors" url="/takeActionOnRegisteredTutors"></webservice>
+			<webservice id="displayRegisteredTutorsFromTutorRegistrations" url="/displayRegisteredTutorsFromTutorRegistrations"></webservice>
+			<webservice id="takeActionOnTutorRegistration" url="/takeActionOnTutorRegistration"></webservice>
 			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
 			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
 			<!-- Tutor Enquiry Admin -->
@@ -40,7 +44,7 @@
 			<webservice id="displayToBeRecontactedTutorEnquiries" url="/displayToBeRecontactedTutorEnquiries"></webservice>
 			<webservice id="displaySelectedTutorEnquiries" url="/displaySelectedTutorEnquiries"></webservice>
 			<webservice id="displayRejectedTutorEnquiries" url="/displayRejectedTutorEnquiries"></webservice>
-			<webservice id="takeActionOnEnquiredTutors" url="/takeActionOnEnquiredTutors"></webservice>
+			<webservice id="takeActionOnTutorEnquiry" url="/takeActionOnTutorEnquiry"></webservice>
 			<webservice id="downloadAdminReportTutorEnquiries" url="/downloadAdminReportTutorEnquiries"></webservice>
 			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
 			<!-- Admin Send Email -->
@@ -58,9 +62,49 @@
 			<webservice id="downloadAdminIndividualSubscriptionProfilePdf" url="/downloadAdminIndividualSubscriptionProfilePdf"></webservice>
 			<!-- Subscription Admin -->
 		</page>
+		<page id="enquiryRest" url="/rest/enquiry" pageAccessType="A">
+			<!-- Customer Enquiry Admin -->
+			<webservice id="displayCustomerWithPendingEnquiries" url="/displayCustomerWithPendingEnquiries"></webservice>
+			<webservice id="displayCustomerWithMappedEnquiries" url="/displayCustomerWithMappedEnquiries"></webservice>
+			<webservice id="displayCustomerWithAbandonedEnquiries" url="/displayCustomerWithAbandonedEnquiries"></webservice>
+			<webservice id="displayAllEnquiriesForParticularCustomer" url="/displayAllEnquiriesForParticularCustomer"></webservice>
+			<webservice id="getDropdownListDataForEnquiryDetails" url="/getDropdownListDataForEnquiryDetails"></webservice>
+			<webservice id="updateEnquiryDetails" url="/updateEnquiryDetails"></webservice>
+			<webservice id="displayAllEligibleTutors" url="/displayAllEligibleTutors"></webservice>
+			<webservice id="mapTutors" url="/mapTutors"></webservice>
+			<webservice id="displayAllMappedDemoPendingTutors" url="/displayAllMappedDemoPendingTutors"></webservice>
+			<webservice id="unmapTutors" url="/unmapTutors"></webservice>
+			<webservice id="displayAllMappedDemoScheduledTutors" url="/displayAllMappedDemoScheduledTutors"></webservice>
+		</page>
+		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
+		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
+			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
+			<webservice id="loadTutorRecord" url="/loadTutorRecord"></webservice>
+			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
+			<webservice id="updateDetails" url="/updateDetails"></webservice>
+			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
+			<webservice id="registeredTutorsList" url="/registeredTutorsList" pageAccessType="A"></webservice>
+			<webservice id="downloadDocumentFromAdmin" url="/downloadDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="aprroveDocumentFromAdmin" url="/aprroveDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="rejectDocumentFromAdmin" url="/rejectDocumentFromAdmin" pageAccessType="A"></webservice>
+			<webservice id="sendDocumentReminderEmail" url="/sendDocumentReminderEmail" pageAccessType="A"></webservice>
+			<webservice id="downloadAdminReportRegisteredTutors" url="/downloadAdminReportRegisteredTutors" pageAccessType="A"></webservice>
+			<webservice id="downloadAdminIndividualRegisteredTutorProfilePdf" url="/downloadAdminIndividualRegisteredTutorProfilePdf" pageAccessType="A"></webservice>
+		</page>
 		<page id="commons" url="/rest/commons" pageAccessType="G">
 			<webservice id=" getUser" url="/getUser"></webservice>
 		</page>
+		<page id="loginRest" url="/rest/login" pageAccessType="G">
+			<webservice id="changePassword" url="/changePassword"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
+		</page>
+		<page id="customer" url="/customer.html" pageAccessType="C"></page>
+		<page id="customerRest" url="/rest/customer" pageAccessType="C">
+			<webservice id="loadSubscribedCustomerRecord" url="/loadSubscribedCustomerRecord"></webservice>
+			<webservice id="getDropdownListDataSubscribedCustomer" url="/getDropdownListDataSubscribedCustomer"></webservice>
+			<webservice id="updateSubscribedCustomerDetails" url="/updateSubscribedCustomerDetails"></webservice>
+			<webservice id="subscribedCustomersList" url="/subscribedCustomersList" pageAccessType="A"></webservice>		
+		</page> 
 	</pageList>
 	<pageList id="unsecured">
 		<page id="index" url="/"></page>
@@ -75,17 +119,12 @@
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
 		</page>
 		<page id="login" url="/login.html"></page>
-		<page id="loginRest" url="/rest/login">
+		<page id="loginRestUnsecured" url="/rest/login">
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
-			<webservice id="logout" url="/logout"></webservice>
 		</page>
 		<page id="commonsUnsecured" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
 		</page>
 		<page id="error" url="/error.html"></page>
-		<page id="tutor" url="/tutor.html"></page>
-		<page id="tutorRest" url="/rest/tutor">
-			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
-		</page>
 	</pageList>
 </menu>

@@ -25,7 +25,16 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS = "/displayToBeRecontactedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS = "/displaySelectedTutorRegistrations";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS = "/displayRejectedTutorRegistrations";
-	String REST_METHOD_NAME_TAKE_ACTION_ON_REGISTERED_TUTORS = "/takeActionOnRegisteredTutors";
+	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS = "/displayRegisteredTutorsFromTutorRegistrations";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION = "/takeActionOnTutorRegistration";
+	// Registered Tutors
+	String REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT = "/downloadDocumentFromAdmin";
+	String REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN = "/aprroveDocumentFromAdmin";
+	String REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN = "/rejectDocumentFromAdmin";
+	String REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN = "/sendDocumentReminderEmail";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF = "/downloadAdminIndividualRegisteredTutorProfilePdf";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS = "/downloadAdminReportRegisteredTutors";
 	// Tutor Enquiry
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF = "/downloadAdminTutorEnquiryProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_ENQUIRIES = "/downloadAdminReportTutorEnquiries";
@@ -36,7 +45,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES = "/displayToBeRecontactedTutorEnquiries";
 	String REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES = "/displaySelectedTutorEnquiries";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES = "/displayRejectedTutorEnquiries";
-	String REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRED_TUTORS = "/takeActionOnEnquiredTutors";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_ENQUIRY = "/takeActionOnTutorEnquiry";
 	// Subscription Enquiry
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF = "/downloadAdminIndividualSubscriptionProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIPTIONS = "/downloadAdminReportSubscriptions";
@@ -48,14 +57,37 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS = "/displaySelectedSubscriptions";
 	String REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS = "/displayRejectedSubscriptions";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS = "/takeActionOnSubscriptions";
+	// Enquiry
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES = "/displayCustomerWithPendingEnquiries";
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES = "/displayCustomerWithMappedEnquiries";
+	String REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES = "/displayCustomerWithAbandonedEnquiries";
+	String REST_METHOD_NAME_DISPLAY_ALL_ENQUIRIES_FOR_PARTICULAR_CUSTOMER = "/displayAllEnquiriesForParticularCustomer";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FOR_ENQUIRY_DETAILS = "/getDropdownListDataForEnquiryDetails";
+	String REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS = "/updateEnquiryDetails";
+	String REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS = "/displayAllEligibleTutors";
+	String REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS = "/displayAllMappedDemoPendingTutors";
+	String REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS = "/displayAllMappedDemoScheduledTutors";
+	String REST_METHOD_NAME_MAP_TUTORS = "/mapTutors";
+	String REST_METHOD_NAME_UNMAP_TUTORS = "/unmapTutors";
 	// Send Email
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
+	String REST_METHOD_NAME_CHANGE_PASSWORD = "/changePassword";
 	String REST_METHOD_NAME_TO_LOGOUT = "/logout";
 	// Commons REST methods
 	String REST_METHOD_NAME_TO_GET_USER = "/getUser";
 	String REST_METHOD_NAME_TO_GET_SERVER_INFO = "/getServerInfo";
 	// Tutor REST methods
 	String REST_METHOD_NAME_UPLOAD_DOCUMENTS = "/uploadDocuments";
+	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
+	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
+	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
+	//Customer Rest methods
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER = "/getDropdownListDataSubscribedCustomer";
+	String REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD = "/loadSubscribedCustomerRecord";
+	String REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS = "/updateSubscribedCustomerDetails";
+	String REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
+
 }

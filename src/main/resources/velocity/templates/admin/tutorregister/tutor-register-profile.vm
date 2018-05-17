@@ -29,179 +29,195 @@ body {
 		<table align="center">
 	    	<tr>
 	    		<td>Application Date</td>
-	    		<td>$registeredTutorObject.applicationDate</td>
+	    		<td>$tutorRegisterObject.applicationDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Application Status</td>
-	    		<td>$registeredTutorObject.applicationStatus</td>
+	    		<td>$tutorRegisterObject.applicationStatus</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Date of Birth</td>
-	    		<td>$registeredTutorObject.dateOfBirth</td>
+	    		<td>$tutorRegisterObject.dateOfBirth</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contact Number</td>
-	    		<td>$registeredTutorObject.contactNumber</td>
+	    		<td>$tutorRegisterObject.contactNumber</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Email Id</td>
-	    		<td>$registeredTutorObject.emailId</td>
+	    		<td>$tutorRegisterObject.emailId</td>
 	    	</tr>
 	    	<tr>
 	    		<td>First Name</td>
-	    		<td>$registeredTutorObject.firstName</td>
+	    		<td>$tutorRegisterObject.firstName</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Last Name</td>
-	    		<td>$registeredTutorObject.lastName</td>
+	    		<td>$tutorRegisterObject.lastName</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Gender</td>
-	    		<td>$registeredTutorObject.gender</td>
+	    		<td>$tutorRegisterObject.gender</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Qualification</td>
-	    		<td>$registeredTutorObject.qualification</td>
+	    		<td>$tutorRegisterObject.qualification</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Primary Profession</td>
-	    		<td>$registeredTutorObject.primaryProfession</td>
+	    		<td>$tutorRegisterObject.primaryProfession</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Transport Mode</td>
-	    		<td>$registeredTutorObject.transportMode</td>
+	    		<td>$tutorRegisterObject.transportMode</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Teaching Experience</td>
-	    		<td>$registeredTutorObject.teachingExp</td>
+	    		<td>$tutorRegisterObject.teachingExp</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Student Grade</td>
-	    		<td>$registeredTutorObject.studentGrade</td>
+	    		<td>$tutorRegisterObject.studentGrade</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Subjects</td>
-	    		<td>$registeredTutorObject.subjects</td>
+	    		<td>$tutorRegisterObject.subjects</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Locations</td>
-	    		<td>$registeredTutorObject.locations</td>
+	    		<td>$tutorRegisterObject.locations</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Preferred Time To Call</td>
-	    		<td>$registeredTutorObject.preferredTimeToCall</td>
+	    		<td>$tutorRegisterObject.preferredTimeToCall</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$tutorRegisterObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Teaching Type</td>
+	    		<td>$tutorRegisterObject.preferredTeachingType</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Additional Details</td>
-	    		<td>$registeredTutorObject.additionalDetails</td>
+	    		<td>$tutorRegisterObject.additionalDetails</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Contacted</td>
-	    		<td>$registeredTutorObject.isContacted</td>
+	    		<td>$tutorRegisterObject.isContacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Contacted</td>
-	    		<td>$registeredTutorObject.whoContacted</td>
+	    		<td>$tutorRegisterObject.whoContacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contacted Date</td>
-	    		<td>$registeredTutorObject.contactedDate</td>
+	    		<td>$tutorRegisterObject.contactedDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Contacted Remarks</td>
-	    		<td>$registeredTutorObject.contactedRemarks</td>
+	    		<td>$tutorRegisterObject.contactedRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Authentication Verified</td>
-	    		<td>$registeredTutorObject.isAuthenticationVerified</td>
+	    		<td>$tutorRegisterObject.isAuthenticationVerified</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Verified</td>
-	    		<td>$registeredTutorObject.whoVerified</td>
+	    		<td>$tutorRegisterObject.whoVerified</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Verification Date</td>
-	    		<td>$registeredTutorObject.verificationDate</td>
+	    		<td>$tutorRegisterObject.verificationDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Verification Remarks</td>
-	    		<td>$registeredTutorObject.verificationRemarks</td>
+	    		<td>$tutorRegisterObject.verificationRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is To Be Recontacted</td>
-	    		<td>$registeredTutorObject.isToBeRecontacted</td>
+	    		<td>$tutorRegisterObject.isToBeRecontacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Suggested For Re-contact</td>
-	    		<td>$registeredTutorObject.whoSuggestedForRecontact</td>
+	    		<td>$tutorRegisterObject.whoSuggestedForRecontact</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Suggestion Date</td>
-	    		<td>$registeredTutorObject.suggestionDate</td>
+	    		<td>$tutorRegisterObject.suggestionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Suggestion Remarks</td>
-	    		<td>$registeredTutorObject.suggestionRemarks</td>
+	    		<td>$tutorRegisterObject.suggestionRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Recontacted</td>
-	    		<td>$registeredTutorObject.whoRecontacted</td>
+	    		<td>$tutorRegisterObject.whoRecontacted</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Recontacted Date</td>
-	    		<td>$registeredTutorObject.recontactedDate</td>
+	    		<td>$tutorRegisterObject.recontactedDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Recontacted Remarks</td>
-	    		<td>$registeredTutorObject.recontactedRemarks</td>
+	    		<td>$tutorRegisterObject.recontactedRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Selected</td>
-	    		<td>$registeredTutorObject.isSelected</td>
+	    		<td>$tutorRegisterObject.isSelected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Selected</td>
-	    		<td>$registeredTutorObject.whoSelected</td>
+	    		<td>$tutorRegisterObject.whoSelected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Selection Date</td>
-	    		<td>$registeredTutorObject.selectionDate</td>
+	    		<td>$tutorRegisterObject.selectionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Selection Remarks</td>
-	    		<td>$registeredTutorObject.selectionRemarks</td>
+	    		<td>$tutorRegisterObject.selectionRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Is Rejected</td>
-	    		<td>$registeredTutorObject.isRejected</td>
+	    		<td>$tutorRegisterObject.isRejected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Who Rejected</td>
-	    		<td>$registeredTutorObject.whoRejected</td>
+	    		<td>$tutorRegisterObject.whoRejected</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Rejection Date</td>
-	    		<td>$registeredTutorObject.rejectionDate</td>
+	    		<td>$tutorRegisterObject.rejectionDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Rejection Remarks</td>
-	    		<td>$registeredTutorObject.rejectionRemarks</td>
+	    		<td>$tutorRegisterObject.rejectionRemarks</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Rejection Count</td>
-	    		<td>$registeredTutorObject.rejectionCount</td>
+	    		<td>$tutorRegisterObject.rejectionCount</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Re Applied</td>
-	    		<td>$registeredTutorObject.reApplied</td>
+	    		<td>$tutorRegisterObject.reApplied</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Previous Application Date</td>
-	    		<td>$registeredTutorObject.previousApplicationDate</td>
+	    		<td>$tutorRegisterObject.previousApplicationDate</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Record Last Updated</td>
-	    		<td>$registeredTutorObject.recordLastUpdated</td>
+	    		<td>$tutorRegisterObject.recordLastUpdated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Data Migrated</td>
+	    		<td>$tutorRegisterObject.isDataMigrated</td>
+	    	</tr>
+	    	<tr>
+	    		<td>When Migrated</td>
+	    		<td>$tutorRegisterObject.whenMigrated</td>
 	    	</tr>
 		</table>
 
