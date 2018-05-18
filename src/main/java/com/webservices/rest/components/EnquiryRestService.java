@@ -37,7 +37,6 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_ENQUIRY) 
 public class EnquiryRestService extends AbstractRestWebservice implements RestMethodConstants, EnquiryConstants {
 	
-	private HttpServletRequest request;
 	private Long customerId;
 	private Long enquiryId;
 	private Date scheduledDemoDateAndTime;
@@ -331,7 +330,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.customerId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -348,7 +347,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -372,7 +371,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedEligibleTutorIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -389,7 +388,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedTutorMappedIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -406,7 +405,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -430,7 +429,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId + LINE_BREAK + this.scheduledDemoDateAndTime);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}

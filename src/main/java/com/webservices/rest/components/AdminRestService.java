@@ -644,6 +644,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	
 	@Override
 	public void doSecurity(final HttpServletRequest request) {
+		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
@@ -761,7 +762,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName, 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -799,8 +800,8 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName, 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSalutationName + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

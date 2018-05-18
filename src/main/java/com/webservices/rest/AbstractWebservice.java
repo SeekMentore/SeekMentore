@@ -17,9 +17,9 @@ public abstract class AbstractWebservice {
 		return LoginUtils.getUserFromSession(request).getUserId();
 	}
 	
-	public String getLoggedInUserIdForPrinting(final HttpServletRequest request) {
+	public String getLoggedInUserIdAndTypeForPrinting(final HttpServletRequest request) {
 		final User user = LoginUtils.getUserFromSession(request);
-		return null != user ? user.getUserId() : "NO_USER_IN_SESSION";
+		return null != user ? (user.getUserId() + "<" + user.getUserType() + ">") : "NO_USER_IN_SESSION";
 	}
 	
 	public User getLoggedInUser(final HttpServletRequest request) {

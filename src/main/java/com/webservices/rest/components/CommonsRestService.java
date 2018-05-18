@@ -64,6 +64,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	
 	@Override
 	public void doSecurity(final HttpServletRequest request) {
+		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

@@ -179,6 +179,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	
 	@Override
 	public void doSecurity (final HttpServletRequest request) throws Exception {
+		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		// Check Security/Validations for Methods which Submit Data
@@ -350,7 +351,9 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + becomeTutorApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + becomeTutorApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -422,7 +425,9 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + findTutorApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + findTutorApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -501,7 +506,9 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + subscribeWithUsApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + subscribeWithUsApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -524,7 +531,9 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), this.methodName, this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + submitQueryApplication.toString());
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + submitQueryApplication.toString());
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
