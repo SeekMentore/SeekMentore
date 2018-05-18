@@ -1,8 +1,8 @@
 package com.model.rowmappers;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -15,46 +15,46 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 	@Override
 	public FindTutor mapRow(ResultSet row, int rowNum) throws SQLException {
 		final FindTutor findTutor = new FindTutor();
-		findTutor.setEnquiryId(row.getLong(COLUMN_NAME_ENQUIRY_ID));
-		findTutor.setEnquiryDate(row.getDate(COLUMN_NAME_ENQUIRY_DATE));
-		findTutor.setEnquiryStatus(row.getString(COLUMN_NAME_ENQUIRY_STATUS));
-		findTutor.setName(row.getString(COLUMN_NAME_NAME));
-		findTutor.setContactNumber(row.getString(COLUMN_NAME_CONTACT_NUMBER));
-		findTutor.setEmailId(row.getString(COLUMN_NAME_EMAIL_ID));
-		findTutor.setStudentGrade(row.getString(COLUMN_NAME_STUDENT_GRADE));
-		findTutor.setSubjects(row.getString(COLUMN_NAME_SUBJECTS));
-		findTutor.setPreferredTimeToCall(row.getString(COLUMN_NAME_PREFERRED_TIME_TO_CALL));
-		findTutor.setLocation(row.getString(COLUMN_NAME_LOCATION));
-		findTutor.setReference(row.getString(COLUMN_NAME_REFERENCE));
-		findTutor.setAddressDetails(row.getString(COLUMN_NAME_ADDRESS_DETAILS));
-		findTutor.setAdditionalDetails(row.getString(COLUMN_NAME_ADDITIONAL_DETAILS));
-		findTutor.setSubscribedCustomer(row.getString(COLUMN_NAME_SUBSCRIBED_CUSTOMER));
-		findTutor.setIsContacted(row.getString(COLUMN_NAME_IS_CONTACTED));
-		findTutor.setWhoContacted(row.getString(COLUMN_NAME_WHO_CONTACTED));
-		findTutor.setContactedDate(row.getDate(COLUMN_NAME_CONTACTED_DATE));
-		findTutor.setContactedRemarks(row.getString(COLUMN_NAME_CONTACTED_REMARKS));
-		findTutor.setIsAuthenticationVerified(row.getString(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED));
-		findTutor.setWhoVerified(row.getString(COLUMN_NAME_WHO_VERIFIED));
-		findTutor.setVerificationDate(row.getDate(COLUMN_NAME_VERIFICATION_DATE));
-		findTutor.setVerificationRemarks(row.getString(COLUMN_NAME_VERIFICATION_REMARKS));
-		findTutor.setIsToBeRecontacted(row.getString(COLUMN_NAME_IS_TO_BE_RECONTACTED));
-		findTutor.setWhoSuggestedForRecontact(row.getString(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT));
-		findTutor.setSuggestionDate(row.getDate(COLUMN_NAME_SUGGESTION_DATE));
-		findTutor.setSuggestionRemarks(row.getString(COLUMN_NAME_SUGGESTION_REMARKS));
-		findTutor.setWhoRecontacted(row.getString(COLUMN_NAME_WHO_RECONTACTED));
-		findTutor.setRecontactedDate(row.getDate(COLUMN_NAME_RECONTACTED_DATE));
-		findTutor.setRecontactedRemarks(row.getString(COLUMN_NAME_RECONTACTED_REMARKS));
-		findTutor.setIsSelected(row.getString(COLUMN_NAME_IS_SELECTED));
-		findTutor.setWhoSelected(row.getString(COLUMN_NAME_WHO_SELECTED));
-		findTutor.setSelectionDate(row.getDate(COLUMN_NAME_SELECTION_DATE));
-		findTutor.setSelectionRemarks(row.getString(COLUMN_NAME_SELECTION_REMARKS));
-		findTutor.setIsRejected(row.getString(COLUMN_NAME_IS_REJECTED));
-		findTutor.setWhoRejected(row.getString(COLUMN_NAME_WHO_REJECTED));
-		findTutor.setRejectionDate(row.getDate(COLUMN_NAME_REJECTION_DATE));
-		findTutor.setRejectionRemarks(row.getString(COLUMN_NAME_REJECTION_REMARKS));
-		findTutor.setRecordLastUpdated(row.getDate(COLUMN_NAME_RECORD_LAST_UPDATED));
+		findTutor.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_ENQUIRY_ID, Long.class));
+		findTutor.setEnquiryDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_ENQUIRY_DATE, Timestamp.class));
+		findTutor.setEnquiryStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_ENQUIRY_STATUS, String.class));
+		findTutor.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_NAME, String.class));
+		findTutor.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_CONTACT_NUMBER, String.class));
+		findTutor.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_EMAIL_ID, String.class));
+		findTutor.setStudentGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_STUDENT_GRADE, String.class));
+		findTutor.setSubjects(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SUBJECTS, String.class));
+		findTutor.setPreferredTimeToCall(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_PREFERRED_TIME_TO_CALL, String.class));
+		findTutor.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_LOCATION, String.class));
+		findTutor.setReference(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_REFERENCE, String.class));
+		findTutor.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_ADDRESS_DETAILS, String.class));
+		findTutor.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_ADDITIONAL_DETAILS, String.class));
+		findTutor.setSubscribedCustomer(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SUBSCRIBED_CUSTOMER, String.class));
+		findTutor.setIsContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_IS_CONTACTED, String.class));
+		findTutor.setWhoContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_CONTACTED, String.class));
+		findTutor.setContactedDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_CONTACTED_DATE, Timestamp.class));
+		findTutor.setContactedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_CONTACTED_REMARKS, String.class));
+		findTutor.setIsAuthenticationVerified(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, String.class));
+		findTutor.setWhoVerified(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_VERIFIED, String.class));
+		findTutor.setVerificationDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_VERIFICATION_DATE, Timestamp.class));
+		findTutor.setVerificationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_VERIFICATION_REMARKS, String.class));
+		findTutor.setIsToBeRecontacted(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_IS_TO_BE_RECONTACTED, String.class));
+		findTutor.setWhoSuggestedForRecontact(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, String.class));
+		findTutor.setSuggestionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SUGGESTION_DATE, Timestamp.class));
+		findTutor.setSuggestionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SUGGESTION_REMARKS, String.class));
+		findTutor.setWhoRecontacted(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_RECONTACTED, String.class));
+		findTutor.setRecontactedDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_RECONTACTED_DATE, Timestamp.class));
+		findTutor.setRecontactedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_RECONTACTED_REMARKS, String.class));
+		findTutor.setIsSelected(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_IS_SELECTED, String.class));
+		findTutor.setWhoSelected(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_SELECTED, String.class));
+		findTutor.setSelectionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SELECTION_DATE, Timestamp.class));
+		findTutor.setSelectionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_SELECTION_REMARKS, String.class));
+		findTutor.setIsRejected(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_IS_REJECTED, String.class));
+		findTutor.setWhoRejected(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_WHO_REJECTED, String.class));
+		findTutor.setRejectionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_REJECTION_DATE, Timestamp.class));
+		findTutor.setRejectionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_REJECTION_REMARKS, String.class));
+		findTutor.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, COLUMN_NAME_RECORD_LAST_UPDATED, Timestamp.class));
 		findTutor.setIsDataMigrated(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_DATA_MIGRATED", String.class));
-		findTutor.setWhenMigrated(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHEN_MIGRATED", Date.class));
+		findTutor.setWhenMigrated(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHEN_MIGRATED", Timestamp.class));
 		return findTutor;
 	}
 

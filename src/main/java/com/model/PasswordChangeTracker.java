@@ -1,7 +1,7 @@
 package com.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.constants.UserConstants;
 
@@ -10,7 +10,7 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 	private static final long serialVersionUID = -6349692224199736678L;
 	
 	private Long passwordChangeId;
-	private Timestamp changeTime;
+	private Date changeTime;
 	private String userType;
 	private String userId;
 	private String encryptedPasswordOld;
@@ -42,11 +42,11 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 		this.passwordChangeId = passwordChangeId;
 	}
 
-	public Timestamp getChangeTime() {
+	public Date getChangeTime() {
 		return changeTime;
 	}
 
-	public void setChangeTime(Timestamp changeTime) {
+	public void setChangeTime(Date changeTime) {
 		this.changeTime = changeTime;
 	}
 

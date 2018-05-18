@@ -1,7 +1,7 @@
 package com.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.constants.UserConstants;
 
@@ -10,7 +10,7 @@ public class LogonTracker implements Serializable, UserConstants {
 	private static final long serialVersionUID = -6349692224199736678L;
 	
 	private Long logonId;
-	private Timestamp loginTime;
+	private Date loginTime;
 	private String loginFrom;
 	private String machineIp;
 	private String userType;
@@ -26,11 +26,11 @@ public class LogonTracker implements Serializable, UserConstants {
 		this.logonId = logonId;
 	}
 
-	public Timestamp getLoginTime() {
+	public Date getLoginTime() {
 		return loginTime;
 	}
 
-	public void setLoginTime(Timestamp loginTime) {
+	public void setLoginTime(Date loginTime) {
 		this.loginTime = loginTime;
 	}
 
