@@ -94,6 +94,11 @@ public class LoginUtils implements LoginConstants {
 		throw new ApplicationException("No Email Id in Session");
 	}
 	
+	public static String getLoggedInUserIdAndTypeForPrinting(final HttpServletRequest request) {
+		final User user = getUserFromSession(request);
+		return null != user ? (user.getUserId() + "<" + user.getUserType() + ">") : "NO_USER_IN_SESSION";
+	}
+	
 	public static void logoutUserSession(final HttpServletRequest httpRequest) {
 		final HttpSession session = httpRequest.getSession();
 		session.invalidate();

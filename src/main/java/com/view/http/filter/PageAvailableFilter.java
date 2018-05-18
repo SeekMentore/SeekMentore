@@ -55,7 +55,7 @@ public class PageAvailableFilter extends AbstractWebservice implements Filter, F
 			if (menuService.pageExists(pageURL)) {
 				chain.doFilter(request, response);
 			} else {
-				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL, "Page not found on Server.");
+				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(httpRequest), "Page not found on Server.");
 				commonsService.feedErrorRecord(errorPacket);
 				WebServiceUtils.redirectToPage("/error.html", httpRequest, httpResponse);
 			}

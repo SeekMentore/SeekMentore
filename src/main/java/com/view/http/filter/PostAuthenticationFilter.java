@@ -59,7 +59,7 @@ public class PostAuthenticationFilter extends AbstractWebservice implements Filt
 				if (menuService.hasAccessToURL(user.getUserId(), pageURL, user.getPageAccessTypes(), null)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL, "No access to this page.");
+					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(httpRequest), "No access to this page.");
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.redirectToPage("/error.html", httpRequest, httpResponse);
 				}
