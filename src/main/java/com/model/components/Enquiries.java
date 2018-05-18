@@ -6,7 +6,7 @@ import java.util.Date;
 import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
 
-public class EnquiryObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class Enquiries implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long enquiryId;
@@ -30,7 +30,7 @@ public class EnquiryObject implements Serializable, CustomerConstants, Applicati
 	private String whoActed;
 	private String preferredTeachingType;
 	
-	public EnquiryObject() {}
+	public Enquiries() {}
 
 	public Long getEnquiryId() {
 		return enquiryId;

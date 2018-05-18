@@ -23,7 +23,7 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.EnquiryConstants;
 import com.model.ErrorPacket;
-import com.model.components.EnquiryObject;
+import com.model.components.Enquiries;
 import com.model.components.TutorMapper;
 import com.service.components.CommonsService;
 import com.service.components.EnquiryService;
@@ -125,7 +125,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
 	public String updateEnquiryDetails (
-			final EnquiryObject enquiryObject,
+			final Enquiries enquiryObject,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_ENQUIRY_DETAILS;

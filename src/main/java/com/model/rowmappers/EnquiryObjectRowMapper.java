@@ -6,14 +6,14 @@ import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.model.components.EnquiryObject;
+import com.model.components.Enquiries;
 import com.utils.ExceptionUtils;
 
-public class EnquiryObjectRowMapper implements RowMapper<EnquiryObject> {
+public class EnquiryObjectRowMapper implements RowMapper<Enquiries> {
 
 	@Override
-	public EnquiryObject mapRow(ResultSet row, int rowNum) throws SQLException {
-		final EnquiryObject enquiryObject = new EnquiryObject();
+	public Enquiries mapRow(ResultSet row, int rowNum) throws SQLException {
+		final Enquiries enquiryObject = new Enquiries();
 		enquiryObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENQUIRY_ID", Long.class));
 		enquiryObject.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, "CUSTOMER_ID", Long.class));
 		enquiryObject.setSubject(ExceptionUtils.exceptionHandlerForRowMapper(row, "SUBJECT", String.class));

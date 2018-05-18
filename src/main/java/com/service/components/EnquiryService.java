@@ -19,7 +19,7 @@ import com.constants.components.EnquiryConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
-import com.model.components.EnquiryObject;
+import com.model.components.Enquiries;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
@@ -55,7 +55,7 @@ public class EnquiryService implements EnquiryConstants {
 	public void init() {}
 	
 	@Transactional
-	public void addEnquiry(final EnquiryObject enquiryObject) {
+	public void addEnquiry(final Enquiries enquiryObject) {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("customerId", enquiryObject.getCustomerId());
 		paramsMap.put("subject", enquiryObject.getSubject());
@@ -93,12 +93,12 @@ public class EnquiryService implements EnquiryConstants {
 		return customersEnquiryList;
 	}
 	
-	public List<EnquiryObject> displayAllEnquiriesForParticularCustomer(final Long customerId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<Enquiries> displayAllEnquiriesForParticularCustomer(final Long customerId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("matchStatus", getMatchStatusFromGridName(grid));
 		paramsMap.put("customerId", customerId);
-		final List<EnquiryObject> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
-		for (final EnquiryObject enquiryObject : enquiryObjectList) {
+		final List<Enquiries> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
+		for (final Enquiries enquiryObject : enquiryObjectList) {
 			replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, delimiter);
 		}
 		return enquiryObjectList;
@@ -113,7 +113,7 @@ public class EnquiryService implements EnquiryConstants {
 		}
 	}
 	
-	public void replacePlaceHolderAndIdsFromEnquiryObject(final EnquiryObject enquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public void replacePlaceHolderAndIdsFromEnquiryObject(final Enquiries enquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		enquiryObject.setSubject(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiryObject.getSubject(), false, delimiter));
 		enquiryObject.setGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiryObject.getGrade(), false, delimiter));
 		enquiryObject.setLocationDetails(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiryObject.getLocationDetails(), true, delimiter));
@@ -139,7 +139,7 @@ public class EnquiryService implements EnquiryConstants {
 	}
 	
 	@Transactional
-	public Map<String, Object> updateEnquiryDetails(final EnquiryObject enquiryObject, final User user) throws Exception {
+	public Map<String, Object> updateEnquiryDetails(final Enquiries enquiryObject, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
@@ -230,7 +230,7 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.TUTOR_ID NOT IN (SELECT DISTINCT TUTOR_ID FROM TUTOR_MAPPER WHERE ENQUIRY_ID = :enquiryId)", paramsMap, new RegisteredTutorRowMapper());
-		final EnquiryObject enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final Enquiries enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocationTeachingType = new ArrayList<RegisteredTutor>();
@@ -479,7 +479,7 @@ public class EnquiryService implements EnquiryConstants {
 		paramsMap.put("tutorMapperId", tutorMapperId);
 		final TutorMapper tutorMapperObject = applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
 		paramsMap.put("enquiryId", tutorMapperObject.getEnquiryId());
-		final EnquiryObject enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final Enquiries enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
 		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);

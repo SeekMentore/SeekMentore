@@ -18,7 +18,7 @@ import com.constants.BeanConstants;
 import com.constants.SchedulerConstants;
 import com.dao.ApplicationDao;
 import com.model.ErrorPacket;
-import com.model.components.EnquiryObject;
+import com.model.components.Enquiries;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.publicaccess.BecomeTutor;
@@ -159,7 +159,7 @@ public class SchedulerService implements SchedulerConstants {
 				LoggerUtils.logOnConsole("executeSubscribedCustomerJob");
 				final List<FindTutor> customerObjList = customerService.getNonSubscribedCustomer(20);
 				for (final FindTutor customerObj : customerObjList) {
-					final List<EnquiryObject> enquiryObjectList = new ArrayList<EnquiryObject>();
+					final List<Enquiries> enquiryObjectList = new ArrayList<Enquiries>();
 					if (NO.equalsIgnoreCase(customerObj.getSubscribedCustomer())) {
 						final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 						final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
@@ -176,7 +176,7 @@ public class SchedulerService implements SchedulerConstants {
 						subscribedCustomerObj.setEncryptedPassword(encryptedTemporaryPassword);
 						subscribedCustomerObj.setUserId(customerObj.getEmailId());
 						final Long customerId = customerService.feedSubscribedCustomerRecords(subscribedCustomerObj);
-						final EnquiryObject enquiryObject = new EnquiryObject();
+						final Enquiries enquiryObject = new Enquiries();
 						enquiryObject.setCustomerId(customerId);
 						enquiryObject.setSubject(customerObj.getSubjects());
 						enquiryObject.setGrade(customerObj.getStudentGrade());
@@ -192,7 +192,7 @@ public class SchedulerService implements SchedulerConstants {
 						final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
 						if (null != subscribedCustomerInDatabaseWithEmailId) {
 							if (null != subscribedCustomerInDatabaseWithEmailId.getCustomerId()) {
-								final EnquiryObject enquiryObject = new EnquiryObject();
+								final Enquiries enquiryObject = new Enquiries();
 								enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
 								enquiryObject.setSubject(customerObj.getSubjects());
 								enquiryObject.setGrade(customerObj.getStudentGrade());
@@ -208,7 +208,7 @@ public class SchedulerService implements SchedulerConstants {
 						final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
 						if (null != subscribedCustomerInDatabaseWithContactNumber) {
 							if (null != subscribedCustomerInDatabaseWithContactNumber.getCustomerId()) {
-								final EnquiryObject enquiryObject = new EnquiryObject();
+								final Enquiries enquiryObject = new Enquiries();
 								enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
 								enquiryObject.setSubject(customerObj.getSubjects());
 								enquiryObject.setGrade(customerObj.getStudentGrade());
@@ -222,7 +222,7 @@ public class SchedulerService implements SchedulerConstants {
 						
 					}
 					if (!enquiryObjectList.isEmpty()) {
-						for (final EnquiryObject enquiryObject : enquiryObjectList) {
+						for (final Enquiries enquiryObject : enquiryObjectList) {
 							enquiryService.addEnquiry(enquiryObject);
 						}
 					}
