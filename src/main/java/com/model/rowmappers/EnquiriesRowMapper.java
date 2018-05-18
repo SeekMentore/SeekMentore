@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.Enquiries;
 import com.utils.ExceptionUtils;
 
-public class EnquiryObjectRowMapper implements RowMapper<Enquiries> {
+public class EnquiriesRowMapper implements RowMapper<Enquiries> {
 
 	@Override
 	public Enquiries mapRow(ResultSet row, int rowNum) throws SQLException {

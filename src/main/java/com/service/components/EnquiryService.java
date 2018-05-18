@@ -24,7 +24,7 @@ import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
 import com.model.components.commons.SelectLookup;
-import com.model.rowmappers.EnquiryObjectRowMapper;
+import com.model.rowmappers.EnquiriesRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
@@ -97,7 +97,7 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("matchStatus", getMatchStatusFromGridName(grid));
 		paramsMap.put("customerId", customerId);
-		final List<Enquiries> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
+		final List<Enquiries> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiriesRowMapper());
 		for (final Enquiries enquiryObject : enquiryObjectList) {
 			replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, delimiter);
 		}
@@ -230,7 +230,7 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.TUTOR_ID NOT IN (SELECT DISTINCT TUTOR_ID FROM TUTOR_MAPPER WHERE ENQUIRY_ID = :enquiryId)", paramsMap, new RegisteredTutorRowMapper());
-		final Enquiries enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final Enquiries enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocationTeachingType = new ArrayList<RegisteredTutor>();
@@ -479,7 +479,7 @@ public class EnquiryService implements EnquiryConstants {
 		paramsMap.put("tutorMapperId", tutorMapperId);
 		final TutorMapper tutorMapperObject = applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
 		paramsMap.put("enquiryId", tutorMapperObject.getEnquiryId());
-		final Enquiries enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final Enquiries enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
 		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);

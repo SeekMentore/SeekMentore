@@ -63,7 +63,7 @@
 			<!-- Subscription Admin -->
 		</page>
 		<page id="enquiryRest" url="/rest/enquiry" pageAccessType="A">
-			<!-- Customer Enquiry Admin -->
+			<!-- Enquiries Admin -->
 			<webservice id="displayCustomerWithPendingEnquiries" url="/displayCustomerWithPendingEnquiries"></webservice>
 			<webservice id="displayCustomerWithMappedEnquiries" url="/displayCustomerWithMappedEnquiries"></webservice>
 			<webservice id="displayCustomerWithAbandonedEnquiries" url="/displayCustomerWithAbandonedEnquiries"></webservice>
@@ -78,8 +78,15 @@
 			<webservice id="updateTutorMapperDetails" url="/updateTutorMapperDetails"></webservice>
 			<webservice id="scheduleDemo" url="/scheduleDemo"></webservice>
 		</page>
+		<page id="demoRest" url="/rest/demo" pageAccessType="A">
+			<!-- Demo Tracker Admin -->
+			<webservice id="displayPendingDemos" url="/displayPendingDemos"></webservice>
+			<webservice id="displaySuccessfullDemos" url="/displaySuccessfullDemos"></webservice>
+			<webservice id="displayFailedDemos" url="/displayFailedDemos"></webservice>
+		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
+			<!-- Tutor External -->
 			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
 			<webservice id="loadTutorRecord" url="/loadTutorRecord"></webservice>
 			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
@@ -102,6 +109,7 @@
 		</page>
 		<page id="customer" url="/customer.html" pageAccessType="C"></page>
 		<page id="customerRest" url="/rest/customer" pageAccessType="C">
+			<!-- Customer External -->
 			<webservice id="loadSubscribedCustomerRecord" url="/loadSubscribedCustomerRecord"></webservice>
 			<webservice id="getDropdownListDataSubscribedCustomer" url="/getDropdownListDataSubscribedCustomer"></webservice>
 			<webservice id="updateSubscribedCustomerDetails" url="/updateSubscribedCustomerDetails"></webservice>
