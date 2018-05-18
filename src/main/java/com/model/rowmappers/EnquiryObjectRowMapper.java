@@ -1,8 +1,8 @@
 package com.model.rowmappers;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,7 +22,7 @@ public class EnquiryObjectRowMapper implements RowMapper<EnquiryObject> {
 		enquiryObject.setNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_RATE_WITH_CLIENT", Integer.class));
 		enquiryObject.setClientNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "CLIENT_NEGOTIATION_REMARKS", String.class));
 		enquiryObject.setIsMapped(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_MAPPED", String.class));
-		enquiryObject.setLastActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "LAST_ACTION_DATE", Date.class));
+		enquiryObject.setLastActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "LAST_ACTION_DATE", Timestamp.class));
 		enquiryObject.setMatchStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, "MATCH_STATUS", String.class));
 		enquiryObject.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_ID", Long.class));
 		enquiryObject.setAdminRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_REMARKS", String.class));

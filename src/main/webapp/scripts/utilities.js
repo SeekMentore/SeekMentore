@@ -236,6 +236,21 @@ function createSelectOptionOutOfSelectLookupArray(lookupArray) {
 	return html;
 }
 
+function getDateValue(value) {
+	if (null != value && value.trim() != '') {
+		return new Date(value);
+	}
+	return null;
+}
+
+function getDateValueInMillis(value) {
+	var date = getDateValue(value);
+	if (null != date) {
+		return date.getTime();
+	}
+	return null;
+}
+
 function getAttributeValue(id, isArray) {
 	var element = $('#'+id);
 	var value;

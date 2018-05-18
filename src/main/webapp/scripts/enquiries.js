@@ -283,6 +283,7 @@ function hideParticularEnquiryAllMappedAndEligibleTutorsPage() {
 function showParticularEnquiryAllMappedAndEligibleTutorsPage() {
 	$('#particular-customer-particular-enquiry-div').removeClass('noscreen');
 	$('#particular-customer-particular-enquiry-particular-mapped-tutor-div').addClass('noscreen');
+	$('.form-element').removeClass('noscreen');
 }
 
 function openTutorMapperRecord(tutorMapperObject) {
@@ -313,6 +314,11 @@ function openTutorMapperRecord(tutorMapperObject) {
 		$('#ADMIN_ACTION_REMARKS').html(showValue(tutorMapperObject.adminActionRemarks));
 		$('#WHO_ACTED').html(showValue(tutorMapperObject.whoActed));
 		$('#IS_DEMO_SCHEDULED').html(showValue(tutorMapperObject.isDemoScheduled));
+		$('#DEMO_TIME_AND_DATE').html(showValue(tutorMapperObject.demoDateAndTime));
+		
+		if ('all-mapped-scheduled-tutors' ==  particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid) {
+			$('.form-element').addClass('noscreen');
+		}
 	} 
 }
 
@@ -355,6 +361,29 @@ function prepareEnquiryUpdateParams() {
 	return form;
 }
 
+function prepareTutorMapperUpdateParams() {
+	var form = {
+			tutorMapperId						: particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].getCurrentRecord().tutorMapperId,
+			quotedTutorRate 					: getAttributeValue('form-quoted-tutor-rate', false),
+			negotiatedRateWithTutor 			: getAttributeValue('form-negotiated-tutor-rate', false),
+			tutorNegotiationRemarks 			: getAttributeValue('form-negotiated-tutor-remarks', false),
+			isTutorContacted 					: getAttributeValue('form-is-tutor-contacted', false),
+			isTutorAgreed 						: getAttributeValue('form-is-tutor-agreed', false),
+			isTutorRejectionValid				: getAttributeValue('form-is-tutor-rejection-valid', false),
+			adminTutorRejectionValidityResponse : getAttributeValue('form-admin-tutor-rejection-validity-remarks', false),
+			tutorResponse       				: getAttributeValue('form-tutor-response', false),
+			adminRemarksForTutor 				: getAttributeValue('form-admin-remarks-for-tutor', false),
+			isClientContacted 					: getAttributeValue('form-is-client-contacted', false),
+			isClientAgreed 						: getAttributeValue('form-is-client-agreed', false),
+			clientResponse 						: getAttributeValue('form-client-response', false),
+			isClientRejectionValid				: getAttributeValue('form-is-client-rejection-valid', false),
+			adminClientRejectionValidityResponse: getAttributeValue('form-admin-client-rejection-validity-remarks', false),
+			adminRemarksForClient       		: getAttributeValue('form-admin-remarks-for-client', false),
+			adminActionRemarks 					: getAttributeValue('form-admin-action-remarks', false)
+		};
+	return form;
+}
+
 function updateEnquiryDetails() {
 	successMessage = 'Enquiry details updated successfully.';
 	callbackAfterCommonSuccess = loadBackParticularCustomerAllEnquiries;
@@ -362,13 +391,30 @@ function updateEnquiryDetails() {
 	resetEnquiryDetails();
 }
 
+function updateTutorMapperDetails() {
+	successMessage = 'Tutor Mapper details updated successfully.';
+	callbackAfterCommonSuccess = loadBackParticularEnquiryAllMappedAndEligibleTutorsPage;
+	callWebservice('/rest/enquiry/updateTutorMapperDetails', encodeObjectAsJSON(prepareTutorMapperUpdateParams()));
+	resetTutorMappeDetails();
+}
+
 function loadBackParticularCustomerAllEnquiries() {
 	showAllEnquiriesParticularCustomerPage();
 	openCustomerRecord(customerListMap[customerListMap.selectedGrid].getCurrentRecord());
 }
 
+function loadBackParticularEnquiryAllMappedAndEligibleTutorsPage() {
+	showParticularEnquiryAllMappedAndEligibleTutorsPage();
+	openEnquiryRecord(particularCustomerEnquiryNavigatiorObject.getCurrentRecord());
+}
+
 function resetEnquiryDetails() {
 	var form = document.getElementById('details-update-form');
+	form.reset();
+}
+
+function resetTutorMappeDetails() {
+	var form = document.getElementById('details-mapper-update-form');
 	form.reset();
 }
 
@@ -404,6 +450,16 @@ function unmapTutors() {
 	successMessage = 'Tutors unmapped successfully.';
 	callbackAfterCommonSuccess = refreshTutorLists;
 	callWebservice('/rest/enquiry/unmapTutors', data, null, null, null, 'application/x-www-form-urlencoded');
+}
+
+function scheduleDemo() {
+	var data = { 
+		tutorMapperId: particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap[particularCustomerParticularEnquiryTutorMapperNavigatiorObjectListMap.selectedGrid].getCurrentRecord().tutorMapperId,
+		demoTimeInMillis : getDateValueInMillis(getAttributeValue('form-demo-date', false)+' '+getAttributeValue('form-demo-time', false))
+	}
+	successMessage = 'Demo Scheduled successfully.';
+	callbackAfterCommonSuccess = loadBackParticularEnquiryAllMappedAndEligibleTutorsPage;
+	callWebservice('/rest/enquiry/scheduleDemo', data, null, null, null, 'application/x-www-form-urlencoded');
 }
 
 function refreshTutorLists() {

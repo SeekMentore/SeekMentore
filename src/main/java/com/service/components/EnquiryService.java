@@ -1,6 +1,7 @@
 package com.service.components;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,10 @@ import com.model.rowmappers.EnquiryObjectRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.MailUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE)
 public class EnquiryService implements EnquiryConstants {
@@ -43,6 +47,9 @@ public class EnquiryService implements EnquiryConstants {
 	
 	@Autowired
 	private transient TutorService tutorService;
+	
+	@Autowired
+	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@PostConstruct
 	public void init() {}
@@ -90,11 +97,11 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("matchStatus", getMatchStatusFromGridName(grid));
 		paramsMap.put("customerId", customerId);
-		final List<EnquiryObject> ernquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
-		for (final EnquiryObject ernquiryObject : ernquiryObjectList) {
-			replacePlaceHolderAndIdsFromEnquiryObject(ernquiryObject, delimiter);
+		final List<EnquiryObject> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryObjectRowMapper());
+		for (final EnquiryObject enquiryObject : enquiryObjectList) {
+			replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, delimiter);
 		}
-		return ernquiryObjectList;
+		return enquiryObjectList;
 	}
 	
 	private String getMatchStatusFromGridName(final String grid) {
@@ -152,14 +159,14 @@ public class EnquiryService implements EnquiryConstants {
 			updateQuery += "GRADE = :grade";
 			updatedPropertiesParams.put("grade", enquiryObject.getGrade());
 		}
-		if (ValidationUtils.validateNumber(enquiryObject.getQuotedClientRate(), false, 99, true, 0)) {
+		if (ValidationUtils.validateNumber(enquiryObject.getQuotedClientRate(), false, 9999, true, 0)) {
 			if (!"UPDATE ENQUIRIES SET ".equals(updateQuery)) {
 				updateQuery += " ,";
 			}
 			updateQuery += "QUOTED_CLIENT_RATE = :quotedClientRate";
 			updatedPropertiesParams.put("quotedClientRate", enquiryObject.getQuotedClientRate());
 		}
-		if (ValidationUtils.validateNumber(enquiryObject.getNegotiatedRateWithClient(), false, 99, true, 0)) {
+		if (ValidationUtils.validateNumber(enquiryObject.getNegotiatedRateWithClient(), false, 9999, true, 0)) {
 			if (!"UPDATE ENQUIRIES SET ".equals(updateQuery)) {
 				updateQuery += " ,";
 			}
@@ -209,8 +216,8 @@ public class EnquiryService implements EnquiryConstants {
 			updatedPropertiesParams.put("adminRemarks", enquiryObject.getAdminRemarks());
 		}
 		if (!"UPDATE ENQUIRIES SET ".equals(updateQuery)) {
-			updatedPropertiesParams.put("whoActed", user.getUserId());
 			updateQuery += " ,LAST_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE ENQUIRY_ID = :enquiryId";
+			updatedPropertiesParams.put("whoActed", user.getUserId());
 			updatedPropertiesParams.put("enquiryId", enquiryObject.getEnquiryId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
 			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
@@ -313,5 +320,190 @@ public class EnquiryService implements EnquiryConstants {
 			applicationDao.executeUpdate("DELETE FROM TUTOR_MAPPER WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
 		}
 		return response;
+	}
+	
+	@Transactional
+	public Map<String, Object> updateTutorMapperDetails(final TutorMapper tutorMapperObject, final User user) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		String updateQuery = "UPDATE TUTOR_MAPPER SET ";
+		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
+		if (ValidationUtils.validateNumber(tutorMapperObject.getQuotedTutorRate(), false, 9999, true, 0)) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "QUOTED_TUTOR_RATE = :quotedTutorRate";
+			updatedPropertiesParams.put("quotedTutorRate", tutorMapperObject.getQuotedTutorRate());
+		}
+		if (ValidationUtils.validateNumber(tutorMapperObject.getNegotiatedRateWithTutor(), false, 9999, true, 0)) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "NEGOTIATED_RATE_WITH_TUTOR = :negotiatedRateWithTutor";
+			updatedPropertiesParams.put("negotiatedRateWithTutor", tutorMapperObject.getNegotiatedRateWithTutor());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getTutorNegotiationRemarks())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "TUTOR_NEGOTIATION_REMARKS = :tutorNegotiationRemarks";
+			updatedPropertiesParams.put("tutorNegotiationRemarks", tutorMapperObject.getTutorNegotiationRemarks());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsTutorContacted())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			if (YES.equalsIgnoreCase(tutorMapperObject.getIsTutorContacted())) {
+				updateQuery += "IS_TUTOR_CONTACTED = :isTutorContacted, TUTOR_CONTACTED_DATE = SYSDATE()";
+			} else {
+				updateQuery += "IS_TUTOR_CONTACTED = :isTutorContacted, TUTOR_CONTACTED_DATE = SYSDATE()";
+			}
+			updatedPropertiesParams.put("isTutorContacted", tutorMapperObject.getIsTutorContacted());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsTutorAgreed())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "IS_TUTOR_AGREED = :isTutorAgreed";
+			updatedPropertiesParams.put("isTutorAgreed", tutorMapperObject.getIsTutorAgreed());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsTutorRejectionValid())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "IS_TUTOR_REJECTION_VALID = :isTutorRejectionValid";
+			updatedPropertiesParams.put("isTutorRejectionValid", tutorMapperObject.getIsTutorRejectionValid());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getAdminTutorRejectionValidityResponse())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE = :adminTutorRejectionValidityResponse";
+			updatedPropertiesParams.put("adminTutorRejectionValidityResponse", tutorMapperObject.getAdminTutorRejectionValidityResponse());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getTutorResponse())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "TUTOR_RESPONSE = :tutorResponse";
+			updatedPropertiesParams.put("tutorResponse", tutorMapperObject.getTutorResponse());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getAdminRemarksForTutor())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADMIN_REMARKS_FOR_TUTOR = :adminRemarksForTutor";
+			updatedPropertiesParams.put("adminRemarksForTutor", tutorMapperObject.getAdminRemarksForTutor());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsClientContacted())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			if (YES.equalsIgnoreCase(tutorMapperObject.getIsClientContacted())) {
+				updateQuery += "IS_CLIENT_CONTACTED = :isClientContacted, CLIENT_CONTACTED_DATE = SYSDATE()";
+			} else {
+				updateQuery += "IS_CLIENT_CONTACTED = :isClientContacted, CLIENT_CONTACTED_DATE = SYSDATE()";
+			}
+			updatedPropertiesParams.put("isClientContacted", tutorMapperObject.getIsClientContacted());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsClientAgreed())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "IS_CLIENT_AGREED = :isClientAgreed";
+			updatedPropertiesParams.put("isClientAgreed", tutorMapperObject.getIsClientAgreed());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getClientResponse())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "CLIENT_RESPONSE = :clientResponse";
+			updatedPropertiesParams.put("clientResponse", tutorMapperObject.getClientResponse());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getIsClientRejectionValid())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "IS_CLIENT_REJECTION_VALID = :isClientRejectionValid";
+			updatedPropertiesParams.put("isClientRejectionValid", tutorMapperObject.getIsClientRejectionValid());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getAdminClientRejectionValidityResponse())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE = :adminClientRejectionValidityResponse";
+			updatedPropertiesParams.put("adminClientRejectionValidityResponse", tutorMapperObject.getAdminClientRejectionValidityResponse());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getAdminRemarksForClient())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADMIN_REMARKS_FOR_CLIENT = :adminRemarksForClient";
+			updatedPropertiesParams.put("adminRemarksForClient", tutorMapperObject.getAdminRemarksForClient());
+		}
+		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(tutorMapperObject.getAdminActionRemarks())) {
+			if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+				updateQuery += " ,";
+			}
+			updateQuery += "ADMIN_ACTION_REMARKS = :adminActionRemarks";
+			updatedPropertiesParams.put("adminActionRemarks", tutorMapperObject.getAdminActionRemarks());
+		}
+		if (!"UPDATE TUTOR_MAPPER SET ".equals(updateQuery)) {
+			updateQuery += " ,ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId";
+			updatedPropertiesParams.put("whoActed", user.getUserId());
+			updatedPropertiesParams.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
+			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		}
+		return response;
+	}
+
+	public Map<String, Object> scheduleDemo(final Long tutorMapperId, final Date demoDateAndTime, final User user) throws Exception {
+		final Map<String, Object> response = new HashMap<String, Object>(); 
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("whoActed", user.getUserId());
+		paramsMap.put("demoDateAndTime", demoDateAndTime);
+		paramsMap.put("tutorMapperId", tutorMapperId);
+		applicationDao.executeUpdate("UPDATE TUTOR_MAPPER SET IS_DEMO_SCHEDULED = 'Y', DEMO_DATE_AND_TIME = :demoDateAndTime, MAPPING_STATUS = 'SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_STATUS) VALUES(:tutorMapperId, :demoDateAndTime, 'PENDING')", paramsMap);
+		sendDemoScheduledNotificationEmails(tutorMapperId);
+		return response;
+	}
+	
+	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorMapperId", tutorMapperId);
+		final TutorMapper tutorMapperObject = applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
+		paramsMap.put("enquiryId", tutorMapperObject.getEnquiryId());
+		final EnquiryObject enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryObjectRowMapper());
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		// Tutor Email
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Your demo has been scheduled with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes),
+				null);
+		// Client Email
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Tutor demo has been scheduled for your enquiry", 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
+				null);
 	}
 }

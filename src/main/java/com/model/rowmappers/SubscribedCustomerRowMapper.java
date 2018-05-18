@@ -1,8 +1,8 @@
 package com.model.rowmappers;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,7 +24,7 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOCATION", String.class));
 		subscribedCustomer.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDITIONAL_DETAILS", String.class));
 		subscribedCustomer.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDRESS_DETAILS", String.class));
-		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, "RECORD_LAST_UPDATED", Date.class));
+		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, "RECORD_LAST_UPDATED", Timestamp.class));
 		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
 		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
 		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, "UPDATED_BY", String.class));

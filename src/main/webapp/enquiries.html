@@ -22,7 +22,7 @@
 		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
 		    <a href="subscribewithus.html" >Subscribe With Us</a>
 		    <a href="registeredtutor.html" >Registered Tutor</a>
-		    <a href="ennquiries.html" >All Enquiries</a>
+		    <a href="enquiries.html" >All Enquiries</a>
 		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
 		  </div>
 		</div>
@@ -322,7 +322,7 @@
 		    		<td id="ENQUIRY_DETAILS_ADDRESS_DETAILS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-address-details" id="form-address-details" placeholder="Provide address details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-address-details" id="form-address-details" placeholder="Provide address details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Preferred Teaching Type</td>
@@ -347,7 +347,7 @@
 		    		<td id="ENQUIRY_DETAILS_CLEINT_NEGOTIATION_REMARKS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-negotiation-details" id="form-negotiation-details" placeholder="Provide any negotiation details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-negotiation-details" id="form-negotiation-details" placeholder="Provide any negotiation details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Is Mapped</td>
@@ -376,7 +376,7 @@
 		    		<td id="ENQUIRY_DETAILS_ADDITIONAL_DETAILS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-additional-details" id="form-additional-details" placeholder="Provide any additional details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-additional-details" id="form-additional-details" placeholder="Provide any additional details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Who Acted</td>
@@ -391,7 +391,7 @@
 		    		<td id="ENQUIRY_DETAILS_ADMIN_REMARKS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks" id="form-admin-remarks" placeholder="Provide any Admin Remarks."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-remarks" id="form-admin-remarks" placeholder="Provide any Admin Remarks."></textarea></td>
 		    	</tr>
 		    	<tr>
 					<th colspan="2">
@@ -673,7 +673,7 @@
 		</table>
    </div>
    <div class="w3-row-padding">
-   		<form id="details-update-form" method="post">
+   		<form id="details-mapper-update-form" method="post">
 		    <table align="center" class="all-records">
 		    	<tr>
 		    		<td>Tutor Name</td>
@@ -706,13 +706,14 @@
 		    		<td id="TUTOR_NEGOTIATION_REMARKS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-negotiated-tutor-remarks" id="form-negotiated-tutor-remarks" placeholder="Provide negotiation details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-negotiated-tutor-remarks" id="form-negotiated-tutor-remarks" placeholder="Provide negotiation details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Is Tutor Contacted</td>
 		    		<td id="IS_TUTOR_CONTACTED"></td>
 		    		<td>
 		    			<select name="form-is-tutor-contacted" id="form-is-tutor-contacted" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -727,6 +728,7 @@
 		    		<td id="IS_TUTOR_AGREED"></td>
 		    		<td>
 		    			<select name="form-is-tutor-agreed" id="form-is-tutor-agreed" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -737,6 +739,7 @@
 		    		<td id="IS_TUTOR_REJECTION_VALID"></td>
 		    		<td>
 		    			<select name="form-is-tutor-rejection-valid" id="form-is-tutor-rejection-valid" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -747,27 +750,28 @@
 		    		<td id="ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-tutor-rejection-validity-remarks" id="form-admin-tutor-rejection-validity-remarks" placeholder="Provide admin tutor rejection validity details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-tutor-rejection-validity-remarks" id="form-admin-tutor-rejection-validity-remarks" placeholder="Provide admin tutor rejection validity details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Tutor Response</td>
 		    		<td id="TUTOR_RESPONSE" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-tutor-response" id="form-tutor-response" placeholder="Provide tutor response."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-tutor-response" id="form-tutor-response" placeholder="Provide tutor response."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Admin Remarks For Tutor</td>
 		    		<td id="ADMIN_REMARKS_FOR_TUTOR" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks-for-tutor" id="form-admin-remarks-for-tutor" placeholder="Provide admin remarks for tutor."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-remarks-for-tutor" id="form-admin-remarks-for-tutor" placeholder="Provide admin remarks for tutor."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Is Client Contacted</td>
 		    		<td id="IS_CLIENT_CONTACTED"></td>
 		    		<td>
 		    			<select name="form-is-client-contacted" id="form-is-client-contacted" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -782,6 +786,7 @@
 		    		<td id="IS_CLIENT_AGREED"></td>
 		    		<td>
 		    			<select name="form-is-client-agreed" id="form-is-client-agreed" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -792,6 +797,7 @@
 		    		<td id="IS_CLIENT_REJECTION_VALID"></td>
 		    		<td>
 		    			<select name="form-is-client-rejection-valid" id="form-is-client-rejection-valid" class="form-element">
+		    				<option value="">--Select--</option>
 		    				<option value="N">No</option>
 		    				<option value="Y">Yes</option>
 						</select>
@@ -802,21 +808,21 @@
 		    		<td id="ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-client-rejection-validity-remarks" id="form-admin-client-rejection-validity-remarks" placeholder="Provide admin client rejection validity details."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-client-rejection-validity-remarks" id="form-admin-client-rejection-validity-remarks" placeholder="Provide admin client rejection validity details."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Client Response</td>
 		    		<td id="CLIENT_RESPONSE" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-client-response" id="form-client-response" placeholder="Provide client response."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-client-response" id="form-client-response" placeholder="Provide client response."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Admin Remarks For Client</td>
 		    		<td id="ADMIN_REMARKS_FOR_CLIENT" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-remarks-for-client" id="form-admin-remarks-for-client" placeholder="Provide admin remarks for client."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-remarks-for-client" id="form-admin-remarks-for-client" placeholder="Provide admin remarks for client."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Admin Action Date</td>
@@ -827,7 +833,7 @@
 		    		<td id="ADMIN_ACTION_REMARKS" colspan="2"></td>
 		    	</tr>
 		    	<tr>
-		    		<td colspan="3"><textarea rows="4" cols="65" name="form-admin-action-remarks" id="form-admin-action-remarks" placeholder="Provide any Admin Action Remarks."></textarea></td>
+		    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-action-remarks" id="form-admin-action-remarks" placeholder="Provide any Admin Action Remarks."></textarea></td>
 		    	</tr>
 		    	<tr>
 		    		<td>Who Acted</td>
@@ -836,20 +842,6 @@
 		    	<tr>
 		    		<td>Is Demo Scheduled</td>
 		    		<td id="IS_DEMO_SCHEDULED"></td>
-		    		<td>
-		    			<select name="form-is-client-agreed" id="form-is-demo-scheduled" class="form-element">
-		    				<option value="N">No</option>
-		    				<option value="Y">Yes</option>
-						</select>
-					</td>
-		    	</tr>
-		    	<tr>
-		    		<td>Demo Time & Date</td>
-		    		<td id="DEMO_TIME_AND_DATE"></td>
-		    		<td>
-		    			<input type="date" name="form-demo-date" id="form-demo-date" class="form-element"/>
-		    			<input type="time" name="form-demo-time" id="form-demo-time" class="form-element">
-					</td>
 		    	</tr>
 		    	<tr>
 					<th colspan="2">
@@ -871,6 +863,26 @@
 				</tr>
 			</table>
    		</form>
+   		<table align="center" class="all-records">
+   			<tr>
+	    		<td>Demo Time & Date</td>
+	    		<td id="DEMO_TIME_AND_DATE"></td>
+	    		<td>
+	    			<input type="date" name="form-demo-date" id="form-demo-date" class="form-element"/>
+	    			<input type="time" name="form-demo-time" id="form-demo-time" class="form-element">
+				</td>
+	    	</tr>
+	    	<tr>
+				<th colspan="3">
+					<button 
+						type="button" 
+						onClick="scheduleDemo()"
+						class="form-element submit-button button-green" >
+						Schedule Demo
+					</button> 
+				</th>
+			</tr>
+   		</table>
    </div>
    <div class="w3-row-padding">
 		<table align="center" class="all-records">

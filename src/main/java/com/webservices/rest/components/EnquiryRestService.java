@@ -24,6 +24,7 @@ import com.constants.ScopeConstants;
 import com.constants.components.EnquiryConstants;
 import com.model.ErrorPacket;
 import com.model.components.EnquiryObject;
+import com.model.components.TutorMapper;
 import com.service.components.CommonsService;
 import com.service.components.EnquiryService;
 import com.utils.ApplicationUtils;
@@ -39,6 +40,8 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	private HttpServletRequest request;
 	private Long customerId;
 	private Long enquiryId;
+	private Date scheduledDemoDateAndTime;
+	private Long tutorMapperId;
 	private String selectedEligibleTutorIdSemicolonSeparatedList;
 	private String selectedTutorMappedIdSemicolonSeparatedList;
 	
@@ -230,6 +233,41 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 	}
 	
+	@Path(REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String updateTutorMapperDetails (
+			final TutorMapper tutorMapperObject,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS;
+		this.tutorMapperId = tutorMapperObject.getTutorMapperId();
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().updateTutorMapperDetails(tutorMapperObject, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_SCHEDULE_DEMO)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String scheduleDemo (
+			@FormParam("tutorMapperId") final Long tutorMapperId,
+			@FormParam("demoTimeInMillis") final Long demoTimeInMillis,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_SCHEDULE_DEMO;
+		this.tutorMapperId = tutorMapperId;
+		this.scheduledDemoDateAndTime = new Date(demoTimeInMillis);
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getEnquiryService().scheduleDemo(tutorMapperId, scheduledDemoDateAndTime, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} 
+		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+	}
+	
 	public EnquiryService getEnquiryService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE, EnquiryService.class);
 	}
@@ -268,6 +306,14 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 			}
 			case REST_METHOD_NAME_UNMAP_TUTORS : {
 				handleParticularEnquiryTutorUnMappingSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS : {
+				handleParticularTutorMapperSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_SCHEDULE_DEMO : {
+				handleScheduledDemoSecurity();
 				break;
 			}
 		}
@@ -327,7 +373,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedEligibleTutorIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
@@ -344,7 +390,48 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedTutorMappedIdSemicolonSeparatedList);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleParticularTutorMapperSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleScheduledDemoSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateDate(this.scheduledDemoDateAndTime)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId + LINE_BREAK + this.scheduledDemoDateAndTime);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

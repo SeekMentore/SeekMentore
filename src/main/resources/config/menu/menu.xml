@@ -75,6 +75,8 @@
 			<webservice id="displayAllMappedDemoPendingTutors" url="/displayAllMappedDemoPendingTutors"></webservice>
 			<webservice id="unmapTutors" url="/unmapTutors"></webservice>
 			<webservice id="displayAllMappedDemoScheduledTutors" url="/displayAllMappedDemoScheduledTutors"></webservice>
+			<webservice id="updateTutorMapperDetails" url="/updateTutorMapperDetails"></webservice>
+			<webservice id="scheduleDemo" url="/scheduleDemo"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
