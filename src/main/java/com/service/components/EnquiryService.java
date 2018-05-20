@@ -474,12 +474,21 @@ public class EnquiryService implements EnquiryConstants {
 		return response;
 	}
 	
-	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId) throws Exception {
+	public TutorMapper getTutorMapperObject(final Long tutorMapperId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorMapperId", tutorMapperId);
-		final TutorMapper tutorMapperObject = applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
-		paramsMap.put("enquiryId", tutorMapperObject.getEnquiryId());
-		final Enquiries enquiryObject =  applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
+		return applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
+	}
+	
+	public Enquiries getEnquiriesObject(final Long enquiryId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		return applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
+	}
+	
+	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId) throws Exception {
+		final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
+		final Enquiries enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
 		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);

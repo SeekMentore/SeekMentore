@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="css/lib/w3.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<title>Seek Mentore - Admin - Demo Tracker</title>
+</head>
+<body>
+<div class="w3-container w3-green banner">
+  <div class="company-logo">
+	  <img src="images/company-logo-complete.png" />
+  </div>
+  <div class="user-info">
+	  <div class="menu-dropdown-div">
+	  	<div class="menu-dropdown">
+		<button onclick="toggleMenu()" class="dropbtn">Public Pages</button>
+		  <div id="menu-Dropdown" class="dropdown-content">
+		    <a href="tutorregister.html" >Tutor Register</a>
+		    <a href="tutorenquiry.html" >Tutor Enquiry</a>
+		    <a href="subscribewithus.html" >Subscribe With Us</a>
+		    <a href="registeredtutor.html" >Registered Tutor</a>
+		    <a href="enquiries.html" >All Enquiries</a>
+		    <a href="demo.html" >Demo Tracker</a>
+		    <a href="javascript:void(0);" onclick="showChangePassword()">Change Password</a>
+		  </div>
+		</div>
+  	  </div>
+  	  <div class="info-div">
+		  <div id="user-name">Welcome - </div>
+		  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+  	  </div>
+  </div>
+</div>
+<div class="banner-separator"></div>
+<form method="POST" id="signout_form" class="noscreen">
+</form>
+<div id="all-demos-div">
+	<div id="download-report-div" class="w3-row-padding">
+		<Br/>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records no-border">
+				<tr>
+					<th>
+						<a href="admin.html">&lt;&lt;Back to Admin</a> 
+					</th>
+					<th class="center-align">
+						<button 
+							type="button" 
+							onClick="downloadReport()"
+							class="form-element submit-button button-green" >
+							Download Report
+						</button> 
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">All Demos</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<div id="all-scheduled-demo-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Scheduled Demo</th>
+					<th id="all-scheduled-demo-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Demo Date & Time</th>
+						<th>Client Name</th>
+						<th>Tutor Name</th>
+						<th>Occurred</th>
+					</tr>
+				</thead>
+				<tbody id="all-scheduled-demo-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="all-rescheduled-demo-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Re-Scheduled Demo</th>
+					<th id="all-rescheduled-demo-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Demo Date & Time</th>
+						<th>Client Name</th>
+						<th>Tutor Name</th>
+						<th>Occurred</th>
+					</tr>
+				</thead>
+				<tbody id="all-rescheduled-demo-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="all-successfull-demo-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Successful Demo</th>
+					<th id="all-successfull-demo-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Demo Date & Time</th>
+						<th>Client Name</th>
+						<th>Tutor Name</th>
+						<th>Occurred</th>
+					</tr>
+				</thead>
+				<tbody id="all-successfull-demo-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="all-failed-demo-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Failed Demo</th>
+					<th id="all-failed-demo-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Demo Date & Time</th>
+						<th>Client Name</th>
+						<th>Tutor Name</th>
+						<th>Occurred</th>
+					</tr>
+				</thead>
+				<tbody id="all-failed-demo-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div id="all-canceled-demo-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<tr class="header-panel">
+					<th>Canceled Demo</th>
+					<th id="all-canceled-demo-total-records" class="total-records"></th>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-row-padding">
+			<table align="center" class="all-records">
+				<thead>
+					<tr>
+						<th>Demo Date & Time</th>
+						<th>Client Name</th>
+						<th>Tutor Name</th>
+						<th>Occurred</th>
+					</tr>
+				</thead>
+				<tbody id="all-canceled-demo-records">
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div id="particular-demo-div" class="noscreen">
+	<Br/>
+	<div id="download-profile-div" class="w3-row-padding">
+		<div class="w3-row-padding">
+			<table align="center" class="">
+				<tr>
+					<th class="center-align">
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<Br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">All Demos</th>
+			</tr>
+		</table>
+	</div>
+	<Br/>
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th class="center-align">Customer Details</th>
+		</tr>
+	</table>
+	<table align="center" class="all-records">
+		<tr>
+    		<th>Client Name</th>
+    		<th>Client Email</th>
+    		<th>Client Contact Number</th>
+    	</tr>
+    	<tr>
+    		<td id="CLIENT_NAME"></td>
+    		<td id="CLIENT_EMAIl"></td>
+    		<td id="CLIENT_CONTACT_NUMBER"></td>
+    	</tr>
+	</table>
+	<br/>
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th class="center-align">Customer Enquiry Details</th>
+		</tr>
+	</table>
+	<table align="center" class="all-records">
+		<tr>
+    		<th>Subject</th>
+    		<th>Grade</th>
+    		<th>Address</th>
+    		<th>Quoted Client Rate</th>
+    		<th>Negotiated Client Rate</th>
+    	</tr>
+    	<tr>
+    		<td id="SUBJECT"></td>
+    		<td id="GRADE"></td>
+    		<td id="ADDRESS"></td>
+    		<td id="QUOTED_CLIENT_RATE"></td>
+    		<td id="NEGOTIATED_CLIENT_RATE"></td>
+    	</tr>
+	</table>
+	<br/>
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th class="center-align">Tutor Details</th>
+		</tr>
+	</table>
+	<table align="center" class="all-records">
+		<tr>
+    		<th>Tutor Name</th>
+    		<th>Tutor Email</th>
+    		<th>Tutor Contact Number</th>
+    	</tr>
+    	<tr>
+    		<td id="TUTOR_NAME"></td>
+    		<td id="TUTOR_EMAIl"></td>
+    		<td id="TUTOR_CONTACT_NUMBER"></td>
+    	</tr>
+	</table>
+	<br/>
+	<table align="center" class="all-records">
+		<tr class="header-panel">
+			<th class="center-align">Tutor Mapping Details</th>
+		</tr>
+	</table>
+	<table align="center" class="all-records">
+		<tr>
+    		<th>Quoted Tutor Rate</th>
+    		<th>Negotiated Tutor Rate</th>
+    	</tr>
+    	<tr>
+    		<td id="QUOTED_TUTOR_RATE"></td>
+    		<td id="NEGOTIATED_TUTOR_RATE"></td>
+    	</tr>
+	</table>
+	<br/>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th class="center-align">Demo Details</th>
+			</tr>
+		</table>
+	</div>
+	<div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousDemoRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllDemosPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextDemoRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+   <div class="w3-row-padding">
+   	<form id="demo-tracker-details-update-form">
+	    <table align="center" class="all-records">
+	    	<tr>
+	    		<td>Demo Date & Time</td>
+	    		<td id="DEMO_DATE_AND_TIME" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Demo Status</td>
+	    		<td id="DEMO_STATUS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Demo Occurred</td>
+	    		<td id="DEMO_OCCURRED"></td>
+	    		<td>
+	    			<select name="form-demo-occurred" id="form-demo-occurred" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Client Satisfied From Tutor</td>
+	    		<td id="CLIENT_SATISFIED_FROM_TUTOR"></td>
+	    		<td>
+	    			<select name="form-client-satisfied-from-tutor" id="form-client-satisfied-from-tutor" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Client Remarks</td>
+	    		<td id="CLIENT_REMARKS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-client-remarks" id="form-client-remarks" placeholder="Provide client remarks."></textarea></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Tutor Satisfied With Client</td>
+	    		<td id="TUTOR_SATISFIED_WITH_CLIENT"></td>
+	    		<td>
+	    			<select name="form-tutor-satisfied-with-client" id="form-tutor-satisfied-with-client" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Tutor Remarks</td>
+	    		<td id="TUTOR_REMARKS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-tutor-remarks" id="form-tutor-remarks" placeholder="Provide tutor remarks."></textarea></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Admin Satisfied With Client</td>
+	    		<td id="ADMIN_SATISFIED_WITH_CLIENT"></td>
+	    		<td>
+	    			<select name="form-admin-satisfied-with-client" id="form-admin-satisfied-with-client" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Admin Satisfied With Tutor</td>
+	    		<td id="ADMIN_SATISFIED_FROM_TUTOR"></td>
+	    		<td>
+	    			<select name="form-admin-satisfied-with-tutor" id="form-admin-satisfied-with-tutor" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Need Price Negotiation With Client</td>
+	    		<td id="NEED_PRICE_NEGOTIATION_WITH_CLIENT"></td>
+	    		<td>
+	    			<select name="form-need-price-negotiation-with-tutor" id="form-need-price-negotiation-with-client" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Negotiated Override Rate With Client</td>
+	    		<td id="NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT"></td>
+	    		<td><input type="number" id="form-negotiated-override-rate-with-client" class="form-element" name="form-negotiated-override-rate-with-client" placeholder="Negotiated Override Rate With Client"/></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Client Negotiation Remarks</td>
+	    		<td id="CLIENT_NEGOTIATION_REMARKS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-client-negotiation-remarks" id="form-client-negotiation-remarks" placeholder="Provide client negotiation details."></textarea></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Need Price Negotiation With Tutor</td>
+	    		<td id="NEED_PRICE_NEGOTIATION_WITH_TUTOR"></td>
+	    		<td>
+	    			<select name="form-need-price-negotiation-with-tutor" id="form-need-price-negotiation-with-tutor" class="form-element">
+	    				<option value="">--Select--</option>
+	    				<option value="N">No</option>
+	    				<option value="Y">Yes</option>
+					</select>
+				</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Negotiated Override Rate With Tutor</td>
+	    		<td id="NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR"></td>
+	    		<td><input type="number" id="form-negotiated-override-rate-with-tutor" class="form-element" name="form-negotiated-override-rate-with-tutor" placeholder="Negotiated Override Rate With Tutor"/></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Tutor Negotiation Remarks</td>
+	    		<td id="TUTOR_NEGOTIATION_REMARKS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-tutor-negotiation-remarks" id="form-tutor-negotiation-remarks" placeholder="Provide tutor negotiation details."></textarea></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Demo Success</td>
+	    		<td id="IS_DEMO_SUCCESS"></td>
+	    		<td></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Admin Action Date</td>
+	    		<td id="ADMIN_ACTION_DATE" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Admin Remarks</td>
+	    		<td id="ADMIN_REMARKS" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-admin-remarks" id="form-admin-remarks" placeholder="Provide any Admin Remarks."></textarea></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Acted</td>
+	    		<td id="WHO_ACTED" colspan="2"></td>
+	    	</tr>
+	    	<tr>
+				<th colspan="2">
+					<button 
+						type="button" 
+						onClick="updateDemoTrackerDetails()"
+						class="form-element submit-button button-green" >
+						Update Demo Details
+					</button> 
+				</th>
+				<td>
+					<button 
+						type="button" 
+						onClick="resetDemoTrackerDetails()"
+						class="form-element submit-button" >
+						Reset
+					</button> 
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="all-records">
+   			<tr>
+	    		<td colspan="3"><textarea rows="4" cols="65" class="form-element" name="form-failure-cancel-remarks" id="form-failure-cancel-remarks" placeholder="Provide remarks for Demo Failure and Cancellations."></textarea></td>
+	    	</tr>
+	    	<tr>
+				<th>
+					<button 
+						type="button" 
+						onClick="demoSuccess()"
+						class="form-element submit-button button-green" >
+						Demo Success
+					</button> 
+				</th>
+				<td>
+					<button 
+						type="button" 
+						onClick="demoFailure()"
+						class="form-element submit-button button-red" >
+						Demo Failure
+					</button> 
+				<th>
+					<button 
+						type="button" 
+						onClick="cancelDemo()"
+						class="form-element submit-button button-red" >
+						Cancel Demo
+					</button> 
+				</th>
+				</td>
+			</tr>
+   		</table>
+		<table align="center" class="all-records">
+   			<tr>
+	    		<td>Re-schedule Demo Time & Date</td>
+	    		<td>
+	    			<input type="date" name="form-demo-date" id="form-demo-date" class="form-element"/>
+				</td>
+	    		<td>
+	    			<input type="time" name="form-demo-time" id="form-demo-time" class="form-element">
+				</td>
+	    	</tr>
+	    	<tr>
+				<th colspan="3">
+					<button 
+						type="button" 
+						onClick="rescheduleDemo()"
+						class="form-element submit-button button-green" >
+						Re-Schedule Demo
+					</button> 
+				</th>
+			</tr>
+   		</table>
+   	</form> 
+   </div>
+   <div class="w3-row-padding">
+		<table align="center" class="all-records">
+			<tr class="header-panel">
+				<th><a href="javascript:void(0);" onclick="previousDemoRecord()">&lt;&lt; Previous</a></th>
+				<th><a href="javascript:void(0);" onclick="showAllDemosPage()">Back to all records</a></th>
+				<th ><a href="javascript:void(0);" onclick="nextDemoRecord()">Next &gt;&gt;</a></th>
+			</tr>
+		</table>
+   </div>
+</div>
+<form 
+	id="downloadForm" 
+  	target="ifrDownload" 
+  	method="post" 
+  	class="noscreen"
+>
+</form>
+<iframe id="ifrDownload" name="ifrDownload" width="0" height="0"></iframe>
+<!-- The Modal -->
+<div id="notification-popup-modal" class="modal noscreen">
+  <!-- Modal content -->
+  <div class="modal-content">
+  	<div id="alert-title"></div>
+    <div id="close-notification-popup-modal" class="close-modal" onclick="closeNotificationPopUpModal()">&times;</div>
+    <hr class="modal-line" />
+    <p id="notification-popup-model-content-section"></p>
+    <hr class="modal-line" />
+    <div onclick="closeNotificationPopUpModal()" class="close-modal-button">OK</div>
+  </div>
+</div>
+<!-- The Loader Modal -->
+<div id="loader-popup-modal" class="modal noscreen">
+	<div class="loader"></div>
+</div>
+<div class="w3-container footer">
+  © Developed and Maintained by <a href="http://www.seekmentore.com">Seek Mentore</a>
+</div>
+<script src="scripts/lib/jQuery/v-3.1.1/jquery-3.1.1.min.js"></script>
+<script src="scripts/utilities.js"></script>
+<script src="scripts/user.js"></script>
+<script src="scripts/admin.js"></script>
+<script src="scripts/demo.js"></script>
+<script>
+	loadGrids();
+</script>
+</body>
+</html>

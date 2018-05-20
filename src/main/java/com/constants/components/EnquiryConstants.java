@@ -13,6 +13,7 @@ public interface EnquiryConstants extends ApplicationConstants {
 	String VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID = "Invalid Tutor Mapper Id.";
 	String VALIDATION_MESSAGE_INVALID_TUTOR_ID_LIST = "Invalid Tutor Id List.";
 	String VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID_LIST = "Invalid Tutor Mapper Id List.";
+	String VALIDATION_MESSAGE_INVALID_SCHEDULE_TIME = "Invalid Schedule Date & Time..";
 	
 	String VELOCITY_TEMPLATES_ENQUIRIES_PATH = AdminConstants.VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/enquiries";
 	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-tutor-email.vm";

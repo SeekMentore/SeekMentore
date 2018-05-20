@@ -1,9 +1,12 @@
 package com.webservices.rest.components;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -17,9 +20,12 @@ import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.DemoTrackerConstants;
+import com.model.ErrorPacket;
+import com.model.components.DemoTracker;
 import com.service.components.CommonsService;
 import com.service.components.DemoService;
-import com.service.components.EnquiryService;
+import com.utils.ApplicationUtils;
+import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -28,16 +34,34 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_DEMO) 
 public class DemoRestService extends AbstractRestWebservice implements RestMethodConstants, DemoTrackerConstants {
 	
-	@Path(REST_METHOD_NAME_DISPLAY_PENDING_DEMOS)
+	private Long demoTrackerId;
+	private Date rescheduledDemoDateAndTime;
+	
+	@Path(REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
 	public String displayPendingDemos (
 			@Context final HttpServletRequest request
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_DISPLAY_PENDING_DEMOS;
+		this.methodName = REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getDemoService().displayDemos(REST_METHOD_NAME_DISPLAY_PENDING_DEMOS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getDemoService().displayDemos(REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayRescheduledDemos (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().displayDemos(REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -73,12 +97,110 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		}
 	}
 	
-	public DemoService getDemoService() {
-		return AppContext.getBean(BeanConstants.BEAN_NAME_DEMO_SERVICE, DemoService.class);
+	@Path(REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String displayCanceledDemos (
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().displayDemos(REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
 	}
 	
-	public EnquiryService getEnquiryService() {
-		return AppContext.getBean(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE, EnquiryService.class);
+	@Path(REST_METHOD_NAME_DISPLAY_DEMO_DETAILS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String displayDemoDetails (
+			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DISPLAY_DEMO_DETAILS;
+		this.demoTrackerId = demoTrackerId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().displayDemoDetails(demoTrackerId), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DEMO_SUCCESS)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String demoSuccess (
+			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DEMO_SUCCESS;
+		this.demoTrackerId = demoTrackerId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_SUCCESS, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DEMO_FAILURE)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String demoFailure (
+			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DEMO_FAILURE;
+		this.demoTrackerId = demoTrackerId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_FAILURE, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_CANCEL_DEMO)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String cancelDemo (
+			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_CANCEL_DEMO;
+		this.demoTrackerId = demoTrackerId;
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_CANCEL_DEMO, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_RESCHEDULE_DEMO)
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String rescheduleDemo (
+			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@FormParam("demoTimeInMillis") final Long demoTimeInMillis,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_RESCHEDULE_DEMO;
+		this.demoTrackerId = demoTrackerId;
+		this.rescheduledDemoDateAndTime = new Date(demoTimeInMillis);
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().rescheduleDemo(demoTrackerId, rescheduledDemoDateAndTime, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	public DemoService getDemoService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_DEMO_SERVICE, DemoService.class);
 	}
 	
 	public CommonsService getCommonsService() {
@@ -91,13 +213,68 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_DISPLAY_PENDING_DEMOS :
+			case REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS :
+			case REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS :
 			case REST_METHOD_NAME_DISPLAY_SUCCESSFULL_DEMOS :
-			case REST_METHOD_NAME_DISPLAY_FAILED_DEMOS : {
+			case REST_METHOD_NAME_DISPLAY_FAILED_DEMOS :
+			case REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS : {
 				this.securityPassed = true;
+				break;
+			}
+			case REST_METHOD_NAME_DISPLAY_DEMO_DETAILS :
+			case REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS :
+			case REST_METHOD_NAME_DEMO_SUCCESS : 
+			case REST_METHOD_NAME_DEMO_FAILURE : 
+			case REST_METHOD_NAME_CANCEL_DEMO : {
+				handleParticularDemoSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_RESCHEDULE_DEMO : {
+				handleRescheduledDemoSecurity();
 				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
+	}
+	
+	private void handleParticularDemoSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_DEMO_TRACKER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.demoTrackerId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
+	private void handleRescheduledDemoSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_DEMO_TRACKER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateDate(this.rescheduledDemoDateAndTime)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_RESCHEDULE_DATE_AND_TIME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.demoTrackerId + LINE_BREAK + this.rescheduledDemoDateAndTime);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
 	}
 }

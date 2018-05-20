@@ -27,6 +27,11 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	private String needPriceNegotiationWithTutor;
 	private String tutorNegotiationRemarks;
 	private String adminRemarks;
+	private Integer negotiatedOverrideRateWithClient;
+	private Integer negotiatedOverrideRateWithTutor;
+	private Date adminActionDate;
+	private String customerName;
+	private String tutorName;
 	
 	public DemoTracker() {}
 
@@ -173,6 +178,52 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	public void setAdminRemarks(String adminRemarks) {
 		this.adminRemarks = adminRemarks;
 	}
+	
+	public Integer getNegotiatedOverrideRateWithClient() {
+		return negotiatedOverrideRateWithClient;
+	}
+
+	public void setNegotiatedOverrideRateWithClient(Integer negotiatedOverrideRateWithClient) {
+		this.negotiatedOverrideRateWithClient = negotiatedOverrideRateWithClient;
+	}
+
+	public Integer getNegotiatedOverrideRateWithTutor() {
+		return negotiatedOverrideRateWithTutor;
+	}
+
+	public void setNegotiatedOverrideRateWithTutor(Integer negotiatedOverrideRateWithTutor) {
+		this.negotiatedOverrideRateWithTutor = negotiatedOverrideRateWithTutor;
+	}
+
+	public Date getAdminActionDate() {
+		return adminActionDate;
+	}
+
+	public void setAdminActionDate(Date adminActionDate) {
+		this.adminActionDate = adminActionDate;
+	}
+	
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	/**
+	 * @return the tutorName
+	 */
+	public String getTutorName() {
+		return tutorName;
+	}
+
+	/**
+	 * @param tutorName the tutorName to set
+	 */
+	public void setTutorName(String tutorName) {
+		this.tutorName = tutorName;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -185,5 +236,4 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

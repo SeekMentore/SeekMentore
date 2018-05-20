@@ -23,6 +23,7 @@
 		<page id="subscribewithus" url="/subscribewithus.html" pageAccessType="A"></page>
 		<page id="registeredtutor" url="/registeredtutor.html" pageAccessType="A"></page>
 		<page id="enquiries" url="/enquiries.html" pageAccessType="A"></page>
+		<page id="demo" url="/demo.html" pageAccessType="A"></page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="A">
 			<!-- Tutor Registration Admin -->
 			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
@@ -80,9 +81,17 @@
 		</page>
 		<page id="demoRest" url="/rest/demo" pageAccessType="A">
 			<!-- Demo Tracker Admin -->
-			<webservice id="displayPendingDemos" url="/displayPendingDemos"></webservice>
+			<webservice id="displayScheduledDemos" url="/displayScheduledDemos"></webservice>
+			<webservice id="displayRescheduledDemos" url="/displayRescheduledDemos"></webservice>
 			<webservice id="displaySuccessfullDemos" url="/displaySuccessfullDemos"></webservice>
 			<webservice id="displayFailedDemos" url="/displayFailedDemos"></webservice>
+			<webservice id="displayCanceledDemos" url="/displayCanceledDemos"></webservice>
+			<webservice id="displayDemoDetails" url="/displayDemoDetails"></webservice>
+			<webservice id="updateDemoTrackerDetails" url="/updateDemoTrackerDetails"></webservice>
+			<webservice id="demoSuccess" url="/demoSuccess"></webservice>
+			<webservice id="demoFailure" url="/demoFailure"></webservice>
+			<webservice id="cancelDemo" url="/cancelDemo"></webservice>
+			<webservice id="rescheduleDemo" url="/rescheduleDemo"></webservice>
 		</page>
 		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
 		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">

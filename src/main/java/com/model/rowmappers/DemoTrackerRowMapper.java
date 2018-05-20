@@ -32,6 +32,9 @@ public class DemoTrackerRowMapper implements RowMapper<DemoTracker> {
 		demoTracker.setNeedPriceNegotiationWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEED_PRICE_NEGOTIATION_WITH_TUTOR", String.class));
 		demoTracker.setTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_NEGOTIATION_REMARKS", String.class));
 		demoTracker.setAdminRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_REMARKS", String.class));
+		demoTracker.setNegotiatedOverrideRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT", Integer.class));
+		demoTracker.setNegotiatedOverrideRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR", Integer.class));
+		demoTracker.setAdminActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_ACTION_DATE", Timestamp.class));
 		return demoTracker;
 	}
 

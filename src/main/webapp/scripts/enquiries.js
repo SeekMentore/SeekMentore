@@ -200,8 +200,6 @@ function openCustomerRecord(customerObj) {
 		$('#ADDRESS_DETAILS').html(showValue(customerObj.addressDetails));
 		$('#ADDITIONAL_DETAILS').html(showValue(customerObj.additionalDetails));
 		
-		replacePlaceHoldersForEmailPanel(showValue(customerObj.emailId), showValue(customerObj.name));
-		
 		var data = { 
 			customerId: customerObj.customerId,
 			grid	: customerListMap.selectedGrid

@@ -423,7 +423,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		if (!ValidationUtils.validateDate(this.scheduledDemoDateAndTime)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
+					VALIDATION_MESSAGE_INVALID_SCHEDULE_TIME,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}

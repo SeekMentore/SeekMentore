@@ -72,9 +72,17 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS = "/updateTutorMapperDetails";
 	String REST_METHOD_NAME_SCHEDULE_DEMO = "/scheduleDemo";
 	// Demo
-	String REST_METHOD_NAME_DISPLAY_PENDING_DEMOS = "/displayPendingDemos";
+	String REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS = "/displayScheduledDemos";
+	String REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS = "/displayRescheduledDemos";
 	String REST_METHOD_NAME_DISPLAY_SUCCESSFULL_DEMOS = "/displaySuccessfullDemos";
 	String REST_METHOD_NAME_DISPLAY_FAILED_DEMOS = "/displayFailedDemos";
+	String REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS = "/displayCanceledDemos";
+	String REST_METHOD_NAME_DISPLAY_DEMO_DETAILS = "/displayDemoDetails";
+	String REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS = "/updateDemoTrackerDetails";
+	String REST_METHOD_NAME_DEMO_SUCCESS = "/demoSuccess";
+	String REST_METHOD_NAME_DEMO_FAILURE = "/demoFailure";
+	String REST_METHOD_NAME_CANCEL_DEMO = "/cancelDemo";
+	String REST_METHOD_NAME_RESCHEDULE_DEMO = "/rescheduleDemo";
 	// Send Email
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Login REST methods
