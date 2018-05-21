@@ -21,6 +21,7 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.DemoTrackerConstants;
 import com.model.ErrorPacket;
+import com.model.components.DemoTracker;
 import com.service.components.CommonsService;
 import com.service.components.DemoService;
 import com.utils.ApplicationUtils;
@@ -125,6 +126,23 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		doSecurity(request);
 		if (this.securityPassed) {
 			return convertObjToJSONString(getDemoService().displayDemoDetails(demoTrackerId), REST_MESSAGE_JSON_RESPONSE_NAME);
+		} else {
+			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS)
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String updateDemoTrackerDetails (
+			final DemoTracker demoTrackerObject,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS;
+		this.demoTrackerId = demoTrackerObject.getDemoTrackerId();
+		doSecurity(request);
+		if (this.securityPassed) {
+			return convertObjToJSONString(getDemoService().updateDemoTrackerDetails(demoTrackerObject, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}

@@ -86,6 +86,10 @@ function openDemoRecord(demoObj) {
 		$('#ADMIN_FINALIZING_REMARKS').html(showValue(demoObj.adminFinalizingRemarks));
 		$('#RESCHEDULING_REMARKS').html(showValue(demoObj.reschedulingRemarks));
 		
+		if ('all-scheduled-demo' !=  demoListMap.selectedGrid) {
+			$('.form-element').addClass('noscreen');
+		}
+		
 		var data = { 
 			demoTrackerId: demoObj.demoTrackerId
 		}
@@ -155,19 +159,9 @@ function cancelDemo() {
 }
 
 function rescheduleDemo() {
-	/*successMessage = 'Demo Re-scheduled.';
-	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
-	var data = { 
-		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
-		finalizingRemarks : getAttributeValue('form-reschedule-remarks', false),
-		demoTimeInMillis : getDateValueInMillis(getAttributeValue('form-demo-date', false)+' '+getAttributeValue('form-demo-time', false))
-	}
-	callWebservice('/rest/demo/rescheduleDemo', data, null, null, null, 'application/x-www-form-urlencoded');
-	resetDemoTrackerDetails();*/
 	successMessage = 'Demo Successfull.';
 	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
 	var demoTimeInMillis = getDateValueInMillis(getAttributeValue('form-demo-date', false)+' '+getAttributeValue('form-demo-time', false));
-	alert(demoTimeInMillis);
 	var data = { 
 		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
 		demoTimeInMillis : isNaN(demoTimeInMillis) ? null : demoTimeInMillis,

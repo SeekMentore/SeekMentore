@@ -83,7 +83,7 @@ function prepareHTMLToFillGridForEligibleTutors(response) {
 		html += '<td><input type="checkbox" onclick="toggleTutorIdForMapping(this,\''+tutorObj.tutorId+'\')" /></td>';
 		html +='</tr>';
 	}
-	$('#all-enquiries-records').html(html);
+	$('#all-eligible-tutors-with-subject-grade-location-and-teachingtype-records').html(html);
 	$('#all-eligible-tutors-with-subject-grade-location-and-teachingtype-total-records').html('Total Records = ' + eligibleTutorListWithSubjectGradeLocationTeachingType.length);
 	
 	var html ='';
@@ -254,6 +254,8 @@ function openEnquiryRecord(enquiryObject) {
 		$('#BASIC_INFO-ENQUIRY_GRADE').html(showValue(enquiryObject.grade));
 		$('#BASIC_INFO-ENQUIRY_LOCATION').html(showValue(enquiryObject.locationDetails));
 		$('#BASIC_INFO-ENQUIRY_TEACHING_TYPE').html(showValue(enquiryObject.preferredTeachingType));
+		$('#BASIC_INFO-ENQUIRY_QUOTED_CLIENT_RATE').html(showValue(enquiryObject.quotedClientRate));
+		$('#BASIC_INFO-ENQUIRY_NEGOTIATED_CLIENT_RATE').html(showValue(enquiryObject.negotiatedRateWithClient));
 		
 		loadMappedTutors();
 		loadEligibleTutors();
