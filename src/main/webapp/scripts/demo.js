@@ -83,6 +83,8 @@ function openDemoRecord(demoObj) {
 		$('#ADMIN_ACTION_DATE').html(showValue(demoObj.adminActionDate));
 		$('#ADMIN_REMARKS').html(showValue(demoObj.adminRemarks));
 		$('#WHO_ACTED').html(showValue(demoObj.whoActed));
+		$('#ADMIN_FINALIZING_REMARKS').html(showValue(demoObj.adminFinalizingRemarks));
+		$('#RESCHEDULING_REMARKS').html(showValue(demoObj.reschedulingRemarks));
 		
 		var data = { 
 			demoTrackerId: demoObj.demoTrackerId
@@ -116,6 +118,62 @@ function updateDemoTrackerDetails() {
 	successMessage = 'Demo Tracker details updated successfully.';
 	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
 	callWebservice('/rest/demo/updateDemoTrackerDetails', encodeObjectAsJSON(prepareDemoTrackerUpdateParams()));
+	resetDemoTrackerDetails();
+}
+
+function demoSuccess() {
+	successMessage = 'Demo Successfull.';
+	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
+	var data = { 
+		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
+		finalizingRemarks : getAttributeValue('form-failure-cancel-remarks', false)
+	}
+	callWebservice('/rest/demo/demoSuccess', data, null, null, null, 'application/x-www-form-urlencoded');
+	resetDemoTrackerDetails();
+}
+
+function demoFailure() {
+	successMessage = 'Demo Failed.';
+	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
+	var data = { 
+		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
+		finalizingRemarks : getAttributeValue('form-failure-cancel-remarks', false)
+	}
+	callWebservice('/rest/demo/demoFailure', data, null, null, null, 'application/x-www-form-urlencoded');
+	resetDemoTrackerDetails();
+}
+
+function cancelDemo() {
+	successMessage = 'Demo Canceled';
+	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
+	var data = { 
+		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
+		finalizingRemarks : getAttributeValue('form-failure-cancel-remarks', false)
+	}
+	callWebservice('/rest/demo/cancelDemo', data, null, null, null, 'application/x-www-form-urlencoded');
+	resetDemoTrackerDetails();
+}
+
+function rescheduleDemo() {
+	/*successMessage = 'Demo Re-scheduled.';
+	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
+	var data = { 
+		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
+		finalizingRemarks : getAttributeValue('form-reschedule-remarks', false),
+		demoTimeInMillis : getDateValueInMillis(getAttributeValue('form-demo-date', false)+' '+getAttributeValue('form-demo-time', false))
+	}
+	callWebservice('/rest/demo/rescheduleDemo', data, null, null, null, 'application/x-www-form-urlencoded');
+	resetDemoTrackerDetails();*/
+	successMessage = 'Demo Successfull.';
+	callbackAfterCommonSuccess = updateDemoTrackerDetailsSuccess;
+	var demoTimeInMillis = getDateValueInMillis(getAttributeValue('form-demo-date', false)+' '+getAttributeValue('form-demo-time', false));
+	alert(demoTimeInMillis);
+	var data = { 
+		demoTrackerId: demoListMap[demoListMap.selectedGrid].getCurrentRecord().demoTrackerId,
+		demoTimeInMillis : isNaN(demoTimeInMillis) ? null : demoTimeInMillis,
+		finalizingRemarks : getAttributeValue('form-reschedule-remarks', false)
+	}
+	callWebservice('/rest/demo/rescheduleDemo', data, null, null, null, 'application/x-www-form-urlencoded');
 	resetDemoTrackerDetails();
 }
 

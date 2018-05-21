@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.DemoTrackerConstants;
-import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.DemoTracker;
@@ -24,9 +23,10 @@ import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
 import com.model.rowmappers.DemoTrackerRowMapper;
-import com.model.rowmappers.EnquiriesRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.MailUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_DEMO_SERVICE)
 public class DemoService implements DemoTrackerConstants {
@@ -36,9 +36,6 @@ public class DemoService implements DemoTrackerConstants {
 	
 	@Autowired
 	private transient CustomerService customerService;
-	
-	@Autowired
-	private transient CommonsService commonsService;
 	
 	@Autowired
 	private transient TutorService tutorService;
@@ -229,12 +226,11 @@ public class DemoService implements DemoTrackerConstants {
 		return response;
 	}
 
-	public Map<String, Object> takeActionOnDemo(final String actionName, final Long demoTrackerId, final User user) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Map<String, Object> takeActionOnDemo(final String actionName, final Long demoTrackerId, final String finalizingRemarks, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
 		String updateQuery = "UPDATE DEMO_TRACKER SET ";
-		final DemoTracker demoTracker = getDemoTracker(demoTrackerId);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(actionName) {
 			case RestMethodConstants.REST_METHOD_NAME_DEMO_SUCCESS : {
@@ -253,14 +249,117 @@ public class DemoService implements DemoTrackerConstants {
 				break;
 			}
 		}
-		updateQuery += " ,ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE DEMO_TRACKER_ID = :demoTrackerId";
+		updateQuery += " ,DEMO_STATUS = :demoStatus ,ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed, ADMIN_FINALIZING_REMARKS = :adminFinalizingRemarks WHERE DEMO_TRACKER_ID = :demoTrackerId";
 		paramsMap.put("whoActed", user.getUserId());
+		paramsMap.put("adminFinalizingRemarks", finalizingRemarks);
 		paramsMap.put("demoTrackerId", demoTrackerId);
 		applicationDao.executeUpdate(updateQuery, paramsMap);
+		switch(actionName) {
+			case RestMethodConstants.REST_METHOD_NAME_DEMO_SUCCESS : {
+				sendDemoSuccessNotificationEmails(demoTrackerId);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DEMO_FAILURE : {
+				sendDemoFailedNotificationEmails(demoTrackerId);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CANCEL_DEMO : {
+				sendDemoCanceledNotificationEmails(demoTrackerId);
+				break;
+			}
+		}
 		return response;
 	}
 	
-	public Map<String, Object> rescheduleDemo(final Long demoTrackerId, final Date rescheduleDateAndTime, final User user) throws Exception {
+	public void sendDemoSuccessNotificationEmails(final Long demoTrackerId) throws Exception {
+		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
+		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
+		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("demoTrackerObject", demoTrackerObject);
+		// Tutor Email
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Your demo was successful with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_TUTOR_EMAIL_PATH, attributes),
+				null);
+		// Client Email
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Tutor demo was successful for your enquiry", 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes),
+				null);
+	}
+	
+	public void sendDemoFailedNotificationEmails(final Long demoTrackerId) throws Exception {
+		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
+		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
+		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("demoTrackerObject", demoTrackerObject);
+		// Sales Team Email
+		MailUtils.sendMimeMessageEmail( 
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(), 
+				null,
+				null,
+				"Demo faild with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
+				null);
+	}
+	
+	public void sendDemoCanceledNotificationEmails(final Long demoTrackerId) throws Exception {
+		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
+		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
+		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("demoTrackerObject", demoTrackerObject);
+		// Tutor Email
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Your demo has been canceled with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_TUTOR_EMAIL_PATH, attributes),
+				null);
+		// Client Email
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Tutor demo has been cenceled for your enquiry", 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_CLIENT_EMAIL_PATH, attributes),
+				null);
+	}
+	
+	public Map<String, Object> rescheduleDemo(final Long demoTrackerId, final Date rescheduleDateAndTime, final String reschedulingRemarks, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
@@ -268,6 +367,8 @@ public class DemoService implements DemoTrackerConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("demoTrackerId", demoTrackerObject.getDemoTrackerId());
 		paramsMap.put("demoDateAndTime", rescheduleDateAndTime);
+		paramsMap.put("reschedulingRemarks", reschedulingRemarks);
+		paramsMap.put("tutorMapperId", demoTrackerObject.getTutorMapperId());
 		paramsMap.put("demoOccurred", demoTrackerObject.getDemoOccurred());
 		paramsMap.put("demoStatus", demoTrackerObject.getDemoStatus());
 		paramsMap.put("clientRemarks", demoTrackerObject.getClientRemarks());
@@ -285,9 +386,42 @@ public class DemoService implements DemoTrackerConstants {
 		paramsMap.put("adminRemarks", demoTrackerObject.getAdminRemarks());
 		paramsMap.put("negotiatedOverrideRateWithClient", demoTrackerObject.getNegotiatedOverrideRateWithClient());
 		paramsMap.put("negotiatedOverrideRateWithTutor", demoTrackerObject.getNegotiatedOverrideRateWithTutor());
-		applicationDao.executeUpdate("UPDATE DEMO_TRACKER SET DEMO_STATUS = 'RE-SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE DEMO_TRACKER_ID = :demoTrackerId", paramsMap);
-		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_OCCURRED, DEMO_STATUS, CLIENT_REMARKS, TUTOR_REMARKS, CLIENT_SATISFIED_FROM_TUTOR, TUTOR_SATISFIED_WITH_CLIENT, ADMIN_SATISFIED_FROM_TUTOR, ADMIN_SATISFIED_WITH_CLIENT, WHO_ACTED, IS_DEMO_SUCCESS, NEED_PRICE_NEGOTIATION_WITH_CLIENT, CLIENT_NEGOTIATION_REMARKS, NEED_PRICE_NEGOTIATION_WITH_TUTOR, TUTOR_NEGOTIATION_REMARKS, ADMIN_REMARKS, NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT, NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR, ADMIN_ACTION_DATE) VALUES(:tutorMapperId, :demoDateAndTime, :demoOccurred, :demoStatus, :clientRemarks, :tutorRemarks, :clientSatisfiedFromTutor, :tutorSatisfiedWithClient, :adminSatisfiedFromTutor, :adminSatisfiedWithClient, :whoActed, :isDemoSuccess, :needPriceNegotiationWithClient, :clientNegotiationRemarks, :needPriceNegotiationWithTutor, :tutorNegotiationRemarks, :adminRemarks, :negotiatedOverrideRateWithClient, :negotiatedOverrideRateWithTutor, SYSDATE())", paramsMap);
-		//sendDemoScheduledNotificationEmails(tutorMapperId);
+		applicationDao.executeUpdate("UPDATE DEMO_TRACKER SET DEMO_STATUS = 'RE-SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed, RESCHEDULING_REMARKS = :reschedulingRemarks WHERE DEMO_TRACKER_ID = :demoTrackerId", paramsMap);
+		final Long newDemoTrackerId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_OCCURRED, DEMO_STATUS, CLIENT_REMARKS, TUTOR_REMARKS, CLIENT_SATISFIED_FROM_TUTOR, TUTOR_SATISFIED_WITH_CLIENT, ADMIN_SATISFIED_FROM_TUTOR, ADMIN_SATISFIED_WITH_CLIENT, WHO_ACTED, IS_DEMO_SUCCESS, NEED_PRICE_NEGOTIATION_WITH_CLIENT, CLIENT_NEGOTIATION_REMARKS, NEED_PRICE_NEGOTIATION_WITH_TUTOR, TUTOR_NEGOTIATION_REMARKS, ADMIN_REMARKS, NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT, NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR, ADMIN_ACTION_DATE) VALUES(:tutorMapperId, :demoDateAndTime, :demoOccurred, :demoStatus, :clientRemarks, :tutorRemarks, :clientSatisfiedFromTutor, :tutorSatisfiedWithClient, :adminSatisfiedFromTutor, :adminSatisfiedWithClient, :whoActed, :isDemoSuccess, :needPriceNegotiationWithClient, :clientNegotiationRemarks, :needPriceNegotiationWithTutor, :tutorNegotiationRemarks, :adminRemarks, :negotiatedOverrideRateWithClient, :negotiatedOverrideRateWithTutor, SYSDATE())", paramsMap);
+		sendDemoScheduledNotificationEmails(newDemoTrackerId, demoTrackerObject);
 		return response;
+	}
+	
+	public void sendDemoScheduledNotificationEmails(final Long newDemoTrackerId, final DemoTracker oldDemoTrackerObject) throws Exception {
+		final DemoTracker newDemoTrackerObject = getDemoTracker(newDemoTrackerId);
+		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(newDemoTrackerObject.getTutorMapperId());
+		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("oldDemoTrackerObject", oldDemoTrackerObject);
+		attributes.put("newDemoTrackerObject", newDemoTrackerObject);
+		// Tutor Email
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Your demo has been re-scheduled with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_TUTOR_EMAIL_PATH, attributes),
+				null);
+		// Client Email
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Tutor demo has been re-scheduled for your enquiry", 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_CLIENT_EMAIL_PATH, attributes),
+				null);
 	}
 }

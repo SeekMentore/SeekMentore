@@ -35,6 +35,8 @@ public class DemoTrackerRowMapper implements RowMapper<DemoTracker> {
 		demoTracker.setNegotiatedOverrideRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT", Integer.class));
 		demoTracker.setNegotiatedOverrideRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR", Integer.class));
 		demoTracker.setAdminActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_ACTION_DATE", Timestamp.class));
+		demoTracker.setAdminFinalizingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_FINALIZING_REMARKS", String.class));
+		demoTracker.setReschedulingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "RESCHEDULING_REMARKS", String.class));
 		return demoTracker;
 	}
 

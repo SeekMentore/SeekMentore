@@ -28,7 +28,7 @@ Hello $registeredTutorObj.getName(),
 
 <br/><br/>
 <p>
-	Your demo has been scheduled with client, please find below the details.
+	Your demo has been canceled with client, please find below the details.
 	<br/><br/>
 	<b>Client</b> - $subscribedCustomerObj.getName()
 	<br/>
@@ -38,17 +38,17 @@ Hello $registeredTutorObj.getName(),
 	<br/>
 	<b>Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
 	<br/>
-	<b>Demo Date & Time</b> - $tutorMapperObject.getDemoDateAndTime()
+	<b>Demo Occurred At Date & Time</b> - $demoTrackerObject.getDemoDateAndTime()
 	<br/>
 	<b>Address</b> - $enquiryObject.getAddressDetails()
 </p>
 <br/><br/>
 <p>
-	Please contact the client on the afore-mentioned contact details. 
+	We regret for the inconvenience caused.
 	<br/>
-	In case you are not able to connect with client please call our Tutor Service Center on the below provided details.
+	Soon someone from Sales Team will contact you to explain the details.
 	<br/>
-	All the best!!! 
+	Thank you for choosing Seek Mentore for your partner in tutoring.
 </p>
 <br/><br/>
 

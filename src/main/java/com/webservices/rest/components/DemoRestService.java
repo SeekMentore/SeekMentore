@@ -21,7 +21,6 @@ import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.DemoTrackerConstants;
 import com.model.ErrorPacket;
-import com.model.components.DemoTracker;
 import com.service.components.CommonsService;
 import com.service.components.DemoService;
 import com.utils.ApplicationUtils;
@@ -36,6 +35,8 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	
 	private Long demoTrackerId;
 	private Date rescheduledDemoDateAndTime;
+	private Long rescheduledDemoDateAndTimeinMillis;
+	private String finalizingRemarks;
 	
 	@Path(REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -134,13 +135,15 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	@POST
 	public String demoSuccess (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@FormParam("finalizingRemarks") final String finalizingRemarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DEMO_SUCCESS;
 		this.demoTrackerId = demoTrackerId;
+		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_SUCCESS, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_SUCCESS, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -151,13 +154,15 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	@POST
 	public String demoFailure (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@FormParam("finalizingRemarks") final String finalizingRemarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DEMO_FAILURE;
 		this.demoTrackerId = demoTrackerId;
+		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_FAILURE, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_FAILURE, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -168,13 +173,15 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	@POST
 	public String cancelDemo (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
+			@FormParam("finalizingRemarks") final String finalizingRemarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CANCEL_DEMO;
 		this.demoTrackerId = demoTrackerId;
+		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_CANCEL_DEMO, demoTrackerId, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_CANCEL_DEMO, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -186,14 +193,16 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	public String rescheduleDemo (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
 			@FormParam("demoTimeInMillis") final Long demoTimeInMillis,
+			@FormParam("finalizingRemarks") final String finalizingRemarks,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_RESCHEDULE_DEMO;
 		this.demoTrackerId = demoTrackerId;
-		this.rescheduledDemoDateAndTime = new Date(demoTimeInMillis);
+		this.rescheduledDemoDateAndTimeinMillis = demoTimeInMillis;
+		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getDemoService().rescheduleDemo(demoTrackerId, rescheduledDemoDateAndTime, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return convertObjToJSONString(getDemoService().rescheduleDemo(demoTrackerId, rescheduledDemoDateAndTime, finalizingRemarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
 		} else {
 			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
 		}
@@ -222,11 +231,14 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 				break;
 			}
 			case REST_METHOD_NAME_DISPLAY_DEMO_DETAILS :
-			case REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS :
+			case REST_METHOD_NAME_TO_UPDATE_DEMO_TRACKER_DETAILS :{
+				handleParticularDemoSecurity();
+				break;
+			}
 			case REST_METHOD_NAME_DEMO_SUCCESS : 
 			case REST_METHOD_NAME_DEMO_FAILURE : 
 			case REST_METHOD_NAME_CANCEL_DEMO : {
-				handleParticularDemoSecurity();
+				handleTakeActionDemoSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_RESCHEDULE_DEMO : {
@@ -254,6 +266,39 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		}
 	}
 	
+	private void handleTakeActionDemoSecurity() {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_DEMO_TRACKER_ID,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		}
+		switch(this.methodName) {
+			case REST_METHOD_NAME_DEMO_SUCCESS : {
+				break;
+			}
+			case REST_METHOD_NAME_CANCEL_DEMO :
+			case REST_METHOD_NAME_DEMO_FAILURE : {
+				if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.finalizingRemarks)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							VALIDATION_MESSAGE_INVALID_TAKE_ACTION_REMARKS_ID,
+							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					this.securityPassed = false;
+				}
+				break;
+			}
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.demoTrackerId);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	}
+	
 	private void handleRescheduledDemoSecurity() {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerId)) {
@@ -263,17 +308,26 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateDate(this.rescheduledDemoDateAndTime)) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.rescheduledDemoDateAndTimeinMillis)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_RESCHEDULE_DATE_AND_TIME,
+					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+			this.securityPassed = false;
+		} else {
+			this.rescheduledDemoDateAndTime = new Date(this.rescheduledDemoDateAndTimeinMillis);
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.finalizingRemarks)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_INVALID_RESCHEDULE_REMARKS_ID,
 					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.demoTrackerId + LINE_BREAK + this.rescheduledDemoDateAndTime);
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.demoTrackerId + LINE_BREAK + this.rescheduledDemoDateAndTimeinMillis);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

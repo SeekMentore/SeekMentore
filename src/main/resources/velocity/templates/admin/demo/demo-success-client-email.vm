@@ -28,7 +28,7 @@ Hello $subscribedCustomerObj.getName(),
 
 <br/><br/>
 <p>
-	Tutor demo has been scheduled for your enquiry, please find below the details.
+	Tutor demo was successful for your enquiry, please find below the details.
 	<br/><br/>
 	<b>Subject</b> - $enquiryObject.getSubject()
 	<br/>
@@ -38,13 +38,13 @@ Hello $subscribedCustomerObj.getName(),
 	<br/>
 	<b>Mobile Number</b> - $registeredTutorObj.getContactNumber()
 	<br/>
-	<b>Demo Date & Time</b> - $tutorMapperObject.getDemoDateAndTime()
+	<b>Demo Occurred At Date & Time</b> - $demoTrackerObject.getDemoDateAndTime()
 </p>
 <br/><br/>
 <p>
-	Please contact the tutor on the afore-mentioned contact details.
-	<br/> 
-	In case you are not able to connect with Tutor please call our Customer Service Center on the below provided details.
+	Soon someone from Sales Team and Finance Team will contact you to complete the further processing.
+	<br/>
+	Thank you for choosing Seek Mentore for your partner in tutoring.
 </p>
 <br/><br/>
 

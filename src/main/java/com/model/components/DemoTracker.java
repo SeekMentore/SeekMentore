@@ -32,6 +32,8 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	private Date adminActionDate;
 	private String customerName;
 	private String tutorName;
+	private String adminFinalizingRemarks;
+	private String reschedulingRemarks;
 	
 	public DemoTracker() {}
 
@@ -223,6 +225,34 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	 */
 	public void setTutorName(String tutorName) {
 		this.tutorName = tutorName;
+	}
+
+	/**
+	 * @return the adminFinalizingRemarks
+	 */
+	public String getAdminFinalizingRemarks() {
+		return adminFinalizingRemarks;
+	}
+
+	/**
+	 * @param adminFinalizingRemarks the adminFinalizingRemarks to set
+	 */
+	public void setAdminFinalizingRemarks(String adminFinalizingRemarks) {
+		this.adminFinalizingRemarks = adminFinalizingRemarks;
+	}
+	
+	/**
+	 * @return the reschedulingRemarks
+	 */
+	public String getReschedulingRemarks() {
+		return reschedulingRemarks;
+	}
+
+	/**
+	 * @param reschedulingRemarks the reschedulingRemarks to set
+	 */
+	public void setReschedulingRemarks(String reschedulingRemarks) {
+		this.reschedulingRemarks = reschedulingRemarks;
 	}
 
 	@Override

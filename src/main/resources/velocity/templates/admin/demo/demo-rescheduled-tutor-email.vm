@@ -28,7 +28,7 @@ Hello $registeredTutorObj.getName(),
 
 <br/><br/>
 <p>
-	Your demo has been scheduled with client, please find below the details.
+	Your demo has been re-scheduled with client, please find below the details.
 	<br/><br/>
 	<b>Client</b> - $subscribedCustomerObj.getName()
 	<br/>
@@ -38,7 +38,9 @@ Hello $registeredTutorObj.getName(),
 	<br/>
 	<b>Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
 	<br/>
-	<b>Demo Date & Time</b> - $tutorMapperObject.getDemoDateAndTime()
+	<b>Initial Demo Date & Time</b> - $oldDemoTrackerObject.getDemoDateAndTime()
+	<br/>
+	<b>Re-Scheduled Demo Date & Time</b> - $newDemoTrackerObject.getDemoDateAndTime()
 	<br/>
 	<b>Address</b> - $enquiryObject.getAddressDetails()
 </p>
