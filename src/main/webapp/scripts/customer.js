@@ -1,6 +1,3 @@
-/**
- * 
- */
 var subscribedCustomerObj;
 function updateDetails() {
 	successMessage = 'Your details were updated successfully.';

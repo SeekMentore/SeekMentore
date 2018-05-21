@@ -158,7 +158,7 @@ function takeAction(button) {
 	var data = { 
 			gridName: tutorListMap.selectedGrid, 
 			button : button, 
-			tentativeTutorId : tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().tentativeTutorId,
+			tentativeTutorId : tutorListMap[tutorListMap.selectedGrid].getCurrentRecord().tentativeTutorId,
 			remarks : $('#remarks').val()
 	}
 	successMessage = 'Tutor Registration Admin action successfully taken.';
@@ -192,7 +192,7 @@ function downloadReport() {
 function downloadProfile() {
 	var form = document.getElementById('downloadForm');
 	form.action = ctxPath + '/rest/admin/downloadAdminTutorRegistrationProfilePdf';
-	$('#downloadForm-tentativeTutorId').val(tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().tentativeTutorId);
-	$('#downloadForm-name').val(tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().firstName + '_' + tutorListMap[tutorListMap.selectedGrid].getCurrentTutorRecord().lastName);
+	$('#downloadForm-tentativeTutorId').val(tutorListMap[tutorListMap.selectedGrid].getCurrentRecord().tentativeTutorId);
+	$('#downloadForm-name').val(tutorListMap[tutorListMap.selectedGrid].getCurrentRecord().firstName + '_' + tutorListMap[tutorListMap.selectedGrid].getCurrentRecord().lastName);
 	form.submit();
 }

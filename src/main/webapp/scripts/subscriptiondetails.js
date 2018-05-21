@@ -1,6 +1,3 @@
-/**
- * 
- */
 var subscriptionListMap = new Object();
 subscriptionListMap.selectedGrid = 'none';
 function loadGrids() {
@@ -154,7 +151,7 @@ function takeAction(button) {
 	var data = { 
 			gridName: subscriptionListMap.selectedGrid, 
 			button : button, 
-			tentativeSubscriptionId : subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().tentativeSubscriptionId,
+			tentativeSubscriptionId : subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentRecord().tentativeSubscriptionId,
 			remarks : $('#remarks').val()
 	}
 	successMessage = 'Tutor Registration Admin action successfully taken.';
@@ -176,8 +173,8 @@ function downloadReport() {
 function downloadProfile() {
 	var form = document.getElementById('downloadForm');
 	form.action = ctxPath + '/rest/admin/downloadAdminIndividualSubscriptionProfilePdf';
-	$('#downloadForm-tentativeSubscriptionId').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().tentativeSubscriptionId);
-	$('#downloadForm-name').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().firstName + '_' + subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentSubscribedRecord().lastName);
+	$('#downloadForm-tentativeSubscriptionId').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentRecord().tentativeSubscriptionId);
+	$('#downloadForm-name').val(subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentRecord().firstName + '_' + subscriptionListMap[subscriptionListMap.selectedGrid].getCurrentRecord().lastName);
 	form.submit();
 }
 

@@ -142,7 +142,7 @@ function takeAction(button) {
 	var data = { 
 			gridName: enquiryListMap.selectedGrid, 
 			button : button, 
-			enquiryId : enquiryListMap[enquiryListMap.selectedGrid].getCurrentEnquiryRecord().enquiryId,
+			enquiryId : enquiryListMap[enquiryListMap.selectedGrid].getCurrentRecord().enquiryId,
 			remarks : $('#remarks').val()
 	}
 	successMessage = 'Tutor Enquiry Admin action successfully taken.';
@@ -175,7 +175,7 @@ function downloadReport() {
 function downloadProfile() {
 	var form = document.getElementById('downloadForm');
 	form.action = ctxPath + '/rest/admin/downloadAdminTutorEnquiryProfilePdf';
-	$('#downloadForm-enquiryId').val(enquiryListMap[enquiryListMap.selectedGrid].getCurrentEnquiryRecord().enquiryId);
-	$('#downloadForm-name').val(enquiryListMap[enquiryListMap.selectedGrid].getCurrentEnquiryRecord().name);
+	$('#downloadForm-enquiryId').val(enquiryListMap[enquiryListMap.selectedGrid].getCurrentRecord().enquiryId);
+	$('#downloadForm-name').val(enquiryListMap[enquiryListMap.selectedGrid].getCurrentRecord().name);
 	form.submit();
 }

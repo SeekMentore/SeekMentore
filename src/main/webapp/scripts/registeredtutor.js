@@ -138,7 +138,7 @@ function prepareDocumentSection() {
 }
 
 function showDocumentDetails(documentType) {
-	var tutorDocuments = tutorNavigatorObject.getCurrentTutorRecord().documents;
+	var tutorDocuments = tutorNavigatorObject.getCurrentRecord().documents;
 	var tutorDocument = tutorDocuments[documentTypeIndexMap[documentType]];
 	var html = 'User: - ' + tutorDocument.whoActed + '<br/><br/>' + 'Date & Time: - ' + tutorDocument.actionDate + '<br/><br/>' + 'Remarks: - ' + tutorDocument.remarks;
 	showNotificationModalWithModifiedHeader(html, 'Details');
@@ -148,7 +148,7 @@ function downloadDocument(documentType) {
 	var form = document.getElementById('downloadForm');
 	form.action = ctxPath + '/rest/tutor/downloadDocumentFromAdmin';
 	$('#downloadForm-documentType').val(documentType);
-	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentTutorRecord().tutorId);
+	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentRecord().tutorId);
 	form.submit();
 	if (documentType == 'PROFILE_PHOTO') {
 		$('#inputFilePhoto-link').addClass('noscreen');
@@ -181,7 +181,7 @@ function loadGrids() {
 
 function approveDocument(documentType) {
 	var data = { 
-			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
+			tutorId		: tutorNavigatorObject.getCurrentRecord().tutorId, 
 			documentType 	: documentType,
 			remarks		: $('#remarks').val()
 	}
@@ -192,7 +192,7 @@ function approveDocument(documentType) {
 
 function rejectDocument(documentType) {
 	var data = { 
-			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
+			tutorId		: tutorNavigatorObject.getCurrentRecord().tutorId, 
 			documentType 	: documentType,
 			remarks		: $('#remarks').val()
 	}
@@ -203,7 +203,7 @@ function rejectDocument(documentType) {
 
 function sendReminderEmail(documentType) {
 	var data = { 
-			tutorId		: tutorNavigatorObject.getCurrentTutorRecord().tutorId, 
+			tutorId		: tutorNavigatorObject.getCurrentRecord().tutorId, 
 			documentType 	: documentType
 	}
 	successMessage = 'Succesfully sent Document Reminder.';
@@ -211,7 +211,7 @@ function sendReminderEmail(documentType) {
 }
 
 var actionAfterSuccessCallback = function(response) {
-	tutorNavigatorObject.getCurrentTutorRecord().documents = response
+	tutorNavigatorObject.getCurrentRecord().documents = response
 	prepareDocumentSection();
 }
 
@@ -224,7 +224,7 @@ function downloadReport() {
 function downloadProfile() {
 	var form = document.getElementById('downloadForm');
 	form.action = ctxPath + '/rest/tutor/downloadAdminIndividualRegisteredTutorProfilePdf';
-	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentTutorRecord().tutorId);
-	$('#downloadForm-name').val(tutorNavigatorObject.getCurrentTutorRecord().name);
+	$('#downloadForm-tutorId').val(tutorNavigatorObject.getCurrentRecord().tutorId);
+	$('#downloadForm-name').val(tutorNavigatorObject.getCurrentRecord().name);
 	form.submit();
 }
