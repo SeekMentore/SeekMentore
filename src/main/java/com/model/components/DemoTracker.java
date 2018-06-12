@@ -12,6 +12,7 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	private Long demoTrackerId;
 	private Long tutorMapperId;
 	private Date demoDateAndTime;
+	private Long demoDateAndTimeMillis;
 	private String demoOccurred;
 	private String demoStatus;
 	private String clientRemarks;
@@ -253,6 +254,20 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	 */
 	public void setReschedulingRemarks(String reschedulingRemarks) {
 		this.reschedulingRemarks = reschedulingRemarks;
+	}
+	
+	/**
+	 * @return the demoDateAndTimeMillis
+	 */
+	public Long getDemoDateAndTimeMillis() {
+		return demoDateAndTimeMillis;
+	}
+
+	/**
+	 * @param demoDateAndTimeMillis the demoDateAndTimeMillis to set
+	 */
+	public void setDemoDateAndTimeMillis(Long demoDateAndTimeMillis) {
+		this.demoDateAndTimeMillis = demoDateAndTimeMillis;
 	}
 
 	@Override

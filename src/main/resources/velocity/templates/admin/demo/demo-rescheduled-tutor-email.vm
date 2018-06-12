@@ -38,9 +38,9 @@ Hello $registeredTutorObj.getName(),
 	<br/>
 	<b>Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
 	<br/>
-	<b>Initial Demo Date & Time</b> - $oldDemoTrackerObject.getDemoDateAndTime()
+	<b>Initial Demo Date & Time</b> - $demoDateAndTimeISTOld
 	<br/>
-	<b>Re-Scheduled Demo Date & Time</b> - $newDemoTrackerObject.getDemoDateAndTime()
+	<b>Re-Scheduled Demo Date & Time</b> - $demoDateAndTimeISTNew
 	<br/>
 	<b>Address</b> - $enquiryObject.getAddressDetails()
 </p>

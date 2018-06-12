@@ -37,7 +37,6 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 	private String whoActed;
 	private String isDemoScheduled;
 	private String mappingStatus;
-	private Date demoDateAndTime;
 	
 	public TutorMapper() {}
 
@@ -265,14 +264,6 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 		this.mappingStatus = mappingStatus;
 	}
 	
-	public Date getDemoDateAndTime() {
-		return demoDateAndTime;
-	}
-
-	public void setDemoDateAndTime(Date demoDateAndTime) {
-		this.demoDateAndTime = demoDateAndTime;
-	}
-
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		// TODO Auto-generated method stub

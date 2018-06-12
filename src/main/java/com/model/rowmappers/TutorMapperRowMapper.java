@@ -39,7 +39,6 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHO_ACTED", String.class));
 		tutorMapperObject.setIsDemoScheduled(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_DEMO_SCHEDULED", String.class));
 		tutorMapperObject.setMappingStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, "MAPPING_STATUS", String.class));
-		tutorMapperObject.setDemoDateAndTime(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_DATE_AND_TIME", Timestamp.class));
 		return tutorMapperObject;
 	}
 

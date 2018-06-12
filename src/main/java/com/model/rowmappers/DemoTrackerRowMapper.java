@@ -17,6 +17,7 @@ public class DemoTrackerRowMapper implements RowMapper<DemoTracker> {
 		demoTracker.setDemoTrackerId(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_TRACKER_ID", Long.class));
 		demoTracker.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_MAPPER_ID", Long.class));
 		demoTracker.setDemoDateAndTime(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_DATE_AND_TIME", Timestamp.class));
+		demoTracker.setDemoDateAndTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_DATE_AND_TIME_MILLIS", Long.class));
 		demoTracker.setDemoOccurred(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_OCCURRED", String.class));
 		demoTracker.setDemoStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, "DEMO_STATUS", String.class));
 		demoTracker.setClientRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "CLIENT_REMARKS", String.class));

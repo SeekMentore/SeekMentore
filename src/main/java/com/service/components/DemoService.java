@@ -24,6 +24,7 @@ import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
 import com.model.rowmappers.DemoTrackerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.DateUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -387,7 +388,7 @@ public class DemoService implements DemoTrackerConstants {
 		paramsMap.put("negotiatedOverrideRateWithClient", demoTrackerObject.getNegotiatedOverrideRateWithClient());
 		paramsMap.put("negotiatedOverrideRateWithTutor", demoTrackerObject.getNegotiatedOverrideRateWithTutor());
 		applicationDao.executeUpdate("UPDATE DEMO_TRACKER SET DEMO_STATUS = 'RE-SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed, RESCHEDULING_REMARKS = :reschedulingRemarks WHERE DEMO_TRACKER_ID = :demoTrackerId", paramsMap);
-		final Long newDemoTrackerId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_OCCURRED, DEMO_STATUS, CLIENT_REMARKS, TUTOR_REMARKS, CLIENT_SATISFIED_FROM_TUTOR, TUTOR_SATISFIED_WITH_CLIENT, ADMIN_SATISFIED_FROM_TUTOR, ADMIN_SATISFIED_WITH_CLIENT, WHO_ACTED, IS_DEMO_SUCCESS, NEED_PRICE_NEGOTIATION_WITH_CLIENT, CLIENT_NEGOTIATION_REMARKS, NEED_PRICE_NEGOTIATION_WITH_TUTOR, TUTOR_NEGOTIATION_REMARKS, ADMIN_REMARKS, NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT, NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR, ADMIN_ACTION_DATE) VALUES(:tutorMapperId, :demoDateAndTime, :demoOccurred, :demoStatus, :clientRemarks, :tutorRemarks, :clientSatisfiedFromTutor, :tutorSatisfiedWithClient, :adminSatisfiedFromTutor, :adminSatisfiedWithClient, :whoActed, :isDemoSuccess, :needPriceNegotiationWithClient, :clientNegotiationRemarks, :needPriceNegotiationWithTutor, :tutorNegotiationRemarks, :adminRemarks, :negotiatedOverrideRateWithClient, :negotiatedOverrideRateWithTutor, SYSDATE())", paramsMap);
+		final Long newDemoTrackerId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_DATE_AND_TIME_MILLIS, DEMO_OCCURRED, DEMO_STATUS, CLIENT_REMARKS, TUTOR_REMARKS, CLIENT_SATISFIED_FROM_TUTOR, TUTOR_SATISFIED_WITH_CLIENT, ADMIN_SATISFIED_FROM_TUTOR, ADMIN_SATISFIED_WITH_CLIENT, WHO_ACTED, IS_DEMO_SUCCESS, NEED_PRICE_NEGOTIATION_WITH_CLIENT, CLIENT_NEGOTIATION_REMARKS, NEED_PRICE_NEGOTIATION_WITH_TUTOR, TUTOR_NEGOTIATION_REMARKS, ADMIN_REMARKS, NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT, NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR, ADMIN_ACTION_DATE) VALUES(:tutorMapperId, :demoDateAndTime, :demoDateAndTimeMillis, :demoOccurred, :demoStatus, :clientRemarks, :tutorRemarks, :clientSatisfiedFromTutor, :tutorSatisfiedWithClient, :adminSatisfiedFromTutor, :adminSatisfiedWithClient, :whoActed, :isDemoSuccess, :needPriceNegotiationWithClient, :clientNegotiationRemarks, :needPriceNegotiationWithTutor, :tutorNegotiationRemarks, :adminRemarks, :negotiatedOverrideRateWithClient, :negotiatedOverrideRateWithTutor, SYSDATE())", paramsMap);
 		sendDemoScheduledNotificationEmails(newDemoTrackerId, demoTrackerObject);
 		return response;
 	}
@@ -407,6 +408,8 @@ public class DemoService implements DemoTrackerConstants {
 		attributes.put("tutorMapperObject", tutorMapperObject);
 		attributes.put("oldDemoTrackerObject", oldDemoTrackerObject);
 		attributes.put("newDemoTrackerObject", newDemoTrackerObject);
+		attributes.put("demoDateAndTimeISTOld", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(oldDemoTrackerObject.getDemoDateAndTimeMillis()));
+		attributes.put("demoDateAndTimeISTNew", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(newDemoTrackerObject.getDemoDateAndTimeMillis()));
 		// Tutor Email
 		MailUtils.sendMimeMessageEmail( 
 				registeredTutorObj.getEmailId(), 

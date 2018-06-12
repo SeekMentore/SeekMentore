@@ -38,7 +38,7 @@ Hello $registeredTutorObj.getName(),
 	<br/>
 	<b>Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
 	<br/>
-	<b>Demo Date & Time</b> - $tutorMapperObject.getDemoDateAndTime()
+	<b>Demo Date & Time</b> - $demoDateAndTimeIST
 	<br/>
 	<b>Address</b> - $enquiryObject.getAddressDetails()
 </p>

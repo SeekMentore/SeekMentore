@@ -29,6 +29,7 @@ import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.DateUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -468,9 +469,10 @@ public class EnquiryService implements EnquiryConstants {
 		paramsMap.put("whoActed", user.getUserId());
 		paramsMap.put("demoDateAndTime", demoDateAndTime);
 		paramsMap.put("tutorMapperId", tutorMapperId);
-		applicationDao.executeUpdate("UPDATE TUTOR_MAPPER SET IS_DEMO_SCHEDULED = 'Y', DEMO_DATE_AND_TIME = :demoDateAndTime, MAPPING_STATUS = 'SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
-		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_STATUS) VALUES(:tutorMapperId, :demoDateAndTime, 'PENDING')", paramsMap);
-		sendDemoScheduledNotificationEmails(tutorMapperId);
+		paramsMap.put("demoDateAndTimeMillis", demoDateAndTime.getTime());
+		applicationDao.executeUpdate("UPDATE TUTOR_MAPPER SET IS_DEMO_SCHEDULED = 'Y', MAPPING_STATUS = 'SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS) VALUES(:tutorMapperId, :demoDateAndTime, :demoDateAndTimeMillis, 'PENDING')", paramsMap);
+		sendDemoScheduledNotificationEmails(tutorMapperId, demoDateAndTime.getTime());
 		return response;
 	}
 	
@@ -486,7 +488,7 @@ public class EnquiryService implements EnquiryConstants {
 		return applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
 	}
 	
-	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId) throws Exception {
+	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId, final Long demoTimeInMillis) throws Exception {
 		final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
 		final Enquiries enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
@@ -498,6 +500,7 @@ public class EnquiryService implements EnquiryConstants {
 		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
 		attributes.put("registeredTutorObj", registeredTutorObj);
 		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("demoDateAndTimeIST", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(demoTimeInMillis));
 		// Tutor Email
 		MailUtils.sendMimeMessageEmail( 
 				registeredTutorObj.getEmailId(), 

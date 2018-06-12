@@ -86,7 +86,9 @@ function openDemoRecord(demoObj) {
 		$('#ADMIN_FINALIZING_REMARKS').html(showValue(demoObj.adminFinalizingRemarks));
 		$('#RESCHEDULING_REMARKS').html(showValue(demoObj.reschedulingRemarks));
 		
-		if ('all-scheduled-demo' !=  demoListMap.selectedGrid) {
+		if ('all-scheduled-demo' ==  demoListMap.selectedGrid) {
+			$('.form-element').removeClass('noscreen');
+		} else {
 			$('.form-element').addClass('noscreen');
 		}
 		
