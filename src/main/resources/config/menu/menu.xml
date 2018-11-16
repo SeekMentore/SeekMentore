@@ -10,139 +10,134 @@
 		D - Development Team Access
 		T - Testing Team Access
  -->
-<menu>
-	<pageList id="secured">
-		<!-- <page id="publicAccess" url="/rest/publicaccess" pageAccessType="G">
-			<webservice id="getForm" url="/getForm"></webservice>
-			<webservice id="saveForm" url="/saveForm" additionalAccessFunction="saveAccessForForm11"></webservice>
-			<webservice id="downloadForm" url="/downloadForm"></webservice>
-		</page> -->
-		<page id="admin" url="/admin.html" pageAccessType="A"></page>
-		<page id="tutorregister" url="/tutorregister.html" pageAccessType="A"></page>
-		<page id="tutorenquiry" url="/tutorenquiry.html" pageAccessType="A"></page>
-		<page id="subscribewithus" url="/subscribewithus.html" pageAccessType="A"></page>
-		<page id="registeredtutor" url="/registeredtutor.html" pageAccessType="A"></page>
-		<page id="enquiries" url="/enquiries.html" pageAccessType="A"></page>
-		<page id="demo" url="/demo.html" pageAccessType="A"></page>
-		<page id="adminRest" url="/rest/admin" pageAccessType="A">
-			<!-- Tutor Registration Admin -->
-			<webservice id="displayNonContactedTutorRegistrations" url="/displayNonContactedTutorRegistrations"></webservice>
-			<webservice id="displayNonVerifiedTutorRegistrations" url="/displayNonVerifiedTutorRegistrations"></webservice>
-			<webservice id="displayVerifiedTutorRegistrations" url="/displayVerifiedTutorRegistrations"></webservice>
-			<webservice id="displayVerificationFailedTutorRegistrations" url="/displayVerificationFailedTutorRegistrations"></webservice>
-			<webservice id="displayToBeRecontactedTutorRegistrations" url="/displayToBeRecontactedTutorRegistrations"></webservice>
-			<webservice id="displaySelectedTutorRegistrations" url="/displaySelectedTutorRegistrations"></webservice>
-			<webservice id="displayRejectedTutorRegistrations" url="/displayRejectedTutorRegistrations"></webservice>
-			<webservice id="displayRegisteredTutorsFromTutorRegistrations" url="/displayRegisteredTutorsFromTutorRegistrations"></webservice>
-			<webservice id="takeActionOnTutorRegistration" url="/takeActionOnTutorRegistration"></webservice>
-			<webservice id="downloadAdminReportTutorRegistrations" url="/downloadAdminReportTutorRegistrations"></webservice>
-			<webservice id="downloadAdminTutorRegistrationProfilePdf" url="/downloadAdminTutorRegistrationProfilePdf"></webservice>
-			<!-- Tutor Enquiry Admin -->
-			<webservice id="displayNonContactedTutorEnquiries" url="/displayNonContactedTutorEnquiries"></webservice>
-			<webservice id="displayNonVerifiedTutorEnquiries" url="/displayNonVerifiedTutorEnquiries"></webservice>
-			<webservice id="displayVerifiedTutorEnquiries" url="/displayVerifiedTutorEnquiries"></webservice>
-			<webservice id="displayVerificationFailedTutorEnquiries" url="/displayVerificationFailedTutorEnquiries"></webservice>
-			<webservice id="displayToBeRecontactedTutorEnquiries" url="/displayToBeRecontactedTutorEnquiries"></webservice>
-			<webservice id="displaySelectedTutorEnquiries" url="/displaySelectedTutorEnquiries"></webservice>
-			<webservice id="displayRejectedTutorEnquiries" url="/displayRejectedTutorEnquiries"></webservice>
-			<webservice id="takeActionOnTutorEnquiry" url="/takeActionOnTutorEnquiry"></webservice>
-			<webservice id="downloadAdminReportTutorEnquiries" url="/downloadAdminReportTutorEnquiries"></webservice>
-			<webservice id="downloadAdminTutorEnquiryProfilePdf" url="/downloadAdminTutorEnquiryProfilePdf"></webservice>
-			<!-- Admin Send Email -->
-			<webservice id="sendEmail" url="/sendEmail"></webservice>
-			<!-- Subscription Admin -->
-			<webservice id="displayNonContactedSubscriptions" url="/displayNonContactedSubscriptions"></webservice>
-			<webservice id="displayNonVerifiedSubscriptions" url="/displayNonVerifiedSubscriptions"></webservice>
-			<webservice id="displayVerifiedSubscriptions" url="/displayVerifiedSubscriptions"></webservice>
-			<webservice id="displayVerificationFailedSubscriptions" url="/displayVerificationFailedSubscriptions"></webservice>
-			<webservice id="displayToBeRecontactedSubscriptions" url="/displayToBeRecontactedSubscriptions"></webservice>
-			<webservice id="displaySelectedSubscriptions" url="/displaySelectedSubscriptions"></webservice>
-			<webservice id="displayRejectedSubscriptions" url="/displayRejectedSubscriptions"></webservice>
-			<webservice id="takeActionOnSubscriptions" url="/takeActionOnSubscriptions"></webservice>
-			<webservice id="downloadAdminReportSubscriptions" url="/downloadAdminReportSubscriptions"></webservice>
-			<webservice id="downloadAdminIndividualSubscriptionProfilePdf" url="/downloadAdminIndividualSubscriptionProfilePdf"></webservice>
-			<!-- Subscription Admin -->
-		</page>
-		<page id="enquiryRest" url="/rest/enquiry" pageAccessType="A">
-			<!-- Enquiries Admin -->
-			<webservice id="displayCustomerWithPendingEnquiries" url="/displayCustomerWithPendingEnquiries"></webservice>
-			<webservice id="displayCustomerWithMappedEnquiries" url="/displayCustomerWithMappedEnquiries"></webservice>
-			<webservice id="displayCustomerWithAbandonedEnquiries" url="/displayCustomerWithAbandonedEnquiries"></webservice>
-			<webservice id="displayAllEnquiriesForParticularCustomer" url="/displayAllEnquiriesForParticularCustomer"></webservice>
-			<webservice id="getDropdownListDataForEnquiryDetails" url="/getDropdownListDataForEnquiryDetails"></webservice>
-			<webservice id="updateEnquiryDetails" url="/updateEnquiryDetails"></webservice>
-			<webservice id="displayAllEligibleTutors" url="/displayAllEligibleTutors"></webservice>
-			<webservice id="mapTutors" url="/mapTutors"></webservice>
-			<webservice id="displayAllMappedDemoPendingTutors" url="/displayAllMappedDemoPendingTutors"></webservice>
-			<webservice id="unmapTutors" url="/unmapTutors"></webservice>
-			<webservice id="displayAllMappedDemoScheduledTutors" url="/displayAllMappedDemoScheduledTutors"></webservice>
-			<webservice id="updateTutorMapperDetails" url="/updateTutorMapperDetails"></webservice>
-			<webservice id="scheduleDemo" url="/scheduleDemo"></webservice>
-		</page>
-		<page id="demoRest" url="/rest/demo" pageAccessType="A">
-			<!-- Demo Tracker Admin -->
-			<webservice id="displayScheduledDemos" url="/displayScheduledDemos"></webservice>
-			<webservice id="displayRescheduledDemos" url="/displayRescheduledDemos"></webservice>
-			<webservice id="displaySuccessfullDemos" url="/displaySuccessfullDemos"></webservice>
-			<webservice id="displayFailedDemos" url="/displayFailedDemos"></webservice>
-			<webservice id="displayCanceledDemos" url="/displayCanceledDemos"></webservice>
-			<webservice id="displayDemoDetails" url="/displayDemoDetails"></webservice>
-			<webservice id="updateDemoTrackerDetails" url="/updateDemoTrackerDetails"></webservice>
-			<webservice id="demoSuccess" url="/demoSuccess"></webservice>
-			<webservice id="demoFailure" url="/demoFailure"></webservice>
-			<webservice id="cancelDemo" url="/cancelDemo"></webservice>
-			<webservice id="rescheduleDemo" url="/rescheduleDemo"></webservice>
-		</page>
-		<page id="tutor" url="/tutor.html" pageAccessType="M"></page>
-		<page id="tutorRest" url="/rest/tutor" pageAccessType="M">
-			<!-- Tutor External -->
-			<webservice id="uploadDocuments" url="/uploadDocuments"></webservice>
-			<webservice id="loadTutorRecord" url="/loadTutorRecord"></webservice>
-			<webservice id="getDropdownListDataRegisteredTutor" url="/getDropdownListDataRegisteredTutor"></webservice>
-			<webservice id="updateDetails" url="/updateDetails"></webservice>
-			<webservice id="downloadDocument" url="/downloadDocument"></webservice>
-			<webservice id="registeredTutorsList" url="/registeredTutorsList" pageAccessType="A"></webservice>
-			<webservice id="downloadDocumentFromAdmin" url="/downloadDocumentFromAdmin" pageAccessType="A"></webservice>
-			<webservice id="aprroveDocumentFromAdmin" url="/aprroveDocumentFromAdmin" pageAccessType="A"></webservice>
-			<webservice id="rejectDocumentFromAdmin" url="/rejectDocumentFromAdmin" pageAccessType="A"></webservice>
-			<webservice id="sendDocumentReminderEmail" url="/sendDocumentReminderEmail" pageAccessType="A"></webservice>
-			<webservice id="downloadAdminReportRegisteredTutors" url="/downloadAdminReportRegisteredTutors" pageAccessType="A"></webservice>
-			<webservice id="downloadAdminIndividualRegisteredTutorProfilePdf" url="/downloadAdminIndividualRegisteredTutorProfilePdf" pageAccessType="A"></webservice>
-		</page>
-		<page id="commons" url="/rest/commons" pageAccessType="G">
-			<webservice id=" getUser" url="/getUser"></webservice>
-		</page>
-		<page id="loginRest" url="/rest/login" pageAccessType="G">
-			<webservice id="changePassword" url="/changePassword"></webservice>
-			<webservice id="logout" url="/logout"></webservice>
-		</page>
-		<page id="customer" url="/customer.html" pageAccessType="C"></page>
-		<page id="customerRest" url="/rest/customer" pageAccessType="C">
-			<!-- Customer External -->
-			<webservice id="loadSubscribedCustomerRecord" url="/loadSubscribedCustomerRecord"></webservice>
-			<webservice id="getDropdownListDataSubscribedCustomer" url="/getDropdownListDataSubscribedCustomer"></webservice>
-			<webservice id="updateSubscribedCustomerDetails" url="/updateSubscribedCustomerDetails"></webservice>
-			<webservice id="subscribedCustomersList" url="/subscribedCustomersList" pageAccessType="A"></webservice>		
-		</page> 
-	</pageList>
+ <menu>
+	<pageList id="secured"></pageList>
 	<pageList id="unsecured">
-		<page id="index" url="/"></page>
+		<page id="indexDirect" url="/"></page>
 		<page id="index" url="/index.html"></page>
-		<page id="publicAccess" url="/rest/publicaccess">
-			<webservice id="becomeTutor" url="/becomeTutor"></webservice>
-			<webservice id="findTutor" url="/findTutor"></webservice>
-			<webservice id="submitQuery" url="/submitQuery"></webservice>
-			<webservice id="subscribe" url="/subscribe"></webservice>
-			<webservice id="getDropdownListDataBecomeTutor" url="/getDropdownListDataBecomeTutor"></webservice>
-			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
-			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
-		</page>
-		<page id="login" url="/login.html"></page>
 		<page id="loginRestUnsecured" url="/rest/login">
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
+			<webservice id="resetPassword" url="/resetPassword"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
+			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
 		</page>
 		<page id="commonsUnsecured" url="/rest/commons">
-			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
+			<webservice id="getLoginBasicInfo" url="/getLoginBasicInfo"></webservice>
+			<webservice id="getEmailTemplates" url="/getEmailTemplates"></webservice>
+			<webservice id="loadEmailTemplate" url="/loadEmailTemplate"></webservice>
+			<webservice id="sendEmail" url="/sendEmail"></webservice>
+		</page>
+		<page id="employeeUnsecured" url="/rest/employee">
+			<webservice id="alertsRemindersGrid" url="/alertsRemindersGrid"></webservice>
+			<webservice id="tasksGrid" url="/tasksGrid"></webservice>
+			<webservice id="workflowsGrid" url="/workflowsGrid"></webservice>
+		</page>
+		<page id="adminUnsecured" url="/rest/admin">
+			<webservice id="registeredTutorsList" url="/registeredTutorsList"></webservice>
+			<webservice id="registeredTutorCheckDataAccess" url="/registeredTutorCheckDataAccess"></webservice>
+			<webservice id="blacklistRegisteredTutors" url="/blacklistRegisteredTutors"></webservice>
+			<webservice id="subscribedCustomersList" url="/subscribedCustomersList"></webservice>
+			<webservice id="subscribedCustomerCheckDataAccess" url="/subscribedCustomerCheckDataAccess"></webservice>
+			<webservice id="blacklistSubscribedCustomers" url="/blacklistSubscribedCustomers"></webservice>
+		</page>
+		<page id="registeredTutorUnsecured" url="/rest/registeredTutor">
+			<webservice id="uploadedDocuments" url="/uploadedDocuments"></webservice>
+			<webservice id="bankDetails" url="/bankDetails"></webservice>
+			<webservice id="currentPackages" url="/currentPackages"></webservice>
+			<webservice id="historyPackages" url="/historyPackages"></webservice>
+			<webservice id="approveTutorDocument" url="/approveTutorDocument"></webservice>
+			<webservice id="approveMultipleTutorDocument" url="/approveMultipleTutorDocument"></webservice>
+			<webservice id="sendReminderTutorDocument" url="/sendReminderTutorDocument"></webservice>
+			<webservice id="sendReminderMultipleTutorDocument" url="/sendReminderMultipleTutorDocument"></webservice>
+			<webservice id="rejectTutorDocument" url="/rejectTutorDocument"></webservice>
+			<webservice id="rejectMultipleTutorDocument" url="/rejectMultipleTutorDocument"></webservice>
+			<webservice id="approveBankAccount" url="/approveBankAccount"></webservice>
+			<webservice id="approveMultipleBankAccount" url="/approveMultipleBankAccount"></webservice>
+			<webservice id="makeDefaultBankAccount" url="/makeDefaultBankAccount"></webservice>
+			<webservice id="rejectBankAccount" url="/rejectBankAccount"></webservice>
+			<webservice id="rejectMultipleBankAccount" url="/rejectMultipleBankAccount"></webservice>
+			<webservice id="updateTutorRecord" url="/updateTutorRecord"></webservice>
+		</page>
+		<page id="subscribedCustomerUnsecured" url="/rest/subscribedCustomer">
+			<webservice id="currentPackages" url="/currentPackages"></webservice>
+			<webservice id="historyPackages" url="/historyPackages"></webservice>
+			<webservice id="updateCustomerRecord" url="/updateCustomerRecord"></webservice>
+		</page>
+		<page id="supportUnsecured" url="/rest/support">
+			<webservice id="nonContactedBecomeTutorsList" url="/nonContactedBecomeTutorsList"></webservice>
+			<webservice id="nonVerifiedBecomeTutorsList" url="/nonVerifiedBecomeTutorsList"></webservice>
+			<webservice id="verifiedBecomeTutorsList" url="/verifiedBecomeTutorsList"></webservice>
+			<webservice id="verificationFailedBecomeTutorsList" url="/verificationFailedBecomeTutorsList"></webservice>
+			<webservice id="toBeReContactedBecomeTutorsList" url="/toBeReContactedBecomeTutorsList"></webservice>
+			<webservice id="selectedBecomeTutorsList" url="/selectedBecomeTutorsList"></webservice>
+			<webservice id="rejectedBecomeTutorsList" url="/rejectedBecomeTutorsList"></webservice>
+			<webservice id="registeredBecomeTutorsList" url="/registeredBecomeTutorsList"></webservice>	
+			<webservice id="becomeTutorCheckDataAccess" url="/becomeTutorCheckDataAccess"></webservice>	
+			<webservice id="blacklistBecomeTutors" url="/blacklistBecomeTutors"></webservice>	
+			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>			
+			<webservice id="nonContactedEnquirysList" url="/nonContactedEnquirysList"></webservice>
+			<webservice id="nonVerifiedEnquirysList" url="/nonVerifiedEnquirysList"></webservice>
+			<webservice id="verifiedEnquirysList" url="/verifiedEnquirysList"></webservice>
+			<webservice id="verificationFailedEnquirysList" url="/verificationFailedEnquirysList"></webservice>
+			<webservice id="toBeReContactedEnquirysList" url="/toBeReContactedEnquirysList"></webservice>
+			<webservice id="selectedEnquirysList" url="/selectedEnquirysList"></webservice>
+			<webservice id="rejectedEnquirysList" url="/rejectedEnquirysList"></webservice>		
+			<webservice id="enquiryRequestCheckDataAccess" url="/enquiryRequestCheckDataAccess"></webservice>	
+			<webservice id="blacklistEnquiryRequests" url="/blacklistEnquiryRequests"></webservice>	
+			<webservice id="updateEnquiryRequestRecord" url="/updateEnquiryRequestRecord"></webservice>	
+			<webservice id="nonContactedSubscriptionsList" url="/nonContactedSubscriptionsList"></webservice>
+			<webservice id="nonVerifiedSubscriptionsList" url="/nonVerifiedSubscriptionsList"></webservice>
+			<webservice id="verifiedSubscriptionsList" url="/verifiedSubscriptionsList"></webservice>
+			<webservice id="verificationFailedSubscriptionsList" url="/verificationFailedSubscriptionsList"></webservice>
+			<webservice id="toBeReContactedSubscriptionsList" url="/toBeReContactedSubscriptionsList"></webservice>
+			<webservice id="selectedSubscriptionsList" url="/selectedSubscriptionsList"></webservice>
+			<webservice id="rejectedSubscriptionsList" url="/rejectedSubscriptionsList"></webservice>
+			<webservice id="subscriptionRequestCheckDataAccess" url="/subscriptionRequestCheckDataAccess"></webservice>	
+			<webservice id="blacklistSubscriptionRequests" url="/blacklistSubscriptionRequests"></webservice>	
+			<webservice id="updateSubscriptionRequestRecord" url="/updateSubscriptionRequestRecord"></webservice>
+			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
+			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>
+			<webservice id="answeredQueryList" url="/answeredQueryList"></webservice>
+			<webservice id="submittedQueryCheckDataAccess" url="/submittedQueryCheckDataAccess"></webservice>	
+			<webservice id="updateSubmittedQueryRecord" url="/updateSubmittedQueryRecord"></webservice>
+			<webservice id="customerComplaintList" url="/customerComplaintList"></webservice>
+			<webservice id="tutorComplaintList" url="/tutorComplaintList"></webservice>
+			<webservice id="employeeComplaintList" url="/employeeComplaintList"></webservice>
+			<webservice id="resolvedComplaintList" url="/resolvedComplaintList"></webservice>
+			<webservice id="complaintCheckDataAccess" url="/complaintCheckDataAccess"></webservice>	
+			<webservice id="updateComplaintRecord" url="/updateComplaintRecord"></webservice>
+		</page>
+		<page id="salesCustomerUnsecured" url="/rest/sales">
+			<webservice id="pendingEnquiriesList" url="/pendingEnquiriesList"></webservice>
+			<webservice id="completedEnquiriesList" url="/completedEnquiriesList"></webservice>
+			<webservice id="abortedEnquiriesList" url="/abortedEnquiriesList"></webservice>
+			<webservice id="pendingEnquiryCheckDataAccess" url="/pendingEnquiryCheckDataAccess"></webservice>
+			<webservice id="currentCustomerAllPendingEnquiriesList" url="/currentCustomerAllPendingEnquiriesList"></webservice>
+			<webservice id="updatePendingEnquiryRecord" url="/updatePendingEnquiryRecord"></webservice>
+			<webservice id="toBeMappedEnquiriesGridList" url="/toBeMappedEnquiriesGridList"></webservice>
+			<webservice id="mapTutorToEnquiryCheckDataAccess" url="/mapTutorToEnquiryCheckDataAccess"></webservice>
+			<webservice id="allMappingEligibleTutorsList" url="/allMappingEligibleTutorsList"></webservice>
+			<webservice id="mapRegisteredTutors" url="/mapRegisteredTutors"></webservice>
+			<webservice id="mapRegisteredTutor" url="/mapRegisteredTutor"></webservice>
+			<webservice id="allMappedTutorsList" url="/allMappedTutorsList"></webservice>
+			<webservice id="unmapRegisteredTutors" url="/unmapRegisteredTutors"></webservice>
+			<webservice id="unmapRegisteredTutor" url="/unmapRegisteredTutor"></webservice>
+			<webservice id="updateTutorMapperRecord" url="/updateTutorMapperRecord"></webservice>
+			<webservice id="mappedTutorCheckDataAccess" url="/mappedTutorCheckDataAccess"></webservice>
+			<webservice id="allDemoReadyMappedTutorsList" url="/allDemoReadyMappedTutorsList"></webservice>
+			<webservice id="mappedTutorCheckScheduleDemoAccess" url="/mappedTutorCheckScheduleDemoAccess"></webservice>
+			<webservice id="currentTutorAllMappingList" url="/currentTutorAllMappingList"></webservice>
+			<webservice id="currentTutorAllScheduledDemoList" url="/currentTutorAllScheduledDemoList"></webservice>
+			<webservice id="updateScheduleDemoMappedTutorRecord" url="/updateScheduleDemoMappedTutorRecord"></webservice>
+			<webservice id="scheduledDemoList" url="/scheduledDemoList"></webservice>
+			<webservice id="reScheduledDemoList" url="/reScheduledDemoList"></webservice>
+			<webservice id="successfulDemoList" url="/successfulDemoList"></webservice>
+			<webservice id="failedDemoList" url="/failedDemoList"></webservice>
+			<webservice id="cancelledDemoGridList" url="/cancelledDemoGridList"></webservice>
+			<webservice id="demoTrackerModifyCheckDataAccess" url="/demoTrackerModifyCheckDataAccess"></webservice>
+			<webservice id="cancelDemos" url="/cancelDemos"></webservice>
+			<webservice id="updateDemoTrackerRecord" url="/updateDemoTrackerRecord"></webservice>
 		</page>
 		<page id="error" url="/error.html"></page>
 	</pageList>

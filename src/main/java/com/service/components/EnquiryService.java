@@ -142,8 +142,8 @@ public class EnquiryService implements EnquiryConstants {
 	@Transactional
 	public Map<String, Object> updateEnquiryDetails(final Enquiries enquiryObject, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
 		String updateQuery = "UPDATE ENQUIRIES SET ";
 		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
 		if (ValidationUtils.validateAgainstSelectLookupValues(enquiryObject.getSubject(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
@@ -221,8 +221,8 @@ public class EnquiryService implements EnquiryConstants {
 			updatedPropertiesParams.put("whoActed", user.getUserId());
 			updatedPropertiesParams.put("enquiryId", enquiryObject.getEnquiryId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		}
 		return response;
 	}
@@ -300,8 +300,8 @@ public class EnquiryService implements EnquiryConstants {
 	
 	public Map<String, Object> mapTutors(final Long enquiryId, final List<Long> tutorIdList) {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		for (final Long tutorId : tutorIdList) {
@@ -313,8 +313,8 @@ public class EnquiryService implements EnquiryConstants {
 	
 	public Map<String, Object> unmapTutors(final List<Long> tutorMapperIdList) {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		for (final Long tutorMapperId : tutorMapperIdList) {
 			paramsMap.put("tutorMapperId", tutorMapperId);
@@ -326,8 +326,8 @@ public class EnquiryService implements EnquiryConstants {
 	@Transactional
 	public Map<String, Object> updateTutorMapperDetails(final TutorMapper tutorMapperObject, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
 		String updateQuery = "UPDATE TUTOR_MAPPER SET ";
 		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
 		if (ValidationUtils.validateNumber(tutorMapperObject.getQuotedTutorRate(), false, 9999, true, 0)) {
@@ -455,16 +455,16 @@ public class EnquiryService implements EnquiryConstants {
 			updatedPropertiesParams.put("whoActed", user.getUserId());
 			updatedPropertiesParams.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		}
 		return response;
 	}
 
 	public Map<String, Object> scheduleDemo(final Long tutorMapperId, final Date demoDateAndTime, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", user.getUserId());
 		paramsMap.put("demoDateAndTime", demoDateAndTime);

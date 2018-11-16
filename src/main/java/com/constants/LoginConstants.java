@@ -1,13 +1,16 @@
 package com.constants;
 
-public interface LoginConstants extends PageConstants {
+import com.constants.components.ResponseMapConstants;
+
+public interface LoginConstants extends ResponseMapConstants, PageConstants {
 	
 	String USER_OBJECT = "user";
 	String USER_TYPE_OBJECT = "user-type-object";
 	String USER_TYPE = "user-type";
 	
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
+	String USER_TYPE_CUSTOMER = "Customer";
+	String USER_TYPE_TUTOR = "Tutor";
+	String USER_TYPE_EMPLOYEE = "Employee";
 	
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_USER_ID = "Please provide some 'User Id'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_PASSWORD = "Please provide some 'Password'";

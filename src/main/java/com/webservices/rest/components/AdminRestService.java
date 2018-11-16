@@ -37,6 +37,7 @@ import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
+import com.utils.JSONUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -100,9 +101,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -115,9 +116,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -130,9 +131,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -145,9 +146,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -160,9 +161,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -175,9 +176,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -190,9 +191,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -205,9 +206,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorRegistrations(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -228,9 +229,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().takeActionOnTutorRegistration(gridName, button, tentativeTutorId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().takeActionOnTutorRegistration(gridName, button, tentativeTutorId, remarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	/*
 	 * Tutor Registration Admin
@@ -278,9 +279,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -293,9 +294,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -308,9 +309,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -323,9 +324,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -338,9 +339,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -353,9 +354,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -368,9 +369,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displayTutorEnquiries(REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -391,9 +392,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().takeActionOnTutorEnquiry(gridName, button, enquiryId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().takeActionOnTutorEnquiry(gridName, button, enquiryId, remarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	/*
 	 * Tutor Enquiry Admin
@@ -442,9 +443,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -457,9 +458,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -472,9 +473,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -487,9 +488,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -502,9 +503,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -517,9 +518,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -532,9 +533,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().displaySubscriptions(REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -555,9 +556,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.remarks = remarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getAdminService().takeActionOnSubscriptions(gridName, button, tentativeSubscriptionId, remarks, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getAdminService().takeActionOnSubscriptions(gridName, button, tentativeSubscriptionId, remarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}	
 	
 	/*
@@ -618,7 +619,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("emailSalutationName", emailSalutationName);
 			attributes.put("emailText", emailText.replaceAll(NEW_LINE, LINE_BREAK));
-			attributes.put("user", getLoggedInUser(request));
+			attributes.put("user", getActiveUser(request));
 			attributes.put("companyContactInfo", getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 			MailUtils.sendMimeMessageEmail( 
 					recepientEmailId, 
@@ -643,10 +644,10 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Override
-	public void doSecurity(final HttpServletRequest request) {
+	public void doSecurity(final HttpServletRequest request) throws Exception {
 		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_TUTOR_REGISTRATIONS :
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF :
@@ -692,23 +693,23 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 				break;
 			}
 		}
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleTakeActionSecurity() {
+	private void handleTakeActionSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.gridName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_GRID_REFERENCE_ACCESS,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.button)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_BUTTON_ACTION,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
 			switch(button) {
@@ -726,7 +727,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
 							AdminConstants.VALIDATION_MESSAGE_INVALID_BUTTON_ACTION,
-							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 					break;
 				}
@@ -736,7 +737,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_UNIQUE_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		switch(button) {
@@ -754,7 +755,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
 							AdminConstants.VALIDATION_MESSAGE_PLEASE_ENTER_REMARKS,
-							RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 				}
 				break;
@@ -762,46 +763,46 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleSendEmailSecurity() {
+	private void handleSendEmailSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validateEmailAddress(this.recepientEmailId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_RECEPIENT_ADDRESS,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailSalutationName)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_SALUTATION,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailSubject)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_BUTTON_ACTION,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} 
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.emailText)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_INVALID_UNIQUE_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSalutationName + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSalutationName + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

@@ -1,8 +1,6 @@
 package com.constants.components;
 
-import com.constants.ApplicationConstants;
-
-public interface EnquiryConstants extends ApplicationConstants {
+public interface EnquiryConstants extends ResponseMapConstants {
 	
 	String MATCH_STATUS_ABANDONED = "ABANDONED";
 	String MATCH_STATUS_MAPPED = "MAPPED";
@@ -18,7 +16,4 @@ public interface EnquiryConstants extends ApplicationConstants {
 	String VELOCITY_TEMPLATES_ENQUIRIES_PATH = AdminConstants.VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/enquiries";
 	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-tutor-email.vm";
 	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-client-email.vm";
-	
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 }

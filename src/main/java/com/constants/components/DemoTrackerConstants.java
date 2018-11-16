@@ -1,8 +1,6 @@
 package com.constants.components;
 
-import com.constants.ApplicationConstants;
-
-public interface DemoTrackerConstants extends ApplicationConstants {
+public interface DemoTrackerConstants extends ResponseMapConstants {
 	
 	String DEMO_STATUS_FAILED = "FAILED";
 	String DEMO_STATUS_SUCCESS = "SUCCESS";
@@ -23,7 +21,4 @@ public interface DemoTrackerConstants extends ApplicationConstants {
 	String VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-failed-email.vm";
 	String VELOCITY_TEMPLATES_DEMO_CANCEL_TUTOR_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-cancel-tutor-email.vm";
 	String VELOCITY_TEMPLATES_DEMO_CANCEL_CLIENT_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-cancel-client-email.vm";
-	
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 }

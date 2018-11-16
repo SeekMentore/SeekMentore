@@ -3,6 +3,7 @@ package com.constants;
 public interface MenuConstants extends ApplicationConstants {
 	
 	String MENU_XML_PATH = "config/menu/menu.xml";
+	String MENU_BO_UI_PATH = "config/menu/boUIPath.xml";
 	String PAGE_UNSECURED = "unsecured";
 	String PAGE_SECURED = "secured";
 	

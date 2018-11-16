@@ -1,9 +1,8 @@
 package com.constants.components;
 
-import com.constants.ApplicationConstants;
 import com.constants.VelocityConstants;
 
-public interface AdminConstants extends ApplicationConstants {
+public interface AdminConstants extends ResponseMapConstants {
 	
 	String BUTTON_ACTION_RECONTACTED = "recontacted";
 	String BUTTON_ACTION_SELECT = "select";
@@ -13,9 +12,6 @@ public interface AdminConstants extends ApplicationConstants {
 	String BUTTON_ACTION_REJECT = "reject";
 	String BUTTON_ACTION_RECONTACT = "recontact";
 	String BUTTON_ACTION_CONTACTED = "contacted";
-	
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 	
 	String VALIDATION_MESSAGE_INVALID_GRID_REFERENCE_ACCESS = "Invalid Grid Reference Access.";
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";

@@ -2,26 +2,20 @@ package com.webservices.rest;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.dao.DataAccessException;
-
-import com.constants.ApplicationConstants;
-import com.google.gson.Gson;
 import com.model.User;
 import com.utils.LoginUtils;
 
 public abstract class AbstractWebservice {
 	
-	public String getLoggedInUserId(final HttpServletRequest request) {
+	public String getLoggedInUserId(final HttpServletRequest request) throws Exception {
 		return LoginUtils.getUserFromSession(request).getUserId();
 	}
 	
-	public String getLoggedInUserIdAndTypeForPrinting(final HttpServletRequest request) {
+	public String getLoggedInUserIdAndTypeForPrinting(final HttpServletRequest request) throws Exception {
 		return LoginUtils.getLoggedInUserIdAndTypeForPrinting(request);
 	}
 	
-	public User getLoggedInUser(final HttpServletRequest request) {
+	public User getLoggedInUser(final HttpServletRequest request) throws Exception {
 		return LoginUtils.getUserFromSession(request);
 	}
 	
@@ -29,15 +23,28 @@ public abstract class AbstractWebservice {
 		return LoginUtils.getUserTypeFromSession(request);
 	}
 	
-	public <T extends Object> T getLoggedInUserTypeObject(final HttpServletRequest request, Class<T> type) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public <T extends Object> T getLoggedInUserTypeObject(final HttpServletRequest request, Class<T> type) throws Exception {
 		return LoginUtils.getUserTypeObjectFromSession(request, type);
 	}
 	
-	public String convertObjToJSONString(
-			final Object obj,
-			final String ObjName
-	) throws JSONException {
-		return new JSONObject().put(ObjName, new Gson().toJson((obj != null) ? obj : ApplicationConstants.EMPTY_STRING)).toString();
+	public String getActiveUserId(final HttpServletRequest request) throws Exception {
+		return getLoggedInUserId(request);
+	}
+	
+	public String getActiveUserIdAndTypeForPrinting(final HttpServletRequest request) throws Exception {
+		return LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request);
+	}
+	
+	public User getActiveUser(final HttpServletRequest request) throws Exception {
+		return getLoggedInUser(request);
+	}
+	
+	public String getActiveUserType(final HttpServletRequest request) {
+		return getLoggedInUserType(request);
+	}
+	
+	public <T extends Object> T getActiveUserTypeObject(final HttpServletRequest request, Class<T> type) throws Exception {
+		return getLoggedInUserTypeObject(request, type);
 	}
 	
 	public String getServerURL(final HttpServletRequest request) {

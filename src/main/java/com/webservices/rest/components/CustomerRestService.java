@@ -20,6 +20,7 @@ import com.constants.components.CustomerConstants;
 import com.model.components.SubscribedCustomer;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
+import com.utils.JSONUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -37,9 +38,9 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getCustomerService().getSubscribedCustomer(getLoggedInUserTypeObject(request, SubscribedCustomer.class).getACopy()), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getCustomerService().getSubscribedCustomer(getActiveUserTypeObject(request, SubscribedCustomer.class).getACopy()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -52,9 +53,9 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getCustomerService().getDropdownListData(), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getCustomerService().getDropdownListData(), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -68,10 +69,10 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			subscribedCustomerObj.setCustomerId(getLoggedInUserTypeObject(request, SubscribedCustomer.class).getCustomerId());
-			return convertObjToJSONString(getCustomerService().updateDetails(subscribedCustomerObj), REST_MESSAGE_JSON_RESPONSE_NAME);
+			subscribedCustomerObj.setCustomerId(getActiveUserTypeObject(request, SubscribedCustomer.class).getCustomerId());
+			return JSONUtils.convertObjToJSONString(getCustomerService().updateDetails(subscribedCustomerObj), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -92,16 +93,16 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getCustomerService().subscribedCustomersList(LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getCustomerService().subscribedCustomersList(LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	@Override
 	public void doSecurity(final HttpServletRequest request) {
 		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD :
 			case REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS :
@@ -111,7 +112,7 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 				break;
 			}
 		}
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 
 }

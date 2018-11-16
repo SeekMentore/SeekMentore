@@ -27,7 +27,7 @@ import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE)
-	public class CustomerService implements CustomerConstants{
+	public class CustomerService implements CustomerConstants {
 
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -52,8 +52,8 @@ import com.utils.VelocityUtils;
 	@Transactional
 	public Map<String, Object> updateDetails(final SubscribedCustomer subscriberCustomerObj) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
 		String updateQuery = "UPDATE SUBSCRIBED_CUSTOMER SET ";
 		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
 
@@ -99,8 +99,8 @@ import com.utils.VelocityUtils;
 			updateQuery += " ,RECORD_LAST_UPDATED = SYSDATE(), UPDATED_BY = :updatedBy WHERE CUSTOMER_ID = :customerId";
 			updatedPropertiesParams.put("customerId", subscriberCustomerObj.getCustomerId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		}
 		return response;
 	}
@@ -166,8 +166,8 @@ import com.utils.VelocityUtils;
 	
 	public Map<String, Object> getSubscribedCustomer(final SubscribedCustomer subscribedCustomerObj) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		replacePlaceHolderAndIdsFromSubscribedCustomerObject(subscribedCustomerObj, LINE_BREAK);
 		removeAllSensitiveInformationFromSubscribedCustomerObject(subscribedCustomerObj);
 		response.put("subscribedCustomerObj", subscribedCustomerObj);

@@ -37,6 +37,12 @@ public class ApplicationUtils implements ApplicationConstants {
 		return newuserobj;
 	}
 	
+	public static User returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(final User user) {
+		final User newuserobj = user.getACopy();
+		newuserobj.setEncyptedPassword(null);
+		return newuserobj;
+	}
+	
 	public static String returnBlankIfStringNull(final String obj) {
 		if (obj == null)
 			return EMPTY_STRING;

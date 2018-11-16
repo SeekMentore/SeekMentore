@@ -13,6 +13,7 @@ public class User implements Serializable {
 	private String userType;
 	private String encyptedPassword;
 	private List<String> pageAccessTypes;
+	private UserAccessOptions accessOptions;
 	
 	public User getACopy() {
 		final User newInstance = new User();
@@ -26,6 +27,7 @@ public class User implements Serializable {
 				newInstance.pageAccessTypes.add(pageAccessType);
 			}
 		}
+		newInstance.accessOptions = accessOptions.getACopy();
 		return newInstance;
 	}
 	
@@ -58,5 +60,13 @@ public class User implements Serializable {
 	}
 	public void setEncyptedPassword(String encyptedPassword) {
 		this.encyptedPassword = encyptedPassword;
+	}
+
+	public UserAccessOptions getAccessOptions() {
+		return accessOptions;
+	}
+
+	public void setAccessOptions(UserAccessOptions accessOptions) {
+		this.accessOptions = accessOptions;
 	}
 }

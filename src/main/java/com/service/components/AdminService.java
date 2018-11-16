@@ -160,8 +160,8 @@ public class AdminService implements AdminConstants {
 			final User user
 	) {
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", user.getUserId());
@@ -310,8 +310,8 @@ public class AdminService implements AdminConstants {
 			final User user
 	) {
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", user.getUserId());
@@ -462,8 +462,8 @@ public class AdminService implements AdminConstants {
 			final User user
 	) {
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", user.getUserId());

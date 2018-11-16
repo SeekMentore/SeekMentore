@@ -57,7 +57,7 @@ public class PreAuthenticationFilter extends AbstractWebservice implements Filte
 				if (LoginUtils.validateExistingSession(httpRequest)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(httpRequest), "Not a valid user in session.");
+					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Not a valid user in session.");
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.redirectToPage("/error.html", httpRequest, httpResponse);
 				}

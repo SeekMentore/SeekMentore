@@ -28,6 +28,7 @@ import com.model.components.TutorMapper;
 import com.service.components.CommonsService;
 import com.service.components.EnquiryService;
 import com.utils.ApplicationUtils;
+import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
@@ -53,9 +54,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.methodName = REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -68,9 +69,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.methodName = REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -83,9 +84,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.methodName = REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayCustomerWithEnquiries(REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -101,9 +102,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.customerId = customerId;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllEnquiriesForParticularCustomer(customerId, grid, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayAllEnquiriesForParticularCustomer(customerId, grid, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FOR_ENQUIRY_DETAILS)
@@ -115,9 +116,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FOR_ENQUIRY_DETAILS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().getDropdownListData(), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().getDropdownListData(), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -132,9 +133,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.enquiryId = enquiryObject.getEnquiryId();
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().updateEnquiryDetails(enquiryObject, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().updateEnquiryDetails(enquiryObject, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -149,9 +150,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.enquiryId = enquiryId;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayAllEligibleTutors(enquiryId, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_MAP_TUTORS)
@@ -173,9 +174,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 					tutorIdList.add(Long.parseLong(tutorId));
 				}
 			}
-			return convertObjToJSONString(getEnquiryService().mapTutors(enquiryId, tutorIdList), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().mapTutors(enquiryId, tutorIdList), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS)
@@ -189,9 +190,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.enquiryId = enquiryId;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_UNMAP_TUTORS)
@@ -211,9 +212,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 					tutorMapperIdList.add(Long.parseLong(tutorMapperId));
 				}
 			}
-			return convertObjToJSONString(getEnquiryService().unmapTutors(tutorMapperIdList), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().unmapTutors(tutorMapperIdList), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS)
@@ -227,9 +228,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.enquiryId = enquiryId;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS, LINE_BREAK), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().displayAllMappedTutors(enquiryId, REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS, LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS)
@@ -243,9 +244,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.tutorMapperId = tutorMapperObject.getTutorMapperId();
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().updateTutorMapperDetails(tutorMapperObject, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().updateTutorMapperDetails(tutorMapperObject, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -262,9 +263,9 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.scheduledDemoDateAndTime = new Date(demoTimeInMillis);
 		doSecurity(request);
 		if (this.securityPassed) {
-			return convertObjToJSONString(getEnquiryService().scheduleDemo(tutorMapperId, scheduledDemoDateAndTime, getLoggedInUser(request)), REST_MESSAGE_JSON_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().scheduleDemo(tutorMapperId, scheduledDemoDateAndTime, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return convertObjToJSONString(securityFailureResponse, REST_MESSAGE_JSON_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	public EnquiryService getEnquiryService() {
@@ -276,10 +277,10 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Override
-	public void doSecurity(final HttpServletRequest request) {
+	public void doSecurity(final HttpServletRequest request) throws Exception {
 		this.request = request;
 		this.securityFailureResponse = new HashMap<String, Object>();
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_PENDING_ENQUIRIES : 
 			case REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES : 
@@ -316,121 +317,121 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 				break;
 			}
 		}
-		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, !this.securityPassed);
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleParticularCustomerActionSecurity() {
+	private void handleParticularCustomerActionSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.customerId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_CUSTOMER_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.customerId);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.customerId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleParticularEnquirySecurity() {
+	private void handleParticularEnquirySecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.enquiryId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_ENQUIRY_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.enquiryId);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.enquiryId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleParticularEnquiryTutorMappingSecurity() {
+	private void handleParticularEnquiryTutorMappingSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.enquiryId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_ENQUIRY_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.selectedEligibleTutorIdSemicolonSeparatedList)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_ID_LIST,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedEligibleTutorIdSemicolonSeparatedList);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.selectedEligibleTutorIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleParticularEnquiryTutorUnMappingSecurity() {
+	private void handleParticularEnquiryTutorUnMappingSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.selectedTutorMappedIdSemicolonSeparatedList)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID_LIST,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.selectedTutorMappedIdSemicolonSeparatedList);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.selectedTutorMappedIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleParticularTutorMapperSecurity() {
+	private void handleParticularTutorMapperSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorMapperId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
 	
-	private void handleScheduledDemoSecurity() {
+	private void handleScheduledDemoSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!ValidationUtils.validateDate(this.scheduledDemoDateAndTime)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_INVALID_SCHEDULE_TIME,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE) + LINE_BREAK + this.tutorMapperId + LINE_BREAK + this.scheduledDemoDateAndTime);
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorMapperId + LINE_BREAK + this.scheduledDemoDateAndTime);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}

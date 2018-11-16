@@ -1,9 +1,9 @@
 package com.constants.components.publicaccess;
 
-import com.constants.ApplicationConstants;
 import com.constants.VelocityConstants;
+import com.constants.components.ResponseMapConstants;
 
-public interface PublicAccessConstants extends ApplicationConstants {
+public interface PublicAccessConstants extends ResponseMapConstants {
 	
 	String APPLICATION_STATUS = "APPLICATION_STATUS";
 	String APPLICATION_STATUS_FRESH = "FRESH";
@@ -17,10 +17,8 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String APPLICATION_STATUS_RE_APPLIED = "RE_APPLIED";
 	
 	String FAILURE_CONTACT_INFO = "If you believe you are receiving this error wrong.<br/>Please contact 'Seek Mentore' Support team from our 'Connect with us' section on home page.";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
 	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
 	
 	String PAGE_REFERENCE_SUBMIT_QUERY = "SUBMIT_QUERY";
 	String PAGE_REFERENCE_TUTOR_ENQUIRY = "TUTOR_ENQUIRY";

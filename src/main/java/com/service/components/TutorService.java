@@ -119,8 +119,8 @@ public class TutorService implements TutorConstants {
 	
 	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final List<TutorDocument> tutorDocumentList = getTutorDocuments(registeredTutorObj.getTutorId());
 		for (final TutorDocument tutorDocument : tutorDocumentList) {
 			removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
@@ -162,8 +162,8 @@ public class TutorService implements TutorConstants {
 	@Transactional
 	public Map<String, Object> updateDetails(final RegisteredTutor registeredTutorObj) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, "Nothing to be updated.");
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
 		String updateQuery = "UPDATE REGISTERED_TUTOR SET ";
 		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
 		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
@@ -234,8 +234,8 @@ public class TutorService implements TutorConstants {
 			updateQuery += " ,RECORD_LAST_UPDATED = SYSDATE(), UPDATED_BY = :updatedBy WHERE TUTOR_ID = :tutorId";
 			updatedPropertiesParams.put("tutorId", registeredTutorObj.getTutorId());
 			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+			response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		}
 		return response;
 	}
@@ -366,8 +366,8 @@ public class TutorService implements TutorConstants {
 				"Reminder: Your " + documentType + " is missing", 
 				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		return response;
 	}
 

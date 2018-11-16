@@ -51,8 +51,8 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Transactional
 	public Map<String, Object> submitApplication(final PublicApplication application) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Date currentTimestamp = new Date();
 		if (application instanceof BecomeTutor) {
 			handleBecomeTutorApplication(application, response, currentTimestamp);
@@ -64,10 +64,10 @@ public class PublicAccessService implements PublicAccessConstants {
 			handleSubmitQueryApplication(application, response, currentTimestamp);
 		} else {
 			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, true);
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			return response;
 		}
-		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
+		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			feedRecordForApplication(application);
 			if (application instanceof BecomeTutor) {
 				sendNotificationAndConfirmationEmailsToTutor((BecomeTutor) application);
@@ -80,10 +80,10 @@ public class PublicAccessService implements PublicAccessConstants {
 			} 
 		}
 		// Append contact information if Failure occurred
-		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
+		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			ApplicationUtils.appendMessageInMapAttribute(response, 
 														FAILURE_CONTACT_INFO,
-														RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+														RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		}
 		return response;
 	}
@@ -135,20 +135,20 @@ public class PublicAccessService implements PublicAccessConstants {
 		paramsMap.put("contactNumber", becomeTutorApplication.getContactNumber());
 		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new BecomeTutorRowMapper());
 		if (null != becomeTutorApplicationInDatabaseWithEmailId) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
 					FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		} 
 		if (null != becomeTutorApplicationInDatabaseWithContactNumber) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, true);
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
 					FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
-					RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE);
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		}
-		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_FAILURE)) {
+		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			// Fresh Application Status
 			becomeTutorApplication.setApplicationDate(currentTimestamp);
 			becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);

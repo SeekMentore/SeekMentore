@@ -23,6 +23,7 @@ import com.model.ErrorPacket;
 import com.model.LogonTracker;
 import com.model.PasswordChangeTracker;
 import com.model.User;
+import com.model.UserAccessOptions;
 import com.service.components.CommonsService;
 import com.utils.MailUtils;
 import com.utils.SecurityUtil;
@@ -48,6 +49,7 @@ public class LoginService implements LoginConstants {
 			if (decryptUserPasswordFromDB.equals(decryptUserPasswordFromUI)) {
 				if (user.getUserType().equals(credential.getUserType())) {
 					setAccessTypes(user);
+					setAccessOptions(user);
 				} else {
 					final String message = "Hacking alert !!! <BR/> Received Invalid User Type for : <BR/>" + credential.toString();
 					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
@@ -88,39 +90,63 @@ public class LoginService implements LoginConstants {
 	
 	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
 		switch(userType) {
-			case "Admin"          : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
-			case "Tutor"          : return commonsService.getUserFromTutorDbUsingUserId(userId);
-			case "Customer"       : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
+			case USER_TYPE_EMPLOYEE : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
+			case USER_TYPE_TUTOR    : return commonsService.getUserFromTutorDbUsingUserId(userId);
+			case USER_TYPE_CUSTOMER : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
 			default	: return null;
 		}
 	}
 	
 	private void setAccessTypes(final User user) {
 		final List<String> pageAccessTypes = new ArrayList<String>();
+		pageAccessTypes.add("user");
+		pageAccessTypes.add("common");
+		pageAccessTypes.add("public");
 		switch(user.getUserType()) {
-			case "Admin" : {
-				pageAccessTypes.add("A");
+			case USER_TYPE_EMPLOYEE : {
+				// Compute from database
+				pageAccessTypes.add("employee");
+				pageAccessTypes.add("admin");
+				pageAccessTypes.add("sales");
+				pageAccessTypes.add("support");
+				pageAccessTypes.add("super-admin");
 				break;
 			}
-			case "Tutor" : {
-				pageAccessTypes.add("M");
+			case USER_TYPE_TUTOR : {
+				pageAccessTypes.add("tutor");
 				break;
 			}
-			case "Customer" : {
-				pageAccessTypes.add("C");
+			case USER_TYPE_CUSTOMER : {
+				pageAccessTypes.add("customer");
 				break;
-			}
-			default	: {
 			}
 		}
-		pageAccessTypes.add("G");
 		user.setPageAccessTypes(pageAccessTypes);
+	}
+	
+	private void setAccessOptions(final User user) {
+		final UserAccessOptions accessOptions = new UserAccessOptions();
+		switch(user.getUserType()) {
+			case USER_TYPE_EMPLOYEE : {
+				// Compute from database
+				accessOptions.setImpersonationaccess(true);
+				accessOptions.setEmailformaccess(true);
+				break;
+			}
+			case USER_TYPE_TUTOR : {
+				break;
+			}
+			case USER_TYPE_CUSTOMER : {
+				break;
+			}
+		}
+		user.setAccessOptions(accessOptions);
 	}
 
 	public Map<String, Object> changePassword(final User user, final String newPassword, final String emailIdOfUserInSession) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE, EMPTY_STRING);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
 		final String encryptedOldPassword = user.getEncyptedPassword();
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
@@ -155,15 +181,15 @@ public class LoginService implements LoginConstants {
 		params.put("userId", loggedInUserId);
 		params.put("encryptedPassword", encryptedNewPassword);
 		switch(userType) {
-			case "Admin" : {
+			case USER_TYPE_EMPLOYEE : {
 				applicationDao.executeUpdate("UPDATE EMPLOYEE SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}
-			case "Tutor" : {
+			case USER_TYPE_TUTOR : {
 				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}
-			case "Customer" : {
+			case USER_TYPE_CUSTOMER : {
 				applicationDao.executeUpdate("UPDATE SUBSCRIBED_CUSTOMER SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
 				break;
 			}

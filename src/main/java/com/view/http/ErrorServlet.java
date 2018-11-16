@@ -53,7 +53,7 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     } else {
 	    	 errorText = ExceptionUtils.generateErrorLog(throwable);
 	     }
-	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri + LINE_BREAK + LoginUtils.getLoggedInUserIdAndTypeForPrinting(request), errorText);
+	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
 	     getCommonsService().feedErrorRecord(errorPacket);
 	     WebServiceUtils.redirectToPage("/error.html", request, response);
 	}
