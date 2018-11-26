@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	pageAccessType values 
+		user                                        - General Access only Public Rest URL's & Commons URL
+		employee                                    - Mentor Access
+		admin                                       - Professional Team Access
+		sales                                       - Customer Access
+		support                                     - Admin Access
+		superadmin                                 - Development Team Access
+ -->
 <bouipath>
     <viewtype id="public" url="/public">
         <uipage id="login" url="/login" urlActive="true"></uipage>
@@ -26,7 +36,7 @@
                 <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscriptions Requested" order="4"></uipage>
                 <uipage id="complaints" url="/complaints" urlActive="true" itemHeader="User Complaints" order="5"></uipage>
             </menuitem>
-            <menuitem id="superadmin" url="/superadmin" pageAccessType="super-admin" itemHeader="System" order="5" faClass="">
+            <menuitem id="superadmin" url="/superadmin" pageAccessType="superadmin" itemHeader="System" order="5" faClass="">
                 <uipage id="controlpanel" url="/controlpanel" urlActive="true" itemHeader="Control Panel" order="1"></uipage>
             </menuitem>
         </usertype>

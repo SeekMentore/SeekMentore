@@ -3,10 +3,9 @@ package com.model.components;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
 
-public class DemoTracker implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long demoTrackerId;
@@ -31,12 +30,57 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	private Integer negotiatedOverrideRateWithClient;
 	private Integer negotiatedOverrideRateWithTutor;
 	private Date adminActionDate;
+	private Long adminActionDateMillis;
 	private String customerName;
 	private String tutorName;
 	private String adminFinalizingRemarks;
 	private String reschedulingRemarks;
 	
 	public DemoTracker() {}
+	
+	public DemoTracker(Long demoTrackerId) {
+		this.demoTrackerId = demoTrackerId;
+		this.tutorMapperId = 1L;
+		this.demoDateAndTime = new Date();
+		this.demoDateAndTimeMillis = new Date().getTime();
+		this.demoOccurred = "Y";
+		this.demoStatus = "SCHEDULED";
+		this.clientRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.tutorRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.clientSatisfiedFromTutor = "Y";
+		this.tutorSatisfiedWithClient = "Y";
+		this.adminSatisfiedFromTutor = "Y";
+		this.adminSatisfiedWithClient = "Y";
+		this.whoActed = "abcd";
+		this.isDemoSuccess = "Y";
+		this.needPriceNegotiationWithClient = "Y";
+		this.clientNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.needPriceNegotiationWithTutor = "Y";
+		this.tutorNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.adminRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.negotiatedOverrideRateWithClient = 890;
+		this.negotiatedOverrideRateWithTutor = 890;
+		this.adminActionDate = new Date();
+		this.adminActionDateMillis = new Date().getTime();
+		this.customerName = "Shantanu Mukherjee";
+		this.tutorName = "Shantanu Mukherjee";
+		this.adminFinalizingRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.reschedulingRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+	}
 
 	public Long getDemoTrackerId() {
 		return demoTrackerId;
@@ -280,5 +324,13 @@ public class DemoTracker implements Serializable, CustomerConstants, Application
 	public Object[] getReportRecords(String reportSwitch) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Long getAdminActionDateMillis() {
+		return adminActionDateMillis;
+	}
+
+	public void setAdminActionDateMillis(Long adminActionDateMillis) {
+		this.adminActionDateMillis = adminActionDateMillis;
 	}
 }

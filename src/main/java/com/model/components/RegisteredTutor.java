@@ -28,11 +28,36 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 	private String encryptedPassword;
 	private String userId;
 	private Date recordLastUpdated;
+	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String preferredTeachingType;
 	private List<TutorDocument> documents;
 	
 	public RegisteredTutor() {}
+	
+	public RegisteredTutor(Long tutorId) {
+		this.tutorId = tutorId;
+		this.name = "shantanu mukherjee";
+		this.contactNumber = "9739936482";
+		this.emailId = "abc@efg.com";
+		this.tentativeTutorId = 5L;
+		this.dateOfBirth = new Date();
+		this.gender = "01";
+		this.qualification = "02";
+		this.primaryProfession = "03";
+		this.transportMode = "01";
+		this.teachingExp = 5;
+		this.interestedStudentGrades = "01;02;03";
+		this.interestedSubjects = "02;03;04";
+		this.comfortableLocations = "03;04;05";
+		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.encryptedPassword = "";
+		this.userId = "abc";
+		this.recordLastUpdated = new Date();
+		this.recordLastUpdatedMillis = recordLastUpdated.getTime();
+		this.updatedBy = "abcf";
+		this.preferredTeachingType = "01;02";
+	}
 	
 	public RegisteredTutor getACopy() {
 		final RegisteredTutor newInstance = new RegisteredTutor();
@@ -279,5 +304,13 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 			}
 		}
 		return new Object[] {};
+	}
+
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 }

@@ -22,9 +22,28 @@ public class SubscribedCustomer implements Serializable, CustomerConstants, Appl
 	private String encryptedPassword;
 	private String userId;
 	private Date recordLastUpdated;
+	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	
 	public SubscribedCustomer() {}
+	
+	public SubscribedCustomer(Long customerId) {
+		this.customerId = customerId;
+		name = "shantanu mukherjee";
+		contactNumber = "9739936482";
+		emailId = "abc@efg.com";
+		enquiryID = 5L;
+		studentGrades = "01;02;03";
+		interestedSubjects = "02;03;04";
+		location = "03";
+		addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		encryptedPassword = "";
+		userId = "abc";
+		recordLastUpdated = new Date();
+		recordLastUpdatedMillis = recordLastUpdated.getTime();
+		updatedBy = "abcf";
+	}
 
 	public SubscribedCustomer getACopy() {
 		final SubscribedCustomer newInstance = new SubscribedCustomer();
@@ -199,5 +218,13 @@ public class SubscribedCustomer implements Serializable, CustomerConstants, Appl
 			}
 		}
 		return new Object[] {};
+	}
+
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 }

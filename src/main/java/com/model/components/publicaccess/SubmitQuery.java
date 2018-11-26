@@ -79,6 +79,10 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
 	private Date recordLastUpdated;
 	
+	private Long queryRequestedDateMillis;
+	private Long contactedDateMillis;
+	private Long recordLastUpdatedMillis;
+	
 	public SubmitQuery() {}
 	
 	public SubmitQuery(
@@ -107,6 +111,36 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.notAnsweredReason = notAnsweredReason;
 		this.whoNotAnswered = whoNotAnswered;
 		this.recordLastUpdated = recordLastUpdated;
+	}
+	
+	public SubmitQuery(Long queryId) {
+		this.queryId = queryId;
+		this.queryRequestedDate = new Date();
+		this.queryRequestedDateMillis = new Date().getTime();
+		this.queryStatus = "FRESH";
+		this.emailId = "abc@hg.com";
+		this.registeredTutor = "Y";
+		this.subscribedCustomer = "N";
+		this.queryDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.isContacted = "N";
+		this.whoContacted = "abc";
+		this.contactedDate = new Date();
+		this.contactedDateMillis = new Date().getTime();
+		this.queryResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.notAnswered = "Y";
+		this.notAnsweredReason = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.whoNotAnswered = "abc";
+		this.recordLastUpdated = new Date();
+		this.recordLastUpdatedMillis = new Date().getTime();
 	}
 
 	public String getEmailId() {
@@ -229,6 +263,30 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.subscribedCustomer = subscribedCustomer;
 	}
 	
+	public Long getQueryRequestedDateMillis() {
+		return queryRequestedDateMillis;
+	}
+
+	public void setQueryRequestedDateMillis(Long queryRequestedDateMillis) {
+		this.queryRequestedDateMillis = queryRequestedDateMillis;
+	}
+
+	public Long getContactedDateMillis() {
+		return contactedDateMillis;
+	}
+
+	public void setContactedDateMillis(Long contactedDateMillis) {
+		this.contactedDateMillis = contactedDateMillis;
+	}
+
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);

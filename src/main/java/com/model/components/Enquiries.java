@@ -3,14 +3,16 @@ package com.model.components;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
 
-public class Enquiries implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class Enquiries implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long enquiryId;
 	private Long customerId;
+	private String customerName;
+	private String customerEmail;
+	private String customerContactNumber;
 	private String subject;
 	private String grade;
 	private Integer quotedClientRate ;
@@ -18,6 +20,7 @@ public class Enquiries implements Serializable, CustomerConstants, ApplicationWo
 	private String clientNegotiationRemarks;
 	private String isMapped;
 	private Date lastActionDate;
+	private Long lastActionDateMillis;
 	private String matchStatus;
 	private Long tutorId;
 	private String tutorName;
@@ -31,6 +34,33 @@ public class Enquiries implements Serializable, CustomerConstants, ApplicationWo
 	private String preferredTeachingType;
 	
 	public Enquiries() {}
+	
+	public Enquiries(Long enquiryId) {
+		this.enquiryId = enquiryId;
+		this.customerId = enquiryId;
+		this.customerName = "Test User";
+		this.customerEmail = "efg@gm.com";
+		this.customerContactNumber = "78965412365";
+		this.subject = "01";
+		this.grade = "01";
+		this.quotedClientRate = 560;
+		this.negotiatedRateWithClient = 540;
+		this.clientNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.isMapped = "N";
+		this.lastActionDate = new Date();
+		this.lastActionDateMillis = new Date().getTime();
+		this.matchStatus = "New";
+		this.tutorId = enquiryId;
+		this.tutorName = "Shantanu Mukherjee";
+		this.tutorEmail = "abc@gm.com";
+		this.tutorContactNumber = "986542365899";
+		this.adminRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.locationDetails = "01";
+		this.addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		this.whoActed = "absd";
+		this.preferredTeachingType = "01;02";
+	}
 
 	public Long getEnquiryId() {
 		return enquiryId;
@@ -202,6 +232,38 @@ public class Enquiries implements Serializable, CustomerConstants, ApplicationWo
 	public Object[] getReportRecords(String reportSwitch) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerContactNumber() {
+		return customerContactNumber;
+	}
+
+	public void setCustomerContactNumber(String customerContactNumber) {
+		this.customerContactNumber = customerContactNumber;
+	}
+
+	public Long getLastActionDateMillis() {
+		return lastActionDateMillis;
+	}
+
+	public void setLastActionDateMillis(Long lastActionDateMillis) {
+		this.lastActionDateMillis = lastActionDateMillis;
 	}
 
 }

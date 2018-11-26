@@ -1,4 +1,4 @@
-package com.webservices.rest.components;
+package com.webservices.rest.components.old;
 
 import java.util.HashMap;
 
@@ -26,8 +26,8 @@ import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path(RestPathConstants.REST_SERVICE_PATH_CUSTOMER) 
-public class CustomerRestService extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_CUSTOMER+"old") 
+public class CustomerRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
 	
 	@Path(REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -38,7 +38,7 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getCustomerService().getSubscribedCustomer(getLoggedInUserTypeObject(request, SubscribedCustomer.class).getACopy()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getCustomerService().getSubscribedCustomer(getActiveUserTypeObject(request, SubscribedCustomer.class).getACopy()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -69,7 +69,7 @@ public class CustomerRestService extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			subscribedCustomerObj.setCustomerId(getLoggedInUserTypeObject(request, SubscribedCustomer.class).getCustomerId());
+			subscribedCustomerObj.setCustomerId(getActiveUserTypeObject(request, SubscribedCustomer.class).getCustomerId());
 			return JSONUtils.convertObjToJSONString(getCustomerService().updateDetails(subscribedCustomerObj), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);

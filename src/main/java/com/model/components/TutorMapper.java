@@ -20,6 +20,7 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 	private String tutorNegotiationRemarks;
 	private String isTutorContacted;
 	private Date tutorContactedDate;
+	private Long tutorContactedDateMillis;
 	private String isTutorAgreed;
 	private String isTutorRejectionValid;
 	private String adminTutorRejectionValidityResponse;
@@ -27,18 +28,70 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 	private String adminRemarksForTutor;
 	private String isClientContacted;
 	private Date clientContactedDate;
+	private Long clientContactedDateMillis;
 	private String isClientAgreed;
 	private String clientResponse;
 	private String isClientRejectionValid;
 	private String adminClientRejectionValidityResponse;
 	private String adminRemarksForClient;
 	private Date adminActionDate;
+	private Long adminActionDateMillis;
 	private String adminActionRemarks;
 	private String whoActed;
 	private String isDemoScheduled;
 	private String mappingStatus;
 	
 	public TutorMapper() {}
+	
+	public TutorMapper(Long tutorMapperId) {
+		this.tutorMapperId = tutorMapperId;
+		this.enquiryId = 1L;
+		this.tutorId = 2L;
+		this.tutorName = "Shantanu Mukherjee";
+		this.tutorEmail = "abc@ghm.com";
+		this.tutorContactNumber = "563248965";
+		this.quotedTutorRate = 895;
+		this.negotiatedRateWithTutor  = 124;
+		this.tutorNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.isTutorContacted = "N";
+		this.tutorContactedDate = new Date();
+		this.tutorContactedDateMillis = new Date().getTime(); 
+		this.isTutorAgreed = "Y";
+		this.isTutorRejectionValid = "N";
+		this.adminTutorRejectionValidityResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.tutorResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.adminRemarksForTutor = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.isClientContacted = "Y";
+		this.clientContactedDate = new Date();
+		this.clientContactedDateMillis = new Date().getTime(); 
+		this.isClientAgreed = "Y";
+		this.clientResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.isClientRejectionValid = "N";
+		this.adminClientRejectionValidityResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.adminRemarksForClient = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.adminActionDate = new Date();
+		this.adminActionDateMillis = new Date().getTime(); 
+		this.adminActionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
+				+ "Test Test Test Test Test Test Test Test Test Test Test";
+		this.whoActed = "abgd";
+		this.isDemoScheduled = "N";
+		this.mappingStatus = "FRESH";
+	}
 
 	public Long getTutorMapperId() {
 		return tutorMapperId;
@@ -274,5 +327,29 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 	public Object[] getReportRecords(String reportSwitch) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public Long getTutorContactedDateMillis() {
+		return tutorContactedDateMillis;
+	}
+
+	public void setTutorContactedDateMillis(Long tutorContactedDateMillis) {
+		this.tutorContactedDateMillis = tutorContactedDateMillis;
+	}
+
+	public Long getClientContactedDateMillis() {
+		return clientContactedDateMillis;
+	}
+
+	public void setClientContactedDateMillis(Long clientContactedDateMillis) {
+		this.clientContactedDateMillis = clientContactedDateMillis;
+	}
+
+	public Long getAdminActionDateMillis() {
+		return adminActionDateMillis;
+	}
+
+	public void setAdminActionDateMillis(Long adminActionDateMillis) {
+		this.adminActionDateMillis = adminActionDateMillis;
 	}
 }

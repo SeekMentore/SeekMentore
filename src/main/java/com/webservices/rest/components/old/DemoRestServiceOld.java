@@ -1,4 +1,4 @@
-package com.webservices.rest.components;
+package com.webservices.rest.components.old;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -32,8 +32,8 @@ import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path(RestPathConstants.REST_SERVICE_PATH_DEMO) 
-public class DemoRestService extends AbstractRestWebservice implements RestMethodConstants, DemoTrackerConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_DEMO+"old") 
+public class DemoRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, DemoTrackerConstants {
 	
 	private Long demoTrackerId;
 	private Date rescheduledDemoDateAndTime;
@@ -143,7 +143,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.demoTrackerId = demoTrackerObject.getDemoTrackerId();
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getDemoService().updateDemoTrackerDetails(demoTrackerObject, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getDemoService().updateDemoTrackerDetails(demoTrackerObject, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -162,7 +162,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_SUCCESS, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_SUCCESS, demoTrackerId, finalizingRemarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -181,7 +181,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_FAILURE, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_DEMO_FAILURE, demoTrackerId, finalizingRemarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -200,7 +200,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_CANCEL_DEMO, demoTrackerId, finalizingRemarks, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getDemoService().takeActionOnDemo(REST_METHOD_NAME_CANCEL_DEMO, demoTrackerId, finalizingRemarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -221,7 +221,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		this.finalizingRemarks = finalizingRemarks;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getDemoService().rescheduleDemo(demoTrackerId, rescheduledDemoDateAndTime, finalizingRemarks, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getDemoService().rescheduleDemo(demoTrackerId, rescheduledDemoDateAndTime, finalizingRemarks, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -279,7 +279,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.demoTrackerId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -312,7 +312,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.demoTrackerId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -345,7 +345,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.demoTrackerId + LINE_BREAK + this.rescheduledDemoDateAndTimeinMillis);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}

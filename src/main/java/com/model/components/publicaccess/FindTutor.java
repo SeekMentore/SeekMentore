@@ -154,6 +154,15 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
 	private Date recordLastUpdated;
 	
+	private Long enquiryDateMillis;
+	private Long contactedDateMillis;
+	private Long verificationDateMillis;
+	private Long suggestionDateMillis;
+	private Long recontactedDateMillis;
+	private Long selectionDateMillis;
+	private Long rejectionDateMillis;
+	private Long recordLastUpdatedMillis;
+	
 	public FindTutor() {}
 	
 	public FindTutor(
@@ -231,6 +240,54 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.location = location;
 		this.reference = reference;
 		this.addressDetails = addressDetails;
+	}
+	
+	public FindTutor(Long enquiryId) {
+		this.enquiryId = enquiryId;
+		this.enquiryDate = new Date();
+		this.enquiryDateMillis = new Date().getTime();
+		this.enquiryStatus = "FRESH";
+		this.name = "Shantanu Mukherjee";
+		this.contactNumber = "989898989898";
+		this.emailId = "abc@efb.com";
+		this.studentGrade = "01";
+		this.subjects = "01";
+		this.preferredTimeToCall = "01;02;03";
+		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isContacted = "Y";
+		this.whoContacted = "abc";
+		this.contactedDate = new Date();
+		this.contactedDateMillis = new Date().getTime();
+		this.contactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isAuthenticationVerified = "Y";
+		this.whoVerified = "abc";
+		this.verificationDate = new Date();
+		this.verificationDateMillis = new Date().getTime();
+		this.verificationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isToBeRecontacted = "Y";
+		this.whoSuggestedForRecontact = "abc";
+		this.suggestionDate = new Date();
+		this.suggestionDateMillis = new Date().getTime();
+		this.suggestionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.whoRecontacted = "abc";
+		this.recontactedDate = new Date();
+		this.recontactedDateMillis = new Date().getTime();
+		this.recontactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isSelected = "Y";
+		this.whoSelected = "abc";
+		this.selectionDate = new Date();
+		this.selectionDateMillis = new Date().getTime();
+		this.selectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isRejected = "Y";
+		this.whoRejected = "abc";
+		this.rejectionDate = new Date();
+		this.rejectionDateMillis = new Date().getTime();
+		this.rejectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.recordLastUpdated = new Date();
+		this.recordLastUpdatedMillis = new Date().getTime();
+		this.location = "01";
+		this.reference = "01";
+		this.addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
 	}
 
 	public String getContactNumber() {
@@ -535,6 +592,70 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setRecordLastUpdated(Date recordLastUpdated) {
 		this.recordLastUpdated = recordLastUpdated;
+	}
+
+	public Long getEnquiryDateMillis() {
+		return enquiryDateMillis;
+	}
+
+	public void setEnquiryDateMillis(Long enquiryDateMillis) {
+		this.enquiryDateMillis = enquiryDateMillis;
+	}
+
+	public Long getContactedDateMillis() {
+		return contactedDateMillis;
+	}
+
+	public void setContactedDateMillis(Long contactedDateMillis) {
+		this.contactedDateMillis = contactedDateMillis;
+	}
+
+	public Long getVerificationDateMillis() {
+		return verificationDateMillis;
+	}
+
+	public void setVerificationDateMillis(Long verificationDateMillis) {
+		this.verificationDateMillis = verificationDateMillis;
+	}
+
+	public Long getSuggestionDateMillis() {
+		return suggestionDateMillis;
+	}
+
+	public void setSuggestionDateMillis(Long suggestionDateMillis) {
+		this.suggestionDateMillis = suggestionDateMillis;
+	}
+
+	public Long getRecontactedDateMillis() {
+		return recontactedDateMillis;
+	}
+
+	public void setRecontactedDateMillis(Long recontactedDateMillis) {
+		this.recontactedDateMillis = recontactedDateMillis;
+	}
+
+	public Long getSelectionDateMillis() {
+		return selectionDateMillis;
+	}
+
+	public void setSelectionDateMillis(Long selectionDateMillis) {
+		this.selectionDateMillis = selectionDateMillis;
+	}
+
+	public Long getRejectionDateMillis() {
+		return rejectionDateMillis;
+	}
+
+	public void setRejectionDateMillis(Long rejectionDateMillis) {
+		this.rejectionDateMillis = rejectionDateMillis;
+	}
+
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 
 	@Override

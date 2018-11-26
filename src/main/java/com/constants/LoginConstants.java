@@ -5,8 +5,13 @@ import com.constants.components.ResponseMapConstants;
 public interface LoginConstants extends ResponseMapConstants, PageConstants {
 	
 	String USER_OBJECT = "user";
-	String USER_TYPE_OBJECT = "user-type-object";
 	String USER_TYPE = "user-type";
+	String USER_TYPE_HEADER = "USER-TYPE";
+	String USER_AUTH_HEADER = "USER-AUTH";
+	String USER_TYPE_PARAM = "user-type";
+	String USER_AUTH_PARAM = "user-auth";
+	String USER_TYPE_TOKEN = "userTypeToken";
+	String USER_AUTH_TOKEN = "userAuthToken";
 	
 	String USER_TYPE_CUSTOMER = "Customer";
 	String USER_TYPE_TUTOR = "Tutor";

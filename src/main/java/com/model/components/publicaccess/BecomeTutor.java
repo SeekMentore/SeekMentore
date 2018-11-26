@@ -183,6 +183,17 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
 	private Date recordLastUpdated;
 	
+	private Long dateOfBirthMillis;
+	private Long applicationDateMillis;
+	private Long contactedDateMillis;
+	private Long verificationDateMillis;
+	private Long suggestionDateMillis;
+	private Long recontactedDateMillis;
+	private Long selectionDateMillis;
+	private Long rejectionDateMillis;
+	private Long previousApplicationDateMillis;
+	private Long recordLastUpdatedMillis;
+	
 	public BecomeTutor() {}
 	
 	public BecomeTutor(
@@ -279,6 +290,66 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.preferredTeachingType = preferredTeachingType;
 		this.previousApplicationDate = previousApplicationDate;
 		this.recordLastUpdated = recordLastUpdated;
+	}
+	
+	public BecomeTutor(Long tentativeTutorId) {
+		this.tentativeTutorId = tentativeTutorId;
+		this.applicationDate = new Date();
+		this.applicationDateMillis = new Date().getTime();
+		this.applicationStatus = "FRESH";
+		this.dateOfBirth = new Date();
+		this.dateOfBirthMillis = new Date().getTime();
+		this.contactNumber = "989898989898";
+		this.emailId = "abc@efb.com";
+		this.firstName = "Shantanu";
+		this.lastName = "Mukherjee";
+		this.gender = "01";
+		this.qualification = "02";
+		this.primaryProfession = "03";
+		this.transportMode = "02";
+		this.teachingExp = 5;
+		this.studentGrade = "01;02;03";
+		this.subjects = "01;02;03";
+		this.locations = "01;02;03";
+		this.preferredTimeToCall = "01;02;03";
+		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isContacted = "Y";
+		this.whoContacted = "abc";
+		this.contactedDate = new Date();
+		this.contactedDateMillis = new Date().getTime();
+		this.contactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isAuthenticationVerified = "Y";
+		this.whoVerified = "abc";
+		this.verificationDate = new Date();
+		this.verificationDateMillis = new Date().getTime();
+		this.verificationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isToBeRecontacted = "N";
+		this.whoSuggestedForRecontact = "abc";
+		this.suggestionDate = new Date();
+		this.suggestionDateMillis = new Date().getTime();
+		this.suggestionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.whoRecontacted = "abc";
+		this.recontactedDate = new Date();
+		this.recontactedDateMillis = new Date().getTime();
+		this.recontactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isSelected = "Y";
+		this.whoSelected = "abc";
+		this.selectionDate = new Date();
+		this.selectionDateMillis = new Date().getTime();
+		this.selectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.isRejected = "Y";
+		this.whoRejected = "abc";
+		this.rejectionDate = new Date();
+		this.rejectionDateMillis = new Date().getTime();
+		this.rejectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+		this.rejectionCount = 2;
+		this.reApplied = "Y";
+		this.reference = "02";
+		this.preferredTeachingType = "01;02";
+		this.previousApplicationDate = new Date();
+		this.previousApplicationDateMillis = new Date().getTime();
+		this.recordLastUpdated = new Date();
+		this.recordLastUpdatedMillis = new Date().getTime();
 	}
 
 	public Long getTentativeTutorId() {
@@ -657,6 +728,86 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.preferredTeachingType = preferredTeachingType;
 	}
 	
+	public Long getDateOfBirthMillis() {
+		return dateOfBirthMillis;
+	}
+
+	public void setDateOfBirthMillis(Long dateOfBirthMillis) {
+		this.dateOfBirthMillis = dateOfBirthMillis;
+	}
+
+	public Long getApplicationDateMillis() {
+		return applicationDateMillis;
+	}
+
+	public void setApplicationDateMillis(Long applicationDateMillis) {
+		this.applicationDateMillis = applicationDateMillis;
+	}
+
+	public Long getContactedDateMillis() {
+		return contactedDateMillis;
+	}
+
+	public void setContactedDateMillis(Long contactedDateMillis) {
+		this.contactedDateMillis = contactedDateMillis;
+	}
+
+	public Long getVerificationDateMillis() {
+		return verificationDateMillis;
+	}
+
+	public void setVerificationDateMillis(Long verificationDateMillis) {
+		this.verificationDateMillis = verificationDateMillis;
+	}
+
+	public Long getSuggestionDateMillis() {
+		return suggestionDateMillis;
+	}
+
+	public void setSuggestionDateMillis(Long suggestionDateMillis) {
+		this.suggestionDateMillis = suggestionDateMillis;
+	}
+
+	public Long getRecontactedDateMillis() {
+		return recontactedDateMillis;
+	}
+
+	public void setRecontactedDateMillis(Long recontactedDateMillis) {
+		this.recontactedDateMillis = recontactedDateMillis;
+	}
+
+	public Long getSelectionDateMillis() {
+		return selectionDateMillis;
+	}
+
+	public void setSelectionDateMillis(Long selectionDateMillis) {
+		this.selectionDateMillis = selectionDateMillis;
+	}
+
+	public Long getRejectionDateMillis() {
+		return rejectionDateMillis;
+	}
+
+	public void setRejectionDateMillis(Long rejectionDateMillis) {
+		this.rejectionDateMillis = rejectionDateMillis;
+	}
+
+	public Long getPreviousApplicationDateMillis() {
+		return previousApplicationDateMillis;
+	}
+
+	public void setPreviousApplicationDateMillis(Long previousApplicationDateMillis) {
+		this.previousApplicationDateMillis = previousApplicationDateMillis;
+	}
+
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);

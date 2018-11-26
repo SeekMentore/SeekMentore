@@ -154,7 +154,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		final Map<String, Object> restResponse = new HashMap<String, Object>();
 		doSecurity(request);
 		if (this.securityPassed) {
-			LoginUtils.logoutUserSession(request);
+			LoginUtils.logoutUserSession(request, response);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		} else {

@@ -3,9 +3,7 @@ package com.model.components;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.constants.components.SelectLookupConstants;
-
-public class TutorDocument implements Serializable, SelectLookupConstants {
+public class TutorDocument implements Serializable {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long documentId;
@@ -16,9 +14,22 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 	private String whoActed;
 	private String remarks;
 	private Date actionDate;
+	private Long actionDateMillis;
 	private byte[] content;
 	
 	public TutorDocument() {}
+	
+	public TutorDocument(Long documentId) {
+		this.documentId = documentId;
+		tutorId = 1L;
+		fsKey = "random key";
+		filename = "Fake file";
+		isApproved = documentId%2 == 0 ? "Y" : "N";
+		whoActed = "abcf";
+		remarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+		actionDate = new Date();
+		actionDateMillis = actionDate.getTime();			
+	}
 
 	public Long getDocumentId() {
 		return documentId;
@@ -90,5 +101,13 @@ public class TutorDocument implements Serializable, SelectLookupConstants {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public Long getActionDateMillis() {
+		return actionDateMillis;
+	}
+
+	public void setActionDateMillis(Long actionDateMillis) {
+		this.actionDateMillis = actionDateMillis;
 	}
 }

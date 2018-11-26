@@ -1,4 +1,4 @@
-package com.webservices.rest.components;
+package com.webservices.rest.components.old;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path(RestPathConstants.REST_SERVICE_PATH_ENQUIRY) 
-public class EnquiryRestService extends AbstractRestWebservice implements RestMethodConstants, EnquiryConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_ENQUIRY+"old") 
+public class EnquiryRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, EnquiryConstants {
 	
 	private Long customerId;
 	private Long enquiryId;
@@ -133,7 +133,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.enquiryId = enquiryObject.getEnquiryId();
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getEnquiryService().updateEnquiryDetails(enquiryObject, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().updateEnquiryDetails(enquiryObject, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -244,7 +244,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.tutorMapperId = tutorMapperObject.getTutorMapperId();
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getEnquiryService().updateTutorMapperDetails(tutorMapperObject, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().updateTutorMapperDetails(tutorMapperObject, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -263,7 +263,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		this.scheduledDemoDateAndTime = new Date(demoTimeInMillis);
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getEnquiryService().scheduleDemo(tutorMapperId, scheduledDemoDateAndTime, getLoggedInUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getEnquiryService().scheduleDemo(tutorMapperId, scheduledDemoDateAndTime, getActiveUser(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
 		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
@@ -331,7 +331,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.customerId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -348,7 +348,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.enquiryId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -372,7 +372,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.selectedEligibleTutorIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -389,7 +389,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.selectedTutorMappedIdSemicolonSeparatedList);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -406,7 +406,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorMapperId);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
@@ -430,7 +430,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
-					this.methodName + LINE_BREAK + getLoggedInUserIdAndTypeForPrinting(request), 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorMapperId + LINE_BREAK + this.scheduledDemoDateAndTime);
 			getCommonsService().feedErrorRecord(errorPacket);
 		}

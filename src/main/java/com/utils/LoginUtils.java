@@ -37,32 +37,56 @@ public class LoginUtils implements LoginConstants {
 		logonTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
 		getLoginService().feedLogonTracker(logonTracker);
 		createTokensForNewSession(httpRequest, httpResponse, user);
+		createNewUserSession(httpRequest, httpResponse, user);
 	}
 	
 	private static void createTokensForNewSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final User user) throws Exception {
 		final String userObjectJSONString = JSONUtils.convertObjToJSONString(ApplicationUtils.returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(user), USER_OBJECT);
 		final String userAuthToken = new String(ApplicationUtils.generateBase64EncodedData(SecurityUtil.encrypt(userObjectJSONString).getBytes()));
 		final String userTypeToken = new String(ApplicationUtils.generateBase64EncodedData(SecurityUtil.encrypt(user.getUserType()).getBytes()));
-		final NewCookie userAuthCookie = new NewCookie("userAuthToken", userAuthToken, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
-		final NewCookie userTypeCookie = new NewCookie("userTypeToken", userTypeToken, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
+		final NewCookie userAuthCookie = new NewCookie(USER_AUTH_TOKEN, userAuthToken, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
+		final NewCookie userTypeCookie = new NewCookie(USER_TYPE_TOKEN, userTypeToken, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
 		httpResponse.addHeader("Set-Cookie", userAuthCookie.toString() + "; HTTPOnly");
 		httpResponse.addHeader("Set-Cookie", userTypeCookie.toString() + "; HTTPOnly");
-		httpResponse.addHeader("USER-AUTH", userAuthToken);
-		httpResponse.addHeader("USER-TYPE", userTypeToken);
-		httpRequest.setAttribute("userAuthToken", userAuthToken);
-		httpRequest.setAttribute("userTypeToken", userTypeToken);
+		httpResponse.addHeader(USER_AUTH_HEADER, userAuthToken);
+		httpResponse.addHeader(USER_TYPE_HEADER, userTypeToken);
+		httpRequest.setAttribute(USER_AUTH_TOKEN, userAuthToken);
+		httpRequest.setAttribute(USER_TYPE_TOKEN, userTypeToken);
+	}
+	
+	private static void createNewUserSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final User user) {
+		final HttpSession session = httpRequest.getSession();
+		session.setAttribute(USER_OBJECT, user);
+		session.setAttribute(USER_TYPE, user.getUserType());
+	}
+	
+	private static void deleteTokens(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) {
+		final NewCookie userAuthCookie = new NewCookie(USER_AUTH_TOKEN, EMPTY_STRING, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
+		final NewCookie userTypeCookie = new NewCookie(USER_TYPE_TOKEN, EMPTY_STRING, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
+		httpResponse.addHeader("Set-Cookie", userAuthCookie.toString() + "; HTTPOnly");
+		httpResponse.addHeader("Set-Cookie", userTypeCookie.toString() + "; HTTPOnly");
+		httpResponse.addHeader(USER_AUTH_HEADER, EMPTY_STRING);
+		httpResponse.addHeader(USER_TYPE_HEADER, EMPTY_STRING);
+		httpRequest.setAttribute(USER_AUTH_TOKEN, EMPTY_STRING);
+		httpRequest.setAttribute(USER_TYPE_TOKEN, EMPTY_STRING);
+	}
+	
+	private static void deleteSessions(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) {
+		final HttpSession session = httpRequest.getSession();
+		session.setAttribute(USER_OBJECT, null);
+		session.setAttribute(USER_TYPE, null);
 	}
 	
 	public static String getUserAuthToken(final HttpServletRequest httpRequest) {
-		String userAuthToken = httpRequest.getParameter("user-auth");
+		String userAuthToken = httpRequest.getParameter(USER_AUTH_PARAM);
 		if (userAuthToken == null) {
-			userAuthToken = (String)httpRequest.getHeader("USER-AUTH");
+			userAuthToken = (String)httpRequest.getHeader(USER_AUTH_HEADER);
 			if (userAuthToken == null) {
-				final Cookie userAuthCookie = HttpRequestUtil.getCookie(httpRequest, "userAuthToken");
+				final Cookie userAuthCookie = HttpRequestUtil.getCookie(httpRequest, USER_AUTH_TOKEN);
 				if (userAuthCookie != null) {
 					userAuthToken = userAuthCookie.getValue().toString();
 				} else {
-					userAuthToken = (String) httpRequest.getAttribute("userAuthToken");
+					userAuthToken = (String) httpRequest.getAttribute(USER_AUTH_TOKEN);
 				}
 			}
 		}
@@ -70,15 +94,15 @@ public class LoginUtils implements LoginConstants {
 	}
 	
 	public static String getUserTypeToken(final HttpServletRequest httpRequest) {
-		String userTypeToken = httpRequest.getParameter("user-type");
+		String userTypeToken = httpRequest.getParameter(USER_TYPE_PARAM);
 		if (userTypeToken == null) {
-			userTypeToken = (String)httpRequest.getHeader("USER-TYPE");
+			userTypeToken = (String)httpRequest.getHeader(USER_TYPE_HEADER);
 			if (userTypeToken == null) {
-				final Cookie userTypeCookie = HttpRequestUtil.getCookie(httpRequest, "userTypeToken");
+				final Cookie userTypeCookie = HttpRequestUtil.getCookie(httpRequest, USER_TYPE_TOKEN);
 				if (userTypeCookie != null) {
 					userTypeToken = userTypeCookie.getValue().toString();
 				} else {
-					userTypeToken = (String) httpRequest.getAttribute("userTypeToken");
+					userTypeToken = (String) httpRequest.getAttribute(USER_TYPE_TOKEN);
 				}
 			}
 		}
@@ -109,6 +133,10 @@ public class LoginUtils implements LoginConstants {
 		return user;
 	}
 	
+	public static String getUserTypeFromUserTypeToken(final String usertypeToken) throws Exception {
+		return SecurityUtil.decrypt(new String(ApplicationUtils.generateBase64DecodedData(usertypeToken.getBytes())));
+	}
+	
 	private static <T extends Object> T getUserTypeObject(final HttpServletRequest httpRequest, final Class<T> type) throws Exception {
 		final User user = getUserFromSession(httpRequest);
 		switch(user.getUserType()) {
@@ -134,16 +162,39 @@ public class LoginUtils implements LoginConstants {
 	}
 	
 	public static User getUserFromSession(final HttpServletRequest httpRequest) {
+		User user = null;
+		final HttpSession session = httpRequest.getSession();
 		try {
-			return getUserFromUserAuthToken(getUserAuthToken(httpRequest));
+			user = (User)session.getAttribute(USER_OBJECT);
 		} catch (Exception e) {
-			return null;
+			LoggerUtils.logError("No user found in Session; Searching in token");
 		}
+		if (null == user) {
+			try {
+				user = getUserFromUserAuthToken(getUserAuthToken(httpRequest));
+			} catch (Exception e) {
+				LoggerUtils.logError("No user found in Token;");
+			}
+		}
+		return user;
 	}
 	
 	public static String getUserTypeFromSession(final HttpServletRequest httpRequest) {
+		String usertype = null;
 		final HttpSession session = httpRequest.getSession();
-		return (String)session.getAttribute(USER_TYPE);
+		try {
+			usertype = (String)session.getAttribute(USER_TYPE);
+		} catch (Exception e) {
+			LoggerUtils.logError("No user-type found in Session; Searching in token");
+		}
+		if (null == usertype) {
+			try {
+				usertype = getUserTypeFromUserTypeToken(getUserTypeToken(httpRequest));
+			} catch (Exception e) {
+				LoggerUtils.logError("No user-type found in Token");
+			}
+		}
+		return usertype;
 	}
 	
 	public static <T extends Object> T getUserTypeObjectFromSession(final HttpServletRequest httpRequest, Class<T> type) throws Exception {
@@ -187,9 +238,11 @@ public class LoginUtils implements LoginConstants {
 		}
 	}
 	
-	public static void logoutUserSession(final HttpServletRequest httpRequest) {
+	public static void logoutUserSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse) {
 		final HttpSession session = httpRequest.getSession();
+		deleteSessions(httpRequest, httpResponse);
 		session.invalidate();
+		deleteTokens(httpRequest, httpResponse);
 	}
 
 	public static LoginService getLoginService() {

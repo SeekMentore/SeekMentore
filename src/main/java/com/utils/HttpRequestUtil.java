@@ -3,13 +3,9 @@ package com.utils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-//import com.omni.unity.session.common.Constants;
-
 /**
  * Utility class for extracting data from HttpServletRequest objects.
  * 
- * @author bapple
- *
  */
 public class HttpRequestUtil {
 	

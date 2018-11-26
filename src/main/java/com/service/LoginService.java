@@ -109,7 +109,7 @@ public class LoginService implements LoginConstants {
 				pageAccessTypes.add("admin");
 				pageAccessTypes.add("sales");
 				pageAccessTypes.add("support");
-				pageAccessTypes.add("super-admin");
+				pageAccessTypes.add("superadmin");
 				break;
 			}
 			case USER_TYPE_TUTOR : {
