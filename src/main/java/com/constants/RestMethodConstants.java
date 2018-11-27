@@ -83,8 +83,19 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DEMO_FAILURE = "/demoFailure";
 	String REST_METHOD_NAME_CANCEL_DEMO = "/cancelDemo";
 	String REST_METHOD_NAME_RESCHEDULE_DEMO = "/rescheduleDemo";
-	// Send Email
-	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
+	// Tutor REST methods
+	String REST_METHOD_NAME_UPLOAD_DOCUMENTS = "/uploadDocuments";
+	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
+	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
+	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
+	//Customer Rest methods
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER = "/getDropdownListDataSubscribedCustomer";
+	String REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD = "/loadSubscribedCustomerRecord";
+	String REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS = "/updateSubscribedCustomerDetails";
+	String REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
+	
+	/************************************************************************************************************/
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
 	String REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS = "/checkUIpathAccess";
@@ -98,16 +109,8 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO = "/getLoginBasicInfo";
 	String REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES = "/getEmailTemplates";
 	String REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE = "/loadEmailTemplate";
-	// Tutor REST methods
-	String REST_METHOD_NAME_UPLOAD_DOCUMENTS = "/uploadDocuments";
-	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
-	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
-	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
-	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
-	//Customer Rest methods
-	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER = "/getDropdownListDataSubscribedCustomer";
-	String REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD = "/loadSubscribedCustomerRecord";
-	String REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS = "/updateSubscribedCustomerDetails";
-	String REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
+	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
+	// Admin REST methods
+	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
 
 }

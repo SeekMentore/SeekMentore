@@ -143,6 +143,131 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
+	
+	
+	/************/
+	/*@Path("/swhxue")
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String swhxue (
+			@FormParam("filters") final String filters,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("swhxue");
+		LoggerUtils.logOnConsole("filters " + filters);
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/swhaj")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String swhaj (
+			final GridComponent gridComponent,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("swhaj");
+		LoggerUtils.logOnConsole("gridComponent-filters " + gridComponent.getFilters());
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/swohxue")
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String swohxue (
+			@FormParam("filters") final String filters,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("swohxue");
+		LoggerUtils.logOnConsole("filters " + filters);
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/swohaj")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String swohaj (
+			final GridComponent gridComponent,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("swohaj");
+		LoggerUtils.logOnConsole("gridComponent-filters " + gridComponent.getFilters());
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	
+	@Path("/uwhxue")
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String uwhxue (
+			@FormParam("filters") final String filters,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("uwhxue");
+		LoggerUtils.logOnConsole("filters " + filters);
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/uwhaj")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String uwhaj (
+			final GridComponent gridComponent,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("uwhaj");
+		LoggerUtils.logOnConsole("gridComponent-filters " + gridComponent.getFilters());
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/uwohxue")
+	@Consumes("application/x-www-form-urlencoded")
+	@POST
+	public String uwohxue (
+			@FormParam("filters") final String filters,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("uwohxue");
+		LoggerUtils.logOnConsole("filters " + filters);
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path("/uwohaj")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@POST
+	public String uwohaj (
+			final GridComponent gridComponent,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		LoggerUtils.logOnConsole("uwohaj");
+		LoggerUtils.logOnConsole("gridComponent-filters " + gridComponent.getFilters());
+		final Map<String, Object> restResponse = new HashMap<String, Object>();
+		user = getActiveUser(request);
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(user, "USER_OBJ"));
+		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}*/
+	/************/
+	
 	@Path(REST_METHOD_NAME_TO_LOGOUT)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST

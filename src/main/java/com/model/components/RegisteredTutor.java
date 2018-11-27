@@ -6,8 +6,9 @@ import java.util.List;
 
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
 
-public class RegisteredTutor implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
+public class RegisteredTutor extends GridComponentObject implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long tutorId;
@@ -312,5 +313,34 @@ public class RegisteredTutor implements Serializable, RegisteredTutorConstants, 
 
 	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		switch(mappingProperty) {
+			case "tutorId" : return "TUTOR_ID";
+			case "name" : return "NAME";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "tentativeTutorId" : return "TENTATIVE_TUTOR_ID";
+			case "dateOfBirth" : return "DATE_OF_BIRTH";
+			case "gender" : return "GENDER";
+			case "qualification" : return "QUALIFICATION";
+			case "primaryProfession" : return "PRIMARY_PROFESSION";
+			case "transportMode" : return "TRANSPORT_MODE";
+			case "teachingExp" : return "TEACHING_EXP";
+			case "interestedStudentGrades" : return "INTERESTED_STUDENT_GRADES";
+			case "interestedSubjects" : return "INTERESTED_SUBJECTS";
+			case "comfortableLocations" : return "COMFORTABLE_LOCATIONS";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
+			case "userId" : return "USER_ID";
+			case "recordLastUpdated" : return "RECORD_LAST_UPDATED";
+			case "recordLastUpdatedMillis" : return "TUTOR_ID";
+			case "updatedBy" : return "UPDATED_BY";
+			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
+			case "gridRecordDataTotalRecords" : return "TOTAL_RECORDS";
+		}
+		return "";
 	}
 }

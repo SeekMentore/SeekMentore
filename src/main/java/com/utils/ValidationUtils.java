@@ -15,6 +15,29 @@ import com.utils.context.AppContext;
 
 public class ValidationUtils implements ValidationConstants {
 	
+	public static Boolean checkObjectAvailability(final Object object) {
+	    if (null != object) {
+	      return true;
+	    }
+	    return false;
+	}
+	
+	public static Boolean checkStringAvailability(final String stringObject) {
+	    if (checkObjectAvailability(stringObject)) {
+	      if (!"".equals(stringObject.trim())) {
+	        return true;
+	      }
+	    }
+	    return false;
+	}
+	
+	public static Boolean checkNonEmptyList(final List<?> dataList) {
+		if (checkObjectAvailability(dataList)) {
+			return !dataList.isEmpty();
+		}
+		return false;
+	}
+	
 	public static boolean validatePlainNotNullAndEmptyTextString(final Object text) {
 		if (null != text && !EMPTY_STRING.equals(text.toString()))
 			return true;

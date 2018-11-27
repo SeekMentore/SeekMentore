@@ -24,7 +24,6 @@ import com.model.components.DemoTracker;
 import com.model.components.Enquiries;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorMapper;
-import com.model.gridcomponent.GridComponent;
 import com.utils.JSONUtils;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -34,10 +33,14 @@ import com.webservices.rest.AbstractRestWebservice;
 public class SalesRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
 	@Path("/pendingEnquiriesList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String pendingEnquiriesList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -61,10 +64,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/completedEnquiriesList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String completedEnquiriesList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -88,10 +95,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/abortedEnquiriesList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String abortedEnquiriesList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -115,7 +126,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/pendingEnquiryCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String pendingEnquiryCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -144,10 +155,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/currentCustomerAllPendingEnquiriesList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentCustomerAllPendingEnquiriesList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -171,10 +186,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/toBeMappedEnquiriesGridList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String toBeMappedEnquiriesGridList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -198,7 +217,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mapTutorToEnquiryCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String mapTutorToEnquiryCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -212,10 +231,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/allMappingEligibleTutorsList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String allMappingEligibleTutorsList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -271,10 +294,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/allMappedTutorsList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String allMappedTutorsList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -328,7 +355,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mappedTutorCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String mappedTutorCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -357,10 +384,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/allDemoReadyMappedTutorsList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String allDemoReadyMappedTutorsList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -384,7 +415,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mappedTutorCheckScheduleDemoAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String mappedTutorCheckScheduleDemoAccess (
 			@Context final HttpServletRequest request,
@@ -398,10 +429,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/currentTutorAllMappingList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentTutorAllMappingList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -425,10 +460,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/currentTutorAllScheduledDemoList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentTutorAllScheduledDemoList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -467,10 +506,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/scheduledDemoList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String scheduledDemoList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -494,10 +537,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/reScheduledDemoList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String reScheduledDemoList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -521,10 +568,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/successfulDemoList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String successfulDemoList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -548,10 +599,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/failedDemoList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String failedDemoList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -575,10 +630,14 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/cancelledDemoGridList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String cancelledDemoGridList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -602,7 +661,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/demoTrackerModifyCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String demoTrackerModifyCheckDataAccess (
 			@Context final HttpServletRequest request,

@@ -12,11 +12,11 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -24,7 +24,13 @@ import com.constants.components.AdminConstants;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.gridcomponent.GridComponent;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.AdminService;
+import com.service.components.CommonsService;
+import com.service.components.TutorService;
+import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -32,35 +38,36 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_ADMIN) 
 public class AdminRestService extends AbstractRestWebservice implements RestMethodConstants, AdminConstants {
 	
-	@Path("/registeredTutorsList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Path(REST_METHOD_NAME_REGISTERED_TUTORS_LIST)
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String registeredTutorsList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<RegisteredTutor> data = new LinkedList<RegisteredTutor>();
-		data.add(new RegisteredTutor(1L));
-		data.add(new RegisteredTutor(2L));
-		data.add(new RegisteredTutor(3L));
-		data.add(new RegisteredTutor(4L));
-		data.add(new RegisteredTutor(5L));
-		data.add(new RegisteredTutor(6L));
-		data.add(new RegisteredTutor(7L));
-		data.add(new RegisteredTutor(8L));
-		data.add(new RegisteredTutor(9L));
-		data.add(new RegisteredTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REGISTERED_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorsList(gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(registeredTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/registeredTutorCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String registeredTutorCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -95,10 +102,14 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/subscribedCustomersList")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String subscribedCustomersList (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -114,15 +125,15 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		data.add(new SubscribedCustomer(8L));
 		data.add(new SubscribedCustomer(9L));
 		data.add(new SubscribedCustomer(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
+		restresponse.put(GRID_COMPONENT_RECORD_DATA, data);
+		restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, data.size());
 		restresponse.put("success", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path("/subscribedCustomerCheckDataAccess")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String subscribedCustomerCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -151,10 +162,35 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
+	
+	public AdminService getAdminService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
+	}
+	
+	public TutorService getTutorService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
+	}
+	
+	public CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
 
 	@Override
 	protected void doSecurity(HttpServletRequest request) throws Exception {
-		// TODO Auto-generated method stub
+		this.request = request;
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_REGISTERED_TUTORS_LIST : {
+				this.securityPassed = true;
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
 }

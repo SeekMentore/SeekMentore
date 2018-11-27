@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,8 +21,8 @@ import com.constants.ScopeConstants;
 import com.model.components.AlertReminder;
 import com.model.components.Task;
 import com.model.components.Workflow;
-import com.model.gridcomponent.GridComponent;
 import com.utils.JSONUtils;
+import com.utils.LoggerUtils;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -31,10 +31,14 @@ import com.webservices.rest.AbstractRestWebservice;
 public class EmployeeRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
 	@Path("/alertsRemindersGrid")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String alertsRemindersGrid (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -58,10 +62,14 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path("/tasksGrid")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String tasksGrid (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -85,10 +93,14 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path("/workflowsGrid")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String workflowsGrid (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -108,6 +120,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 		restResponse.put("totalRecords", data.size());
 		restResponse.put("success", true);
 		restResponse.put("message", "");
+		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(getActiveUser(request), "USER_OBJ"));
 		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	

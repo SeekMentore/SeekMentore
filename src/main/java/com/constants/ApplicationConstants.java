@@ -21,6 +21,7 @@ public interface ApplicationConstants {
 	String INVERTED_COMMA = "\"";
 	String ASSIGNMENT_OPERATOR = "=";
 	String AMPERSAND_OPERATOR = "&";
+	String APOSTROPHE = "'";
 	
 	String YES = "Y";
 	String NO = "N";

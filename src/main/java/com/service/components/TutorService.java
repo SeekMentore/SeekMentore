@@ -24,12 +24,14 @@ import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
+import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
+import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
@@ -387,5 +389,10 @@ public class TutorService implements TutorConstants {
 	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
+	}
+	
+	/***********************************************************************************************************************************/
+	public List<RegisteredTutor> getRegisteredTutorsList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM REGISTERED_TUTOR", null, null, null, null, gridComponent, RegisteredTutor.class.newInstance()), new RegisteredTutorRowMapper());
 	}
 }

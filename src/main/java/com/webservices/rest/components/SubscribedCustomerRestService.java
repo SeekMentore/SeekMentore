@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Component;
 import com.constants.RestMethodConstants;
 import com.constants.ScopeConstants;
 import com.model.components.SubscriptionPackage;
-import com.model.gridcomponent.GridComponent;
 import com.utils.JSONUtils;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -31,10 +31,14 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	
 	
 	@Path("/currentPackages")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentPackages (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -58,10 +62,14 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	}
 	
 	@Path("/historyPackages")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String historyPackages (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {

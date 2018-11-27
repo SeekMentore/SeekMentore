@@ -25,7 +25,6 @@ import com.constants.ScopeConstants;
 import com.model.components.BankAccount;
 import com.model.components.SubscriptionPackage;
 import com.model.components.TutorDocument;
-import com.model.gridcomponent.GridComponent;
 import com.utils.JSONUtils;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -36,10 +35,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	
 	
 	@Path("/uploadedDocuments")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String uploadedDocuments (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -63,10 +66,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	}
 	
 	@Path("/bankDetails")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String bankDetails (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -90,10 +97,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	}
 	
 	@Path("/currentPackages")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentPackages (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -117,10 +128,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	}
 	
 	@Path("/historyPackages")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String historyPackages (
-			final GridComponent gridComponent,
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {

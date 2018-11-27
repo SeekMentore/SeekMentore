@@ -12,6 +12,7 @@ public class Filter implements Serializable {
 	private String type;
 	private String mapping;
 	private String columnId;
+	private Boolean multiList;
 	private Integer lessThan;
 	private Integer equalTo;
 	private Integer greaterThan;
@@ -27,11 +28,12 @@ public class Filter implements Serializable {
 
 	public Filter() {}
 	
-	public Filter(String id, String type, String mapping, String columnId) {
+	public Filter(String id, String type, String mapping, String columnId, Boolean multiList) {
 		this.id = id;
 		this.type = type;
 		this.mapping = mapping;
 		this.columnId = columnId;
+		this.multiList = multiList;
 	}
 
 	public String getId() {
@@ -190,5 +192,13 @@ public class Filter implements Serializable {
 			}
 		}
 		return  output;
+	}
+
+	public Boolean getMultiList() {
+		return multiList;
+	}
+
+	public void setMultiList(Boolean multiList) {
+		this.multiList = multiList;
 	}
 }
