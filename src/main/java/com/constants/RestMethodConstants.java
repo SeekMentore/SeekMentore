@@ -112,5 +112,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
 	// Admin REST methods
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
+	String REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
 
 }

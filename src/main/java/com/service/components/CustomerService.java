@@ -19,9 +19,11 @@ import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.FindTutor;
+import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -211,6 +213,9 @@ import com.utils.VelocityUtils;
 				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes),
 				null);
 	}
-
 	
+	/************************************************************************************************************/
+	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM SUBSCRIBED_CUSTOMER", null, null, null, null, gridComponent, SubscribedCustomer.class.newInstance()), new SubscribedCustomerRowMapper());
+	}
 }

@@ -341,6 +341,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
 			case "gridRecordDataTotalRecords" : return "TOTAL_RECORDS";
 		}
-		return "";
+		return EMPTY_STRING;
 	}
 }

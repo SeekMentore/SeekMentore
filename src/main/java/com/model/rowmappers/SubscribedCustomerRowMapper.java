@@ -14,20 +14,21 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 	@Override 
 	public SubscribedCustomer mapRow(ResultSet row, int rowNum) throws SQLException {
 		final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
-		subscribedCustomer.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, "CUSTOMER_ID", Long.class));
-		subscribedCustomer.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, "NAME", String.class));
-		subscribedCustomer.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, "CONTACT_NUMBER", String.class));
-		subscribedCustomer.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, "EMAIL_ID", String.class));
-		subscribedCustomer.setEnquiryID(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENQUIRY_ID", Long.class));
-		subscribedCustomer.setStudentGrades(ExceptionUtils.exceptionHandlerForRowMapper(row, "STUDENT_GRADE", String.class));
-		subscribedCustomer.setInterestedSubjects(ExceptionUtils.exceptionHandlerForRowMapper(row, "SUBJECTS", String.class));
-		subscribedCustomer.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOCATION", String.class));
-		subscribedCustomer.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDITIONAL_DETAILS", String.class));
-		subscribedCustomer.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADDRESS_DETAILS", String.class));
-		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, "RECORD_LAST_UPDATED", Timestamp.class));
-		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
-		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD", String.class));
-		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, "UPDATED_BY", String.class));
+		subscribedCustomer.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("customerId"), Long.class));
+		subscribedCustomer.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("name"), String.class));
+		subscribedCustomer.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("contactNumber"), String.class));
+		subscribedCustomer.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("emailId"), String.class));
+		subscribedCustomer.setEnquiryID(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("enquiryID"), Long.class));
+		subscribedCustomer.setStudentGrades(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("studentGrades"), String.class));
+		subscribedCustomer.setInterestedSubjects(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("interestedSubjects"), String.class));
+		subscribedCustomer.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("location"), String.class));
+		subscribedCustomer.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("additionalDetails"), String.class));
+		subscribedCustomer.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("addressDetails"), String.class));
+		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("recordLastUpdated"), Timestamp.class));
+		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("userId"), String.class));
+		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("encryptedPassword"), String.class));
+		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedBy"), String.class));
+		subscribedCustomer.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("gridRecordDataTotalRecords"), Integer.class));
 		return subscribedCustomer;
 	}
 }

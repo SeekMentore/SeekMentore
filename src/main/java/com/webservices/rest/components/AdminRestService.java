@@ -1,7 +1,6 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,7 @@ import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
 import com.service.components.TutorService;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
@@ -101,7 +101,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/subscribedCustomersList")
+	@Path(REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String subscribedCustomersList (
@@ -113,23 +113,20 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribedCustomer> data = new LinkedList<SubscribedCustomer>();
-		data.add(new SubscribedCustomer(1L));
-		data.add(new SubscribedCustomer(2L));
-		data.add(new SubscribedCustomer(3L));
-		data.add(new SubscribedCustomer(4L));
-		data.add(new SubscribedCustomer(5L));
-		data.add(new SubscribedCustomer(6L));
-		data.add(new SubscribedCustomer(7L));
-		data.add(new SubscribedCustomer(8L));
-		data.add(new SubscribedCustomer(9L));
-		data.add(new SubscribedCustomer(10L));		
-		restresponse.put(GRID_COMPONENT_RECORD_DATA, data);
-		restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribedCustomer> subscribedCustomersList = getCustomerService().getSubscribedCustomersList(gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribedCustomersList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribedCustomersList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/subscribedCustomerCheckDataAccess")
@@ -171,6 +168,10 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
 	
+	public CustomerService getCustomerService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE, CustomerService.class);
+	}
+	
 	public CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
@@ -185,7 +186,8 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_REGISTERED_TUTORS_LIST : {
+			case REST_METHOD_NAME_REGISTERED_TUTORS_LIST :
+			case REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST : {
 				this.securityPassed = true;
 				break;
 			}

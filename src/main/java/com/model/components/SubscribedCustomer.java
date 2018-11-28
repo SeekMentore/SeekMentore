@@ -5,8 +5,9 @@ import java.util.Date;
 
 import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
 
-public class SubscribedCustomer implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class SubscribedCustomer extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long customerId;
@@ -27,24 +28,6 @@ public class SubscribedCustomer implements Serializable, CustomerConstants, Appl
 	
 	public SubscribedCustomer() {}
 	
-	public SubscribedCustomer(Long customerId) {
-		this.customerId = customerId;
-		name = "shantanu mukherjee";
-		contactNumber = "9739936482";
-		emailId = "abc@efg.com";
-		enquiryID = 5L;
-		studentGrades = "01;02;03";
-		interestedSubjects = "02;03;04";
-		location = "03";
-		addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		encryptedPassword = "";
-		userId = "abc";
-		recordLastUpdated = new Date();
-		recordLastUpdatedMillis = recordLastUpdated.getTime();
-		updatedBy = "abcf";
-	}
-
 	public SubscribedCustomer getACopy() {
 		final SubscribedCustomer newInstance = new SubscribedCustomer();
 		newInstance.customerId = customerId;
@@ -226,5 +209,26 @@ public class SubscribedCustomer implements Serializable, CustomerConstants, Appl
 
 	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		switch(mappingProperty) {
+			case "customerId" : return "CUSTOMER_ID";
+			case "name" : return "NAME";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "enquiryID" : return "ENQUIRY_ID";
+			case "studentGrades" : return "STUDENT_GRADE";
+			case "interestedSubjects" : return "SUBJECTS";
+			case "location" : return "LOCATION";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "recordLastUpdated" : return "RECORD_LAST_UPDATED";
+			case "userId" : return "USER_ID";
+			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
 	}
 }
