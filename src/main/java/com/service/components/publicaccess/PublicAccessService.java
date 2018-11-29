@@ -61,7 +61,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		} else if (application instanceof SubscribeWithUs) {
 			handleSubscribeWithUsApplication(application, response, currentTimestamp.getTime());
 		} else if (application instanceof SubmitQuery) {
-			handleSubmitQueryApplication(application, response, currentTimestamp);
+			handleSubmitQueryApplication(application, response, currentTimestamp.getTime());
 		} else {
 			response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, true);
 			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -282,12 +282,12 @@ public class PublicAccessService implements PublicAccessConstants {
 	private void handleSubmitQueryApplication (
 			final PublicApplication application, 
 			final Map<String, Object> response, 
-			final Date currentTimestamp
+			final Long currentTimestampMillis
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBMIT_QUERY);
 		final SubmitQuery submitQueryApplication = (SubmitQuery) application;
-		submitQueryApplication.setRecordLastUpdated(currentTimestamp);
+		submitQueryApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check contact number in system for Registered Tutor
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", submitQueryApplication.getEmailId());
@@ -306,11 +306,11 @@ public class PublicAccessService implements PublicAccessConstants {
 		} else {
 			submitQueryApplication.setSubscribedCustomer(NO);
 		}
-		submitQueryApplication.setQueryRequestedDate(currentTimestamp);
+		submitQueryApplication.setQueryRequestedDateMillis(currentTimestampMillis);
 		submitQueryApplication.setQueryStatus(APPLICATION_STATUS_FRESH);
 		submitQueryApplication.setIsContacted(NO);
 		submitQueryApplication.setWhoContacted(null);
-		submitQueryApplication.setContactedDate(null);
+		submitQueryApplication.setContactedDateMillis(null);
 		submitQueryApplication.setQueryResponse(null);
 		submitQueryApplication.setNotAnswered(null);
 		submitQueryApplication.setNotAnsweredReason(null);

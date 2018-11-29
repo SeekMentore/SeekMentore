@@ -2,7 +2,6 @@ package com.webservices.rest.components;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +24,13 @@ import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.TutorConstants;
-import com.model.components.BankAccount;
+import com.model.components.BankDetail;
 import com.model.components.SubscriptionPackage;
 import com.model.components.TutorDocument;
 import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
+import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.GridComponentUtils;
@@ -75,7 +75,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path("/bankDetails")
+	@Path(REST_METHOD_NAME_BANK_DETAILS)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String bankDetails (
@@ -87,26 +87,24 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BankAccount> data = new LinkedList<BankAccount>();
-		data.add(new BankAccount(1L));
-		data.add(new BankAccount(2L));
-		data.add(new BankAccount(3L));
-		data.add(new BankAccount(4L));
-		data.add(new BankAccount(5L));
-		data.add(new BankAccount(6L));
-		data.add(new BankAccount(7L));
-		data.add(new BankAccount(8L));
-		data.add(new BankAccount(9L));
-		data.add(new BankAccount(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_BANK_DETAILS;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BankDetail.class);
+		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BankDetail> bankDetailsList = getTutorService().getBankDetails(tutorId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, bankDetailsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(bankDetailsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/currentPackages")
+	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentPackages (
@@ -118,26 +116,24 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscriptionPackage> data = new LinkedList<SubscriptionPackage>();
-		data.add(new SubscriptionPackage(1L));
-		data.add(new SubscriptionPackage(2L));
-		data.add(new SubscriptionPackage(3L));
-		data.add(new SubscriptionPackage(4L));
-		data.add(new SubscriptionPackage(5L));
-		data.add(new SubscriptionPackage(6L));
-		data.add(new SubscriptionPackage(7L));
-		data.add(new SubscriptionPackage(8L));
-		data.add(new SubscriptionPackage(9L));
-		data.add(new SubscriptionPackage(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGES;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_PACKAGES, tutorId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/historyPackages")
+	@Path(REST_METHOD_NAME_HISTORY_PACKAGES)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String historyPackages (
@@ -149,23 +145,21 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscriptionPackage> data = new LinkedList<SubscriptionPackage>();
-		data.add(new SubscriptionPackage(1L));
-		data.add(new SubscriptionPackage(2L));
-		data.add(new SubscriptionPackage(3L));
-		data.add(new SubscriptionPackage(4L));
-		data.add(new SubscriptionPackage(5L));
-		data.add(new SubscriptionPackage(6L));
-		data.add(new SubscriptionPackage(7L));
-		data.add(new SubscriptionPackage(8L));
-		data.add(new SubscriptionPackage(9L));
-		data.add(new SubscriptionPackage(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGES;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_PACKAGES, tutorId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/approveTutorDocument")
@@ -347,6 +341,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
 	
+	public SubscriptionPackageService getSubscriptionPackageService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE, SubscriptionPackageService.class);
+	}
+	
 	public CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
@@ -361,15 +359,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_UPLOADED_DOCUMENTS : {
-				handleUploadedDocumentsGridView();
+			case REST_METHOD_NAME_UPLOADED_DOCUMENTS : 
+			case REST_METHOD_NAME_BANK_DETAILS :
+			case REST_METHOD_NAME_CURRENT_PACKAGES : 
+			case REST_METHOD_NAME_HISTORY_PACKAGES :{
+				handleSelectedTutorDataGridView();
 				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleUploadedDocumentsGridView() throws Exception {
+	private void handleSelectedTutorDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
 			ApplicationUtils.appendMessageInMapAttribute(

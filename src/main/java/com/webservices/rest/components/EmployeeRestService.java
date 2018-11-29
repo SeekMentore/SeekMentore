@@ -1,7 +1,6 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,21 +15,28 @@ import javax.ws.rs.core.Context;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.model.components.AlertReminder;
 import com.model.components.Task;
 import com.model.components.Workflow;
+import com.model.gridcomponent.GridComponent;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.CommonsService;
+import com.service.components.NotificationService;
+import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
-import com.utils.LoggerUtils;
+import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path("/employee") 
+@Path(RestPathConstants.REST_SERVICE_PATH_EMPLOYEE) 
 public class EmployeeRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
-	@Path("/alertsRemindersGrid")
+	@Path(REST_METHOD_NAME_ALERT_REMINDER_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String alertsRemindersGrid (
@@ -42,26 +48,23 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		final Map<String, Object> restResponse = new HashMap<String, Object>();
-		List<AlertReminder> data = new LinkedList<AlertReminder>();
-		data.add(new AlertReminder(1L));
-		data.add(new AlertReminder(2L));
-		data.add(new AlertReminder(3L));
-		data.add(new AlertReminder(4L));
-		data.add(new AlertReminder(5L));
-		data.add(new AlertReminder(6L));
-		data.add(new AlertReminder(7L));
-		data.add(new AlertReminder(8L));
-		data.add(new AlertReminder(9L));
-		data.add(new AlertReminder(10L));		
-		restResponse.put("data", data);
-		restResponse.put("totalRecords", data.size());
-		restResponse.put("success", true);
-		restResponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_ALERT_REMINDER_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, AlertReminder.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<AlertReminder> alertReminderList = getNotificationService().getAlertAndReminderList(getActiveUserId(request), gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, alertReminderList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(alertReminderList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/tasksGrid")
+	@Path(REST_METHOD_NAME_TASK_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String tasksGrid (
@@ -73,26 +76,23 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		final Map<String, Object> restResponse = new HashMap<String, Object>();
-		List<Task> data = new LinkedList<Task>();
-		data.add(new Task(1L));
-		data.add(new Task(2L));
-		data.add(new Task(3L));
-		data.add(new Task(4L));
-		data.add(new Task(5L));
-		data.add(new Task(6L));
-		data.add(new Task(7L));
-		data.add(new Task(8L));
-		data.add(new Task(9L));
-		data.add(new Task(10L));		
-		restResponse.put("data", data);
-		restResponse.put("totalRecords", data.size());
-		restResponse.put("success", true);
-		restResponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_TASK_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Task.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Task> taskList = getNotificationService().getTaskList(getActiveUserId(request), gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, taskList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(taskList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/workflowsGrid")
+	@Path(REST_METHOD_NAME_WORKFLOW_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String workflowsGrid (
@@ -104,27 +104,47 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		final Map<String, Object> restResponse = new HashMap<String, Object>();
-		List<Workflow> data = new LinkedList<Workflow>();
-		data.add(new Workflow(1L));
-		data.add(new Workflow(2L));
-		data.add(new Workflow(3L));
-		data.add(new Workflow(4L));
-		data.add(new Workflow(5L));
-		data.add(new Workflow(6L));
-		data.add(new Workflow(7L));
-		data.add(new Workflow(8L));
-		data.add(new Workflow(9L));
-		data.add(new Workflow(10L));		
-		restResponse.put("data", data);
-		restResponse.put("totalRecords", data.size());
-		restResponse.put("success", true);
-		restResponse.put("message", "");
-		LoggerUtils.logOnConsole("user " + JSONUtils.convertObjToJSONString(getActiveUser(request), "USER_OBJ"));
-		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_WORKFLOW_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Workflow.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Workflow> workflowList = getNotificationService().getWorkflowList(getActiveUserId(request), gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, workflowList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(workflowList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
+	public NotificationService getNotificationService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_SUBSCRIPTION_NOTIFICATION_SERVICE, NotificationService.class);
+	}
+	
+	public CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
+
 	@Override
-	public void doSecurity(final HttpServletRequest request) {
+	protected void doSecurity(HttpServletRequest request) throws Exception {
+		this.request = request;
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_ALERT_REMINDER_LIST :
+			case REST_METHOD_NAME_TASK_LIST : 
+			case REST_METHOD_NAME_WORKFLOW_LIST :{
+				this.securityPassed = true;
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 }

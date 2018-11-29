@@ -1,7 +1,6 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,19 +17,29 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
+import com.constants.components.CustomerConstants;
 import com.model.components.SubscriptionPackage;
+import com.model.gridcomponent.GridComponent;
+import com.service.components.SubscriptionPackageService;
+import com.utils.ApplicationUtils;
+import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.ValidationUtils;
+import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path("/subscribedCustomer") 
-public class SubscribedCustomerRestService extends AbstractRestWebservice implements RestMethodConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_SUBSCRIBED_CUSTOMER_ADMIN) 
+public class SubscribedCustomerRestService extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
 	
+	private Long customerId;
 	
-	@Path("/currentPackages")
+	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentPackages (
@@ -42,26 +51,24 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscriptionPackage> data = new LinkedList<SubscriptionPackage>();
-		data.add(new SubscriptionPackage(1L));
-		data.add(new SubscriptionPackage(2L));
-		data.add(new SubscriptionPackage(3L));
-		data.add(new SubscriptionPackage(4L));
-		data.add(new SubscriptionPackage(5L));
-		data.add(new SubscriptionPackage(6L));
-		data.add(new SubscriptionPackage(7L));
-		data.add(new SubscriptionPackage(8L));
-		data.add(new SubscriptionPackage(9L));
-		data.add(new SubscriptionPackage(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGES;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_PACKAGES, customerId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/historyPackages")
+	@Path(REST_METHOD_NAME_HISTORY_PACKAGES)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String historyPackages (
@@ -73,23 +80,21 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscriptionPackage> data = new LinkedList<SubscriptionPackage>();
-		data.add(new SubscriptionPackage(1L));
-		data.add(new SubscriptionPackage(2L));
-		data.add(new SubscriptionPackage(3L));
-		data.add(new SubscriptionPackage(4L));
-		data.add(new SubscriptionPackage(5L));
-		data.add(new SubscriptionPackage(6L));
-		data.add(new SubscriptionPackage(7L));
-		data.add(new SubscriptionPackage(8L));
-		data.add(new SubscriptionPackage(9L));
-		data.add(new SubscriptionPackage(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGES;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_PACKAGES, customerId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/updateCustomerRecord")
@@ -106,11 +111,35 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
+	
+	public SubscriptionPackageService getSubscriptionPackageService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE, SubscriptionPackageService.class);
+	}
 
 	@Override
 	protected void doSecurity(HttpServletRequest request) throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.request = request;
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_CURRENT_PACKAGES : 
+			case REST_METHOD_NAME_HISTORY_PACKAGES :{
+				handleSelectedTutorDataGridView();
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
+	
+	private void handleSelectedTutorDataGridView() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_CUSTOMER_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
 	
 }

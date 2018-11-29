@@ -73,33 +73,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	
 	public SubmitQuery() {}
 	
-	public SubmitQuery(Long queryId) {
-		this.queryId = queryId;
-		this.queryRequestedDateMillis = new Date().getTime();
-		this.queryStatus = "FRESH";
-		this.emailId = "abc@hg.com";
-		this.registeredTutor = "Y";
-		this.subscribedCustomer = "N";
-		this.queryDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.isContacted = "N";
-		this.whoContacted = "abc";
-		this.contactedDateMillis = new Date().getTime();
-		this.queryResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.notAnswered = "Y";
-		this.notAnsweredReason = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.whoNotAnswered = "abc";
-		this.recordLastUpdatedMillis = new Date().getTime();
-	}
-
 	public String getEmailId() {
 		return emailId;
 	}

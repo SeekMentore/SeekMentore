@@ -21,6 +21,8 @@ public interface BeanConstants extends ApplicationConstants {
 	String BEAN_NAME_CUSTOMER_SERVICE = "customerService";
 	String BEAN_NAME_ENQUIRY_SERVICE = "enquiryService";
 	String BEAN_NAME_DEMO_SERVICE = "demoService";
+	String BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE = "subscriptionPackageService";
+	String BEAN_NAME_SUBSCRIPTION_NOTIFICATION_SERVICE = "notificationService";
 	// Public Access Service
 	String BEAN_NAME_PUBLIC_ACCESS_SERVICE = "publicAccessService";
 }

@@ -6,6 +6,8 @@ public interface RestPathConstants {
 	
 	String REST_SERVICE_PATH_ADMIN = "/admin";
 	String REST_SERVICE_PATH_REGISTERED_TUTOR_ADMIN = "/registeredTutor";
+	String REST_SERVICE_PATH_SUBSCRIBED_CUSTOMER_ADMIN = "/subscribedCustomer";
+	String REST_SERVICE_PATH_EMPLOYEE = "/employee";
 	String REST_SERVICE_PATH_SUPPORT = "/support";
 	String REST_SERVICE_PATH_COMMONS = "/commons";
 	String REST_SERVICE_PATH_TUTOR = "/tutor";

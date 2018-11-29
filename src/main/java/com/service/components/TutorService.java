@@ -20,11 +20,13 @@ import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.model.WorkbookReport;
+import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
+import com.model.rowmappers.BankDetailRowMapper;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
@@ -400,5 +402,11 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll(GridQueryUtils.createGridQuery("SELECT * FROM TUTOR_DOCUMENTS", "WHERE TUTOR_ID = :tutorId", "ORDER BY FILENAME", gridComponent), paramsMap, new TutorDocumentRowMapper());
+	}
+	
+	public List<BankDetail> getBankDetails(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		return applicationDao.findAll(GridQueryUtils.createGridQuery("SELECT * FROM BANK_DETAIL", "WHERE TUTOR_ID = :tutorId", "ORDER BY BANK_NAME", gridComponent), paramsMap, new BankDetailRowMapper());
 	}
 }

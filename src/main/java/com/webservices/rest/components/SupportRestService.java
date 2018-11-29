@@ -1,7 +1,6 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -789,7 +788,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/nonContactedQueryList")
+	@Path(REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonContactedQueryList (
@@ -801,12 +800,12 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -817,7 +816,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	@Path("/nonAnsweredQueryList")
+	@Path(REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonAnsweredQueryList (
@@ -829,26 +828,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubmitQuery> data = new LinkedList<SubmitQuery>();
-		data.add(new SubmitQuery(1L));
-		data.add(new SubmitQuery(2L));
-		data.add(new SubmitQuery(3L));
-		data.add(new SubmitQuery(4L));
-		data.add(new SubmitQuery(5L));
-		data.add(new SubmitQuery(6L));
-		data.add(new SubmitQuery(7L));
-		data.add(new SubmitQuery(8L));
-		data.add(new SubmitQuery(9L));
-		data.add(new SubmitQuery(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/answeredQueryList")
+	@Path(REST_METHOD_NAME_ANSWERED_QUERY_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String answeredQueryList (
@@ -860,23 +856,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubmitQuery> data = new LinkedList<SubmitQuery>();
-		data.add(new SubmitQuery(1L));
-		data.add(new SubmitQuery(2L));
-		data.add(new SubmitQuery(3L));
-		data.add(new SubmitQuery(4L));
-		data.add(new SubmitQuery(5L));
-		data.add(new SubmitQuery(6L));
-		data.add(new SubmitQuery(7L));
-		data.add(new SubmitQuery(8L));
-		data.add(new SubmitQuery(9L));
-		data.add(new SubmitQuery(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_ANSWERED_QUERY_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_ANSWERED_QUERY_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/submittedQueryCheckDataAccess")
@@ -908,7 +901,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/customerComplaintList")
+	@Path(REST_METHOD_CUSTOMER_COMPLAINT_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String customerComplaintList (
@@ -920,26 +913,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<Complaint> data = new LinkedList<Complaint>();
-		data.add(new Complaint(1L));
-		data.add(new Complaint(2L));
-		data.add(new Complaint(3L));
-		data.add(new Complaint(4L));
-		data.add(new Complaint(5L));
-		data.add(new Complaint(6L));
-		data.add(new Complaint(7L));
-		data.add(new Complaint(8L));
-		data.add(new Complaint(9L));
-		data.add(new Complaint(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_CUSTOMER_COMPLAINT_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_CUSTOMER_COMPLAINT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/tutorComplaintList")
+	@Path(REST_METHOD_TUTOR_COMPLAINT_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String tutorComplaintList (
@@ -951,26 +941,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<Complaint> data = new LinkedList<Complaint>();
-		data.add(new Complaint(1L));
-		data.add(new Complaint(2L));
-		data.add(new Complaint(3L));
-		data.add(new Complaint(4L));
-		data.add(new Complaint(5L));
-		data.add(new Complaint(6L));
-		data.add(new Complaint(7L));
-		data.add(new Complaint(8L));
-		data.add(new Complaint(9L));
-		data.add(new Complaint(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_TUTOR_COMPLAINT_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_TUTOR_COMPLAINT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/employeeComplaintList")
+	@Path(REST_METHOD_EMPLOYEE_COMPLAINT_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String employeeComplaintList (
@@ -982,26 +969,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<Complaint> data = new LinkedList<Complaint>();
-		data.add(new Complaint(1L));
-		data.add(new Complaint(2L));
-		data.add(new Complaint(3L));
-		data.add(new Complaint(4L));
-		data.add(new Complaint(5L));
-		data.add(new Complaint(6L));
-		data.add(new Complaint(7L));
-		data.add(new Complaint(8L));
-		data.add(new Complaint(9L));
-		data.add(new Complaint(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_EMPLOYEE_COMPLAINT_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_EMPLOYEE_COMPLAINT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/resolvedComplaintList")
+	@Path(REST_METHOD_RESOLVED_COMPLAINT_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String resolvedComplaintList (
@@ -1013,23 +997,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<Complaint> data = new LinkedList<Complaint>();
-		data.add(new Complaint(1L));
-		data.add(new Complaint(2L));
-		data.add(new Complaint(3L));
-		data.add(new Complaint(4L));
-		data.add(new Complaint(5L));
-		data.add(new Complaint(6L));
-		data.add(new Complaint(7L));
-		data.add(new Complaint(8L));
-		data.add(new Complaint(9L));
-		data.add(new Complaint(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_RESOLVED_COMPLAINT_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_RESOLVED_COMPLAINT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/complaintCheckDataAccess")
@@ -1100,7 +1081,14 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			case REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : 
 			case REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : 
 			case REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+			case REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST :
+			case REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : 
+			case REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : 
+			case REST_METHOD_NAME_ANSWERED_QUERY_LIST :
+			case REST_METHOD_CUSTOMER_COMPLAINT_LIST :
+			case REST_METHOD_TUTOR_COMPLAINT_LIST : 
+			case REST_METHOD_EMPLOYEE_COMPLAINT_LIST : 
+			case REST_METHOD_RESOLVED_COMPLAINT_LIST :{
 				this.securityPassed = true;
 				break;
 			}

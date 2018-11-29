@@ -35,9 +35,9 @@
 			<webservice id="sendEmail" url="/sendEmail"></webservice>
 		</page>
 		<page id="employeeRest" url="/rest/employee" pageAccessType="employee">
-			<webservice id="alertsRemindersGrid" url="/alertsRemindersGrid"></webservice>
-			<webservice id="tasksGrid" url="/tasksGrid"></webservice>
-			<webservice id="workflowsGrid" url="/workflowsGrid"></webservice>
+			<webservice id="alertReminderList" url="/alertReminderList"></webservice>
+			<webservice id="taskList" url="/taskList"></webservice>
+			<webservice id="workflowList" url="/workflowList"></webservice>
 		</page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="admin">
 			<webservice id="registeredTutorsList" url="/registeredTutorsList"></webservice>

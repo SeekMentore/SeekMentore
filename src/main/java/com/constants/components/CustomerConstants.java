@@ -10,4 +10,6 @@ public interface CustomerConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_NO_FILES_UPLOADED = "Please upload some files."; 	
 	String VELOCITY_TEMPLATES_SUBSCRIBED_CUSTOMER_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/customer";
 	String PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER = VELOCITY_TEMPLATES_SUBSCRIBED_CUSTOMER_FOLDER_PATH + "/profile-created.vm";	
+	
+	String VALIDATION_MESSAGE_CUSTOMER_ID_ABSENT = "No 'customerId' found in request, hence cannot load documents.";
 }

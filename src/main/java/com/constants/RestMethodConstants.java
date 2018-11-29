@@ -110,11 +110,18 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES = "/getEmailTemplates";
 	String REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE = "/loadEmailTemplate";
 	String REST_METHOD_NAME_SEND_EMAIL = "/sendEmail";
+	// Employee REST methods
+	String REST_METHOD_NAME_ALERT_REMINDER_LIST = "/alertReminderList";
+	String REST_METHOD_NAME_TASK_LIST = "/taskList";
+	String REST_METHOD_NAME_WORKFLOW_LIST = "/workflowList";
 	// Admin REST methods
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
 	String REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
 	// Admin - RegisteredTutor REST Methods
 	String REST_METHOD_NAME_UPLOADED_DOCUMENTS = "/uploadedDocuments";
+	String REST_METHOD_NAME_BANK_DETAILS = "/bankDetails";
+	String REST_METHOD_NAME_CURRENT_PACKAGES = "/currentPackages";
+	String REST_METHOD_NAME_HISTORY_PACKAGES = "/historyPackages";
 	// Support REST methods
 	String REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST = "/nonContactedBecomeTutorsList";
 	String REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST = "/nonVerifiedBecomeTutorsList";
@@ -138,4 +145,11 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST = "/toBeReContactedSubscriptionsList";
 	String REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST = "/selectedSubscriptionsList";
 	String REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST = "/rejectedSubscriptionsList";
+	String REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST = "/nonContactedQueryList";
+	String REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST = "/nonAnsweredQueryList";
+	String REST_METHOD_NAME_ANSWERED_QUERY_LIST = "/answeredQueryList";
+	String REST_METHOD_CUSTOMER_COMPLAINT_LIST = "/customerComplaintList";
+	String REST_METHOD_TUTOR_COMPLAINT_LIST = "/tutorComplaintList";
+	String REST_METHOD_EMPLOYEE_COMPLAINT_LIST = "/employeeComplaintList";
+	String REST_METHOD_RESOLVED_COMPLAINT_LIST = "/resolvedComplaintList";
 }

@@ -20,12 +20,14 @@ import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.WorkbookReport;
+import com.model.components.Complaint;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.BecomeTutorRowMapper;
+import com.model.rowmappers.ComplaintRowMapper;
 import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
@@ -631,37 +633,46 @@ public class AdminService implements AdminConstants {
 	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT * FROM SUBMIT_QUERY";
 		String existingFilterQueryString = "";
-		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		final String existingSorterQueryString = "ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC";
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : {
 				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND QUERY_RESPONSE IS NULL";
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+			case RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND QUERY_RESPONSE IS NOT NULL";
 				break;
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubmitQueryRowMapper());
+	}
+	
+	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = "SELECT * FROM COMPLAINT";
+		String existingFilterQueryString = "";
+		final String existingSorterQueryString = "ORDER BY COMPLAINT_FILED_DATE_MILLIS DESC";
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_CUSTOMER_COMPLAINT_LIST : {
+				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'C'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_TUTOR_COMPLAINT_LIST : {
+				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'T'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_EMPLOYEE_COMPLAINT_LIST : {
+				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'E'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_RESOLVED_COMPLAINT_LIST : {
+				existingFilterQueryString = "WHERE RESOLVED = 'Y'";
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new ComplaintRowMapper());
 	}
 }

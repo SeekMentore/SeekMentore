@@ -1,15 +1,16 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class Complaint implements Serializable {
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
+
+public class Complaint extends GridComponentObject implements Serializable {
 	
 	private static final long serialVersionUID = -7058576359707327688L;
 	
 	private Long complaintId;
 	private String name;
-	private Date complaintFiledDate;
 	private Long complaintFiledDateMillis;
 	private String complaintStatus;
 	private String userId;
@@ -18,43 +19,15 @@ public class Complaint implements Serializable {
 	private String complaintResponse;
 	private String isContacted;
 	private String whoContacted;
-	private Date contactedDate;
 	private Long contactedDateMillis;
+	private String resolved;
 	private String notResolved;
 	private String notResolvedReason;
 	private String whoNotResolved;
-	private Date recordLastUpdated;
 	private Long recordLastUpdatedMillis;
+	private String updatedBy;
 	
-	public Complaint(Long complaintId) {
-		this.complaintId = complaintId;
-		this.name = "Shantanu Mukherjee";
-		this.complaintFiledDate = new Date();
-		this.complaintFiledDateMillis = new Date().getTime();
-		this.complaintStatus = "FRESH";
-		this.userId = "abc@hg.com";
-		this.complaintUser = complaintId%3==1?"01":complaintId%3==2?"02":"03";
-		this.complaintDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.isContacted = "N";
-		this.whoContacted = "abc";
-		this.contactedDate = new Date();
-		this.contactedDateMillis = new Date().getTime();
-		this.complaintResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.notResolved = "Y";
-		this.notResolvedReason = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.whoNotResolved = "abc";
-		this.recordLastUpdated = new Date();
-		this.recordLastUpdatedMillis = new Date().getTime();
-	}
+	public Complaint() {}
 
 	public Long getComplaintId() {
 		return complaintId;
@@ -70,14 +43,6 @@ public class Complaint implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Date getComplaintFiledDate() {
-		return complaintFiledDate;
-	}
-
-	public void setComplaintFiledDate(Date complaintFiledDate) {
-		this.complaintFiledDate = complaintFiledDate;
 	}
 
 	public Long getComplaintFiledDateMillis() {
@@ -144,14 +109,6 @@ public class Complaint implements Serializable {
 		this.whoContacted = whoContacted;
 	}
 
-	public Date getContactedDate() {
-		return contactedDate;
-	}
-
-	public void setContactedDate(Date contactedDate) {
-		this.contactedDate = contactedDate;
-	}
-
 	public Long getContactedDateMillis() {
 		return contactedDateMillis;
 	}
@@ -184,19 +141,53 @@ public class Complaint implements Serializable {
 		this.whoNotResolved = whoNotResolved;
 	}
 
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-
 	public Long getRecordLastUpdatedMillis() {
 		return recordLastUpdatedMillis;
 	}
 
 	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "complaintId" : return "COMPLAINT_ID";
+			case "name" : return "NAME";
+			case "complaintFiledDateMillis" : return "COMPLAINT_FILED_DATE_MILLIS";
+			case "complaintStatus" : return "COMPLAINT_STATUS";
+			case "userId" : return "USER_ID";
+			case "complaintDetails" : return "COMPLAINT_DETAILS";
+			case "complaintUser" : return "COMPLAINT_USER";
+			case "complaintResponse" : return "COMPLAINT_RESPONSE";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "resolved" : return "RESOLVED";
+			case "notResolved" : return "NOT_RESOLVED";
+			case "notResolvedReason" : return "NOT_RESOLVED_REASON";
+			case "whoNotResolved" : return "WHO_NOT_RESOLVED";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
+	}
+
+	public String getResolved() {
+		return resolved;
+	}
+
+	public void setResolved(String resolved) {
+		this.resolved = resolved;
 	}
 }
