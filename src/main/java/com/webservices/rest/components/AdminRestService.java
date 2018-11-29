@@ -53,7 +53,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_REGISTERED_TUTORS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorsList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
@@ -116,7 +116,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribedCustomer.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscribedCustomer> subscribedCustomersList = getCustomerService().getSubscribedCustomersList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribedCustomersList);
@@ -176,7 +176,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 	
-	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 
@@ -194,5 +194,4 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
-	
 }

@@ -9,16 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
-import com.utils.PrintFormatterUtils;
 import com.model.ApplicationWorkbookObject;
+import com.utils.PrintFormatterUtils;
+import com.utils.ValidationUtils;
 
 @Entity
 @Table( name = SubscribeWithUsConstants.TABLE_NAME, 
@@ -34,10 +33,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, unique = true, nullable = false)
 	private Long tentativeSubscriptionId;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_APPLICATION_DATE, length = 10, nullable = false)
-	private Date applicationDate;
 	
 	@Column(name = COLUMN_NAME_APPLICATION_STATUS, unique = true, nullable = false)
 	private String applicationStatus;
@@ -75,10 +70,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_CONTACTED_DATE, length = 10)
-	private Date contactedDate;
-	
 	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
 	
@@ -87,10 +78,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	
 	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_VERIFICATION_DATE, length = 10)
-	private Date verificationDate;
 	
 	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
@@ -101,19 +88,11 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SUGGESTION_DATE, length = 10)
-	private Date suggestionDate;
-	
 	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
 	
 	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECONTACTED_DATE, length = 10)
-	private Date recontactedDate;
 	
 	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
@@ -124,10 +103,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SELECTION_DATE, length = 10)
-	private Date selectionDate;
-	
 	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
 	
@@ -136,10 +111,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	
 	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_REJECTION_DATE, length = 10)
-	private Date rejectionDate;
 	
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
@@ -153,149 +124,18 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
 	private String addressDetails;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
-	private Date recordLastUpdated;
-	
 	private Long applicationDateMillis;
 	private Long contactedDateMillis;
+	private Long verificationDateMillis;
 	private Long suggestionDateMillis;
 	private Long recontactedDateMillis;
 	private Long selectionDateMillis;
 	private Long rejectionDateMillis;
 	private Long recordLastUpdatedMillis;
+	private String updatedBy;
 	
 	public SubscribeWithUs() {}
 	
-	public SubscribeWithUs(
-			Date applicationDate,
-			String applicationStatus,
-			String firstName,
-			String lastName,
-			String contactNumber,
-			String emailId,
-			String studentGrade,
-			String subjects,
-			String preferredTimeToCall,
-			String additionalDetails,
-			String isContacted,
-			String whoContacted,
-			Date contactedDate,
-			String contactedRemarks,
-			String isAuthenticationVerified,
-			String whoVerified,
-			Date verificationDate,
-			String verificationRemarks,
-			String isToBeRecontacted,
-			String whoSuggestedForRecontact,
-			Date suggestionDate,
-			String suggestionRemarks,
-			String whoRecontacted,
-			Date recontactedDate,
-			String recontactedRemarks,
-			String isSelected,
-			String whoSelected,
-			Date selectionDate,
-			String selectionRemarks,
-			String isRejected,
-			String whoRejected,
-			Date rejectionDate,
-			String rejectionRemarks,
-			String location,
-			String reference,
-			String addressDetails,
-			Date recordLastUpdated
-			
-	) {
-		this.applicationDate = applicationDate;
-		this.applicationStatus = applicationStatus;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.contactNumber = contactNumber;
-		this.emailId = emailId;
-		this.studentGrade = studentGrade;
-		this.subjects = subjects;
-		this.preferredTimeToCall = preferredTimeToCall;
-		this.additionalDetails = additionalDetails;
-		this.isContacted = isContacted;
-		this.whoContacted = whoContacted;
-		this.contactedDate = contactedDate;
-		this.contactedRemarks = contactedRemarks;
-		this.isAuthenticationVerified = isAuthenticationVerified;
-		this.whoVerified = whoVerified;
-		this.verificationDate = verificationDate;
-		this.verificationRemarks = verificationRemarks;
-		this.isToBeRecontacted = isToBeRecontacted;
-		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
-		this.suggestionDate = suggestionDate;
-		this.suggestionRemarks = suggestionRemarks;
-		this.whoRecontacted = whoRecontacted;
-		this.recontactedDate = recontactedDate;
-		this.recontactedRemarks = recontactedRemarks;
-		this.isSelected = isSelected;
-		this.whoSelected = whoSelected;
-		this.selectionDate = selectionDate;
-		this.selectionRemarks = selectionRemarks;
-		this.isRejected = isRejected;
-		this.whoRejected = whoRejected;
-		this.rejectionDate = rejectionDate;
-		this.rejectionRemarks = rejectionRemarks;
-		this.location = location;
-		this.reference = reference;
-		this.addressDetails = addressDetails;
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
-	public SubscribeWithUs(Long tentativeSubscriptionId) {
-		this.tentativeSubscriptionId = tentativeSubscriptionId;
-		this.applicationDate = new Date();
-		this.applicationDateMillis = new Date().getTime();
-		this.applicationStatus = "FRESH";
-		this.firstName = "Shantanu";
-		this.lastName = "Mukherjee";
-		this.contactNumber = "989898989898";
-		this.emailId = "abc@efb.com";
-		this.studentGrade = "01;02;03";
-		this.subjects = "01;02;03";
-		this.preferredTimeToCall = "01;02;03";
-		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isContacted = "Y";
-		this.whoContacted = "abc";
-		this.contactedDate = new Date();
-		this.contactedDateMillis = new Date().getTime();
-		this.contactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isAuthenticationVerified = "Y";
-		this.whoVerified = "abc";
-		this.verificationDate = new Date();
-		this.contactedDateMillis = new Date().getTime();
-		this.verificationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isToBeRecontacted = "Y";
-		this.whoSuggestedForRecontact = "abc";
-		this.suggestionDate = new Date();
-		this.suggestionDateMillis = new Date().getTime();
-		this.suggestionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.whoRecontacted = "abc";
-		this.recontactedDate = new Date();
-		this.recontactedDateMillis = new Date().getTime();
-		this.recontactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isSelected = "Y";
-		this.whoSelected = "abc";
-		this.selectionDate = new Date();
-		this.selectionDateMillis = new Date().getTime();
-		this.selectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isRejected = "Y";
-		this.whoRejected = "abc";
-		this.rejectionDate = new Date();
-		this.rejectionDateMillis = new Date().getTime();
-		this.rejectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.location = "01";
-		this.reference = "01";
-		this.addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.recordLastUpdated = new Date();
-		this.recordLastUpdatedMillis = new Date().getTime();
-		
-	}
-
 	public String getContactNumber() {
 		return contactNumber;
 	}
@@ -376,14 +216,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.whoContacted = whoContacted;
 	}
 
-	public Date getContactedDate() {
-		return contactedDate;
-	}
-
-	public void setContactedDate(Date contactedDate) {
-		this.contactedDate = contactedDate;
-	}
-
 	public String getContactedRemarks() {
 		return contactedRemarks;
 	}
@@ -398,14 +230,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 
 	public void setWhoVerified(String whoVerified) {
 		this.whoVerified = whoVerified;
-	}
-
-	public Date getVerificationDate() {
-		return verificationDate;
-	}
-
-	public void setVerificationDate(Date verificationDate) {
-		this.verificationDate = verificationDate;
 	}
 
 	public String getVerificationRemarks() {
@@ -424,14 +248,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
 	}
 
-	public Date getSuggestionDate() {
-		return suggestionDate;
-	}
-
-	public void setSuggestionDate(Date suggestionDate) {
-		this.suggestionDate = suggestionDate;
-	}
-
 	public String getSuggestionRemarks() {
 		return suggestionRemarks;
 	}
@@ -448,14 +264,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.whoRecontacted = whoRecontacted;
 	}
 
-	public Date getRecontactedDate() {
-		return recontactedDate;
-	}
-
-	public void setRecontactedDate(Date recontactedDate) {
-		this.recontactedDate = recontactedDate;
-	}
-
 	public String getRecontactedRemarks() {
 		return recontactedRemarks;
 	}
@@ -470,14 +278,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 
 	public void setWhoSelected(String whoSelected) {
 		this.whoSelected = whoSelected;
-	}
-
-	public Date getSelectionDate() {
-		return selectionDate;
-	}
-
-	public void setSelectionDate(Date selectionDate) {
-		this.selectionDate = selectionDate;
 	}
 
 	public String getSelectionRemarks() {
@@ -502,14 +302,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 
 	public void setWhoRejected(String whoRejected) {
 		this.whoRejected = whoRejected;
-	}
-
-	public Date getRejectionDate() {
-		return rejectionDate;
-	}
-
-	public void setRejectionDate(Date rejectionDate) {
-		this.rejectionDate = rejectionDate;
 	}
 
 	public String getRejectionRemarks() {
@@ -560,28 +352,12 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.subscribedCustomer = subscribedCustomer;
 	}
 	
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
 	public Long getTentativeSubscriptionId() {
 		return tentativeSubscriptionId;
 	}
 
 	public void setTentativeSubscriptionId(Long tentativeSubscriptionId) {
 		this.tentativeSubscriptionId = tentativeSubscriptionId;
-	}
-
-	public Date getApplicationDate() {
-		return applicationDate;
-	}
-
-	public void setApplicationDate(Date applicationDate) {
-		this.applicationDate = applicationDate;
 	}
 
 	public String getApplicationStatus() {
@@ -669,7 +445,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
 		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, tentativeSubscriptionId));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, applicationDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, new Date(applicationDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, applicationStatus));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, firstName));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, lastName));
@@ -685,28 +461,28 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, contactedRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, isAuthenticationVerified));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, whoVerified));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, verificationDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(verificationDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, verificationRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, isToBeRecontacted));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, whoSuggestedForRecontact));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, suggestionDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(suggestionDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, suggestionRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, whoRecontacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, recontactedDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(recontactedDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, recontactedRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, isSelected));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, whoSelected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, selectionDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(selectionDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, selectionRemarks));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, isRejected));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, whoRejected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(rejectionDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
 	}
@@ -752,7 +528,8 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
-					COLUMN_NAME_RECORD_LAST_UPDATED					
+					COLUMN_NAME_RECORD_LAST_UPDATED,
+					"UPDATED_BY"
 				};
 		}
 	}
@@ -764,7 +541,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		switch (reportSwitch) {
 			case "Admin_Report" : {
 				return new Object[] {
-						this.applicationDate,
+						new Date(this.applicationDateMillis),
 						this.applicationStatus,
 						this.firstName,
 						this.lastName,
@@ -779,31 +556,97 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
-						this.contactedDate,
+						new Date(this.contactedDateMillis),
 						this.contactedRemarks,
 						this.isAuthenticationVerified,
 						this.whoVerified,
-						this.verificationDate,
+						new Date(this.verificationDateMillis),
 						this.verificationRemarks,
 						this.isToBeRecontacted,
 						this.whoSuggestedForRecontact,
-						this.suggestionDate,
+						new Date(this.suggestionDateMillis),
 						this.suggestionRemarks,
 						this.whoRecontacted,
-						this.recontactedDate,
+						new Date(this.recontactedDateMillis),
 						this.recontactedRemarks,
 						this.isSelected,
 						this.whoSelected,
-						this.selectionDate,
+						new Date(this.selectionDateMillis),
 						this.selectionRemarks,
 						this.isRejected,
 						this.whoRejected,
-						this.rejectionDate,
+						new Date(this.rejectionDateMillis),
 						this.rejectionRemarks,
-						this.recordLastUpdated
+						new Date(this.recordLastUpdatedMillis),
+						this.updatedBy
 				};
 			}
 		}
 		return new Object[] {};
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Long getVerificationDateMillis() {
+		return verificationDateMillis;
+	}
+
+	public void setVerificationDateMillis(Long verificationDateMillis) {
+		this.verificationDateMillis = verificationDateMillis;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "tentativeSubscriptionId" : return "TENTATIVE_SUBSCRIPTION_ID";
+			case "applicationDateMillis" : return "APPLICATION_DATE_MILLIS";
+			case "applicationStatus" : return "APPLICATION_STATUS";
+			case "firstName" : return "FIRST_NAME";
+			case "lastName" : return "LAST_NAME";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "studentGrade" : return "STUDENT_GRADE";
+			case "subjects" : return "SUBJECTS";
+			case "preferredTimeToCall" : return "PREFERRED_TIME_TO_CALL";
+			case "location" : return "LOCATION";
+			case "reference" : return "REFERENCE";
+			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";			
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "contactedRemarks" : return "CONTACTED_REMARKS";
+			case "isAuthenticationVerified" : return "IS_AUTHENTICATION_VERIFIED";
+			case "whoVerified" : return "WHO_VERIFIED";
+			case "verificationDateMillis" : return "VERIFICATION_DATE_MILLIS";
+			case "verificationRemarks" : return "VERIFICATION_REMARKS";
+			case "isToBeRecontacted" : return "IS_TO_BE_RECONTACTED";
+			case "whoSuggestedForRecontact" : return "WHO_SUGGESTED_FOR_RECONTACT";
+			case "suggestionDateMillis" : return "SUGGESTION_DATE_MILLIS";
+			case "suggestionRemarks" : return "SUGGESTION_REMARKS";
+			case "whoRecontacted" : return "WHO_RECONTACTED";
+			case "recontactedDateMillis" : return "RECONTACTED_DATE_MILLIS";
+			case "recontactedRemarks" : return "RECONTACTED_REMARKS";
+			case "isSelected" : return "IS_SELECTED";
+			case "whoSelected" : return "WHO_SELECTED";
+			case "selectionDateMillis" : return "SELECTION_DATE_MILLIS";
+			case "selectionRemarks" : return "SELECTION_REMARKS";
+			case "isRejected" : return "IS_REJECTED";
+			case "whoRejected" : return "WHO_REJECTED";
+			case "rejectionDateMillis" : return "REJECTION_DATE_MILLIS";			
+			case "rejectionRemarks" : return "REJECTION_REMARKS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
 	}
 }

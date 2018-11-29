@@ -7,6 +7,7 @@ import java.util.List;
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
 
 public class RegisteredTutor extends GridComponentObject implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
 	
@@ -28,7 +29,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	private String additionalDetails;
 	private String encryptedPassword;
 	private String userId;
-	private Date recordLastUpdated;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String preferredTeachingType;
@@ -54,8 +54,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 		this.encryptedPassword = "";
 		this.userId = "abc";
-		this.recordLastUpdated = new Date();
-		this.recordLastUpdatedMillis = recordLastUpdated.getTime();
+		this.recordLastUpdatedMillis = new Date().getTime();
 		this.updatedBy = "abcf";
 		this.preferredTeachingType = "01;02";
 	}
@@ -79,7 +78,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		newInstance.additionalDetails = additionalDetails;
 		newInstance.encryptedPassword = encryptedPassword;
 		newInstance.userId = userId;
-		newInstance.recordLastUpdated = recordLastUpdated;
+		newInstance.recordLastUpdatedMillis = recordLastUpdatedMillis;
 		newInstance.updatedBy = updatedBy;
 		newInstance.preferredTeachingType = preferredTeachingType;
 		return newInstance;
@@ -205,28 +204,12 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.tentativeTutorId = tentativeTutorId;
 	}
 
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
 	public Integer getTeachingExp() {
 		return teachingExp;
 	}
 
 	public void setTeachingExp(Integer teachingExp) {
 		this.teachingExp = teachingExp;
-	}
-
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
 	}
 
 	public String getUpdatedBy() {
@@ -298,7 +281,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						this.interestedSubjects,
 						this.comfortableLocations,
 						this.additionalDetails,
-						this.recordLastUpdated,
+						new Date(this.recordLastUpdatedMillis),
 						this.updatedBy,
 						this.userId
 					};
@@ -317,6 +300,8 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "tutorId" : return "TUTOR_ID";
 			case "name" : return "NAME";
@@ -332,15 +317,21 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "interestedStudentGrades" : return "INTERESTED_STUDENT_GRADES";
 			case "interestedSubjects" : return "INTERESTED_SUBJECTS";
 			case "comfortableLocations" : return "COMFORTABLE_LOCATIONS";
+			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
 			case "additionalDetails" : return "ADDITIONAL_DETAILS";
 			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
 			case "userId" : return "USER_ID";
-			case "recordLastUpdated" : return "RECORD_LAST_UPDATED";
-			case "recordLastUpdatedMillis" : return "TUTOR_ID";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
-			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
-			case "gridRecordDataTotalRecords" : return "TOTAL_RECORDS";
 		}
 		return EMPTY_STRING;
+	}
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 }

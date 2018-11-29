@@ -1,9 +1,11 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class TutorDocument implements Serializable {
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
+
+public class TutorDocument extends GridComponentObject implements Serializable {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long documentId;
@@ -13,24 +15,11 @@ public class TutorDocument implements Serializable {
 	private String isApproved;
 	private String whoActed;
 	private String remarks;
-	private Date actionDate;
 	private Long actionDateMillis;
 	private byte[] content;
 	
 	public TutorDocument() {}
 	
-	public TutorDocument(Long documentId) {
-		this.documentId = documentId;
-		tutorId = 1L;
-		fsKey = "random key";
-		filename = "Fake file";
-		isApproved = documentId%2 == 0 ? "Y" : "N";
-		whoActed = "abcf";
-		remarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		actionDate = new Date();
-		actionDateMillis = actionDate.getTime();			
-	}
-
 	public Long getDocumentId() {
 		return documentId;
 	}
@@ -79,14 +68,6 @@ public class TutorDocument implements Serializable {
 		this.isApproved = isApproved;
 	}
 
-	public Date getActionDate() {
-		return actionDate;
-	}
-
-	public void setActionDate(Date actionDate) {
-		this.actionDate = actionDate;
-	}
-
 	public String getWhoActed() {
 		return whoActed;
 	}
@@ -109,5 +90,22 @@ public class TutorDocument implements Serializable {
 
 	public void setActionDateMillis(Long actionDateMillis) {
 		this.actionDateMillis = actionDateMillis;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "documentId" : return "DOCUMENT_ID";
+			case "tutorId" : return "TUTOR_ID";
+			case "fsKey" : return "FS_KEY";
+			case "filename" : return "FILENAME";
+			case "isApproved" : return "IS_APPROVED";
+			case "whoActed" : return "WHO_ACTED";
+			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
+			case "remarks" : return "REMARKS";
+		}
+		return EMPTY_STRING;
 	}
 }

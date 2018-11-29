@@ -6,6 +6,7 @@ import java.util.Date;
 import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
 
 public class SubscribedCustomer extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
@@ -22,7 +23,6 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 	private String addressDetails;
 	private String encryptedPassword;
 	private String userId;
-	private Date recordLastUpdated;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	
@@ -42,7 +42,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		newInstance.addressDetails = addressDetails;
 		newInstance.encryptedPassword = encryptedPassword;
 		newInstance.userId = userId;
-		newInstance.recordLastUpdated = recordLastUpdated;
+		newInstance.recordLastUpdatedMillis = recordLastUpdatedMillis;
 		newInstance.updatedBy = updatedBy;
 		return newInstance;
 	}
@@ -143,14 +143,6 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		this.userId = userId;
 	}
 
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
@@ -194,7 +186,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 						this.location,
 						this.addressDetails,
 						this.additionalDetails,
-						this.recordLastUpdated,
+						new Date(this.recordLastUpdatedMillis),
 						this.updatedBy,
 						this.userId
 					};
@@ -213,6 +205,8 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "customerId" : return "CUSTOMER_ID";
 			case "name" : return "NAME";
@@ -224,7 +218,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 			case "location" : return "LOCATION";
 			case "additionalDetails" : return "ADDITIONAL_DETAILS";
 			case "addressDetails" : return "ADDRESS_DETAILS";
-			case "recordLastUpdated" : return "RECORD_LAST_UPDATED";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "userId" : return "USER_ID";
 			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
 			case "updatedBy" : return "UPDATED_BY";

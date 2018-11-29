@@ -118,7 +118,7 @@ import com.utils.VelocityUtils;
 		subscriberCustomerObj.setEnquiryID(null);
 		subscriberCustomerObj.setEncryptedPassword(null);
 		subscriberCustomerObj.setUserId(null);
-		subscriberCustomerObj.setRecordLastUpdated(null);
+		subscriberCustomerObj.setRecordLastUpdatedMillis(null);
 		subscriberCustomerObj.setUpdatedBy(null);
 	}
 	
@@ -134,7 +134,7 @@ import com.utils.VelocityUtils;
 
 	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
 		tutorDocumentObj.setWhoActed(null);
-		tutorDocumentObj.setActionDate(null);
+		tutorDocumentObj.setActionDateMillis(null);
 	}
 	@Transactional
 	public List<FindTutor> getNonSubscribedCustomer(final int numberOfRecords) {
@@ -216,6 +216,6 @@ import com.utils.VelocityUtils;
 	
 	/************************************************************************************************************/
 	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM SUBSCRIBED_CUSTOMER", null, null, null, null, gridComponent, SubscribedCustomer.class.newInstance()), new SubscribedCustomerRowMapper());
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM SUBSCRIBED_CUSTOMER", null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 }

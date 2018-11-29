@@ -22,11 +22,15 @@ import com.model.User;
 import com.model.WorkbookReport;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
+import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
+import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.FindTutorRowMapper;
+import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.utils.ApplicationUtils;
+import com.utils.GridQueryUtils;
 import com.utils.PDFUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -507,4 +511,157 @@ public class AdminService implements AdminConstants {
 	 * Subscrition Admin
 	 * 
 	 */
+	
+	/**************************************************************************************************/
+	public List<BecomeTutor> getBecomeTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = "SELECT * FROM BECOME_TUTOR";
+		String existingFilterQueryString = "";
+		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'N' AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y' AND IS_DATA_MIGRATED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE IS_DATA_MIGRATED = 'Y'";
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new BecomeTutorRowMapper());
+	}
+	
+	public List<FindTutor> getEnquiriesList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = "SELECT * FROM FIND_TUTOR";
+		String existingFilterQueryString = "";
+		final String existingSorterQueryString = "ORDER BY ENQUIRY_DATE_MILLIS DESC";
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new FindTutorRowMapper());
+	}
+	
+	public List<SubscribeWithUs> getSubscriptionsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = "SELECT * FROM SUBSCRIBE_WITH_US";
+		String existingFilterQueryString = "";
+		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubscribeWithUsRowMapper());
+	}
+	
+	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = "SELECT * FROM SUBMIT_QUERY";
+		String existingFilterQueryString = "";
+		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubmitQueryRowMapper());
+	}
 }

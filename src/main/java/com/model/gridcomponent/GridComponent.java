@@ -3,7 +3,11 @@ package com.model.gridcomponent;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.json.JsonObject;
+
+import com.model.GridComponentObject;
 import com.utils.GridComponentUtils;
+import com.utils.JSONUtils;
 
 public class GridComponent implements Serializable {
 
@@ -16,8 +20,12 @@ public class GridComponent implements Serializable {
 	private String otherParams;	
 	private String filters;	
 	private String sorters;	
+	private Class<? extends GridComponentObject> gridComponentObjectClass;
 	private List<Sorter> sorterList;
 	private List<Filter> filterList;
+	private String additionalFilterQueryString;
+	private String additionalSorterQueryString;
+	private JsonObject otherParamsAsJSONObject;
 	
 	public GridComponent() {}
 	
@@ -26,7 +34,8 @@ public class GridComponent implements Serializable {
 		final Integer limit,
 		final String otherParams,
 		final String filters,
-		final String sorters
+		final String sorters,
+		final Class<? extends GridComponentObject> gridComponentObjectClass
 	) {
 		if (null != start && start > 0 && null != limit && limit > 0) {
 			this.start = start;
@@ -44,6 +53,8 @@ public class GridComponent implements Serializable {
 		this.sorters = sorters;
 		this.filterList = GridComponentUtils.createFilterListFromFilterJSON(this.filters);
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
+		this.gridComponentObjectClass = gridComponentObjectClass;
+		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(otherParams);
 	}
 	
 	public GridComponent(
@@ -51,7 +62,8 @@ public class GridComponent implements Serializable {
 		final String limit,
 		final String otherParams,
 		final String filters,
-		final String sorters
+		final String sorters,
+		final Class<? extends GridComponentObject> gridComponentObjectClass
 	) {
 		try {
 			this.start = Integer.parseInt(start);
@@ -76,6 +88,8 @@ public class GridComponent implements Serializable {
 		this.sorters = sorters;
 		this.filterList = GridComponentUtils.createFilterListFromFilterJSON(this.filters);
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
+		this.gridComponentObjectClass = gridComponentObjectClass;
+		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(otherParams);
 	}
 	
 	public String getOtherParams() {
@@ -148,5 +162,37 @@ public class GridComponent implements Serializable {
 
 	public void setPagingAvailable(Boolean pagingAvailable) {
 		this.pagingAvailable = pagingAvailable;
+	}
+
+	public String getAdditionalFilterQueryString() {
+		return additionalFilterQueryString;
+	}
+
+	public void setAdditionalFilterQueryString(String additionalFilterQueryString) {
+		this.additionalFilterQueryString = additionalFilterQueryString;
+	}
+
+	public String getAdditionalSorterQueryString() {
+		return additionalSorterQueryString;
+	}
+
+	public void setAdditionalSorterQueryString(String additionalSorterQueryString) {
+		this.additionalSorterQueryString = additionalSorterQueryString;
+	}
+
+	public Class<? extends GridComponentObject> getGridComponentObjectClass() {
+		return gridComponentObjectClass;
+	}
+
+	public void setGridComponentObjectClass(Class<? extends GridComponentObject> gridComponentObjectClass) {
+		this.gridComponentObjectClass = gridComponentObjectClass;
+	}
+
+	public JsonObject getOtherParamsAsJSONObject() {
+		return otherParamsAsJSONObject;
+	}
+
+	public void setOtherParamsAsJSONObject(JsonObject otherParamsAsJSONObject) {
+		this.otherParamsAsJSONObject = otherParamsAsJSONObject;
 	}
 }

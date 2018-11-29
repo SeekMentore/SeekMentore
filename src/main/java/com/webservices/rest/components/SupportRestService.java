@@ -18,22 +18,30 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.model.components.Complaint;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
+import com.model.gridcomponent.GridComponent;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.AdminService;
+import com.service.components.CommonsService;
+import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path("/support") 
+@Path(RestPathConstants.REST_SERVICE_PATH_SUPPORT) 
 public class SupportRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
-	@Path("/nonContactedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonContactedBecomeTutorsList (
@@ -45,26 +53,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/nonVerifiedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonVerifiedBecomeTutorsList (
@@ -76,26 +81,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/verifiedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String verifiedBecomeTutorsList (
@@ -107,26 +109,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/verificationFailedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String verificationFailedBecomeTutorsList (
@@ -138,26 +137,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/toBeReContactedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String toBeReContactedBecomeTutorsList (
@@ -169,26 +165,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/selectedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String selectedBecomeTutorsList (
@@ -200,26 +193,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/rejectedBecomeTutorsList")
+	@Path(REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String rejectedBecomeTutorsList (
@@ -231,26 +221,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/registeredBecomeTutorsList")
+	@Path(REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String registeredBecomeTutorsList (
@@ -262,23 +249,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<BecomeTutor> data = new LinkedList<BecomeTutor>();
-		data.add(new BecomeTutor(1L));
-		data.add(new BecomeTutor(2L));
-		data.add(new BecomeTutor(3L));
-		data.add(new BecomeTutor(4L));
-		data.add(new BecomeTutor(5L));
-		data.add(new BecomeTutor(6L));
-		data.add(new BecomeTutor(7L));
-		data.add(new BecomeTutor(8L));
-		data.add(new BecomeTutor(9L));
-		data.add(new BecomeTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<BecomeTutor> becomeTutorsList = getAdminService().getBecomeTutorsList(REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, becomeTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(becomeTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/becomeTutorCheckDataAccess")
@@ -325,10 +309,10 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/nonContactedEnquirysList")
+	@Path(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String nonContactedEnquirysList (
+	public String nonContactedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -337,29 +321,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/nonVerifiedEnquirysList")
+	@Path(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String nonVerifiedEnquirysList (
+	public String nonVerifiedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -368,29 +349,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/verifiedEnquirysList")
+	@Path(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String verifiedEnquirysList (
+	public String verifiedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -399,29 +377,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/verificationFailedEnquirysList")
+	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String verificationFailedEnquirysList (
+	public String verificationFailedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -430,29 +405,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/toBeReContactedEnquirysList")
+	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String toBeReContactedEnquirysList (
+	public String toBeReContactedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -461,29 +433,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/selectedEnquirysList")
+	@Path(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String selectedEnquirysList (
+	public String selectedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -492,29 +461,26 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/rejectedEnquirysList")
+	@Path(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
-	public String rejectedEnquirysList (
+	public String rejectedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -523,23 +489,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<FindTutor> data = new LinkedList<FindTutor>();
-		data.add(new FindTutor(1L));
-		data.add(new FindTutor(2L));
-		data.add(new FindTutor(3L));
-		data.add(new FindTutor(4L));
-		data.add(new FindTutor(5L));
-		data.add(new FindTutor(6L));
-		data.add(new FindTutor(7L));
-		data.add(new FindTutor(8L));
-		data.add(new FindTutor(9L));
-		data.add(new FindTutor(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<FindTutor> findTutorList = getAdminService().getEnquiriesList(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/enquiryRequestCheckDataAccess")
@@ -586,7 +549,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/nonContactedSubscriptionsList")
+	@Path(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonContactedSubscriptionsList (
@@ -598,26 +561,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/nonVerifiedSubscriptionsList")
+	@Path(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String nonVerifiedSubscriptionsList (
@@ -629,26 +589,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/verifiedSubscriptionsList")
+	@Path(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String verifiedSubscriptionsList (
@@ -660,26 +617,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/verificationFailedSubscriptionsList")
+	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String verificationFailedSubscriptionsList (
@@ -691,26 +645,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/toBeReContactedSubscriptionsList")
+	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String toBeReContactedSubscriptionsList (
@@ -722,26 +673,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/selectedSubscriptionsList")
+	@Path(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String selectedSubscriptionsList (
@@ -753,26 +701,23 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}	
 	
-	@Path("/rejectedSubscriptionsList")
+	@Path(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String rejectedSubscriptionsList (
@@ -784,23 +729,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubscribeWithUs> data = new LinkedList<SubscribeWithUs>();
-		data.add(new SubscribeWithUs(1L));
-		data.add(new SubscribeWithUs(2L));
-		data.add(new SubscribeWithUs(3L));
-		data.add(new SubscribeWithUs(4L));
-		data.add(new SubscribeWithUs(5L));
-		data.add(new SubscribeWithUs(6L));
-		data.add(new SubscribeWithUs(7L));
-		data.add(new SubscribeWithUs(8L));
-		data.add(new SubscribeWithUs(9L));
-		data.add(new SubscribeWithUs(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionsList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/subscriptionRequestCheckDataAccess")
@@ -859,23 +801,20 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<SubmitQuery> data = new LinkedList<SubmitQuery>();
-		data.add(new SubmitQuery(1L));
-		data.add(new SubmitQuery(2L));
-		data.add(new SubmitQuery(3L));
-		data.add(new SubmitQuery(4L));
-		data.add(new SubmitQuery(5L));
-		data.add(new SubmitQuery(6L));
-		data.add(new SubmitQuery(7L));
-		data.add(new SubmitQuery(8L));
-		data.add(new SubmitQuery(9L));
-		data.add(new SubmitQuery(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/nonAnsweredQueryList")
@@ -1122,10 +1061,50 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public AdminService getAdminService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
 	}
 	
+	public CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
+	
+	@Override
+	protected void doSecurity(HttpServletRequest request) throws Exception {
+		this.request = request;
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : 
+			case REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : 
+			case REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+				this.securityPassed = true;
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
+	}
 }

@@ -159,15 +159,15 @@ public class GridQueryUtils implements GridComponentConstants {
 	public static String createGridQuery (
 			final String baseQuery,
 			String existingFilterQueryString,
-			String additionalFilterQueryString, 
 			String existingSorterQueryString,
-			String additionalSorterQueryString,
-			final GridComponent gridComponent,
-			final GridComponentObject gridComponentObject
-	) {
+			final GridComponent gridComponent
+	) throws InstantiationException, IllegalAccessException {
 		final Integer start = gridComponent.getStart(); 
 		final Integer end = gridComponent.getEnd(); 
 		final Boolean isPagingAvailable = gridComponent.getPagingAvailable();
+		String additionalFilterQueryString = gridComponent.getAdditionalFilterQueryString();
+		String additionalSorterQueryString = gridComponent.getAdditionalSorterQueryString();
+		final GridComponentObject gridComponentObject = gridComponent.getGridComponentObjectClass().newInstance();
 		String filterQueryString = createFilterQuery(gridComponent.getFilterList(), gridComponentObject);
 		String sorterQueryString = createSorterQuery(gridComponent.getSorterList(), gridComponentObject);
 		
@@ -215,12 +215,12 @@ public class GridQueryUtils implements GridComponentConstants {
 		
 		if (isPagingAvailable) {
 			final String coreQuery =  WHITESPACE +  baseQuery + WHITESPACE +  completeFilterQuery;
-			final String mainQueryPseudoTable = " (" + coreQuery + ") AS MAINQUERYPSEUDOTABLE";
+			final String mainQueryPseudoTable = " (" + coreQuery + WHITESPACE + completeSorterQuery + ") AS MAINQUERYPSEUDOTABLE";
 			final String totalRecordsPseudoTable = " (SELECT COUNT(1) AS RECORD_COUNT FROM (" + coreQuery + ") AS COUNTPSEUDOTABLE) AS TOTALRECORDSPSEUDOTABLE";
 			final String resultPseudoTable = " (SELECT TOTALRECORDSPSEUDOTABLE.RECORD_COUNT AS TOTAL_RECORDS, MAINQUERYPSEUDOTABLE.* FROM " + mainQueryPseudoTable + COMMA_APPENDER + totalRecordsPseudoTable + ") AS RESULTPSEUDOTABLE";
 			final String rownumPseudoTable = " (SELECT @row_number:=0) AS ROWNUMPSEUDOTABLE";
 			final String completeQueryPseudoTable = "(SELECT (@row_number:=@row_number + 1) AS RNUM, RESULTPSEUDOTABLE.* FROM " + resultPseudoTable + COMMA_APPENDER + rownumPseudoTable + ") AS COMPLETEQUERYPSEUDOTABLE";
-			completeQuery += " SELECT COMPLETEQUERYPSEUDOTABLE.* FROM " + completeQueryPseudoTable + " WHERE RNUM BETWEEN " + start + " AND " + end + WHITESPACE + completeSorterQuery;
+			completeQuery += " SELECT COMPLETEQUERYPSEUDOTABLE.* FROM " + completeQueryPseudoTable + " WHERE RNUM BETWEEN " + start + " AND " + end + WHITESPACE;
 		} else {
 			completeQuery += WHITESPACE +  baseQuery + WHITESPACE +  completeFilterQuery + WHITESPACE + completeSorterQuery;
 		}

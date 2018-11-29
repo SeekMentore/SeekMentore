@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,6 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
 import com.utils.PrintFormatterUtils;
+import com.utils.ValidationUtils;
 
 @Entity
 @Table( name = SubmitQueryConstants.TABLE_NAME, 
@@ -33,10 +32,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_QUERY_ID, unique = true, nullable = false)
 	private Long queryId;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_QUERY_REQUESTED_DATE, length = 10, nullable = false)
-	private Date queryRequestedDate;
 	
 	@Column(name = COLUMN_NAME_QUERY_STATUS, unique = true, nullable = false)
 	private String queryStatus;
@@ -59,10 +54,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_CONTACTED_DATE, length = 10)
-	private Date contactedDate;
-	
 	@Column(name = COLUMN_NAME_QUERY_RESPONSE)
 	private String queryResponse;
 	
@@ -75,47 +66,15 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	@Column(name = COLUMN_NAME_WHO_NOT_ANSWERED)
 	private String whoNotAnswered;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
-	private Date recordLastUpdated;
-	
 	private Long queryRequestedDateMillis;
 	private Long contactedDateMillis;
 	private Long recordLastUpdatedMillis;
+	private String updatedBy;
 	
 	public SubmitQuery() {}
 	
-	public SubmitQuery(
-			Date queryRequestedDate,
-			String queryStatus,
-			String emailId,
-			String queryDetails,
-			String isContacted,
-			String whoContacted,
-			Date contactedDate,
-			String queryResponse,
-			String notAnswered,
-			String notAnsweredReason,
-			String whoNotAnswered,
-			Date recordLastUpdated
-	) {
-		this.queryRequestedDate = queryRequestedDate;
-		this.queryStatus = queryStatus;
-		this.emailId = emailId;
-		this.queryDetails = queryDetails;
-		this.isContacted = isContacted;
-		this.whoContacted = whoContacted;
-		this.contactedDate = contactedDate;
-		this.queryResponse = queryResponse;
-		this.notAnswered = notAnswered;
-		this.notAnsweredReason = notAnsweredReason;
-		this.whoNotAnswered = whoNotAnswered;
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
 	public SubmitQuery(Long queryId) {
 		this.queryId = queryId;
-		this.queryRequestedDate = new Date();
 		this.queryRequestedDateMillis = new Date().getTime();
 		this.queryStatus = "FRESH";
 		this.emailId = "abc@hg.com";
@@ -127,7 +86,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 		this.isContacted = "N";
 		this.whoContacted = "abc";
-		this.contactedDate = new Date();
 		this.contactedDateMillis = new Date().getTime();
 		this.queryResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
 				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
@@ -139,7 +97,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
 				+ "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 		this.whoNotAnswered = "abc";
-		this.recordLastUpdated = new Date();
 		this.recordLastUpdatedMillis = new Date().getTime();
 	}
 
@@ -167,28 +124,12 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.whoContacted = whoContacted;
 	}
 
-	public Date getContactedDate() {
-		return contactedDate;
-	}
-
-	public void setContactedDate(Date contactedDate) {
-		this.contactedDate = contactedDate;
-	}
-
 	public Long getQueryId() {
 		return queryId;
 	}
 
 	public void setQueryId(Long queryId) {
 		this.queryId = queryId;
-	}
-
-	public Date getQueryRequestedDate() {
-		return queryRequestedDate;
-	}
-
-	public void setQueryRequestedDate(Date queryRequestedDate) {
-		this.queryRequestedDate = queryRequestedDate;
 	}
 
 	public String getQueryStatus() {
@@ -239,14 +180,6 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.whoNotAnswered = whoNotAnswered;
 	}
 	
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
 	public String getRegisteredTutor() {
 		return registeredTutor;
 	}
@@ -292,7 +225,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
 		submitQueryApplication.append(PrintFormatterUtils.startATable());
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_ID, queryId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_REQUESTED_DATE, queryRequestedDate));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_REQUESTED_DATE, new Date(queryRequestedDateMillis)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, queryStatus));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, queryDetails));
@@ -300,13 +233,46 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_RESPONSE, queryResponse));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED, notAnswered));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED_REASON, notAnsweredReason));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_NOT_ANSWERED, whoNotAnswered));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		submitQueryApplication.append(PrintFormatterUtils.endATable());
 		return submitQueryApplication.toString();
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "queryId" : return "QUERY_ID";
+			case "queryRequestedDateMillis" : return "QUERY_REQUESTED_DATE_MILLIS";
+			case "queryStatus" : return "QUERY_STATUS";
+			case "registeredTutor" : return "REGISTERED_TUTOR";
+			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "queryDetails" : return "QUERY_DETAILS";
+			case "queryResponse" : return "QUERY_RESPONSE";
+			case "notAnswered" : return "NOT_ANSWERED";
+			case "notAnsweredReason" : return "NOT_ANSWERED_REASON";
+			case "whoNotAnswered" : return "WHO_NOT_ANSWERED";
+			case "emailId" : return "EMAIL_ID";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
 	}
 }

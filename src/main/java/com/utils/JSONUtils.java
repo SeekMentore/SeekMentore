@@ -31,10 +31,13 @@ public class JSONUtils implements JSONConstants {
 	}
 	
 	public static JsonObject getJSONObjectFromString(final String jsonResponse) {
-		final JsonReader jsonReader = Json.createReader(new StringReader(jsonResponse.toString()));
-		final JsonObject jsonObject = jsonReader.readObject();
-		jsonReader.close();
-		return jsonObject;
+		if (ValidationUtils.checkStringAvailability(jsonResponse)) {
+			final JsonReader jsonReader = Json.createReader(new StringReader(jsonResponse.toString()));
+			final JsonObject jsonObject = jsonReader.readObject();
+			jsonReader.close();
+			return jsonObject;
+		}
+		return null;
 	}
 	
 	public static JsonArray getJSONArrayFromString(final String jsonResponse) {
@@ -70,6 +73,15 @@ public class JSONUtils implements JSONConstants {
 			return null;
 		} catch (Exception e) {
 			if (type == Long.class || type == Integer.class || type == Double.class || type == Float.class) {
+				if (type == Long.class) {
+					return type.cast(0L);
+				}
+				if (type == Double.class) {
+					return type.cast(0D);
+				}
+				if (type == Float.class) {
+					return type.cast(0F);
+				}
 				return type.cast(0);
 			}
 			return null;

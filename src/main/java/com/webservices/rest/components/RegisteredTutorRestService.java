@@ -20,21 +20,33 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
+import com.constants.components.TutorConstants;
 import com.model.components.BankAccount;
 import com.model.components.SubscriptionPackage;
 import com.model.components.TutorDocument;
+import com.model.gridcomponent.GridComponent;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.CommonsService;
+import com.service.components.TutorService;
+import com.utils.ApplicationUtils;
+import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.ValidationUtils;
+import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path("/registeredTutor") 
-public class RegisteredTutorRestService extends AbstractRestWebservice implements RestMethodConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_REGISTERED_TUTOR_ADMIN) 
+public class RegisteredTutorRestService extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 	
+	private Long tutorId;
 	
-	@Path("/uploadedDocuments")
+	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENTS)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String uploadedDocuments (
@@ -46,23 +58,21 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<TutorDocument> data = new LinkedList<TutorDocument>();
-		data.add(new TutorDocument(1L));
-		data.add(new TutorDocument(2L));
-		data.add(new TutorDocument(3L));
-		data.add(new TutorDocument(4L));
-		data.add(new TutorDocument(5L));
-		data.add(new TutorDocument(6L));
-		data.add(new TutorDocument(7L));
-		data.add(new TutorDocument(8L));
-		data.add(new TutorDocument(9L));
-		data.add(new TutorDocument(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENTS;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
+		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<TutorDocument> tutorDocumentsList = getTutorService().getTutorDocuments(tutorId, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, tutorDocumentsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(tutorDocumentsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/bankDetails")
@@ -332,9 +342,41 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
+	
+	public TutorService getTutorService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
+	}
+	
+	public CommonsService getCommonsService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
 
 	@Override
 	protected void doSecurity(HttpServletRequest request) throws Exception {
+		this.request = request;
+		this.securityFailureResponse = new HashMap<String, Object>();
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+		switch(this.methodName) {
+			case REST_METHOD_NAME_UPLOADED_DOCUMENTS : {
+				handleUploadedDocumentsGridView();
+				break;
+			}
+		}
+		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
+	private void handleUploadedDocumentsGridView() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
 }

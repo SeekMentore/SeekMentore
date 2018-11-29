@@ -113,5 +113,29 @@ public interface RestMethodConstants extends RestParamsConstants {
 	// Admin REST methods
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
 	String REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
-
+	// Admin - RegisteredTutor REST Methods
+	String REST_METHOD_NAME_UPLOADED_DOCUMENTS = "/uploadedDocuments";
+	// Support REST methods
+	String REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST = "/nonContactedBecomeTutorsList";
+	String REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST = "/nonVerifiedBecomeTutorsList";
+	String REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST = "/verifiedBecomeTutorsList";
+	String REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST = "/verificationFailedBecomeTutorsList";
+	String REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST = "/toBeReContactedBecomeTutorsList";
+	String REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST = "/selectedBecomeTutorsList";
+	String REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST = "/rejectedBecomeTutorsList";
+	String REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST = "/registeredBecomeTutorsList";
+	String REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST = "/nonContactedEnquiriesList";
+	String REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST = "/nonVerifiedEnquiriesList";
+	String REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST = "/verifiedEnquiriesList";
+	String REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST = "/verificationFailedEnquiriesList";
+	String REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST = "/toBeReContactedEnquiriesList";
+	String REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST = "/selectedEnquiriesList";
+	String REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST = "/rejectedEnquiriesList";	
+	String REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST = "/nonContactedSubscriptionsList";
+	String REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST = "/nonVerifiedSubscriptionsList";
+	String REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST = "/verifiedSubscriptionsList";
+	String REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST = "/verificationFailedSubscriptionsList";
+	String REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST = "/toBeReContactedSubscriptionsList";
+	String REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST = "/selectedSubscriptionsList";
+	String REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST = "/rejectedSubscriptionsList";
 }

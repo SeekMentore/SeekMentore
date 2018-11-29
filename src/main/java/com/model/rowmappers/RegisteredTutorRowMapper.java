@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.components.RegisteredTutor;
 import com.utils.ExceptionUtils;
+import com.utils.GridComponentUtils;
 
 public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, RegisteredTutorConstants {
 
@@ -32,10 +33,10 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 		registeredTutor.setComfortableLocations(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("comfortableLocations"), String.class));
 		registeredTutor.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("additionalDetails"), String.class));
 		registeredTutor.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("encryptedPassword"), String.class));
-		registeredTutor.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("recordLastUpdated"), Timestamp.class));
+		registeredTutor.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		registeredTutor.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("userId"), String.class));
 		registeredTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("updatedBy"), String.class));
-		registeredTutor.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("gridRecordDataTotalRecords"), Integer.class));
+		GridComponentUtils.mapGridPseudoColumnsForRecords(registeredTutor, row, rowNum);
 		return registeredTutor;
 	}
 

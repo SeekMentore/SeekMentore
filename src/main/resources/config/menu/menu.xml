@@ -113,13 +113,13 @@
 			<webservice id="becomeTutorCheckDataAccess" url="/becomeTutorCheckDataAccess"></webservice>	
 			<webservice id="blacklistBecomeTutors" url="/blacklistBecomeTutors"></webservice>	
 			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>			
-			<webservice id="nonContactedEnquirysList" url="/nonContactedEnquirysList"></webservice>
-			<webservice id="nonVerifiedEnquirysList" url="/nonVerifiedEnquirysList"></webservice>
-			<webservice id="verifiedEnquirysList" url="/verifiedEnquirysList"></webservice>
-			<webservice id="verificationFailedEnquirysList" url="/verificationFailedEnquirysList"></webservice>
-			<webservice id="toBeReContactedEnquirysList" url="/toBeReContactedEnquirysList"></webservice>
-			<webservice id="selectedEnquirysList" url="/selectedEnquirysList"></webservice>
-			<webservice id="rejectedEnquirysList" url="/rejectedEnquirysList"></webservice>		
+			<webservice id="nonContactedEnquiriesList" url="/nonContactedEnquiriesList"></webservice>
+			<webservice id="nonVerifiedEnquiriesList" url="/nonVerifiedEnquiriesList"></webservice>
+			<webservice id="verifiedEnquiriesList" url="/verifiedEnquiriesList"></webservice>
+			<webservice id="verificationFailedEnquiriesList" url="/verificationFailedEnquiriesList"></webservice>
+			<webservice id="toBeReContactedEnquiriesList" url="/toBeReContactedEnquiriesList"></webservice>
+			<webservice id="selectedEnquiriesList" url="/selectedEnquiriesList"></webservice>
+			<webservice id="rejectedEnquiriesList" url="/rejectedEnquiriesList"></webservice>		
 			<webservice id="enquiryRequestCheckDataAccess" url="/enquiryRequestCheckDataAccess"></webservice>	
 			<webservice id="blacklistEnquiryRequests" url="/blacklistEnquiryRequests"></webservice>	
 			<webservice id="updateEnquiryRequestRecord" url="/updateEnquiryRequestRecord"></webservice>	

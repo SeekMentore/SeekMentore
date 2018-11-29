@@ -264,7 +264,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 	
-	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 	 

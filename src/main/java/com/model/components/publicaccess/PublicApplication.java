@@ -1,11 +1,13 @@
 package com.model.components.publicaccess;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Transient;
 
-public class PublicApplication implements Serializable {
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
+
+public abstract class PublicApplication extends GridComponentObject implements Serializable {
 
 	private static final long serialVersionUID = -2232244327975645054L;
 	
@@ -16,7 +18,7 @@ public class PublicApplication implements Serializable {
 	private String isDataMigrated;
 	
 	@Transient
-	private Date whenMigrated;
+	private Long whenMigratedMillis;
 	
 	@Transient
 	private String captchaResponse;
@@ -45,15 +47,26 @@ public class PublicApplication implements Serializable {
 		this.isDataMigrated = isDataMigrated;
 	}
 
-	public Date getWhenMigrated() {
-		return whenMigrated;
-	}
-
-	public void setWhenMigrated(Date whenMigrated) {
-		this.whenMigrated = whenMigrated;
-	}
-
 	public Boolean getFlag() {
 		return flag;
+	}
+
+	public Long getWhenMigratedMillis() {
+		return whenMigratedMillis;
+	}
+
+	public void setWhenMigratedMillis(Long whenMigratedMillis) {
+		this.whenMigratedMillis = whenMigratedMillis;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "isDataMigrated" : return "IS_DATA_MIGRATED";
+			case "whenMigratedMillis" : return "WHEN_MIGRATED_MILLIS";
+		}
+		return EMPTY_STRING;
 	}
 }

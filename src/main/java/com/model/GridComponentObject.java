@@ -1,6 +1,8 @@
 package com.model;
 
-public abstract class GridComponentObject {
+import com.constants.GridComponentConstants;
+
+public abstract class GridComponentObject implements GridComponentConstants {
 	
 	private Integer gridRecordDataTotalRecords;
 
@@ -12,5 +14,10 @@ public abstract class GridComponentObject {
 		this.gridRecordDataTotalRecords = gridRecordDataTotalRecords;
 	}
 	
-	public abstract String resolveColumnNameForMapping(final String mappingProperty);
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		switch(mappingProperty) {
+			case "gridRecordDataTotalRecords" : return "TOTAL_RECORDS";
+		}
+		return EMPTY_STRING;
+	}
 }

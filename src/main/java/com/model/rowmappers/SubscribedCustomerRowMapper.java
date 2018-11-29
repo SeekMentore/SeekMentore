@@ -2,14 +2,15 @@ package com.model.rowmappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.constants.components.CustomerConstants;
 import com.model.components.SubscribedCustomer;
 import com.utils.ExceptionUtils;
+import com.utils.GridComponentUtils;
 
-public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer> {
+public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer>, CustomerConstants {
 
 	@Override 
 	public SubscribedCustomer mapRow(ResultSet row, int rowNum) throws SQLException {
@@ -24,11 +25,11 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("location"), String.class));
 		subscribedCustomer.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("additionalDetails"), String.class));
 		subscribedCustomer.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("addressDetails"), String.class));
-		subscribedCustomer.setRecordLastUpdated(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("recordLastUpdated"), Timestamp.class));
+		subscribedCustomer.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("userId"), String.class));
 		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("encryptedPassword"), String.class));
 		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedBy"), String.class));
-		subscribedCustomer.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("gridRecordDataTotalRecords"), Integer.class));
+		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribedCustomer, row, rowNum);
 		return subscribedCustomer;
 	}
 }

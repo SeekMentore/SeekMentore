@@ -262,7 +262,7 @@ public class TutorService implements TutorConstants {
 		registeredTutorObj.setTentativeTutorId(null);
 		registeredTutorObj.setEncryptedPassword(null);
 		registeredTutorObj.setUserId(null);
-		registeredTutorObj.setRecordLastUpdated(null);
+		registeredTutorObj.setRecordLastUpdatedMillis(null);
 		registeredTutorObj.setUpdatedBy(null);
 	}
 	
@@ -281,7 +281,7 @@ public class TutorService implements TutorConstants {
 	
 	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
 		tutorDocumentObj.setWhoActed(null);
-		tutorDocumentObj.setActionDate(null);
+		tutorDocumentObj.setActionDateMillis(null);
 	}
 	
 	private String getFileNameForDocument(final String documentType) {
@@ -393,6 +393,12 @@ public class TutorService implements TutorConstants {
 	
 	/***********************************************************************************************************************************/
 	public List<RegisteredTutor> getRegisteredTutorsList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM REGISTERED_TUTOR", null, null, null, null, gridComponent, RegisteredTutor.class.newInstance()), new RegisteredTutorRowMapper());
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM REGISTERED_TUTOR", null, null, gridComponent), new RegisteredTutorRowMapper());
+	}
+	
+	public List<TutorDocument> getTutorDocuments(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		return applicationDao.findAll(GridQueryUtils.createGridQuery("SELECT * FROM TUTOR_DOCUMENTS", "WHERE TUTOR_ID = :tutorId", "ORDER BY FILENAME", gridComponent), paramsMap, new TutorDocumentRowMapper());
 	}
 }

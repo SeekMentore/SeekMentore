@@ -1,5 +1,7 @@
 package com.utils;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +16,10 @@ import com.model.gridcomponent.GridComponent;
 import com.model.gridcomponent.Sorter;
 
 public class GridComponentUtils implements GridComponentConstants {
+	
+	public static void mapGridPseudoColumnsForRecords(final GridComponentObject gridComponentObject, final ResultSet row, final int rowNum) throws SQLException {
+		gridComponentObject.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, gridComponentObject.resolveColumnNameForMapping("gridRecordDataTotalRecords"), Integer.class));
+	}
 	
 	public static Integer getTotalRecords(final List<? extends GridComponentObject> dataList, final GridComponent gridComponent) {
 		if (!ValidationUtils.checkNonEmptyList(dataList)) return 0;

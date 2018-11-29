@@ -55,11 +55,11 @@ public class PublicAccessService implements PublicAccessConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Date currentTimestamp = new Date();
 		if (application instanceof BecomeTutor) {
-			handleBecomeTutorApplication(application, response, currentTimestamp);
+			handleBecomeTutorApplication(application, response, currentTimestamp.getTime());
 		} else if (application instanceof FindTutor) {
-			handleFindTutorApplication(application, response, currentTimestamp);
+			handleFindTutorApplication(application, response, currentTimestamp.getTime());
 		} else if (application instanceof SubscribeWithUs) {
-			handleSubscribeWithUsApplication(application, response, currentTimestamp);
+			handleSubscribeWithUsApplication(application, response, currentTimestamp.getTime());
 		} else if (application instanceof SubmitQuery) {
 			handleSubmitQueryApplication(application, response, currentTimestamp);
 		} else {
@@ -120,12 +120,12 @@ public class PublicAccessService implements PublicAccessConstants {
 	private void handleBecomeTutorApplication (
 		final PublicApplication application, 
 		final Map<String, Object> response, 
-		final Date currentTimestamp
+		final Long currentTimestampMillis
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_REGISTRATION);
 		final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
-		becomeTutorApplication.setRecordLastUpdated(currentTimestamp);
+		becomeTutorApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", becomeTutorApplication.getEmailId());
@@ -150,46 +150,46 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			// Fresh Application Status
-			becomeTutorApplication.setApplicationDate(currentTimestamp);
+			becomeTutorApplication.setApplicationDateMillis(currentTimestampMillis);
 			becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
 			becomeTutorApplication.setIsContacted(NO);
 			becomeTutorApplication.setWhoContacted(null);
-			becomeTutorApplication.setContactedDate(null);
+			becomeTutorApplication.setContactedDateMillis(null);
 			becomeTutorApplication.setContactedRemarks(null);
 			becomeTutorApplication.setIsAuthenticationVerified(null);
 			becomeTutorApplication.setWhoVerified(null);
-			becomeTutorApplication.setVerificationDate(null);
+			becomeTutorApplication.setVerificationDateMillis(null);
 			becomeTutorApplication.setVerificationRemarks(null);
 			becomeTutorApplication.setIsToBeRecontacted(null);
 			becomeTutorApplication.setWhoSuggestedForRecontact(null);
-			becomeTutorApplication.setSuggestionDate(null);
+			becomeTutorApplication.setSuggestionDateMillis(null);
 			becomeTutorApplication.setSuggestionRemarks(null);
 			becomeTutorApplication.setWhoRecontacted(null);
-			becomeTutorApplication.setRecontactedDate(null);
+			becomeTutorApplication.setRecontactedDateMillis(null);
 			becomeTutorApplication.setRecontactedRemarks(null);
 			becomeTutorApplication.setIsSelected(null);
 			becomeTutorApplication.setWhoSelected(null);
-			becomeTutorApplication.setSelectionDate(null);
+			becomeTutorApplication.setSelectionDateMillis(null);
 			becomeTutorApplication.setSelectionRemarks(null);
 			becomeTutorApplication.setIsRejected(null);
 			becomeTutorApplication.setWhoRejected(null);
-			becomeTutorApplication.setRejectionDate(null);
+			becomeTutorApplication.setRejectionDateMillis(null);
 			becomeTutorApplication.setRejectionRemarks(null);
 			becomeTutorApplication.setRejectionCount(0);
 			becomeTutorApplication.setReApplied(null);
-			becomeTutorApplication.setPreviousApplicationDate(null);
+			becomeTutorApplication.setPreviousApplicationDateMillis(null);
 		}
 	}
 	
 	private void handleFindTutorApplication (
 			final PublicApplication application, 
 			final Map<String, Object> response, 
-			final Date currentTimestamp
+			final Long currentTimestampMillis
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_TUTOR_ENQUIRY);
 		final FindTutor findTutorApplication = (FindTutor) application;
-		findTutorApplication.setRecordLastUpdated(currentTimestamp);
+		findTutorApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system for Subscribed Customer
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", findTutorApplication.getEmailId());
@@ -203,42 +203,42 @@ public class PublicAccessService implements PublicAccessConstants {
 		} else {
 			findTutorApplication.setSubscribedCustomer(NO);
 		}
-		findTutorApplication.setEnquiryDate(currentTimestamp);
+		findTutorApplication.setEnquiryDateMillis(currentTimestampMillis);
 		findTutorApplication.setEnquiryStatus(APPLICATION_STATUS_FRESH);
 		findTutorApplication.setIsContacted(NO);
 		findTutorApplication.setWhoContacted(null);
-		findTutorApplication.setContactedDate(null);
+		findTutorApplication.setContactedDateMillis(null);
 		findTutorApplication.setContactedRemarks(null);
 		findTutorApplication.setIsAuthenticationVerified(null);
 		findTutorApplication.setWhoVerified(null);
-		findTutorApplication.setVerificationDate(null);
+		findTutorApplication.setVerificationDateMillis(null);
 		findTutorApplication.setVerificationRemarks(null);
 		findTutorApplication.setIsToBeRecontacted(null);
 		findTutorApplication.setWhoSuggestedForRecontact(null);
-		findTutorApplication.setSuggestionDate(null);
+		findTutorApplication.setSuggestionDateMillis(null);
 		findTutorApplication.setSuggestionRemarks(null);
 		findTutorApplication.setWhoRecontacted(null);
-		findTutorApplication.setRecontactedDate(null);
+		findTutorApplication.setRecontactedDateMillis(null);
 		findTutorApplication.setRecontactedRemarks(null);
 		findTutorApplication.setIsSelected(null);
 		findTutorApplication.setWhoSelected(null);
-		findTutorApplication.setSelectionDate(null);
+		findTutorApplication.setSelectionDateMillis(null);
 		findTutorApplication.setSelectionRemarks(null);
 		findTutorApplication.setIsRejected(null);
 		findTutorApplication.setWhoRejected(null);
-		findTutorApplication.setRejectionDate(null);
+		findTutorApplication.setRejectionDateMillis(null);
 		findTutorApplication.setRejectionRemarks(null);
 	}
 	
 	private void handleSubscribeWithUsApplication (
 			final PublicApplication application, 
 			final Map<String, Object> response, 
-			final Date currentTimestamp
+			final Long currentTimestampMillis
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		response.put(RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE, PAGE_REFERENCE_SUBSCRIBE_WITH_US);
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) application;
-		subscribeWithUsApplication.setRecordLastUpdated(currentTimestamp);
+		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system for Subscribed Customer
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", subscribeWithUsApplication.getEmailId());
@@ -252,30 +252,30 @@ public class PublicAccessService implements PublicAccessConstants {
 		} else {
 			subscribeWithUsApplication.setSubscribedCustomer(NO);
 		}
-		subscribeWithUsApplication.setApplicationDate(currentTimestamp);
+		subscribeWithUsApplication.setApplicationDateMillis(currentTimestampMillis);
 		subscribeWithUsApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
 		subscribeWithUsApplication.setIsContacted(NO);
 		subscribeWithUsApplication.setWhoContacted(null);
-		subscribeWithUsApplication.setContactedDate(null);
+		subscribeWithUsApplication.setContactedDateMillis(null);
 		subscribeWithUsApplication.setContactedRemarks(null);
 		subscribeWithUsApplication.setIsAuthenticationVerified(null);
 		subscribeWithUsApplication.setWhoVerified(null);
-		subscribeWithUsApplication.setVerificationDate(null);
+		subscribeWithUsApplication.setVerificationDateMillis(null);
 		subscribeWithUsApplication.setVerificationRemarks(null);
 		subscribeWithUsApplication.setIsToBeRecontacted(null);
 		subscribeWithUsApplication.setWhoSuggestedForRecontact(null);
-		subscribeWithUsApplication.setSuggestionDate(null);
+		subscribeWithUsApplication.setSuggestionDateMillis(null);
 		subscribeWithUsApplication.setSuggestionRemarks(null);
 		subscribeWithUsApplication.setWhoRecontacted(null);
-		subscribeWithUsApplication.setRecontactedDate(null);
+		subscribeWithUsApplication.setRecontactedDateMillis(null);
 		subscribeWithUsApplication.setRecontactedRemarks(null);
 		subscribeWithUsApplication.setIsSelected(null);
 		subscribeWithUsApplication.setWhoSelected(null);
-		subscribeWithUsApplication.setSelectionDate(null);
+		subscribeWithUsApplication.setSelectionDateMillis(null);
 		subscribeWithUsApplication.setSelectionRemarks(null);
 		subscribeWithUsApplication.setIsRejected(null);
 		subscribeWithUsApplication.setWhoRejected(null);
-		subscribeWithUsApplication.setRejectionDate(null);
+		subscribeWithUsApplication.setRejectionDateMillis(null);
 		subscribeWithUsApplication.setRejectionRemarks(null);
 	}
 	

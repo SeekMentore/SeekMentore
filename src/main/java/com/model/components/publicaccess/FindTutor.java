@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,6 +17,7 @@ import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.PrintFormatterUtils;
+import com.utils.ValidationUtils;
 
 @Entity
 @Table( name = FindTutorConstants.TABLE_NAME, 
@@ -34,10 +33,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_ENQUIRY_ID, unique = true, nullable = false)
 	private Long enquiryId;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_ENQUIRY_DATE, length = 10, nullable = false)
-	private Date enquiryDate;
 	
 	@Column(name = COLUMN_NAME_ENQUIRY_STATUS, unique = true, nullable = false)
 	private String enquiryStatus;
@@ -72,10 +67,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_CONTACTED_DATE, length = 10)
-	private Date contactedDate;
-	
 	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
 	
@@ -84,10 +75,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	
 	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_VERIFICATION_DATE, length = 10)
-	private Date verificationDate;
 	
 	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
@@ -98,19 +85,11 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SUGGESTION_DATE, length = 10)
-	private Date suggestionDate;
-	
 	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
 	
 	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECONTACTED_DATE, length = 10)
-	private Date recontactedDate;
 	
 	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
@@ -121,10 +100,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SELECTION_DATE, length = 10)
-	private Date selectionDate;
-	
 	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
 	
@@ -133,10 +108,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	
 	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_REJECTION_DATE, length = 10)
-	private Date rejectionDate;
 	
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
@@ -150,10 +121,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
 	private String addressDetails;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
-	private Date recordLastUpdated;
-	
 	private Long enquiryDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -162,134 +129,10 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	private Long selectionDateMillis;
 	private Long rejectionDateMillis;
 	private Long recordLastUpdatedMillis;
+	private String updatedBy;
 	
 	public FindTutor() {}
 	
-	public FindTutor(
-			Date enquiryDate,
-			String enquiryStatus,
-			String name,
-			String contactNumber,
-			String emailId,
-			String studentGrade,
-			String subjects,
-			String preferredTimeToCall,
-			String additionalDetails,
-			String isContacted,
-			String whoContacted,
-			Date contactedDate,
-			String contactedRemarks,
-			String isAuthenticationVerified,
-			String whoVerified,
-			Date verificationDate,
-			String verificationRemarks,
-			String isToBeRecontacted,
-			String whoSuggestedForRecontact,
-			Date suggestionDate,
-			String suggestionRemarks,
-			String whoRecontacted,
-			Date recontactedDate,
-			String recontactedRemarks,
-			String isSelected,
-			String whoSelected,
-			Date selectionDate,
-			String selectionRemarks,
-			String isRejected,
-			String whoRejected,
-			Date rejectionDate,
-			String rejectionRemarks,
-			String location,
-			String reference,
-			String addressDetails,
-			Date recordLastUpdated
-			
-	) {
-		this.enquiryDate = enquiryDate;
-		this.enquiryStatus = enquiryStatus;
-		this.name = name;
-		this.contactNumber = contactNumber;
-		this.emailId = emailId;
-		this.studentGrade = studentGrade;
-		this.subjects = subjects;
-		this.preferredTimeToCall = preferredTimeToCall;
-		this.additionalDetails = additionalDetails;
-		this.isContacted = isContacted;
-		this.whoContacted = whoContacted;
-		this.contactedDate = contactedDate;
-		this.contactedRemarks = contactedRemarks;
-		this.isAuthenticationVerified = isAuthenticationVerified;
-		this.whoVerified = whoVerified;
-		this.verificationDate = verificationDate;
-		this.verificationRemarks = verificationRemarks;
-		this.isToBeRecontacted = isToBeRecontacted;
-		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
-		this.suggestionDate = suggestionDate;
-		this.suggestionRemarks = suggestionRemarks;
-		this.whoRecontacted = whoRecontacted;
-		this.recontactedDate = recontactedDate;
-		this.recontactedRemarks = recontactedRemarks;
-		this.isSelected = isSelected;
-		this.whoSelected = whoSelected;
-		this.selectionDate = selectionDate;
-		this.selectionRemarks = selectionRemarks;
-		this.isRejected = isRejected;
-		this.whoRejected = whoRejected;
-		this.rejectionDate = rejectionDate;
-		this.rejectionRemarks = rejectionRemarks;
-		this.recordLastUpdated = recordLastUpdated;
-		this.location = location;
-		this.reference = reference;
-		this.addressDetails = addressDetails;
-	}
-	
-	public FindTutor(Long enquiryId) {
-		this.enquiryId = enquiryId;
-		this.enquiryDate = new Date();
-		this.enquiryDateMillis = new Date().getTime();
-		this.enquiryStatus = "FRESH";
-		this.name = "Shantanu Mukherjee";
-		this.contactNumber = "989898989898";
-		this.emailId = "abc@efb.com";
-		this.studentGrade = "01";
-		this.subjects = "01";
-		this.preferredTimeToCall = "01;02;03";
-		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isContacted = "Y";
-		this.whoContacted = "abc";
-		this.contactedDate = new Date();
-		this.contactedDateMillis = new Date().getTime();
-		this.contactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isAuthenticationVerified = "Y";
-		this.whoVerified = "abc";
-		this.verificationDate = new Date();
-		this.verificationDateMillis = new Date().getTime();
-		this.verificationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isToBeRecontacted = "Y";
-		this.whoSuggestedForRecontact = "abc";
-		this.suggestionDate = new Date();
-		this.suggestionDateMillis = new Date().getTime();
-		this.suggestionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.whoRecontacted = "abc";
-		this.recontactedDate = new Date();
-		this.recontactedDateMillis = new Date().getTime();
-		this.recontactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isSelected = "Y";
-		this.whoSelected = "abc";
-		this.selectionDate = new Date();
-		this.selectionDateMillis = new Date().getTime();
-		this.selectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isRejected = "Y";
-		this.whoRejected = "abc";
-		this.rejectionDate = new Date();
-		this.rejectionDateMillis = new Date().getTime();
-		this.rejectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.recordLastUpdated = new Date();
-		this.recordLastUpdatedMillis = new Date().getTime();
-		this.location = "01";
-		this.reference = "01";
-		this.addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-	}
-
 	public String getContactNumber() {
 		return contactNumber;
 	}
@@ -370,14 +213,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.whoContacted = whoContacted;
 	}
 
-	public Date getContactedDate() {
-		return contactedDate;
-	}
-
-	public void setContactedDate(Date contactedDate) {
-		this.contactedDate = contactedDate;
-	}
-
 	public String getContactedRemarks() {
 		return contactedRemarks;
 	}
@@ -394,14 +229,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.whoVerified = whoVerified;
 	}
 
-	public Date getVerificationDate() {
-		return verificationDate;
-	}
-
-	public void setVerificationDate(Date verificationDate) {
-		this.verificationDate = verificationDate;
-	}
-
 	public String getVerificationRemarks() {
 		return verificationRemarks;
 	}
@@ -416,14 +243,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setWhoSuggestedForRecontact(String whoSuggestedForRecontact) {
 		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
-	}
-
-	public Date getSuggestionDate() {
-		return suggestionDate;
-	}
-
-	public void setSuggestionDate(Date suggestionDate) {
-		this.suggestionDate = suggestionDate;
 	}
 
 	public String getSuggestionRemarks() {
@@ -466,14 +285,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.whoRecontacted = whoRecontacted;
 	}
 
-	public Date getRecontactedDate() {
-		return recontactedDate;
-	}
-
-	public void setRecontactedDate(Date recontactedDate) {
-		this.recontactedDate = recontactedDate;
-	}
-
 	public String getRecontactedRemarks() {
 		return recontactedRemarks;
 	}
@@ -488,14 +299,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setWhoSelected(String whoSelected) {
 		this.whoSelected = whoSelected;
-	}
-
-	public Date getSelectionDate() {
-		return selectionDate;
-	}
-
-	public void setSelectionDate(Date selectionDate) {
-		this.selectionDate = selectionDate;
 	}
 
 	public String getSelectionRemarks() {
@@ -522,14 +325,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.whoRejected = whoRejected;
 	}
 
-	public Date getRejectionDate() {
-		return rejectionDate;
-	}
-
-	public void setRejectionDate(Date rejectionDate) {
-		this.rejectionDate = rejectionDate;
-	}
-
 	public String getRejectionRemarks() {
 		return rejectionRemarks;
 	}
@@ -544,14 +339,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setEnquiryId(Long enquiryId) {
 		this.enquiryId = enquiryId;
-	}
-
-	public Date getEnquiryDate() {
-		return enquiryDate;
-	}
-
-	public void setEnquiryDate(Date enquiryDate) {
-		this.enquiryDate = enquiryDate;
 	}
 
 	public String getEnquiryStatus() {
@@ -586,14 +373,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.subscribedCustomer = subscribedCustomer;
 	}
 	
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-
 	public Long getEnquiryDateMillis() {
 		return enquiryDateMillis;
 	}
@@ -663,7 +442,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
 		findTutorApplication.append(PrintFormatterUtils.startATable());
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_ID, enquiryId));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_DATE, enquiryDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_DATE, new Date(enquiryDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, enquiryStatus));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, name));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, contactNumber));
@@ -678,28 +457,28 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, contactedDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, contactedRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, isAuthenticationVerified));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, whoVerified));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, verificationDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(verificationDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, verificationRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, isToBeRecontacted));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, whoSuggestedForRecontact));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, suggestionDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(suggestionDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, suggestionRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, whoRecontacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, recontactedDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(recontactedDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, recontactedRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, isSelected));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, whoSelected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, selectionDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(selectionDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, selectionRemarks));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, isRejected));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, whoRejected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, rejectionDate));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(rejectionDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, recordLastUpdated));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		findTutorApplication.append(PrintFormatterUtils.endATable());
 		return findTutorApplication.toString();
 	}
@@ -744,7 +523,8 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
-					COLUMN_NAME_RECORD_LAST_UPDATED
+					COLUMN_NAME_RECORD_LAST_UPDATED,
+					"UPDATED_BY"
 				};
 		}
 	}
@@ -756,7 +536,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		switch (reportSwitch) {
 			case "Admin_Report" : {
 				return new Object[] {
-						this.enquiryDate,
+						new Date(this.enquiryDateMillis),
 						this.enquiryStatus,
 						this.name,
 						this.contactNumber,
@@ -770,31 +550,88 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
-						this.contactedDate,
+						new Date(this.contactedDateMillis),
 						this.contactedRemarks,
 						this.isAuthenticationVerified,
 						this.whoVerified,
-						this.verificationDate,
+						new Date(this.verificationDateMillis),
 						this.verificationRemarks,
 						this.isToBeRecontacted,
 						this.whoSuggestedForRecontact,
-						this.suggestionDate,
+						new Date(this.suggestionDateMillis),
 						this.suggestionRemarks,
 						this.whoRecontacted,
-						this.recontactedDate,
+						new Date(this.recontactedDateMillis),
 						this.recontactedRemarks,
 						this.isSelected,
 						this.whoSelected,
-						this.selectionDate,
+						new Date(this.selectionDateMillis),
 						this.selectionRemarks,
 						this.isRejected,
 						this.whoRejected,
-						this.rejectionDate,
+						new Date(this.rejectionDateMillis),
 						this.rejectionRemarks,
-						this.recordLastUpdated
+						new Date(this.recordLastUpdatedMillis),
+						this.updatedBy
 				};
 			}
 		}
 		return new Object[] {};
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquiryDateMillis" : return "ENQUIRY_DATE_MILLIS";
+			case "enquiryStatus" : return "ENQUIRY_STATUS";
+			case "name" : return "NAME";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "studentGrade" : return "STUDENT_GRADE";
+			case "subjects" : return "SUBJECTS";
+			case "preferredTimeToCall" : return "PREFERRED_TIME_TO_CALL";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";			
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "contactedRemarks" : return "CONTACTED_REMARKS";
+			case "isAuthenticationVerified" : return "IS_AUTHENTICATION_VERIFIED";
+			case "whoVerified" : return "WHO_VERIFIED";
+			case "verificationDateMillis" : return "VERIFICATION_DATE_MILLIS";
+			case "verificationRemarks" : return "VERIFICATION_REMARKS";
+			case "isToBeRecontacted" : return "IS_TO_BE_RECONTACTED";
+			case "whoSuggestedForRecontact" : return "WHO_SUGGESTED_FOR_RECONTACT";
+			case "suggestionDateMillis" : return "SUGGESTION_DATE_MILLIS";
+			case "suggestionRemarks" : return "SUGGESTION_REMARKS";
+			case "whoRecontacted" : return "WHO_RECONTACTED";
+			case "recontactedDateMillis" : return "RECONTACTED_DATE_MILLIS";
+			case "recontactedRemarks" : return "RECONTACTED_REMARKS";
+			case "isSelected" : return "IS_SELECTED";
+			case "whoSelected" : return "WHO_SELECTED";
+			case "selectionDateMillis" : return "SELECTION_DATE_MILLIS";
+			case "selectionRemarks" : return "SELECTION_REMARKS";
+			case "isRejected" : return "IS_REJECTED";
+			case "whoRejected" : return "WHO_REJECTED";
+			case "rejectionDateMillis" : return "REJECTION_DATE_MILLIS";			
+			case "rejectionRemarks" : return "REJECTION_REMARKS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "reference" : return "REFERENCE";
+			case "location" : return "LOCATION";
+			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 }

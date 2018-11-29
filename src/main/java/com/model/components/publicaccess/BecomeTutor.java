@@ -19,6 +19,7 @@ import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.PrintFormatterUtils;
+import com.utils.ValidationUtils;
 
 @Entity
 @Table( name = BecomeTutorConstants.TABLE_NAME,
@@ -34,10 +35,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = COLUMN_NAME_TENTATIVE_TUTOR_ID, unique = true, nullable = false)
 	private Long tentativeTutorId;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_APPLICATION_DATE, length = 10, nullable = false)
-	private Date applicationDate;
 	
 	@Column(name = COLUMN_NAME_APPLICATION_STATUS, unique = true, nullable = false)
 	private String applicationStatus;
@@ -94,10 +91,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_CONTACTED_DATE, length = 10)
-	private Date contactedDate;
-	
 	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
 	
@@ -106,10 +99,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	
 	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_VERIFICATION_DATE, length = 10)
-	private Date verificationDate;
 	
 	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
@@ -120,19 +109,11 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SUGGESTION_DATE, length = 10)
-	private Date suggestionDate;
-	
 	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
 	
 	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECONTACTED_DATE, length = 10)
-	private Date recontactedDate;
 	
 	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
@@ -143,10 +124,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_SELECTION_DATE, length = 10)
-	private Date selectionDate;
-	
 	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
 	
@@ -155,10 +132,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	
 	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_REJECTION_DATE, length = 10)
-	private Date rejectionDate;
 	
 	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
@@ -175,15 +148,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
 	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_PREVIOUS_APPLICATION_DATE, length = 10)
-	private Date previousApplicationDate;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_RECORD_LAST_UPDATED, length = 10, nullable = false)
-	private Date recordLastUpdated;
-	
-	private Long dateOfBirthMillis;
 	private Long applicationDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -193,165 +157,10 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private Long rejectionDateMillis;
 	private Long previousApplicationDateMillis;
 	private Long recordLastUpdatedMillis;
+	private String updatedBy;
 	
 	public BecomeTutor() {}
 	
-	public BecomeTutor(
-			Date applicationDate,
-			String applicationStatus,
-			Date dateOfBirth,
-			String contactNumber,
-			String emailId,
-			String firstName,
-			String lastName,
-			String gender,
-			String qualification,
-			String primaryProfession,
-			String transportMode,
-			Integer teachingExp,
-			String studentGrade,
-			String subjects,
-			String locations,
-			String preferredTimeToCall,
-			String additionalDetails,
-			String isContacted,
-			String whoContacted,
-			Date contactedDate,
-			String contactedRemarks,
-			String isAuthenticationVerified,
-			String whoVerified,
-			Date verificationDate,
-			String verificationRemarks,
-			String isToBeRecontacted,
-			String whoSuggestedForRecontact,
-			Date suggestionDate,
-			String suggestionRemarks,
-			String whoRecontacted,
-			Date recontactedDate,
-			String recontactedRemarks,
-			String isSelected,
-			String whoSelected,
-			Date selectionDate,
-			String selectionRemarks,
-			String isRejected,
-			String whoRejected,
-			Date rejectionDate,
-			String rejectionRemarks,
-			Integer rejectionCount,
-			String reApplied,
-			Date previousApplicationDate,
-			String reference,
-			String preferredTeachingType,
-			Date recordLastUpdated
-	) {
-		this.applicationDate = applicationDate;
-		this.applicationStatus = applicationStatus;
-		this.dateOfBirth = dateOfBirth;
-		this.contactNumber = contactNumber;
-		this.emailId = emailId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.gender = gender;
-		this.qualification = qualification;
-		this.primaryProfession = primaryProfession;
-		this.transportMode = transportMode;
-		this.teachingExp = teachingExp;
-		this.studentGrade = studentGrade;
-		this.subjects = subjects;
-		this.locations = locations;
-		this.preferredTimeToCall = preferredTimeToCall;
-		this.additionalDetails = additionalDetails;
-		this.isContacted = isContacted;
-		this.whoContacted = whoContacted;
-		this.contactedDate = contactedDate;
-		this.contactedRemarks = contactedRemarks;
-		this.isAuthenticationVerified = isAuthenticationVerified;
-		this.whoVerified = whoVerified;
-		this.verificationDate = verificationDate;
-		this.verificationRemarks = verificationRemarks;
-		this.isToBeRecontacted = isToBeRecontacted;
-		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
-		this.suggestionDate = suggestionDate;
-		this.suggestionRemarks = suggestionRemarks;
-		this.whoRecontacted = whoRecontacted;
-		this.recontactedDate = recontactedDate;
-		this.recontactedRemarks = recontactedRemarks;
-		this.isSelected = isSelected;
-		this.whoSelected = whoSelected;
-		this.selectionDate = selectionDate;
-		this.selectionRemarks = selectionRemarks;
-		this.isRejected = isRejected;
-		this.whoRejected = whoRejected;
-		this.rejectionDate = rejectionDate;
-		this.rejectionRemarks = rejectionRemarks;
-		this.rejectionCount = rejectionCount;
-		this.reApplied = reApplied;
-		this.reference = reference;
-		this.preferredTeachingType = preferredTeachingType;
-		this.previousApplicationDate = previousApplicationDate;
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
-	public BecomeTutor(Long tentativeTutorId) {
-		this.tentativeTutorId = tentativeTutorId;
-		this.applicationDate = new Date();
-		this.applicationDateMillis = new Date().getTime();
-		this.applicationStatus = "FRESH";
-		this.dateOfBirth = new Date();
-		this.dateOfBirthMillis = new Date().getTime();
-		this.contactNumber = "989898989898";
-		this.emailId = "abc@efb.com";
-		this.firstName = "Shantanu";
-		this.lastName = "Mukherjee";
-		this.gender = "01";
-		this.qualification = "02";
-		this.primaryProfession = "03";
-		this.transportMode = "02";
-		this.teachingExp = 5;
-		this.studentGrade = "01;02;03";
-		this.subjects = "01;02;03";
-		this.locations = "01;02;03";
-		this.preferredTimeToCall = "01;02;03";
-		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isContacted = "Y";
-		this.whoContacted = "abc";
-		this.contactedDate = new Date();
-		this.contactedDateMillis = new Date().getTime();
-		this.contactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isAuthenticationVerified = "Y";
-		this.whoVerified = "abc";
-		this.verificationDate = new Date();
-		this.verificationDateMillis = new Date().getTime();
-		this.verificationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isToBeRecontacted = "N";
-		this.whoSuggestedForRecontact = "abc";
-		this.suggestionDate = new Date();
-		this.suggestionDateMillis = new Date().getTime();
-		this.suggestionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.whoRecontacted = "abc";
-		this.recontactedDate = new Date();
-		this.recontactedDateMillis = new Date().getTime();
-		this.recontactedRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isSelected = "Y";
-		this.whoSelected = "abc";
-		this.selectionDate = new Date();
-		this.selectionDateMillis = new Date().getTime();
-		this.selectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.isRejected = "Y";
-		this.whoRejected = "abc";
-		this.rejectionDate = new Date();
-		this.rejectionDateMillis = new Date().getTime();
-		this.rejectionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-		this.rejectionCount = 2;
-		this.reApplied = "Y";
-		this.reference = "02";
-		this.preferredTeachingType = "01;02";
-		this.previousApplicationDate = new Date();
-		this.previousApplicationDateMillis = new Date().getTime();
-		this.recordLastUpdated = new Date();
-		this.recordLastUpdatedMillis = new Date().getTime();
-	}
-
 	public Long getTentativeTutorId() {
 		return tentativeTutorId;
 	}
@@ -496,14 +305,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.isSelected = isSelected;
 	}
 	
-	public Date getApplicationDate() {
-		return applicationDate;
-	}
-
-	public void setApplicationDate(Date applicationDate) {
-		this.applicationDate = applicationDate;
-	}
-
 	public String getApplicationStatus() {
 		return applicationStatus;
 	}
@@ -536,14 +337,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.whoContacted = whoContacted;
 	}
 
-	public Date getContactedDate() {
-		return contactedDate;
-	}
-
-	public void setContactedDate(Date contactedDate) {
-		this.contactedDate = contactedDate;
-	}
-
 	public String getContactedRemarks() {
 		return contactedRemarks;
 	}
@@ -558,14 +351,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 
 	public void setWhoVerified(String whoVerified) {
 		this.whoVerified = whoVerified;
-	}
-
-	public Date getVerificationDate() {
-		return verificationDate;
-	}
-
-	public void setVerificationDate(Date verificationDate) {
-		this.verificationDate = verificationDate;
 	}
 
 	public String getVerificationRemarks() {
@@ -584,14 +369,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.whoSuggestedForRecontact = whoSuggestedForRecontact;
 	}
 
-	public Date getSuggestionDate() {
-		return suggestionDate;
-	}
-
-	public void setSuggestionDate(Date suggestionDate) {
-		this.suggestionDate = suggestionDate;
-	}
-
 	public String getSuggestionRemarks() {
 		return suggestionRemarks;
 	}
@@ -608,14 +385,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.whoRecontacted = whoRecontacted;
 	}
 
-	public Date getRecontactedDate() {
-		return recontactedDate;
-	}
-
-	public void setRecontactedDate(Date recontactedDate) {
-		this.recontactedDate = recontactedDate;
-	}
-
 	public String getRecontactedRemarks() {
 		return recontactedRemarks;
 	}
@@ -630,14 +399,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 
 	public void setWhoSelected(String whoSelected) {
 		this.whoSelected = whoSelected;
-	}
-
-	public Date getSelectionDate() {
-		return selectionDate;
-	}
-
-	public void setSelectionDate(Date selectionDate) {
-		this.selectionDate = selectionDate;
 	}
 
 	public String getSelectionRemarks() {
@@ -664,14 +425,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.whoRejected = whoRejected;
 	}
 
-	public Date getRejectionDate() {
-		return rejectionDate;
-	}
-
-	public void setRejectionDate(Date rejectionDate) {
-		this.rejectionDate = rejectionDate;
-	}
-
 	public String getRejectionRemarks() {
 		return rejectionRemarks;
 	}
@@ -696,22 +449,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.reApplied = reApplied;
 	}
 
-	public Date getPreviousApplicationDate() {
-		return previousApplicationDate;
-	}
-
-	public void setPreviousApplicationDate(Date previousApplicationDate) {
-		this.previousApplicationDate = previousApplicationDate;
-	}
-	
-	public Date getRecordLastUpdated() {
-		return recordLastUpdated;
-	}
-
-	public void setRecordLastUpdated(Date recordLastUpdated) {
-		this.recordLastUpdated = recordLastUpdated;
-	}
-	
 	public String getReference() {
 		return reference;
 	}
@@ -728,14 +465,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.preferredTeachingType = preferredTeachingType;
 	}
 	
-	public Long getDateOfBirthMillis() {
-		return dateOfBirthMillis;
-	}
-
-	public void setDateOfBirthMillis(Long dateOfBirthMillis) {
-		this.dateOfBirthMillis = dateOfBirthMillis;
-	}
-
 	public Long getApplicationDateMillis() {
 		return applicationDateMillis;
 	}
@@ -813,7 +542,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
 		becomeTutorApplication.append(PrintFormatterUtils.startATable());
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_TUTOR_ID, this.tentativeTutorId));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, this.applicationDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, new Date(this.applicationDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_DATE_OF_BIRTH, this.dateOfBirth));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
@@ -834,31 +563,31 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, this.isContacted));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, this.whoContacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, this.contactedDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(this.contactedDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, this.contactedRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, this.isAuthenticationVerified));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, this.whoVerified));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, this.verificationDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(this.verificationDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, this.verificationRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, this.isToBeRecontacted));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, this.whoSuggestedForRecontact));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, this.suggestionDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(this.suggestionDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, this.suggestionRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, this.whoRecontacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, this.recontactedDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(this.recontactedDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, this.recontactedRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, this.isSelected));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, this.whoSelected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, this.selectionDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(this.selectionDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, this.selectionRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, this.isRejected));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, this.whoRejected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, this.rejectionDate));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(this.rejectionDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, this.rejectionRemarks));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_COUNT, this.rejectionCount));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RE_APPLIED, this.reApplied));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREVIOUS_APPLICATION_DATE, this.previousApplicationDate));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, this.recordLastUpdated));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREVIOUS_APPLICATION_DATE, new Date(this.previousApplicationDateMillis)));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(this.recordLastUpdatedMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.endATable());
 		return becomeTutorApplication.toString();
 	}
@@ -913,7 +642,8 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_REJECTION_COUNT,
 						COLUMN_NAME_RE_APPLIED,
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
-						COLUMN_NAME_RECORD_LAST_UPDATED
+						COLUMN_NAME_RECORD_LAST_UPDATED,
+						"UPDATED_BY"
 					};
 			}
 		}
@@ -925,7 +655,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		switch (reportSwitch) {
 			case "Admin_Report" : {
 				return new Object[] {
-						this.applicationDate,
+						new Date(this.applicationDateMillis),
 						this.applicationStatus,
 						this.dateOfBirth,
 						this.contactNumber,
@@ -946,34 +676,100 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContacted,
-						this.contactedDate,
+						new Date(this.contactedDateMillis),
 						this.contactedRemarks,
 						this.isAuthenticationVerified,
 						this.whoVerified,
-						this.verificationDate,
+						new Date(this.verificationDateMillis),
 						this.verificationRemarks,
 						this.isToBeRecontacted,
 						this.whoSuggestedForRecontact,
-						this.suggestionDate,
+						new Date(this.suggestionDateMillis),
 						this.suggestionRemarks,
 						this.whoRecontacted,
-						this.recontactedDate,
+						new Date(this.recontactedDateMillis),
 						this.recontactedRemarks,
 						this.isSelected,
 						this.whoSelected,
-						this.selectionDate,
+						new Date(this.selectionDateMillis),
 						this.selectionRemarks,
 						this.isRejected,
 						this.whoRejected,
-						this.rejectionDate,
+						new Date(this.rejectionDateMillis),
 						this.rejectionRemarks,
 						this.rejectionCount,
 						this.reApplied,
-						this.previousApplicationDate,
-						this.recordLastUpdated
+						new Date(this.previousApplicationDateMillis),
+						new Date(this.recordLastUpdatedMillis),
+						this.updatedBy
 				};
 			}
 		}
 		return new Object[] {};
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "tentativeTutorId" : return "TENTATIVE_TUTOR_ID";
+			case "applicationDateMillis" : return "APPLICATION_DATE_MILLIS";
+			case "applicationStatus" : return "APPLICATION_STATUS";
+			case "dateOfBirth" : return "DATE_OF_BIRTH";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "firstName" : return "FIRST_NAME";
+			case "lastName" : return "LAST_NAME";
+			case "gender" : return "GENDER";
+			case "qualification" : return "QUALIFICATION";
+			case "primaryProfession" : return "PRIMARY_PROFESSION";
+			case "transportMode" : return "TRANSPORT_MODE";
+			case "teachingExp" : return "TEACHING_EXP";
+			case "studentGrade" : return "STUDENT_GRADE";
+			case "subjects" : return "SUBJECTS";
+			case "locations" : return "LOCATIONS";
+			case "preferredTimeToCall" : return "PREFERRED_TIME_TO_CALL";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";			
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "contactedRemarks" : return "CONTACTED_REMARKS";
+			case "isAuthenticationVerified" : return "IS_AUTHENTICATION_VERIFIED";
+			case "whoVerified" : return "WHO_VERIFIED";
+			case "verificationDateMillis" : return "VERIFICATION_DATE_MILLIS";
+			case "verificationRemarks" : return "VERIFICATION_REMARKS";
+			case "isToBeRecontacted" : return "IS_TO_BE_RECONTACTED";
+			case "whoSuggestedForRecontact" : return "WHO_SUGGESTED_FOR_RECONTACT";
+			case "suggestionDateMillis" : return "SUGGESTION_DATE_MILLIS";
+			case "suggestionRemarks" : return "SUGGESTION_REMARKS";
+			case "whoRecontacted" : return "WHO_RECONTACTED";
+			case "recontactedDateMillis" : return "RECONTACTED_DATE_MILLIS";
+			case "recontactedRemarks" : return "RECONTACTED_REMARKS";
+			case "isSelected" : return "IS_SELECTED";
+			case "whoSelected" : return "WHO_SELECTED";
+			case "selectionDateMillis" : return "SELECTION_DATE_MILLIS";
+			case "selectionRemarks" : return "SELECTION_REMARKS";
+			case "isRejected" : return "IS_REJECTED";
+			case "whoRejected" : return "WHO_REJECTED";
+			case "rejectionDateMillis" : return "REJECTION_DATE_MILLIS";			
+			case "rejectionRemarks" : return "REJECTION_REMARKS";
+			case "rejectionCount" : return "REJECTION_COUNT";
+			case "reApplied" : return "RE_APPLIED";
+			case "reference" : return "REFERENCE";
+			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
+			case "previousApplicationDateMillis" : return "PREVIOUS_APPLICATION_DATE_MILLIS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+		}
+		return EMPTY_STRING;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 }

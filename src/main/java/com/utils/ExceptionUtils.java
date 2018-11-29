@@ -56,6 +56,15 @@ public class ExceptionUtils implements ExceptionConstants {
 			return row.getObject(columnLabel, type);
 		} catch (Exception e) {
 			if (type == Long.class || type == Integer.class || type == Double.class || type == Float.class) {
+				if (type == Long.class) {
+					return type.cast(0L);
+				}
+				if (type == Double.class) {
+					return type.cast(0D);
+				}
+				if (type == Float.class) {
+					return type.cast(0F);
+				}
 				return type.cast(0);
 			}
 			return null;
