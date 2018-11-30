@@ -37,7 +37,7 @@ import com.webservices.rest.AbstractRestWebservice;
 public class EmployeeRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
 	@Path(REST_METHOD_NAME_ALERT_REMINDER_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String alertsRemindersGrid (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -65,7 +65,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path(REST_METHOD_NAME_TASK_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String tasksGrid (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -93,7 +93,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path(REST_METHOD_NAME_WORKFLOW_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String workflowsGrid (
 			@FormParam(GRID_COMPONENT_START) final String start,

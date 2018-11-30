@@ -9,4 +9,7 @@ public interface RestParamsConstants extends GridComponentConstants {
 	String GRID_COMPONENT_OTHER_PARAMS = "otherParams";
 	String GRID_COMPONENT_LIMIT = "limit";
 	String GRID_COMPONENT_START = "start";
+	
+	String REQUEST_PARAM_COMMENTS = "comments";
+	String REQUEST_PARAM_ALL_IDS_LIST = "allIdsList";
 }

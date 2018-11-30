@@ -16,5 +16,8 @@ public interface TutorConstants extends ResponseMapConstants {
 	String VELOCITY_TEMPLATES_REGISTERED_TUTOR_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/tutor";
 	String PROFILE_CREATION_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_REGISTERED_TUTOR_FOLDER_PATH + "/profile-created.vm";
 	
-	String VALIDATION_MESSAGE_TUTOR_ID_ABSENT = "No 'tutorId' found in request, hence cannot data.";
+	String VALIDATION_MESSAGE_TUTOR_ID_ABSENT = "No 'tutorId' found in request, hence cannot take action.";
+	String VALIDATION_MESSAGE_BANK_ACCOUNT_ID_ABSENT = "No 'bankAccountId' found in request, hence cannot take action.";
+	
+	String REQUEST_PARAM_TUTOR_ID = "tutorId";
 }

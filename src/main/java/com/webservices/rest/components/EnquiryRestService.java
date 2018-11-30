@@ -91,7 +91,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_ENQUIRIES_FOR_PARTICULAR_CUSTOMER)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String displayAllEnquiriesForParticularCustomer (
 			@FormParam("customerId") final Long customerId,
@@ -140,7 +140,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_ELIGIBLE_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String displayAllEligibleTutors (
 			@FormParam("enquiryId") final Long enquiryId,
@@ -156,7 +156,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_MAP_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapTutors (
 			@FormParam("enquiryId") final Long enquiryId,
@@ -180,7 +180,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_PENDING_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String displayAllMappedDemoPendingTutors (
 			@FormParam("enquiryId") final Long enquiryId,
@@ -196,7 +196,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_UNMAP_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String unmapTutors (
 			@FormParam("selectedTutorMappedIdSemicolonSeparatedList") final String selectedTutorMappedIdSemicolonSeparatedList,
@@ -218,7 +218,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_ALL_MAPPED_DEMO_SCHEDULED_TUTORS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String displayAllMappedDemoScheduledTutors (
 			@FormParam("enquiryId") final Long enquiryId,
@@ -251,7 +251,7 @@ public class EnquiryRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_SCHEDULE_DEMO)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String scheduleDemo (
 			@FormParam("tutorMapperId") final Long tutorMapperId,

@@ -96,6 +96,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DISPLAY_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
 	
 	/************************************************************************************************************/
+	String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
 	String REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS = "/checkUIpathAccess";
@@ -116,10 +117,20 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_WORKFLOW_LIST = "/workflowList";
 	// Admin REST methods
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
+	String REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS = "/blacklistRegisteredTutors";
+	String REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS = "/unBlacklistRegisteredTutors";
 	String REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
+	String REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/blacklistSubscribedCustomers";
+	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";
 	// Admin - RegisteredTutor REST Methods
 	String REST_METHOD_NAME_UPLOADED_DOCUMENTS = "/uploadedDocuments";
+	String REST_METHOD_NAME_APPROVE_TUTOR_DOCUMENT_LIST = "/approveTutorDocumentList";
+	String REST_METHOD_NAME_SEND_REMINDER_TUTOR_DOCUMENT_LIST = "/sendReminderTutorDocumentList";
+	String REST_METHOD_NAME_REJECT_TUTOR_DOCUMENT_LIST = "/rejectTutorDocumentList";
 	String REST_METHOD_NAME_BANK_DETAILS = "/bankDetails";
+	String REST_METHOD_NAME_APPROVE_BANK_ACCOUNT_LIST = "/approveBankAccountList";
+	String REST_METHOD_NAME_MAKE_DEFAULT_BANK_ACCOUNT = "/makeDefaultBankAccount";
+	String REST_METHOD_NAME_REJECT_BANK_ACCOUNT_LIST = "/rejectBankAccountList";
 	String REST_METHOD_NAME_CURRENT_PACKAGES = "/currentPackages";
 	String REST_METHOD_NAME_HISTORY_PACKAGES = "/historyPackages";
 	// Sales REST methods

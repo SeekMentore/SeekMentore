@@ -104,7 +104,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadDocument (
     		@FormParam("documentType") final String documentType,
@@ -195,7 +195,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadDocumentFromAdmin (
     		@FormParam("tutorId") final Long tutorId,
@@ -215,7 +215,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
     }
 	
 	@Path(REST_METHOD_NAME_APRROVE_DOCUMENT_FROM_ADMIN)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String aprroveDocumentFromAdmin (
 			@FormParam("tutorId") final Long tutorId,
@@ -235,7 +235,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String rejectDocumentFromAdmin (
 			@FormParam("tutorId") final Long tutorId,
@@ -255,7 +255,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String sendDocumentReminderEmail (
 			@FormParam("tutorId") final Long tutorId,
@@ -288,7 +288,7 @@ public class TutorRestService extends AbstractRestWebservice implements RestMeth
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminIndividualRegisteredTutorProfilePdf (
     		@FormParam("tutorId") final Long tutorId,

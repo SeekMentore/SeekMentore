@@ -20,12 +20,7 @@
 			</page> 
 		-->
 		<page id="loginRest" url="/rest/login" pageAccessType="user">
-			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
-
-			<webservice id="swhxue" url="/swhxue"></webservice>
-			<webservice id="swhaj" url="/swhaj"></webservice>
-			<webservice id="swohxue" url="/swohxue"></webservice>
-			<webservice id="swohaj" url="/swohaj"></webservice>
+		    <webservice id="changePassword" url="/changePassword"></webservice>
 		</page>
 		<page id="commonsRest" url="/rest/commons" pageAccessType="common">
 			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
@@ -43,26 +38,23 @@
 			<webservice id="registeredTutorsList" url="/registeredTutorsList"></webservice>
 			<webservice id="registeredTutorCheckDataAccess" url="/registeredTutorCheckDataAccess"></webservice>
 			<webservice id="blacklistRegisteredTutors" url="/blacklistRegisteredTutors"></webservice>
+			<webservice id="unBlacklistRegisteredTutors" url="/unBlacklistRegisteredTutors"></webservice>
 			<webservice id="subscribedCustomersList" url="/subscribedCustomersList"></webservice>
 			<webservice id="subscribedCustomerCheckDataAccess" url="/subscribedCustomerCheckDataAccess"></webservice>
 			<webservice id="blacklistSubscribedCustomers" url="/blacklistSubscribedCustomers"></webservice>
+			<webservice id="unBlacklistSubscribedCustomers" url="/unBlacklistSubscribedCustomers"></webservice>
 		</page>
 		<page id="registeredTutorRest" url="/rest/registeredTutor" pageAccessType="admin">
 			<webservice id="uploadedDocuments" url="/uploadedDocuments"></webservice>
 			<webservice id="bankDetails" url="/bankDetails"></webservice>
 			<webservice id="currentPackages" url="/currentPackages"></webservice>
 			<webservice id="historyPackages" url="/historyPackages"></webservice>
-			<webservice id="approveTutorDocument" url="/approveTutorDocument"></webservice>
-			<webservice id="approveMultipleTutorDocument" url="/approveMultipleTutorDocument"></webservice>
-			<webservice id="sendReminderTutorDocument" url="/sendReminderTutorDocument"></webservice>
-			<webservice id="sendReminderMultipleTutorDocument" url="/sendReminderMultipleTutorDocument"></webservice>
-			<webservice id="rejectTutorDocument" url="/rejectTutorDocument"></webservice>
-			<webservice id="rejectMultipleTutorDocument" url="/rejectMultipleTutorDocument"></webservice>
-			<webservice id="approveBankAccount" url="/approveBankAccount"></webservice>
-			<webservice id="approveMultipleBankAccount" url="/approveMultipleBankAccount"></webservice>
+			<webservice id="approveTutorDocumentList" url="/approveTutorDocumentList"></webservice>
+			<webservice id="sendReminderTutorDocumentList" url="/sendReminderTutorDocumentList"></webservice>
+			<webservice id="rejectTutorDocumentList" url="/rejectTutorDocumentList"></webservice>
+			<webservice id="approveBankAccountList" url="/approveBankAccountList"></webservice>
 			<webservice id="makeDefaultBankAccount" url="/makeDefaultBankAccount"></webservice>
-			<webservice id="rejectBankAccount" url="/rejectBankAccount"></webservice>
-			<webservice id="rejectMultipleBankAccount" url="/rejectMultipleBankAccount"></webservice>
+			<webservice id="rejectBankAccountList" url="/rejectBankAccountList"></webservice>
 			<webservice id="updateTutorRecord" url="/updateTutorRecord"></webservice>
 		</page>
 		<page id="subscribedCustomerRest" url="/rest/subscribedCustomer" pageAccessType="admin">
@@ -154,12 +146,8 @@
 		<page id="loginRestUnsecured" url="/rest/login">
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
 			<webservice id="resetPassword" url="/resetPassword"></webservice>
+			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
-
-			<webservice id="uwhxue" url="/uwhxue"></webservice>
-			<webservice id="uwhaj" url="/uwhaj"></webservice>
-			<webservice id="uwohxue" url="/uwohxue"></webservice>
-			<webservice id="uwohaj" url="/uwohaj"></webservice>
 		</page>
 		<page id="publicaccessRestUnsecured" url="/rest/publicaccess">
 			<webservice id="becomeTutor" url="/becomeTutor"></webservice>

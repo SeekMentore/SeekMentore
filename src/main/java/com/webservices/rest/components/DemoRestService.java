@@ -116,7 +116,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	}
 	
 	@Path(REST_METHOD_NAME_DISPLAY_DEMO_DETAILS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String displayDemoDetails (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
@@ -150,7 +150,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	}
 	
 	@Path(REST_METHOD_NAME_DEMO_SUCCESS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String demoSuccess (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
@@ -169,7 +169,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	}
 	
 	@Path(REST_METHOD_NAME_DEMO_FAILURE)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String demoFailure (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
@@ -188,7 +188,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	}
 	
 	@Path(REST_METHOD_NAME_CANCEL_DEMO)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String cancelDemo (
 			@FormParam("demoTrackerId") final Long demoTrackerId,
@@ -207,7 +207,7 @@ public class DemoRestService extends AbstractRestWebservice implements RestMetho
 	}
 	
 	@Path(REST_METHOD_NAME_RESCHEDULE_DEMO)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String rescheduleDemo (
 			@FormParam("demoTrackerId") final Long demoTrackerId,

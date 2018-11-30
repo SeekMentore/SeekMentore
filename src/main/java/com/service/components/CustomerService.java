@@ -1,6 +1,7 @@
 package com.service.components;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.constants.BeanConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
+import com.model.User;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.commons.SelectLookup;
@@ -221,5 +223,43 @@ import com.utils.VelocityUtils;
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
 				+ "FROM SUBSCRIBED_CUSTOMER C";
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
+	}
+	
+	@Transactional
+	public void blacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET "
+				+ "IS_BLACKLISTED = 'Y', "
+				+ "BLACKLISTED_REMARKS = :comments, "
+				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_BLACKLISTED = :userId "
+				+ "WHERE CUSTOMER_ID = :customerId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String customerId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("customerId", customerId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void unBlacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET "
+				+ "IS_BLACKLISTED = 'N', "
+				+ "UN_BLACKLISTED_REMARKS = :comments, "
+				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHERE CUSTOMER_ID = :customerId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String customerId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("customerId", customerId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 }

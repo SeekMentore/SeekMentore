@@ -37,4 +37,6 @@ public interface AdminConstants extends ResponseMapConstants {
 	String REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH + "/document-rejected.vm";
 	String REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH = VELOCITY_TEMPLATES_ADMIN_REGISTERED_TUTOR_PATH + "/document-reminder.vm";
 
+	String VALIDATION_MESSAGE_ID_ABSENT = "No 'ID' found in request, hence cannot perform action.";
+	String VALIDATION_MESSAGE_COMMENTS_ABSENT = "No 'comments' found in request which needs mandatory comments, hence cannot perform action.";
 }

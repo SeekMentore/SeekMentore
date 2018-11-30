@@ -49,7 +49,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	private String retypeNewPassword;
 	
 	@Path(REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String validateCredential (
 			@FormParam("userId") final String userId,
@@ -81,7 +81,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String checkUIpathAccess (
 			@FormParam("urlPath") final String urlPath,
@@ -91,19 +91,19 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		final Map<String, Object> restResponse = new HashMap<String, Object>();
 		LoggerUtils.logOnConsole("Accessing UI Path " + urlPath);
 		user = getActiveUser(request);
-		if(getMenuService().hasAccessToUIURL(user.getUserId(), urlPath, user.getPageAccessTypes(), null)) {
+		if(null != user && getMenuService().hasAccessToUIURL(user.getUserId(), urlPath, user.getPageAccessTypes(), null)) {
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		} else {
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "No access to this UI URL");
-			restResponse.put(RESPONSE_MAP_ATTRIBUTE_REDIRECT_TO, "/public/error?errorCode=103");
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_REDIRECT_TO, UI_ERROR_PAGE_NOT_ACCESSIBLE);
 		}
 		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_RESET_PASSWORD)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String resetPassword (
 			@FormParam("userId") final String userId,
@@ -123,7 +123,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CHANGE_PASSWORD)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String changePassword (
 			@FormParam("oldPassword") final String oldPassword,
@@ -147,7 +147,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	
 	/************/
 	/*@Path("/swhxue")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String swhxue (
 			@FormParam("filters") final String filters,
@@ -177,7 +177,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/swohxue")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String swohxue (
 			@FormParam("filters") final String filters,
@@ -208,7 +208,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	
 	
 	@Path("/uwhxue")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String uwhxue (
 			@FormParam("filters") final String filters,
@@ -238,7 +238,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/uwohxue")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String uwohxue (
 			@FormParam("filters") final String filters,
@@ -269,7 +269,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	/************/
 	
 	@Path(REST_METHOD_NAME_TO_LOGOUT)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String logout (
 			@Context final HttpServletRequest request,

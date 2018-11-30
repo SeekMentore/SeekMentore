@@ -24,7 +24,7 @@ public class ValidationUtils implements ValidationConstants {
 	
 	public static Boolean checkStringAvailability(final String stringObject) {
 	    if (checkObjectAvailability(stringObject)) {
-	      if (!"".equals(stringObject.trim())) {
+	      if (!EMPTY_STRING.equals(stringObject.trim())) {
 	        return true;
 	      }
 	    }

@@ -1,6 +1,7 @@
 package com.dao;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -73,25 +74,37 @@ public class ApplicationDao implements ApplicationConstants {
 	 */
 	public void executeUpdate(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
-		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
-		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
-		LoggerUtils.logOnConsole(paramsString.toString());
+		final SqlParameterSource parameters = getSqlParameterSource(params);
 		namedParameterJdbcTemplate.update(query, parameters);
+    }
+	
+	public void executeBatchUpdate(final String query, final List<Map<String, Object>> paramsList) {
+		LoggerUtils.logOnConsole(query);
+		final SqlParameterSource[] parametersBatch = getSqlParameterSourceBatch(paramsList);
+		namedParameterJdbcTemplate.batchUpdate(query, parametersBatch);
     }
 	
 	public Long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
-		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
-		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
-		LoggerUtils.logOnConsole(paramsString.toString());
+		final SqlParameterSource parameters = getSqlParameterSource(params);
 		namedParameterJdbcTemplate.update(query, parameters, keyHolder);
 		if (null != keyHolder.getKey())
 			return keyHolder.getKey().longValue();
 		return null;
 	}
 	
-	private SqlParameterSource getSqlParameterSource(final Map<String, Object> params, final StringBuilder paramsString) {
+	private SqlParameterSource[] getSqlParameterSourceBatch(final List<Map<String, Object>> paramsList) {
+		final List<SqlParameterSource> parameterList = new LinkedList<SqlParameterSource>();
+		for (final Map<String, Object> params : paramsList) {
+			final SqlParameterSource parameters = getSqlParameterSource(params);
+			parameterList.add(parameters);
+		}
+		return parameterList.toArray(new SqlParameterSource[0]);
+	}
+	
+	private SqlParameterSource getSqlParameterSource(final Map<String, Object> params) {
+		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
 		MapSqlParameterSource mapSqlParameterSource = null;
 		if (null != params) {
 			mapSqlParameterSource = new MapSqlParameterSource();
@@ -102,6 +115,7 @@ public class ApplicationDao implements ApplicationConstants {
 		}
 		if (null == mapSqlParameterSource)
 			throw new ApplicationException("Parameters cannot be NULL when using Paramterized Query.");
+		LoggerUtils.logOnConsole(paramsString.toString());
 		return mapSqlParameterSource;
 	}
 	
@@ -111,9 +125,7 @@ public class ApplicationDao implements ApplicationConstants {
 	 */
 	public <T extends Object> T find(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws DataAccessException, InstantiationException, IllegalAccessException {
 		LoggerUtils.logOnConsole(query);
-		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
-		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
-		LoggerUtils.logOnConsole(paramsString.toString());
+		final SqlParameterSource parameters = getSqlParameterSource(params);
 		final List<T> list = namedParameterJdbcTemplate.query(query, parameters, rowmapper);
 		if (list != null) {
 			if (list.isEmpty()) {
@@ -150,9 +162,7 @@ public class ApplicationDao implements ApplicationConstants {
 	 */
 	public < T extends Object > List<T> findAll(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
-		final StringBuilder paramsString =  new StringBuilder(EMPTY_STRING);
-		final SqlParameterSource parameters = getSqlParameterSource(params, paramsString);
-		LoggerUtils.logOnConsole(paramsString.toString());
+		final SqlParameterSource parameters = getSqlParameterSource(params);
 		return namedParameterJdbcTemplate.query(query, parameters, rowmapper);
     }
 	

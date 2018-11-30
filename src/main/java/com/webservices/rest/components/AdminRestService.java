@@ -1,5 +1,6 @@
 package com.webservices.rest.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,10 @@ import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.TutorService;
+import com.utils.ApplicationUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -38,8 +41,11 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_ADMIN) 
 public class AdminRestService extends AbstractRestWebservice implements RestMethodConstants, AdminConstants {
 	
+	private String allIdsList;
+	private String comments;
+	
 	@Path(REST_METHOD_NAME_REGISTERED_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String registeredTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -55,7 +61,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorsList(gridComponent);
+			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(registeredTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -67,7 +73,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/registeredTutorCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String registeredTutorCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -86,23 +92,56 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/blacklistRegisteredTutors")
-	@Consumes("application/x-www-form-urlencoded")
+	@Path(REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String blacklistRegisteredTutors (
-			@FormParam("allIdsList") final String allIdsList,
-			@FormParam("comments") final String comments,
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getTutorService().blacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String unBlacklistRegisteredTutors (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getTutorService().unBlacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String subscribedCustomersList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -130,7 +169,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/subscribedCustomerCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String subscribedCustomerCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -145,19 +184,52 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/blacklistSubscribedCustomers")
-	@Consumes("application/x-www-form-urlencoded")
+	@Path(REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String blacklistSubscribedCustomers (
-			@FormParam("allIdsList") final String allIdsList,
-			@FormParam("comments") final String comments,
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getCustomerService().blacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String unBlacklistSubscribedCustomers (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getCustomerService().unBlacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	public AdminService getAdminService() {
@@ -191,7 +263,32 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 				this.securityPassed = true;
 				break;
 			}
+			case REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS : 
+			case REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS :
+			case REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS : 
+			case REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS : {
+				handleAllIdsAndComments();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
+	
+	private void handleAllIdsAndComments() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.allIdsList) || !ValidationUtils.checkNonEmptyList(Arrays.asList(this.allIdsList.split(SEMICOLON)))) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.checkStringAvailability(this.comments)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					VALIDATION_MESSAGE_COMMENTS_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
 }

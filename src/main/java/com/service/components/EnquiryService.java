@@ -570,6 +570,9 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = "SELECT "
 				+ "TM.*, "
+				+ "C.NAME AS CUSTOMER_NAME, " 
+				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, " 
+				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, " 
 				+ "EN.SUBJECT AS ENQUIRY_SUBJECT, "
 				+ "EN.GRADE AS ENQUIRY_GRADE, "
 				+ "EN.LOCATION_DETAILS AS ENQUIRY_LOCATION, "
@@ -580,7 +583,8 @@ public class EnquiryService implements EnquiryConstants {
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME "
 				+ "FROM TUTOR_MAPPER TM "
 				+ "INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID "
-				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID";
+				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID "
+				+ "INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID";
 		String existingFilterQueryString = "WHERE TM.MAPPING_STATUS = :mappingStatus";
 		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
 		switch(grid) {

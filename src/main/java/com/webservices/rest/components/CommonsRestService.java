@@ -75,7 +75,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_ERROR_DETAILS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getErrorDetails (
 			@FormParam("errorCode") final String errorCode,
@@ -108,7 +108,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getLoginBasicInfo (
 			@Context final HttpServletRequest request,
@@ -153,7 +153,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getEmailTemplates (
 			@Context final HttpServletRequest request,
@@ -170,7 +170,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Path(REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String loadEmailTemplate (
 			@FormParam("templateId") final String templateId,

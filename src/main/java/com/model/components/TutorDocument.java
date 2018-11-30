@@ -10,6 +10,7 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long documentId;
 	private Long tutorId;
+	private String documentType;
 	private String fsKey;
 	private String filename;
 	private String isApproved;
@@ -99,6 +100,7 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "documentId" : return "DOCUMENT_ID";
+			case "documentType" : return "DOCUMENT_TYPE";
 			case "tutorId" : return "TUTOR_ID";
 			case "fsKey" : return "FS_KEY";
 			case "filename" : return "FILENAME";
@@ -117,5 +119,13 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 
 	public void setWhoActedName(String whoActedName) {
 		this.whoActedName = whoActedName;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
 	}
 }

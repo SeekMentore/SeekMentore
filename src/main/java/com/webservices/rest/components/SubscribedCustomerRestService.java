@@ -40,7 +40,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	private Long customerId;
 	
 	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String currentPackages (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -69,7 +69,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	}
 	
 	@Path(REST_METHOD_NAME_HISTORY_PACKAGES)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String historyPackages (
 			@FormParam(GRID_COMPONENT_START) final String start,

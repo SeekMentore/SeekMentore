@@ -51,7 +51,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	private Long tutorId;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String pendingEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -79,7 +79,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String completedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -107,7 +107,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String abortedEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -135,7 +135,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/pendingEnquiryCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String pendingEnquiryCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -164,7 +164,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String currentCustomerAllPendingEnquiriesList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -193,7 +193,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String toBeMappedEnquiriesGridList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -221,7 +221,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mapTutorToEnquiryCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapTutorToEnquiryCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -235,7 +235,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String allMappingEligibleTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -252,7 +252,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorsList(gridComponent);
+			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(registeredTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -264,7 +264,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mapRegisteredTutors")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapRegisteredTutors (
 			@FormParam("enquiryId") final String enquiryId,
@@ -280,7 +280,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mapRegisteredTutor")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapRegisteredTutor (
 			@FormParam("enquiryId") final String enquiryId,
@@ -296,7 +296,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String allMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -325,7 +325,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/unmapRegisteredTutors")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String unmapRegisteredTutors (
 			@FormParam("allIdsList") final String allIdsList,
@@ -340,7 +340,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/unmapRegisteredTutor")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String unmapRegisteredTutor (
 			@FormParam("tutorMapperId") final String tutorMapperId,
@@ -355,7 +355,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mappedTutorCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mappedTutorCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -384,7 +384,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String allPendingMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -412,7 +412,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String allDemoReadyMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -440,7 +440,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String allDemoScheduledMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -468,7 +468,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/mappedTutorCheckScheduleDemoAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mappedTutorCheckScheduleDemoAccess (
 			@Context final HttpServletRequest request,
@@ -482,7 +482,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String currentTutorAllMappingList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -511,7 +511,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String currentTutorAllScheduledDemoList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -555,7 +555,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_SCHEDULED_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String scheduledDemoList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -583,7 +583,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_RESCHEDULED_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String reScheduledDemoList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -611,7 +611,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String successfulDemoList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -639,7 +639,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_FAILED_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String failedDemoList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -667,7 +667,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path(REST_METHOD_NAME_CANCELED_DEMO_LIST)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String cancelledDemoGridList (
 			@FormParam(GRID_COMPONENT_START) final String start,
@@ -695,7 +695,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/demoTrackerModifyCheckDataAccess")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String demoTrackerModifyCheckDataAccess (
 			@Context final HttpServletRequest request,
@@ -709,7 +709,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Path("/cancelDemos")
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String cancelDemos (
 			@FormParam("allIdsList") final String allIdsList,

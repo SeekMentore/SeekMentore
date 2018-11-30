@@ -77,7 +77,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminTutorRegistrationProfilePdf (
     		@FormParam("tentativeTutorId") final String tentativeTutorId,
@@ -213,7 +213,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_REGISTRATION)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String takeActionOnTutorRegistration (
 			@FormParam("gridName") final String gridName,
@@ -255,7 +255,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_ENQUIRY_PROFILE_PDF)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminTutorEnquiryProfilePdf (
     		@FormParam("enquiryId") final String enquiryId,
@@ -376,7 +376,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_TUTOR_ENQUIRY)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String takeActionOnTutorEnquiry (
 			@FormParam("gridName") final String gridName,
@@ -419,7 +419,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_SUBSCRIPTION_PROFILE_PDF)
 	@Produces({MediaType.APPLICATION_JSON})  
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminIndividualSubscriptionProfilePdf (
     		@FormParam("tentativeSubscriptionId") final String tentativeSubscriptionId,
@@ -540,7 +540,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 	}
 	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTIONS)
-	@Consumes("application/x-www-form-urlencoded")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String takeActionOnSubscriptions (
 			@FormParam("gridName") final String gridName,
