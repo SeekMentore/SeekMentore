@@ -1,7 +1,6 @@
 package com.webservices.rest.components;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
+import com.service.components.DemoService;
 import com.service.components.EnquiryService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
@@ -510,7 +510,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path("/currentTutorAllScheduledDemoList")
+	@Path(REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String currentTutorAllScheduledDemoList (
@@ -522,23 +522,21 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllScheduledDemoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllScheduledDemoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/updateScheduleDemoMappedTutorRecord")
@@ -556,7 +554,7 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/scheduledDemoList")
+	@Path(REST_METHOD_NAME_SCHEDULED_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String scheduledDemoList (
@@ -568,26 +566,23 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SCHEDULED_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SCHEDULED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/reScheduledDemoList")
+	@Path(REST_METHOD_NAME_RESCHEDULED_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String reScheduledDemoList (
@@ -599,26 +594,23 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_RESCHEDULED_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_RESCHEDULED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/successfulDemoList")
+	@Path(REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String successfulDemoList (
@@ -630,26 +622,23 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/failedDemoList")
+	@Path(REST_METHOD_NAME_FAILED_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String failedDemoList (
@@ -661,26 +650,23 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_FAILED_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_FAILED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/cancelledDemoGridList")
+	@Path(REST_METHOD_NAME_CANCELED_DEMO_LIST)
 	@Consumes("application/x-www-form-urlencoded")
 	@POST
 	public String cancelledDemoGridList (
@@ -692,23 +678,20 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		List<DemoTracker> data = new LinkedList<DemoTracker>();
-		data.add(new DemoTracker(1L));
-		data.add(new DemoTracker(2L));
-		data.add(new DemoTracker(3L));
-		data.add(new DemoTracker(4L));
-		data.add(new DemoTracker(5L));
-		data.add(new DemoTracker(6L));
-		data.add(new DemoTracker(7L));
-		data.add(new DemoTracker(8L));
-		data.add(new DemoTracker(9L));
-		data.add(new DemoTracker(10L));		
-		restresponse.put("data", data);
-		restresponse.put("totalRecords", data.size());
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_CANCELED_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_CANCELED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/demoTrackerModifyCheckDataAccess")
@@ -768,6 +751,10 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE, EnquiryService.class);
 	}
 	
+	public DemoService getDemoService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_DEMO_SERVICE, DemoService.class);
+	}
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -788,7 +775,12 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST :
 			case REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST : 
-			case REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
+			case REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
+			case REST_METHOD_NAME_SCHEDULED_DEMO_LIST : 
+			case REST_METHOD_NAME_RESCHEDULED_DEMO_LIST : 
+			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
+			case REST_METHOD_NAME_FAILED_DEMO_LIST : 
+			case REST_METHOD_NAME_CANCELED_DEMO_LIST : {
 				this.securityPassed = true;
 				break;
 			}
@@ -801,7 +793,8 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 				handleSelectedEnquiryDataGridView();
 				break;
 			}
-			case REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST :{
+			case REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : 
+			case REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST : {
 				handleSelectedTutorDataGridView();
 				break;
 			}

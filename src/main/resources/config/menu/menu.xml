@@ -98,7 +98,7 @@
 			<webservice id="reScheduledDemoList" url="/reScheduledDemoList"></webservice>
 			<webservice id="successfulDemoList" url="/successfulDemoList"></webservice>
 			<webservice id="failedDemoList" url="/failedDemoList"></webservice>
-			<webservice id="cancelledDemoGridList" url="/cancelledDemoGridList"></webservice>
+			<webservice id="canceledDemoList" url="/canceledDemoList"></webservice>
 			<webservice id="demoTrackerModifyCheckDataAccess" url="/demoTrackerModifyCheckDataAccess"></webservice>
 			<webservice id="cancelDemos" url="/cancelDemos"></webservice>
 			<webservice id="updateDemoTrackerRecord" url="/updateDemoTrackerRecord"></webservice>

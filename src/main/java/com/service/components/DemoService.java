@@ -27,6 +27,7 @@ import com.model.rowmappers.DemoTrackerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.DateUtils;
 import com.utils.GridQueryUtils;
+import com.utils.JSONUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -58,7 +59,7 @@ public class DemoService implements DemoTrackerConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS : {
-				paramsMap.put("demoStatus", DEMO_STATUS_PENDING);
+				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS : {
@@ -454,23 +455,29 @@ public class DemoService implements DemoTrackerConstants {
 		String existingFilterQueryString = "WHERE D.DEMO_STATUS = :demoStatus";
 		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS : {
-				paramsMap.put("demoStatus", DEMO_STATUS_PENDING);
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST : {
+				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
+				existingFilterQueryString += " AND TM.TUTOR_ID = :tutorId";
+				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS : {
+			case RestMethodConstants.REST_METHOD_NAME_SCHEDULED_DEMO_LIST : {
+				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_RESCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_RESCHEDULED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SUCCESSFULL_DEMOS : {
+			case RestMethodConstants.REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SUCCESS);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_FAILED_DEMOS : {
+			case RestMethodConstants.REST_METHOD_NAME_FAILED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_FAILED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS : {
+			case RestMethodConstants.REST_METHOD_NAME_CANCELED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_CANCELED);
 				break;
 			}

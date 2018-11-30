@@ -134,6 +134,12 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST = "/allDemoReadyMappedTutorsList";
 	String REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST = "/allDemoScheduledMappedTutorsList";
 	String REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST = "/currentTutorAllMappingList";
+	String REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST = "/currentTutorAllScheduledDemoList";
+	String REST_METHOD_NAME_SCHEDULED_DEMO_LIST = "/scheduledDemoList";
+	String REST_METHOD_NAME_RESCHEDULED_DEMO_LIST = "/reScheduledDemoList";
+	String REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST = "/successfulDemoList";
+	String REST_METHOD_NAME_FAILED_DEMO_LIST = "/failedDemoList";
+	String REST_METHOD_NAME_CANCELED_DEMO_LIST = "/canceledDemoList";
 	// Support REST methods
 	String REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST = "/nonContactedBecomeTutorsList";
 	String REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST = "/nonVerifiedBecomeTutorsList";

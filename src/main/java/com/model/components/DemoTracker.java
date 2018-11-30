@@ -1,7 +1,6 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
@@ -48,48 +47,6 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 	
 	public DemoTracker() {}
 	
-	public DemoTracker(Long demoTrackerId) {
-		this.demoTrackerId = demoTrackerId;
-		this.tutorMapperId = 1L;
-		this.demoDateAndTimeMillis = new Date().getTime();
-		this.demoOccurred = "Y";
-		this.demoStatus = "SCHEDULED";
-		this.clientRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.tutorRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.clientSatisfiedFromTutor = "Y";
-		this.tutorSatisfiedWithClient = "Y";
-		this.adminSatisfiedFromTutor = "Y";
-		this.adminSatisfiedWithClient = "Y";
-		this.whoActed = "abcd";
-		this.isDemoSuccess = "Y";
-		this.needPriceNegotiationWithClient = "Y";
-		this.clientNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.needPriceNegotiationWithTutor = "Y";
-		this.tutorNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.adminRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.negotiatedOverrideRateWithClient = 890;
-		this.negotiatedOverrideRateWithTutor = 890;
-		this.adminActionDateMillis = new Date().getTime();
-		this.customerName = "Shantanu Mukherjee";
-		this.tutorName = "Shantanu Mukherjee";
-		this.adminFinalizingRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.reschedulingRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-	}
-
 	public Long getDemoTrackerId() {
 		return demoTrackerId;
 	}
