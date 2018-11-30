@@ -31,6 +31,9 @@ public class ComplaintRowMapper implements RowMapper<Complaint> {
 		complaint.setWhoNotResolved(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("whoNotResolved"), String.class));
 		complaint.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		complaint.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("updatedBy"), String.class));
+		complaint.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("whoContactedName"), String.class));
+		complaint.setWhoNotResolvedName(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("whoNotResolvedName"), String.class));
+		complaint.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("updatedByName"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(complaint, row, rowNum);
 		return complaint;
 	}

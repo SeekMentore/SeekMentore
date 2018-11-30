@@ -18,6 +18,7 @@ public class BankDetail extends GridComponentObject implements Serializable {
 	private Long tutorId;
 	private String isApproved;
 	private String whoActed;
+	private String whoActedName;
 	private String remarks;
 	private Long actionDateMillis;
 	
@@ -85,6 +86,7 @@ public class BankDetail extends GridComponentObject implements Serializable {
 			case "isDefault" : return "IS_DEFAULT";
 			case "isApproved" : return "IS_APPROVED";
 			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
 			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
 			case "remarks" : return "REMARKS";
 		}
@@ -129,5 +131,13 @@ public class BankDetail extends GridComponentObject implements Serializable {
 
 	public void setActionDateMillis(Long actionDateMillis) {
 		this.actionDateMillis = actionDateMillis;
+	}
+
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
 	}
 }

@@ -25,6 +25,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 	private String userId;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String updatedByName;
 	
 	public SubscribedCustomer() {}
 	
@@ -187,7 +188,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 						this.addressDetails,
 						this.additionalDetails,
 						new Date(this.recordLastUpdatedMillis),
-						this.updatedBy,
+						this.updatedByName,
 						this.userId
 					};
 			}
@@ -222,7 +223,16 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 			case "userId" : return "USER_ID";
 			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
 			case "updatedBy" : return "UPDATED_BY";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 }

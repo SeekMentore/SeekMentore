@@ -26,6 +26,9 @@ public class Complaint extends GridComponentObject implements Serializable {
 	private String whoNotResolved;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String whoContactedName;
+	private String whoNotResolvedName;
+	private String updatedByName;
 	
 	public Complaint() {}
 
@@ -179,6 +182,9 @@ public class Complaint extends GridComponentObject implements Serializable {
 			case "whoNotResolved" : return "WHO_NOT_RESOLVED";
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoNotResolvedName" : return "WHO_NOT_RESOLVED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -189,5 +195,29 @@ public class Complaint extends GridComponentObject implements Serializable {
 
 	public void setResolved(String resolved) {
 		this.resolved = resolved;
+	}
+
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoNotResolvedName() {
+		return whoNotResolvedName;
+	}
+
+	public void setWhoNotResolvedName(String whoNotResolvedName) {
+		this.whoNotResolvedName = whoNotResolvedName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 }

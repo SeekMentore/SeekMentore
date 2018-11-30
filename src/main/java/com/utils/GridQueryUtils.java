@@ -174,14 +174,8 @@ public class GridQueryUtils implements GridComponentConstants {
 		String completeQuery = EMPTY_STRING;
 		
 		String completeFilterQuery = EMPTY_STRING;
-		if (ValidationUtils.checkStringAvailability(existingFilterQueryString)) {
-			completeFilterQuery += WHITESPACE + existingFilterQueryString;
-			if (ValidationUtils.checkStringAvailability(filterQueryString)) {
-				filterQueryString = filterQueryString.replace(WHERE_CLAUSE, AND_CLAUSE);
-			}
-			if (ValidationUtils.checkStringAvailability(additionalFilterQueryString)) {
-				additionalFilterQueryString = additionalFilterQueryString.replace(WHERE_CLAUSE, AND_CLAUSE);
-			}
+		if (!ValidationUtils.checkStringAvailability(existingFilterQueryString)) {
+			existingFilterQueryString = WHITESPACE;
 		}
 		if (ValidationUtils.checkStringAvailability(filterQueryString)) {
 			if (ValidationUtils.checkStringAvailability(additionalFilterQueryString)) {
@@ -213,8 +207,9 @@ public class GridQueryUtils implements GridComponentConstants {
 			completeSorterQuery += WHITESPACE + additionalSorterQueryString;
 		}		
 		
+		final String encapsulatedBaseQueryWithVirtualColumns = "SELECT ENCAPSULATEDQUERYWITHVIRTUALCOLUMNS.* FROM ( " + baseQuery + WHITESPACE + existingFilterQueryString + ") AS ENCAPSULATEDQUERYWITHVIRTUALCOLUMNS";
 		if (isPagingAvailable) {
-			final String coreQuery =  WHITESPACE +  baseQuery + WHITESPACE +  completeFilterQuery;
+			final String coreQuery =  WHITESPACE +  encapsulatedBaseQueryWithVirtualColumns + WHITESPACE +  completeFilterQuery;
 			final String mainQueryPseudoTable = " (" + coreQuery + WHITESPACE + completeSorterQuery + ") AS MAINQUERYPSEUDOTABLE";
 			final String totalRecordsPseudoTable = " (SELECT COUNT(1) AS RECORD_COUNT FROM (" + coreQuery + ") AS COUNTPSEUDOTABLE) AS TOTALRECORDSPSEUDOTABLE";
 			final String resultPseudoTable = " (SELECT TOTALRECORDSPSEUDOTABLE.RECORD_COUNT AS TOTAL_RECORDS, MAINQUERYPSEUDOTABLE.* FROM " + mainQueryPseudoTable + COMMA_APPENDER + totalRecordsPseudoTable + ") AS RESULTPSEUDOTABLE";
@@ -222,7 +217,7 @@ public class GridQueryUtils implements GridComponentConstants {
 			final String completeQueryPseudoTable = "(SELECT (@row_number:=@row_number + 1) AS RNUM, RESULTPSEUDOTABLE.* FROM " + resultPseudoTable + COMMA_APPENDER + rownumPseudoTable + ") AS COMPLETEQUERYPSEUDOTABLE";
 			completeQuery += " SELECT COMPLETEQUERYPSEUDOTABLE.* FROM " + completeQueryPseudoTable + " WHERE RNUM BETWEEN " + start + " AND " + end + WHITESPACE;
 		} else {
-			completeQuery += WHITESPACE +  baseQuery + WHITESPACE +  completeFilterQuery + WHITESPACE + completeSorterQuery;
+			completeQuery += WHITESPACE +  encapsulatedBaseQueryWithVirtualColumns + WHITESPACE +  completeFilterQuery + WHITESPACE + completeSorterQuery;
 		}
 		LoggerUtils.logOnConsole("GRID QUERY >> " + completeQuery);
 		return completeQuery;

@@ -516,7 +516,16 @@ public class AdminService implements AdminConstants {
 	
 	/**************************************************************************************************/
 	public List<BecomeTutor> getBecomeTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT * FROM BECOME_TUTOR";
+		final String baseQuery = "SELECT "
+				+ "B.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_CONTACTED), B.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_VERIFIED), B.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_SUGGESTED_FOR_RECONTACT), B.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_RECONTACTED), B.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_SELECTED), B.WHO_SELECTED) AS WHO_SELECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_REJECTED), B.WHO_REJECTED) AS WHO_REJECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.UPDATED_BY), B.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM BECOME_TUTOR B";
 		String existingFilterQueryString = "";
 		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
 		switch(grid) {
@@ -557,7 +566,16 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<FindTutor> getEnquiriesList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT * FROM FIND_TUTOR";
+		final String baseQuery = "SELECT "
+				+ "F.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_CONTACTED), F.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_VERIFIED), F.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SUGGESTED_FOR_RECONTACT), F.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_RECONTACTED), F.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SELECTED), F.WHO_SELECTED) AS WHO_SELECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_REJECTED), F.WHO_REJECTED) AS WHO_REJECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.UPDATED_BY), F.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM FIND_TUTOR F";
 		String existingFilterQueryString = "";
 		final String existingSorterQueryString = "ORDER BY ENQUIRY_DATE_MILLIS DESC";
 		switch(grid) {
@@ -594,7 +612,16 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<SubscribeWithUs> getSubscriptionsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT * FROM SUBSCRIBE_WITH_US";
+		final String baseQuery = "SELECT "
+				+ "S.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_CONTACTED), S.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_VERIFIED), S.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SUGGESTED_FOR_RECONTACT), S.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_RECONTACTED), S.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SELECTED), S.WHO_SELECTED) AS WHO_SELECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_REJECTED), S.WHO_REJECTED) AS WHO_REJECTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.UPDATED_BY), S.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM SUBSCRIBE_WITH_US S";
 		String existingFilterQueryString = "";
 		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
 		switch(grid) {
@@ -631,7 +658,12 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT * FROM SUBMIT_QUERY";
+		final String baseQuery = "SELECT "
+				+ "Q.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_CONTACTED), Q.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_NOT_ANSWERED), Q.WHO_NOT_ANSWERED) AS WHO_NOT_ANSWERED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.UPDATED_BY), Q.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM SUBMIT_QUERY Q";
 		String existingFilterQueryString = "";
 		final String existingSorterQueryString = "ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC";
 		switch(grid) {
@@ -652,7 +684,12 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT * FROM COMPLAINT";
+		final String baseQuery = "SELECT "
+				+ "C.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_CONTACTED), C.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_NOT_RESOLVED), C.WHO_NOT_RESOLVED) AS WHO_NOT_RESOLVED_NAME, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM COMPLAINT C";
 		String existingFilterQueryString = "";
 		final String existingSorterQueryString = "ORDER BY COMPLAINT_FILED_DATE_MILLIS DESC";
 		switch(grid) {

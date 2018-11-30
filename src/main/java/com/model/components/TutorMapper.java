@@ -1,25 +1,32 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.constants.components.CustomerConstants;
 import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
 
-public class TutorMapper implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class TutorMapper extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long tutorMapperId;
 	private Long enquiryId;
+	private String enquirySubject;
+	private String enquiryGrade;
+	private String enquiryLocation;
+	private String enquiryPreferredTeachingType;
+	private String customerName;
+	private String customerEmail;
+	private String customerContactNumber;
 	private Long tutorId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
 	private Integer quotedTutorRate;
-	private Integer negotiatedRateWithTutor ;
+	private Integer negotiatedRateWithTutor;
 	private String tutorNegotiationRemarks;
 	private String isTutorContacted;
-	private Date tutorContactedDate;
 	private Long tutorContactedDateMillis;
 	private String isTutorAgreed;
 	private String isTutorRejectionValid;
@@ -27,72 +34,22 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 	private String tutorResponse;
 	private String adminRemarksForTutor;
 	private String isClientContacted;
-	private Date clientContactedDate;
 	private Long clientContactedDateMillis;
 	private String isClientAgreed;
 	private String clientResponse;
 	private String isClientRejectionValid;
 	private String adminClientRejectionValidityResponse;
 	private String adminRemarksForClient;
-	private Date adminActionDate;
 	private Long adminActionDateMillis;
 	private String adminActionRemarks;
 	private String whoActed;
+	private String whoActedName;
 	private String isDemoScheduled;
 	private String mappingStatus;
+	private Long entryDateMillis;
 	
 	public TutorMapper() {}
 	
-	public TutorMapper(Long tutorMapperId) {
-		this.tutorMapperId = tutorMapperId;
-		this.enquiryId = 1L;
-		this.tutorId = 2L;
-		this.tutorName = "Shantanu Mukherjee";
-		this.tutorEmail = "abc@ghm.com";
-		this.tutorContactNumber = "563248965";
-		this.quotedTutorRate = 895;
-		this.negotiatedRateWithTutor  = 124;
-		this.tutorNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.isTutorContacted = "N";
-		this.tutorContactedDate = new Date();
-		this.tutorContactedDateMillis = new Date().getTime(); 
-		this.isTutorAgreed = "Y";
-		this.isTutorRejectionValid = "N";
-		this.adminTutorRejectionValidityResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.tutorResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.adminRemarksForTutor = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.isClientContacted = "Y";
-		this.clientContactedDate = new Date();
-		this.clientContactedDateMillis = new Date().getTime(); 
-		this.isClientAgreed = "Y";
-		this.clientResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.isClientRejectionValid = "N";
-		this.adminClientRejectionValidityResponse = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.adminRemarksForClient = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.adminActionDate = new Date();
-		this.adminActionDateMillis = new Date().getTime(); 
-		this.adminActionRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test TestTest Test Test Test Test Test Test Test Test "
-				+ "Test Test Test Test Test Test Test Test Test Test Test";
-		this.whoActed = "abgd";
-		this.isDemoScheduled = "N";
-		this.mappingStatus = "FRESH";
-	}
-
 	public Long getTutorMapperId() {
 		return tutorMapperId;
 	}
@@ -149,14 +106,6 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 		this.isTutorContacted = isTutorContacted;
 	}
 
-	public Date getTutorContactedDate() {
-		return tutorContactedDate;
-	}
-
-	public void setTutorContactedDate(Date tutorContactedDate) {
-		this.tutorContactedDate = tutorContactedDate;
-	}
-
 	public String getIsTutorAgreed() {
 		return isTutorAgreed;
 	}
@@ -205,14 +154,6 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 		this.isClientContacted = isClientContacted;
 	}
 
-	public Date getClientContactedDate() {
-		return clientContactedDate;
-	}
-
-	public void setClientContactedDate(Date clientContactedDate) {
-		this.clientContactedDate = clientContactedDate;
-	}
-
 	public String getIsClientAgreed() {
 		return isClientAgreed;
 	}
@@ -251,14 +192,6 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 
 	public void setAdminRemarksForClient(String adminRemarksForClient) {
 		this.adminRemarksForClient = adminRemarksForClient;
-	}
-
-	public Date getAdminActionDate() {
-		return adminActionDate;
-	}
-
-	public void setAdminActionDate(Date adminActionDate) {
-		this.adminActionDate = adminActionDate;
 	}
 
 	public String getAdminActionRemarks() {
@@ -351,5 +284,123 @@ public class TutorMapper implements Serializable, CustomerConstants, Application
 
 	public void setAdminActionDateMillis(Long adminActionDateMillis) {
 		this.adminActionDateMillis = adminActionDateMillis;
+	}
+
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySubject" : return "ENQUIRY_SUBJECT";
+			case "enquiryGrade" : return "ENQUIRY_GRADE";
+			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorId" : return "TUTOR_ID";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "quotedTutorRate" : return "QUOTED_TUTOR_RATE";
+			case "negotiatedRateWithTutor" : return "NEGOTIATED_RATE_WITH_TUTOR";
+			case "tutorNegotiationRemarks" : return "TUTOR_NEGOTIATION_REMARKS";
+			case "isTutorContacted" : return "IS_TUTOR_CONTACTED";
+			case "tutorContactedDateMillis" : return "TUTOR_CONTACTED_DATE_MILLIS";
+			case "isTutorAgreed" : return "IS_TUTOR_AGREED";
+			case "isTutorRejectionValid" : return "IS_TUTOR_REJECTION_VALID";
+			case "adminTutorRejectionValidityResponse" : return "ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE";
+			case "tutorResponse" : return "TUTOR_RESPONSE";
+			case "adminRemarksForTutor" : return "ADMIN_REMARKS_FOR_TUTOR";
+			case "isClientContacted" : return "IS_CLIENT_CONTACTED";
+			case "clientContactedDateMillis" : return "CLIENT_CONTACTED_DATE_MILLIS";
+			case "isClientAgreed" : return "IS_CLIENT_AGREED";
+			case "clientResponse" : return "CLIENT_RESPONSE";
+			case "isClientRejectionValid" : return "IS_CLIENT_REJECTION_VALID";
+			case "adminClientRejectionValidityResponse" : return "ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE";
+			case "adminRemarksForClient" : return "ADMIN_REMARKS_FOR_CLIENT";
+			case "adminActionDateMillis" : return "ADMIN_ACTION_DATE_MILLIS";
+			case "adminActionRemarks" : return "ADMIN_ACTION_REMARKS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "isDemoScheduled" : return "IS_DEMO_SCHEDULED";
+			case "mappingStatus" : return "MAPPING_STATUS";
+			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+		}
+		return EMPTY_STRING;
+	}
+
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
+
+	public String getEnquirySubject() {
+		return enquirySubject;
+	}
+
+	public void setEnquirySubject(String enquirySubject) {
+		this.enquirySubject = enquirySubject;
+	}
+
+	public String getEnquiryGrade() {
+		return enquiryGrade;
+	}
+
+	public void setEnquiryGrade(String enquiryGrade) {
+		this.enquiryGrade = enquiryGrade;
+	}
+
+	public String getEnquiryLocation() {
+		return enquiryLocation;
+	}
+
+	public void setEnquiryLocation(String enquiryLocation) {
+		this.enquiryLocation = enquiryLocation;
+	}
+
+	public String getEnquiryPreferredTeachingType() {
+		return enquiryPreferredTeachingType;
+	}
+
+	public void setEnquiryPreferredTeachingType(String enquiryPreferredTeachingType) {
+		this.enquiryPreferredTeachingType = enquiryPreferredTeachingType;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerContactNumber() {
+		return customerContactNumber;
+	}
+
+	public void setCustomerContactNumber(String customerContactNumber) {
+		this.customerContactNumber = customerContactNumber;
 	}
 }

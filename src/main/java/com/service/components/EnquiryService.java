@@ -19,17 +19,20 @@ import com.constants.components.EnquiryConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
-import com.model.components.Enquiries;
+import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
 import com.model.components.commons.SelectLookup;
-import com.model.rowmappers.EnquiriesRowMapper;
+import com.model.gridcomponent.GridComponent;
+import com.model.rowmappers.EnquiryRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.DateUtils;
+import com.utils.GridQueryUtils;
+import com.utils.JSONUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -56,7 +59,7 @@ public class EnquiryService implements EnquiryConstants {
 	public void init() {}
 	
 	@Transactional
-	public void addEnquiry(final Enquiries enquiryObject) {
+	public void addEnquiry(final Enquiry enquiryObject) {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("customerId", enquiryObject.getCustomerId());
 		paramsMap.put("subject", enquiryObject.getSubject());
@@ -78,11 +81,11 @@ public class EnquiryService implements EnquiryConstants {
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_MAPPED_ENQUIRIES : {
-				paramsMap.put("matchStatus", MATCH_STATUS_MAPPED);
+				paramsMap.put("matchStatus", MATCH_STATUS_COMPLETED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CUSTOMER_WITH_ABANDONED_ENQUIRIES : {
-				paramsMap.put("matchStatus", MATCH_STATUS_ABANDONED);
+				paramsMap.put("matchStatus", MATCH_STATUS_ABORTED);
 				break;
 			}
 		}
@@ -94,12 +97,12 @@ public class EnquiryService implements EnquiryConstants {
 		return customersEnquiryList;
 	}
 	
-	public List<Enquiries> displayAllEnquiriesForParticularCustomer(final Long customerId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<Enquiry> displayAllEnquiriesForParticularCustomer(final Long customerId, final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("matchStatus", getMatchStatusFromGridName(grid));
 		paramsMap.put("customerId", customerId);
-		final List<Enquiries> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiriesRowMapper());
-		for (final Enquiries enquiryObject : enquiryObjectList) {
+		final List<Enquiry> enquiryObjectList =  applicationDao.findAll("SELECT * FROM ENQUIRIES E WHERE E.CUSTOMER_ID = :customerId AND E.MATCH_STATUS = :matchStatus", paramsMap, new EnquiryRowMapper());
+		for (final Enquiry enquiryObject : enquiryObjectList) {
 			replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, delimiter);
 		}
 		return enquiryObjectList;
@@ -114,7 +117,7 @@ public class EnquiryService implements EnquiryConstants {
 		}
 	}
 	
-	public void replacePlaceHolderAndIdsFromEnquiryObject(final Enquiries enquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public void replacePlaceHolderAndIdsFromEnquiryObject(final Enquiry enquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		enquiryObject.setSubject(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, enquiryObject.getSubject(), false, delimiter));
 		enquiryObject.setGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, enquiryObject.getGrade(), false, delimiter));
 		enquiryObject.setLocationDetails(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, enquiryObject.getLocationDetails(), true, delimiter));
@@ -140,7 +143,7 @@ public class EnquiryService implements EnquiryConstants {
 	}
 	
 	@Transactional
-	public Map<String, Object> updateEnquiryDetails(final Enquiries enquiryObject, final User user) throws Exception {
+	public Map<String, Object> updateEnquiryDetails(final Enquiry enquiryObject, final User user) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
 		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
@@ -231,7 +234,7 @@ public class EnquiryService implements EnquiryConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.TUTOR_ID NOT IN (SELECT DISTINCT TUTOR_ID FROM TUTOR_MAPPER WHERE ENQUIRY_ID = :enquiryId)", paramsMap, new RegisteredTutorRowMapper());
-		final Enquiries enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
+		final Enquiry enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryRowMapper());
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
 		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocationTeachingType = new ArrayList<RegisteredTutor>();
@@ -482,15 +485,15 @@ public class EnquiryService implements EnquiryConstants {
 		return applicationDao.find("SELECT * FROM TUTOR_MAPPER E WHERE E.TUTOR_MAPPER_ID = :tutorMapperId", paramsMap, new TutorMapperRowMapper());
 	}
 	
-	public Enquiries getEnquiriesObject(final Long enquiryId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Enquiry getEnquiriesObject(final Long enquiryId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
-		return applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiriesRowMapper());
+		return applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryRowMapper());
 	}
 	
 	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId, final Long demoTimeInMillis) throws Exception {
 		final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
-		final Enquiries enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
 		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
@@ -517,5 +520,93 @@ public class EnquiryService implements EnquiryConstants {
 				"Tutor demo has been scheduled for your enquiry", 
 				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
 				null);
+	}
+	
+	/**************************************************************************************************************/
+	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		final String baseQuery = "SELECT "
+				+ "EN.*, "
+				+ "C.NAME AS CUSTOMER_NAME, "
+				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, "
+				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, "
+				+ "T.NAME AS TUTOR_NAME, "
+				+ "T.EMAIL_ID AS TUTOR_EMAIL, "
+				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EN.WHO_ACTED), EN.WHO_ACTED) AS WHO_ACTED_NAME "
+				+ "FROM ENQUIRIES EN "
+				+ "LEFT OUTER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID "
+				+ "LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID";
+		String existingFilterQueryString = "WHERE EN.MATCH_STATUS = :matchStatus";
+		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";		
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_PENDING_ENQUIRIES_LIST : {
+				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST : {
+				paramsMap.put("matchStatus", MATCH_STATUS_TO_BE_MAPPED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST : {
+				paramsMap.put("matchStatus", MATCH_STATUS_COMPLETED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST : {
+				paramsMap.put("matchStatus", MATCH_STATUS_ABORTED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST : {
+				existingFilterQueryString += " AND EN.CUSTOMER_ID = :customerId";
+				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
+				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
+				break;
+			}
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
+	}
+	
+	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		final String baseQuery = "SELECT "
+				+ "TM.*, "
+				+ "EN.SUBJECT AS ENQUIRY_SUBJECT, "
+				+ "EN.GRADE AS ENQUIRY_GRADE, "
+				+ "EN.LOCATION_DETAILS AS ENQUIRY_LOCATION, "
+				+ "EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE, "
+				+ "T.NAME AS TUTOR_NAME, "
+				+ "T.EMAIL_ID AS TUTOR_EMAIL, "
+				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME "
+				+ "FROM TUTOR_MAPPER TM "
+				+ "INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID "
+				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID";
+		String existingFilterQueryString = "WHERE TM.MAPPING_STATUS = :mappingStatus";
+		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", "PENDING");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", "DEMO_READY");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", "DEMO_SCHEDULED");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = "WHERE TM.ENQUIRY_ID = :enquiryId";
+				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : {
+				existingFilterQueryString = "WHERE TM.TUTOR_ID = :tutorId";
+				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				break;
+			}
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
 	}
 }

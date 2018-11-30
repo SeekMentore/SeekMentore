@@ -124,14 +124,14 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		switch(this.methodName) {
 			case REST_METHOD_NAME_CURRENT_PACKAGES : 
 			case REST_METHOD_NAME_HISTORY_PACKAGES :{
-				handleSelectedTutorDataGridView();
+				handleSelectedCustomerDataGridView();
 				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleSelectedTutorDataGridView() throws Exception {
+	private void handleSelectedCustomerDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
 			ApplicationUtils.appendMessageInMapAttribute(

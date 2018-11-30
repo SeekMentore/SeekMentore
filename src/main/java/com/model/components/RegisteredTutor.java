@@ -31,33 +31,11 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	private String userId;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String updatedByName;
 	private String preferredTeachingType;
 	private List<TutorDocument> documents;
 	
 	public RegisteredTutor() {}
-	
-	public RegisteredTutor(Long tutorId) {
-		this.tutorId = tutorId;
-		this.name = "shantanu mukherjee";
-		this.contactNumber = "9739936482";
-		this.emailId = "abc@efg.com";
-		this.tentativeTutorId = 5L;
-		this.dateOfBirth = new Date();
-		this.gender = "01";
-		this.qualification = "02";
-		this.primaryProfession = "03";
-		this.transportMode = "01";
-		this.teachingExp = 5;
-		this.interestedStudentGrades = "01;02;03";
-		this.interestedSubjects = "02;03;04";
-		this.comfortableLocations = "03;04;05";
-		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.encryptedPassword = "";
-		this.userId = "abc";
-		this.recordLastUpdatedMillis = new Date().getTime();
-		this.updatedBy = "abcf";
-		this.preferredTeachingType = "01;02";
-	}
 	
 	public RegisteredTutor getACopy() {
 		final RegisteredTutor newInstance = new RegisteredTutor();
@@ -282,7 +260,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						this.comfortableLocations,
 						this.additionalDetails,
 						new Date(this.recordLastUpdatedMillis),
-						this.updatedBy,
+						this.updatedByName,
 						this.userId
 					};
 			}
@@ -323,6 +301,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "userId" : return "USER_ID";
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -333,5 +312,13 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 }

@@ -395,18 +395,31 @@ public class TutorService implements TutorConstants {
 	
 	/***********************************************************************************************************************************/
 	public List<RegisteredTutor> getRegisteredTutorsList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM REGISTERED_TUTOR", null, null, gridComponent), new RegisteredTutorRowMapper());
+		final String baseQuery = "SELECT "
+				+ "R.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.UPDATED_BY), R.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM REGISTERED_TUTOR R";
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
 	public List<TutorDocument> getTutorDocuments(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		return applicationDao.findAll(GridQueryUtils.createGridQuery("SELECT * FROM TUTOR_DOCUMENTS", "WHERE TUTOR_ID = :tutorId", "ORDER BY FILENAME", gridComponent), paramsMap, new TutorDocumentRowMapper());
+		final String baseQuery = "SELECT "
+				+ "T.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.WHO_ACTED), T.WHO_ACTED) AS WHO_ACTED_NAME "
+				+ "FROM TUTOR_DOCUMENTS T";
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, "WHERE TUTOR_ID = :tutorId", "ORDER BY FILENAME", gridComponent), paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public List<BankDetail> getBankDetails(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		return applicationDao.findAll(GridQueryUtils.createGridQuery("SELECT * FROM BANK_DETAIL", "WHERE TUTOR_ID = :tutorId", "ORDER BY BANK_NAME", gridComponent), paramsMap, new BankDetailRowMapper());
+		final String baseQuery = "SELECT "
+				+ "B.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_ACTED), B.WHO_ACTED) AS WHO_ACTED_NAME "
+				+ "FROM BANK_DETAIL B";
+		
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, "WHERE TUTOR_ID = :tutorId", "ORDER BY BANK_NAME", gridComponent), paramsMap, new BankDetailRowMapper());
 	}
 }

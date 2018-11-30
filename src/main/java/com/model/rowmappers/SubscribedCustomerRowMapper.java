@@ -29,6 +29,7 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("userId"), String.class));
 		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("encryptedPassword"), String.class));
 		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedBy"), String.class));
+		subscribedCustomer.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedByName"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribedCustomer, row, rowNum);
 		return subscribedCustomer;
 	}

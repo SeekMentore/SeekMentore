@@ -32,6 +32,9 @@ public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQuery
 		submitQuery.setWhoNotAnswered(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoNotAnswered"), String.class));
 		submitQuery.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		submitQuery.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("updatedBy"), String.class));
+		submitQuery.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoContactedName"), String.class));
+		submitQuery.setWhoNotAnsweredName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoNotAnsweredName"), String.class));
+		submitQuery.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("updatedByName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(submitQuery, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(submitQuery, row, rowNum);
 		return submitQuery;

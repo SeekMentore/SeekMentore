@@ -130,6 +130,13 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	private Long rejectionDateMillis;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String whoContactedName;
+	private String whoVerifiedName;
+	private String whoSuggestedForRecontactName;
+	private String whoRecontactedName;
+	private String whoSelectedName;
+	private String whoRejectedName;
+	private String updatedByName;
 	
 	public FindTutor() {}
 	
@@ -549,30 +556,30 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 						this.addressDetails,
 						this.additionalDetails,
 						this.isContacted,
-						this.whoContacted,
+						this.whoContactedName,
 						new Date(this.contactedDateMillis),
 						this.contactedRemarks,
 						this.isAuthenticationVerified,
-						this.whoVerified,
+						this.whoVerifiedName,
 						new Date(this.verificationDateMillis),
 						this.verificationRemarks,
 						this.isToBeRecontacted,
-						this.whoSuggestedForRecontact,
+						this.whoSuggestedForRecontactName,
 						new Date(this.suggestionDateMillis),
 						this.suggestionRemarks,
-						this.whoRecontacted,
+						this.whoRecontactedName,
 						new Date(this.recontactedDateMillis),
 						this.recontactedRemarks,
 						this.isSelected,
-						this.whoSelected,
+						this.whoSelectedName,
 						new Date(this.selectionDateMillis),
 						this.selectionRemarks,
 						this.isRejected,
-						this.whoRejected,
+						this.whoRejectedName,
 						new Date(this.rejectionDateMillis),
 						this.rejectionRemarks,
 						new Date(this.recordLastUpdatedMillis),
-						this.updatedBy
+						this.updatedByName
 				};
 			}
 		}
@@ -623,6 +630,13 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 			case "location" : return "LOCATION";
 			case "addressDetails" : return "ADDRESS_DETAILS";
 			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoVerifiedName" : return "WHO_VERIFIED_NAME";
+			case "whoSuggestedForRecontactName" : return "WHO_SUGGESTED_FOR_RECONTACT_NAME";
+			case "whoRecontactedName" : return "WHO_RECONTACTED_NAME";
+			case "whoSelectedName" : return "WHO_SELECTED_NAME";
+			case "whoRejectedName" : return "WHO_REJECTED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -633,5 +647,61 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+	
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoVerifiedName() {
+		return whoVerifiedName;
+	}
+
+	public void setWhoVerifiedName(String whoVerifiedName) {
+		this.whoVerifiedName = whoVerifiedName;
+	}
+
+	public String getWhoSuggestedForRecontactName() {
+		return whoSuggestedForRecontactName;
+	}
+
+	public void setWhoSuggestedForRecontactName(String whoSuggestedForRecontactName) {
+		this.whoSuggestedForRecontactName = whoSuggestedForRecontactName;
+	}
+
+	public String getWhoRecontactedName() {
+		return whoRecontactedName;
+	}
+
+	public void setWhoRecontactedName(String whoRecontactedName) {
+		this.whoRecontactedName = whoRecontactedName;
+	}
+
+	public String getWhoSelectedName() {
+		return whoSelectedName;
+	}
+
+	public void setWhoSelectedName(String whoSelectedName) {
+		this.whoSelectedName = whoSelectedName;
+	}
+
+	public String getWhoRejectedName() {
+		return whoRejectedName;
+	}
+
+	public void setWhoRejectedName(String whoRejectedName) {
+		this.whoRejectedName = whoRejectedName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 }

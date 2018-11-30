@@ -65,6 +65,13 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setPreviousApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("previousApplicationDateMillis"), Long.class));
 		becomeTutor.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		becomeTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("updatedBy"), String.class));
+		becomeTutor.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoContactedName"), String.class));
+		becomeTutor.setWhoVerifiedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoVerifiedName"), String.class));
+		becomeTutor.setWhoSuggestedForRecontactName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoSuggestedForRecontactName"), String.class));
+		becomeTutor.setWhoRecontactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoRecontactedName"), String.class));
+		becomeTutor.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoSelectedName"), String.class));
+		becomeTutor.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoRejectedName"), String.class));
+		becomeTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("updatedByName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(becomeTutor, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(becomeTutor, row, rowNum);
 		return becomeTutor;

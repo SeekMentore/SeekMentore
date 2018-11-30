@@ -70,6 +70,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 	private Long contactedDateMillis;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String whoContactedName;
+	private String whoNotAnsweredName;
+	private String updatedByName;
 	
 	public SubmitQuery() {}
 	
@@ -245,7 +248,34 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoNotAnsweredName" : return "WHO_NOT_ANSWERED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
+	}
+
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoNotAnsweredName() {
+		return whoNotAnsweredName;
+	}
+
+	public void setWhoNotAnsweredName(String whoNotAnsweredName) {
+		this.whoNotAnsweredName = whoNotAnsweredName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 }

@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
 
-public class DemoTracker implements Serializable, ApplicationWorkbookObject {
+public class DemoTracker extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long demoTrackerId;
 	private Long tutorMapperId;
-	private Date demoDateAndTime;
 	private Long demoDateAndTimeMillis;
 	private String demoOccurred;
 	private String demoStatus;
@@ -21,6 +22,7 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 	private String adminSatisfiedFromTutor;
 	private String adminSatisfiedWithClient;
 	private String whoActed;
+	private String whoActedName;
 	private String isDemoSuccess;
 	private String needPriceNegotiationWithClient;
 	private String clientNegotiationRemarks;
@@ -29,19 +31,26 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 	private String adminRemarks;
 	private Integer negotiatedOverrideRateWithClient;
 	private Integer negotiatedOverrideRateWithTutor;
-	private Date adminActionDate;
 	private Long adminActionDateMillis;
 	private String customerName;
+	private String customerEmail;
+	private String customerContactNumber;
 	private String tutorName;
+	private String tutorEmail;
+	private String tutorContactNumber;
+	private String enquirySubject;
+	private String enquiryGrade;
+	private String enquiryLocation;
+	private String enquiryPreferredTeachingType;
 	private String adminFinalizingRemarks;
 	private String reschedulingRemarks;
+	private Long entryDateMillis;
 	
 	public DemoTracker() {}
 	
 	public DemoTracker(Long demoTrackerId) {
 		this.demoTrackerId = demoTrackerId;
 		this.tutorMapperId = 1L;
-		this.demoDateAndTime = new Date();
 		this.demoDateAndTimeMillis = new Date().getTime();
 		this.demoOccurred = "Y";
 		this.demoStatus = "SCHEDULED";
@@ -70,7 +79,6 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 				+ "Test Test Test Test Test Test Test Test Test Test Test";
 		this.negotiatedOverrideRateWithClient = 890;
 		this.negotiatedOverrideRateWithTutor = 890;
-		this.adminActionDate = new Date();
 		this.adminActionDateMillis = new Date().getTime();
 		this.customerName = "Shantanu Mukherjee";
 		this.tutorName = "Shantanu Mukherjee";
@@ -96,14 +104,6 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 
 	public void setTutorMapperId(Long tutorMapperId) {
 		this.tutorMapperId = tutorMapperId;
-	}
-
-	public Date getDemoDateAndTime() {
-		return demoDateAndTime;
-	}
-
-	public void setDemoDateAndTime(Date demoDateAndTime) {
-		this.demoDateAndTime = demoDateAndTime;
 	}
 
 	public String getDemoOccurred() {
@@ -242,14 +242,6 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 		this.negotiatedOverrideRateWithTutor = negotiatedOverrideRateWithTutor;
 	}
 
-	public Date getAdminActionDate() {
-		return adminActionDate;
-	}
-
-	public void setAdminActionDate(Date adminActionDate) {
-		this.adminActionDate = adminActionDate;
-	}
-	
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -332,5 +324,128 @@ public class DemoTracker implements Serializable, ApplicationWorkbookObject {
 
 	public void setAdminActionDateMillis(Long adminActionDateMillis) {
 		this.adminActionDateMillis = adminActionDateMillis;
+	}
+
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
+	}
+
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerContactNumber() {
+		return customerContactNumber;
+	}
+
+	public void setCustomerContactNumber(String customerContactNumber) {
+		this.customerContactNumber = customerContactNumber;
+	}
+
+	public String getTutorEmail() {
+		return tutorEmail;
+	}
+
+	public void setTutorEmail(String tutorEmail) {
+		this.tutorEmail = tutorEmail;
+	}
+
+	public String getTutorContactNumber() {
+		return tutorContactNumber;
+	}
+
+	public void setTutorContactNumber(String tutorContactNumber) {
+		this.tutorContactNumber = tutorContactNumber;
+	}
+
+	public String getEnquirySubject() {
+		return enquirySubject;
+	}
+
+	public void setEnquirySubject(String enquirySubject) {
+		this.enquirySubject = enquirySubject;
+	}
+
+	public String getEnquiryGrade() {
+		return enquiryGrade;
+	}
+
+	public void setEnquiryGrade(String enquiryGrade) {
+		this.enquiryGrade = enquiryGrade;
+	}
+
+	public String getEnquiryLocation() {
+		return enquiryLocation;
+	}
+
+	public void setEnquiryLocation(String enquiryLocation) {
+		this.enquiryLocation = enquiryLocation;
+	}
+
+	public String getEnquiryPreferredTeachingType() {
+		return enquiryPreferredTeachingType;
+	}
+
+	public void setEnquiryPreferredTeachingType(String enquiryPreferredTeachingType) {
+		this.enquiryPreferredTeachingType = enquiryPreferredTeachingType;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "demoTrackerId" : return "DEMO_TRACKER_ID";
+			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "demoDateAndTimeMillis" : return "DEMO_DATE_AND_TIME_MILLIS";
+			case "demoOccurred" : return "DEMO_OCCURRED";
+			case "demoStatus" : return "DEMO_STATUS";
+			case "clientRemarks" : return "CLIENT_REMARKS";
+			case "tutorRemarks" : return "TUTOR_REMARKS";
+			case "clientSatisfiedFromTutor" : return "CLIENT_SATISFIED_FROM_TUTOR";
+			case "tutorSatisfiedWithClient" : return "TUTOR_SATISFIED_WITH_CLIENT";
+			case "adminSatisfiedFromTutor" : return "ADMIN_SATISFIED_FROM_TUTOR";
+			case "adminSatisfiedWithClient" : return "ADMIN_SATISFIED_WITH_CLIENT";
+			case "isDemoSuccess" : return "IS_DEMO_SUCCESS";
+			case "needPriceNegotiationWithClient" : return "NEED_PRICE_NEGOTIATION_WITH_CLIENT";
+			case "clientNegotiationRemarks" : return "CLIENT_NEGOTIATION_REMARKS";
+			case "needPriceNegotiationWithTutor" : return "NEED_PRICE_NEGOTIATION_WITH_TUTOR";
+			case "tutorNegotiationRemarks" : return "TUTOR_NEGOTIATION_REMARKS";
+			case "adminRemarks" : return "ADMIN_REMARKS";
+			case "negotiatedOverrideRateWithClient" : return "NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT";
+			case "negotiatedOverrideRateWithTutor" : return "NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR";
+			case "adminActionDateMillis" : return "ADMIN_ACTION_DATE_MILLIS";
+			case "adminFinalizingRemarks" : return "ADMIN_FINALIZING_REMARKS";
+			case "reschedulingRemarks" : return "RESCHEDULING_REMARKS";
+			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "enquirySubject" : return "ENQUIRY_SUBJECT";
+			case "enquiryGrade" : return "ENQUIRY_GRADE";
+			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+		}
+		return EMPTY_STRING;
+	}
+
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
 	}
 }

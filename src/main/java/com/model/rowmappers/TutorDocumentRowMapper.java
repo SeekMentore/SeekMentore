@@ -20,6 +20,7 @@ public class TutorDocumentRowMapper implements RowMapper<TutorDocument> {
 		tutorDocument.setFilename(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("filename"), String.class));
 		tutorDocument.setIsApproved(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("isApproved"), String.class));
 		tutorDocument.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("whoActed"), String.class));
+		tutorDocument.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("whoActedName"), String.class));
 		tutorDocument.setActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("actionDateMillis"), Long.class));
 		tutorDocument.setRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("remarks"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(tutorDocument, row, rowNum);

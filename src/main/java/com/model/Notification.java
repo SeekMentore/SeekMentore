@@ -6,11 +6,14 @@ public abstract class Notification extends GridComponentObject {
 	
 	private Long initiatedDateMillis;
 	private Long actionDateMillis;
-	private String initiatedBy;
-	private String actionBy;
 	private Long dueDateMillis;
 	private String subject;
+	private String initiatedBy;
+	private String actionBy;
 	private String recipientUserId;
+	private String initiatedByName;
+	private String actionByName;
+	private String recipientUserName;
 	
 	public Long getInitiatedDateMillis() {
 		return initiatedDateMillis;
@@ -67,11 +70,14 @@ public abstract class Notification extends GridComponentObject {
 		switch(mappingProperty) {
 			case "initiatedDateMillis" : return "INITIATED_DATE_MILLIS";
 			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
-			case "initiatedBy" : return "INITIATED_BY";
-			case "actionBy" : return "ACTION_BY";
 			case "dueDateMillis" : return "DUE_DATE_MILLIS";
 			case "subject" : return "SUBJECT";
+			case "initiatedBy" : return "INITIATED_BY";
+			case "actionBy" : return "ACTION_BY";
 			case "recipientUserId" : return "RECIPIENT_USER_ID";
+			case "initiatedByName" : return "INITIATED_BY_NAME";
+			case "actionByName" : return "ACTION_BY_NAME";
+			case "recipientUserName" : return "RECIPIENT_USER_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -82,5 +88,29 @@ public abstract class Notification extends GridComponentObject {
 
 	public void setRecipientUserId(String recipientUserId) {
 		this.recipientUserId = recipientUserId;
+	}
+
+	public String getInitiatedByName() {
+		return initiatedByName;
+	}
+
+	public void setInitiatedByName(String initiatedByName) {
+		this.initiatedByName = initiatedByName;
+	}
+
+	public String getActionByName() {
+		return actionByName;
+	}
+
+	public void setActionByName(String actionByName) {
+		this.actionByName = actionByName;
+	}
+
+	public String getRecipientUserName() {
+		return recipientUserName;
+	}
+
+	public void setRecipientUserName(String recipientUserName) {
+		this.recipientUserName = recipientUserName;
 	}
 }

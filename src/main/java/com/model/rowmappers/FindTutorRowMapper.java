@@ -55,6 +55,13 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		findTutor.setRejectionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("rejectionRemarks"), String.class));
 		findTutor.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		findTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("updatedBy"), String.class));
+		findTutor.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoContactedName"), String.class));
+		findTutor.setWhoVerifiedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoVerifiedName"), String.class));
+		findTutor.setWhoSuggestedForRecontactName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoSuggestedForRecontactName"), String.class));
+		findTutor.setWhoRecontactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoRecontactedName"), String.class));
+		findTutor.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoSelectedName"), String.class));
+		findTutor.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoRejectedName"), String.class));
+		findTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("updatedByName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(findTutor, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(findTutor, row, rowNum);
 		return findTutor;

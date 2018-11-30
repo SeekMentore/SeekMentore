@@ -1,11 +1,12 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
 
-public class Enquiries implements Serializable, ApplicationWorkbookObject {
+public class Enquiry extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	private Long enquiryId;
@@ -19,8 +20,8 @@ public class Enquiries implements Serializable, ApplicationWorkbookObject {
 	private Integer negotiatedRateWithClient;
 	private String clientNegotiationRemarks;
 	private String isMapped;
-	private Date lastActionDate;
 	private Long lastActionDateMillis;
+	private Long entryDateMillis;
 	private String matchStatus;
 	private Long tutorId;
 	private String tutorName;
@@ -31,37 +32,11 @@ public class Enquiries implements Serializable, ApplicationWorkbookObject {
 	private String addressDetails;
 	private String additionalDetails;
 	private String whoActed;
+	private String whoActedName;
 	private String preferredTeachingType;
 	
-	public Enquiries() {}
+	public Enquiry() {}
 	
-	public Enquiries(Long enquiryId) {
-		this.enquiryId = enquiryId;
-		this.customerId = enquiryId;
-		this.customerName = "Test User";
-		this.customerEmail = "efg@gm.com";
-		this.customerContactNumber = "78965412365";
-		this.subject = "01";
-		this.grade = "01";
-		this.quotedClientRate = 560;
-		this.negotiatedRateWithClient = 540;
-		this.clientNegotiationRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.isMapped = "N";
-		this.lastActionDate = new Date();
-		this.lastActionDateMillis = new Date().getTime();
-		this.matchStatus = "New";
-		this.tutorId = enquiryId;
-		this.tutorName = "Shantanu Mukherjee";
-		this.tutorEmail = "abc@gm.com";
-		this.tutorContactNumber = "986542365899";
-		this.adminRemarks = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.locationDetails = "01";
-		this.addressDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.additionalDetails = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-		this.whoActed = "absd";
-		this.preferredTeachingType = "01;02";
-	}
-
 	public Long getEnquiryId() {
 		return enquiryId;
 	}
@@ -124,14 +99,6 @@ public class Enquiries implements Serializable, ApplicationWorkbookObject {
 
 	public void setIsMapped(String isMapped) {
 		this.isMapped = isMapped;
-	}
-
-	public Date getLastActionDate() {
-		return lastActionDate;
-	}
-
-	public void setLastActionDate(Date lastActionDate) {
-		this.lastActionDate = lastActionDate;
 	}
 
 	public String getMatchStatus() {
@@ -266,4 +233,53 @@ public class Enquiries implements Serializable, ApplicationWorkbookObject {
 		this.lastActionDateMillis = lastActionDateMillis;
 	}
 
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "customerId" : return "CUSTOMER_ID";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "subject" : return "SUBJECT";
+			case "grade" : return "GRADE";
+			case "quotedClientRate" : return "QUOTED_CLIENT_RATE";
+			case "negotiatedRateWithClient" : return "NEGOTIATED_RATE_WITH_CLIENT";
+			case "clientNegotiationRemarks" : return "CLIENT_NEGOTIATION_REMARKS";
+			case "isMapped" : return "IS_MAPPED";
+			case "lastActionDateMillis" : return "LAST_ACTION_DATE_MILLIS";
+			case "matchStatus" : return "MATCH_STATUS";
+			case "tutorId" : return "TUTOR_ID";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "adminRemarks" : return "ADMIN_REMARKS";
+			case "locationDetails" : return "LOCATION_DETAILS";
+			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
+			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+		}
+		return EMPTY_STRING;
+	}
+
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
 }

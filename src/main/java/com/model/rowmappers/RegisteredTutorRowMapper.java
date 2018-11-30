@@ -36,6 +36,7 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 		registeredTutor.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		registeredTutor.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("userId"), String.class));
 		registeredTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("updatedBy"), String.class));
+		registeredTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("updatedByName"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(registeredTutor, row, rowNum);
 		return registeredTutor;
 	}

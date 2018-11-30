@@ -18,13 +18,15 @@ import com.constants.components.DemoTrackerConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.DemoTracker;
-import com.model.components.Enquiries;
+import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.TutorMapper;
+import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.DemoTrackerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.DateUtils;
+import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -79,7 +81,7 @@ public class DemoService implements DemoTrackerConstants {
 		final List<DemoTracker> demoTrackerList = applicationDao.findAll(query.toString(), paramsMap, new DemoTrackerRowMapper());
 		for (final DemoTracker demoTrackerObject : demoTrackerList) {
 			final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-			final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+			final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 			final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
 			final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 			demoTrackerObject.setCustomerName(subscribedCustomerObj.getName());
@@ -100,7 +102,7 @@ public class DemoService implements DemoTrackerConstants {
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final DemoTracker demoTracker = getDemoTracker(demoTrackerId);
 		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTracker.getTutorMapperId());
-		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
@@ -275,7 +277,7 @@ public class DemoService implements DemoTrackerConstants {
 	public void sendDemoSuccessNotificationEmails(final Long demoTrackerId) throws Exception {
 		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
 		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
@@ -307,7 +309,7 @@ public class DemoService implements DemoTrackerConstants {
 	public void sendDemoFailedNotificationEmails(final Long demoTrackerId) throws Exception {
 		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
 		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
@@ -331,7 +333,7 @@ public class DemoService implements DemoTrackerConstants {
 	public void sendDemoCanceledNotificationEmails(final Long demoTrackerId) throws Exception {
 		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
 		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
@@ -396,7 +398,7 @@ public class DemoService implements DemoTrackerConstants {
 	public void sendDemoScheduledNotificationEmails(final Long newDemoTrackerId, final DemoTracker oldDemoTrackerObject) throws Exception {
 		final DemoTracker newDemoTrackerObject = getDemoTracker(newDemoTrackerId);
 		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(newDemoTrackerObject.getTutorMapperId());
-		final Enquiries enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
 		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
 		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
 		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
@@ -426,5 +428,53 @@ public class DemoService implements DemoTrackerConstants {
 				"Tutor demo has been re-scheduled for your enquiry", 
 				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_CLIENT_EMAIL_PATH, attributes),
 				null);
+	}
+	
+	/**********************************************************************************************/
+	public List<DemoTracker> getDemoList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		final String baseQuery = "SELECT "
+				+ "D.*, " 
+				+ "C.NAME AS CUSTOMER_NAME, " 
+				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, " 
+				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, " 
+				+ "T.NAME AS TUTOR_NAME, " 
+				+ "T.EMAIL_ID AS TUTOR_EMAIL, " 
+				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, " 
+				+ "EN.SUBJECT AS ENQUIRY_SUBJECT,  " 
+				+ "EN.GRADE AS ENQUIRY_GRADE,  "
+				+ "EN.LOCATION_DETAILS AS ENQUIRY_LOCATION,  " 
+				+ "EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE,  "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = D.WHO_ACTED), D.WHO_ACTED) AS WHO_ACTED_NAME " 
+				+ "FROM DEMO_TRACKER D "
+				+ "INNER JOIN TUTOR_MAPPER TM ON D.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID "
+				+ "INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID "
+				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID " 
+				+ "INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID";
+		String existingFilterQueryString = "WHERE D.DEMO_STATUS = :demoStatus";
+		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS : {
+				paramsMap.put("demoStatus", DEMO_STATUS_PENDING);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS : {
+				paramsMap.put("demoStatus", DEMO_STATUS_RESCHEDULED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SUCCESSFULL_DEMOS : {
+				paramsMap.put("demoStatus", DEMO_STATUS_SUCCESS);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_FAILED_DEMOS : {
+				paramsMap.put("demoStatus", DEMO_STATUS_FAILED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_CANCELED_DEMOS : {
+				paramsMap.put("demoStatus", DEMO_STATUS_CANCELED);
+				break;
+			}
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new DemoTrackerRowMapper());
 	}
 }

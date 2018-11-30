@@ -2,43 +2,56 @@ package com.model.rowmappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import com.model.components.TutorMapper;
 import com.utils.ExceptionUtils;
+import com.utils.GridComponentUtils;
 
 public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 
 	@Override
 	public TutorMapper mapRow(ResultSet row, int rowNum) throws SQLException {
 		final TutorMapper tutorMapperObject = new TutorMapper();
-		tutorMapperObject.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_MAPPER_ID", Long.class));
-		tutorMapperObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENQUIRY_ID", Long.class));
-		tutorMapperObject.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_ID", Long.class));
-		tutorMapperObject.setQuotedTutorRate(ExceptionUtils.exceptionHandlerForRowMapper(row, "QUOTED_TUTOR_RATE", Integer.class));
-		tutorMapperObject.setNegotiatedRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, "NEGOTIATED_RATE_WITH_TUTOR", Integer.class));
-		tutorMapperObject.setTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_NEGOTIATION_REMARKS", String.class));
-		tutorMapperObject.setIsTutorContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_TUTOR_CONTACTED", String.class));
-		tutorMapperObject.setTutorContactedDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_CONTACTED_DATE", Timestamp.class));
-		tutorMapperObject.setIsTutorAgreed(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_TUTOR_AGREED", String.class));
-		tutorMapperObject.setIsTutorRejectionValid(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_TUTOR_REJECTION_VALID", String.class));
-		tutorMapperObject.setAdminTutorRejectionValidityResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE", String.class));
-		tutorMapperObject.setTutorResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, "TUTOR_RESPONSE", String.class));
-		tutorMapperObject.setAdminRemarksForTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_REMARKS_FOR_TUTOR", String.class));
-		tutorMapperObject.setIsClientContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_CLIENT_CONTACTED", String.class));
-		tutorMapperObject.setClientContactedDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "CLIENT_CONTACTED_DATE", Timestamp.class));
-		tutorMapperObject.setIsClientAgreed(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_CLIENT_AGREED", String.class));
-		tutorMapperObject.setClientResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, "CLIENT_RESPONSE", String.class));
-		tutorMapperObject.setIsClientRejectionValid(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_CLIENT_REJECTION_VALID", String.class));
-		tutorMapperObject.setAdminClientRejectionValidityResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE", String.class));
-		tutorMapperObject.setAdminRemarksForClient(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_REMARKS_FOR_CLIENT", String.class));
-		tutorMapperObject.setAdminActionDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_ACTION_DATE", Timestamp.class));
-		tutorMapperObject.setAdminActionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, "ADMIN_ACTION_REMARKS", String.class));
-		tutorMapperObject.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, "WHO_ACTED", String.class));
-		tutorMapperObject.setIsDemoScheduled(ExceptionUtils.exceptionHandlerForRowMapper(row, "IS_DEMO_SCHEDULED", String.class));
-		tutorMapperObject.setMappingStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, "MAPPING_STATUS", String.class));
+		tutorMapperObject.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorMapperId"), Long.class));
+		tutorMapperObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryId"), Long.class));
+		tutorMapperObject.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquirySubject"), String.class));
+		tutorMapperObject.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryGrade"), String.class));
+		tutorMapperObject.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryLocation"), String.class));
+		tutorMapperObject.setEnquiryPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryPreferredTeachingType"), String.class));
+		tutorMapperObject.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerName"), String.class));
+		tutorMapperObject.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerEmail"), String.class));
+		tutorMapperObject.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerContactNumber"), String.class));
+		tutorMapperObject.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorId"), Long.class));
+		tutorMapperObject.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorName"), String.class));
+		tutorMapperObject.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorEmail"), String.class));
+		tutorMapperObject.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorContactNumber"), String.class));
+		tutorMapperObject.setQuotedTutorRate(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("quotedTutorRate"), Integer.class));
+		tutorMapperObject.setNegotiatedRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("negotiatedRateWithTutor"), Integer.class));
+		tutorMapperObject.setTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorNegotiationRemarks"), String.class));
+		tutorMapperObject.setIsTutorContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isTutorContacted"), String.class));
+		tutorMapperObject.setTutorContactedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorContactedDateMillis"), Long.class));
+		tutorMapperObject.setIsTutorAgreed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isTutorAgreed"), String.class));
+		tutorMapperObject.setIsTutorRejectionValid(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isTutorRejectionValid"), String.class));
+		tutorMapperObject.setAdminTutorRejectionValidityResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminTutorRejectionValidityResponse"), String.class));
+		tutorMapperObject.setTutorResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorResponse"), String.class));
+		tutorMapperObject.setAdminRemarksForTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminRemarksForTutor"), String.class));
+		tutorMapperObject.setIsClientContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isClientContacted"), String.class));
+		tutorMapperObject.setClientContactedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("clientContactedDateMillis"), Long.class));
+		tutorMapperObject.setIsClientAgreed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isClientAgreed"), String.class));
+		tutorMapperObject.setClientResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("clientResponse"), String.class));
+		tutorMapperObject.setIsClientRejectionValid(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isClientRejectionValid"), String.class));
+		tutorMapperObject.setAdminClientRejectionValidityResponse(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminClientRejectionValidityResponse"), String.class));
+		tutorMapperObject.setAdminRemarksForClient(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminRemarksForClient"), String.class));
+		tutorMapperObject.setAdminActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminActionDateMillis"), Long.class));
+		tutorMapperObject.setAdminActionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("adminActionRemarks"), String.class));
+		tutorMapperObject.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("whoActed"), String.class));
+		tutorMapperObject.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("whoActedName"), String.class));
+		tutorMapperObject.setIsDemoScheduled(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isDemoScheduled"), String.class));
+		tutorMapperObject.setMappingStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("mappingStatus"), String.class));
+		tutorMapperObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("entryDateMillis"), Long.class));
+		GridComponentUtils.mapGridPseudoColumnsForRecords(tutorMapperObject, row, rowNum);
 		return tutorMapperObject;
 	}
 

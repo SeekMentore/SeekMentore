@@ -216,6 +216,10 @@ import com.utils.VelocityUtils;
 	
 	/************************************************************************************************************/
 	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery("SELECT * FROM SUBSCRIBED_CUSTOMER", null, null, gridComponent), new SubscribedCustomerRowMapper());
+		final String baseQuery = "SELECT "
+				+ "C.*, "
+				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
+				+ "FROM SUBSCRIBED_CUSTOMER C";
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 }

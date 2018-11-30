@@ -14,6 +14,7 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 	private String filename;
 	private String isApproved;
 	private String whoActed;
+	private String whoActedName;
 	private String remarks;
 	private Long actionDateMillis;
 	private byte[] content;
@@ -103,9 +104,18 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 			case "filename" : return "FILENAME";
 			case "isApproved" : return "IS_APPROVED";
 			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
 			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
 			case "remarks" : return "REMARKS";
 		}
 		return EMPTY_STRING;
+	}
+
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
 	}
 }

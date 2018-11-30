@@ -2,8 +2,9 @@ package com.constants.components;
 
 public interface EnquiryConstants extends ResponseMapConstants {
 	
-	String MATCH_STATUS_ABANDONED = "ABANDONED";
-	String MATCH_STATUS_MAPPED = "MAPPED";
+	String MATCH_STATUS_ABORTED = "ABORTED";
+	String MATCH_STATUS_COMPLETED = "COMPLETED";
+	String MATCH_STATUS_TO_BE_MAPPED = "TO_BE_MAPPED";
 	String MATCH_STATUS_PENDING = "PENDING";
 	
 	String VALIDATION_MESSAGE_INVALID_CUSTOMER_ID = "Invalid Customer Id.";
@@ -16,4 +17,6 @@ public interface EnquiryConstants extends ResponseMapConstants {
 	String VELOCITY_TEMPLATES_ENQUIRIES_PATH = AdminConstants.VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/enquiries";
 	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-tutor-email.vm";
 	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-client-email.vm";
+	
+	String VALIDATION_MESSAGE_ENQUIRY_ID_ABSENT = "No 'enquiryId' found in request, hence cannot load data.";
 }

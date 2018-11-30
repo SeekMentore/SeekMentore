@@ -82,12 +82,14 @@
 			<webservice id="allMappingEligibleTutorsList" url="/allMappingEligibleTutorsList"></webservice>
 			<webservice id="mapRegisteredTutors" url="/mapRegisteredTutors"></webservice>
 			<webservice id="mapRegisteredTutor" url="/mapRegisteredTutor"></webservice>
-			<webservice id="allMappedTutorsList" url="/allMappedTutorsList"></webservice>
+			<webservice id="currentEnquiryAllMappedTutorsList" url="/currentEnquiryAllMappedTutorsList"></webservice>
 			<webservice id="unmapRegisteredTutors" url="/unmapRegisteredTutors"></webservice>
 			<webservice id="unmapRegisteredTutor" url="/unmapRegisteredTutor"></webservice>
 			<webservice id="updateTutorMapperRecord" url="/updateTutorMapperRecord"></webservice>
 			<webservice id="mappedTutorCheckDataAccess" url="/mappedTutorCheckDataAccess"></webservice>
+			<webservice id="allPendingMappedTutorsList" url="/allPendingMappedTutorsList"></webservice>
 			<webservice id="allDemoReadyMappedTutorsList" url="/allDemoReadyMappedTutorsList"></webservice>
+			<webservice id="allDemoScheduledMappedTutorsList" url="/allDemoScheduledMappedTutorsList"></webservice>
 			<webservice id="mappedTutorCheckScheduleDemoAccess" url="/mappedTutorCheckScheduleDemoAccess"></webservice>
 			<webservice id="currentTutorAllMappingList" url="/currentTutorAllMappingList"></webservice>
 			<webservice id="currentTutorAllScheduledDemoList" url="/currentTutorAllScheduledDemoList"></webservice>

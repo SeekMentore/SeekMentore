@@ -23,6 +23,7 @@ public class BankDetailRowMapper implements RowMapper<BankDetail> {
 		bankDetail.setIsDefault(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("isDefault"), String.class));
 		bankDetail.setIsApproved(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("isApproved"), String.class));
 		bankDetail.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("whoActed"), String.class));
+		bankDetail.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("whoActedName"), String.class));
 		bankDetail.setActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("actionDateMillis"), Long.class));
 		bankDetail.setRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("remarks"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(bankDetail, row, rowNum);

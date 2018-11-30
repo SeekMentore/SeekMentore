@@ -56,6 +56,13 @@ public class SubscribeWithUsRowMapper implements RowMapper<SubscribeWithUs>, Sub
 		subscribeWithUs.setRejectionRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("rejectionRemarks"), String.class));
 		subscribeWithUs.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		subscribeWithUs.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("updatedBy"), String.class));
+		subscribeWithUs.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoContactedName"), String.class));
+		subscribeWithUs.setWhoVerifiedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoVerifiedName"), String.class));
+		subscribeWithUs.setWhoSuggestedForRecontactName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoSuggestedForRecontactName"), String.class));
+		subscribeWithUs.setWhoRecontactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoRecontactedName"), String.class));
+		subscribeWithUs.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoSelectedName"), String.class));
+		subscribeWithUs.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoRejectedName"), String.class));
+		subscribeWithUs.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("updatedByName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(subscribeWithUs, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribeWithUs, row, rowNum);
 		return subscribeWithUs;
