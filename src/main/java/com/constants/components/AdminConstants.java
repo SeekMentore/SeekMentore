@@ -6,7 +6,7 @@ public interface AdminConstants extends ResponseMapConstants {
 	
 	String BUTTON_ACTION_RECONTACTED = "recontacted";
 	String BUTTON_ACTION_SELECT = "select";
-	String BUTTON_ACTION_FAILVERIFY = "failverify";
+	String BUTTON_ACTION_FAIL_VERIFY = "failverify";
 	String BUTTON_ACTION_REVERIFY = "reverify";
 	String BUTTON_ACTION_VERIFY = "verify";
 	String BUTTON_ACTION_REJECT = "reject";
@@ -39,4 +39,7 @@ public interface AdminConstants extends ResponseMapConstants {
 
 	String VALIDATION_MESSAGE_ID_ABSENT = "No 'ID' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_COMMENTS_ABSENT = "No 'comments' found in request which needs mandatory comments, hence cannot perform action.";
+	String VALIDATION_MESSAGE_GRID_ABSENT = "No 'grid' found in request, hence cannot perform action.";
+	String VALIDATION_MESSAGE_BUTTON_ABSENT = "No 'button' found in request, hence cannot perform action.";
+	String VALIDATION_MESSAGE_BUTTON_UNKNOWN = "Unknown 'button' found in request, hence cannot perform action.";
 }

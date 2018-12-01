@@ -96,6 +96,7 @@
 			<webservice id="updateDemoTrackerRecord" url="/updateDemoTrackerRecord"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
+			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>
 			<webservice id="nonContactedBecomeTutorsList" url="/nonContactedBecomeTutorsList"></webservice>
 			<webservice id="nonVerifiedBecomeTutorsList" url="/nonVerifiedBecomeTutorsList"></webservice>
 			<webservice id="verifiedBecomeTutorsList" url="/verifiedBecomeTutorsList"></webservice>
@@ -105,7 +106,9 @@
 			<webservice id="rejectedBecomeTutorsList" url="/rejectedBecomeTutorsList"></webservice>
 			<webservice id="registeredBecomeTutorsList" url="/registeredBecomeTutorsList"></webservice>	
 			<webservice id="becomeTutorCheckDataAccess" url="/becomeTutorCheckDataAccess"></webservice>	
-			<webservice id="blacklistBecomeTutors" url="/blacklistBecomeTutors"></webservice>	
+			<webservice id="blacklistBecomeTutorList" url="/blacklistBecomeTutorList"></webservice>	
+			<webservice id="unBlacklistBecomeTutorList" url="/unBlacklistBecomeTutorList"></webservice>	
+			<webservice id="takeActionOnBecomeTutor" url="/takeActionOnBecomeTutor"></webservice>	
 			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>			
 			<webservice id="nonContactedEnquiriesList" url="/nonContactedEnquiriesList"></webservice>
 			<webservice id="nonVerifiedEnquiriesList" url="/nonVerifiedEnquiriesList"></webservice>
@@ -115,7 +118,9 @@
 			<webservice id="selectedEnquiriesList" url="/selectedEnquiriesList"></webservice>
 			<webservice id="rejectedEnquiriesList" url="/rejectedEnquiriesList"></webservice>		
 			<webservice id="enquiryRequestCheckDataAccess" url="/enquiryRequestCheckDataAccess"></webservice>	
-			<webservice id="blacklistEnquiryRequests" url="/blacklistEnquiryRequests"></webservice>	
+			<webservice id="blacklistEnquiryRequestList" url="/blacklistEnquiryRequestList"></webservice>	
+			<webservice id="unBlacklistEnquiryRequestList" url="/unBlacklistEnquiryRequestList"></webservice>
+			<webservice id="takeActionOnFindTutor" url="/takeActionOnFindTutor"></webservice>
 			<webservice id="updateEnquiryRequestRecord" url="/updateEnquiryRequestRecord"></webservice>	
 			<webservice id="nonContactedSubscriptionsList" url="/nonContactedSubscriptionsList"></webservice>
 			<webservice id="nonVerifiedSubscriptionsList" url="/nonVerifiedSubscriptionsList"></webservice>
@@ -125,7 +130,9 @@
 			<webservice id="selectedSubscriptionsList" url="/selectedSubscriptionsList"></webservice>
 			<webservice id="rejectedSubscriptionsList" url="/rejectedSubscriptionsList"></webservice>
 			<webservice id="subscriptionRequestCheckDataAccess" url="/subscriptionRequestCheckDataAccess"></webservice>	
-			<webservice id="blacklistSubscriptionRequests" url="/blacklistSubscriptionRequests"></webservice>	
+			<webservice id="blacklistSubscriptionRequestList" url="/blacklistSubscriptionRequestList"></webservice>
+			<webservice id="unBlacklistSubscriptionRequestList" url="/unBlacklistSubscriptionRequestList"></webservice>	
+			<webservice id="takeActionOnSubscription" url="/takeActionOnSubscription"></webservice>
 			<webservice id="updateSubscriptionRequestRecord" url="/updateSubscriptionRequestRecord"></webservice>
 			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
 			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>

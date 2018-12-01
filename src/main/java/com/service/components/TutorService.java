@@ -477,6 +477,7 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			paramsMap.put("comments", comments);
 			paramsMap.put("documentId", documentId);
+			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
@@ -495,6 +496,7 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			paramsMap.put("comments", comments);
 			paramsMap.put("documentId", documentId);
+			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 		sendTutorDocumentListRejectionEmails(idList, tutorId, comments, activeUser);
@@ -536,6 +538,7 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			paramsMap.put("comments", comments);
 			paramsMap.put("bankAccountId", bankAccountId);
+			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
@@ -577,6 +580,7 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			paramsMap.put("comments", comments);
 			paramsMap.put("bankAccountId", bankAccountId);
+			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 		sendBankAccountListRejectionEmails(idList, tutorId, comments, activeUser);

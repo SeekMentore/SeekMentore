@@ -718,7 +718,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 				case BUTTON_ACTION_REJECT : 
 				case BUTTON_ACTION_VERIFY:
 				case BUTTON_ACTION_REVERIFY : 
-				case BUTTON_ACTION_FAILVERIFY : 
+				case BUTTON_ACTION_FAIL_VERIFY : 
 				case BUTTON_ACTION_SELECT : 
 				case BUTTON_ACTION_RECONTACTED : {
 					break;
@@ -749,7 +749,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : 
-			case BUTTON_ACTION_FAILVERIFY : 
+			case BUTTON_ACTION_FAIL_VERIFY : 
 			case BUTTON_ACTION_REJECT : {
 				if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.remarks)) {
 					ApplicationUtils.appendMessageInMapAttribute(

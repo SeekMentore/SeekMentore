@@ -3,6 +3,7 @@ package com.service.components;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
@@ -191,7 +193,7 @@ public class AdminService implements AdminConstants {
 				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
-			case BUTTON_ACTION_FAILVERIFY : {
+			case BUTTON_ACTION_FAIL_VERIFY : {
 				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
@@ -341,7 +343,7 @@ public class AdminService implements AdminConstants {
 				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
-			case BUTTON_ACTION_FAILVERIFY : {
+			case BUTTON_ACTION_FAIL_VERIFY : {
 				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
@@ -493,7 +495,7 @@ public class AdminService implements AdminConstants {
 				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
-			case BUTTON_ACTION_FAILVERIFY : {
+			case BUTTON_ACTION_FAIL_VERIFY : {
 				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
@@ -515,7 +517,7 @@ public class AdminService implements AdminConstants {
 	 */
 	
 	/**************************************************************************************************/
-	public List<BecomeTutor> getBecomeTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "B.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_CONTACTED), B.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -565,7 +567,96 @@ public class AdminService implements AdminConstants {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new BecomeTutorRowMapper());
 	}
 	
-	public List<FindTutor> getEnquiriesList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		workbookReport.createSheet("TUTOR_REGISTRATIONS", getBecomeTutorList(grid, gridComponent), BecomeTutor.class);
+		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	@Transactional
+	public void blacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE BECOME_TUTOR SET "
+				+ "IS_BLACKLISTED = 'Y', "
+				+ "BLACKLISTED_REMARKS = :comments, "
+				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_BLACKLISTED = :userId "
+				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeTutorId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tentativeTutorId", tentativeTutorId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void unBlacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE BECOME_TUTOR SET "
+				+ "IS_BLACKLISTED = 'N', "
+				+ "UN_BLACKLISTED_REMARKS = :comments, "
+				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeTutorId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tentativeTutorId", tentativeTutorId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	public void takeActionOnBecomeTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
+		switch(button) {
+			case BUTTON_ACTION_CONTACTED : {
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACT : {
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_REJECT : {
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_VERIFY:
+			case BUTTON_ACTION_REVERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_FAIL_VERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_SELECT : {
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACTED : {
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeTutorId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("tentativeTutorId", tentativeTutorId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	public List<FindTutor> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "F.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_CONTACTED), F.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -611,7 +702,90 @@ public class AdminService implements AdminConstants {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new FindTutorRowMapper());
 	}
 	
-	public List<SubscribeWithUs> getSubscriptionsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	@Transactional
+	public void blacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE FIND_TUTOR SET "
+				+ "IS_BLACKLISTED = 'Y', "
+				+ "BLACKLISTED_REMARKS = :comments, "
+				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_BLACKLISTED = :userId "
+				+ "WHERE ENQUIRY_ID = :enquiryId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String enquiryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("enquiryId", enquiryId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void unBlacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE FIND_TUTOR SET "
+				+ "IS_BLACKLISTED = 'N', "
+				+ "UN_BLACKLISTED_REMARKS = :comments, "
+				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHERE ENQUIRY_ID = :enquiryId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String enquiryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("enquiryId", enquiryId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	public void takeActionOnFindTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
+		switch(button) {
+			case BUTTON_ACTION_CONTACTED : {
+				query.append("ENQUIRY_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACT : {
+				query.append("ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_REJECT : {
+				query.append("ENQUIRY_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_VERIFY:
+			case BUTTON_ACTION_REVERIFY : {
+				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_FAIL_VERIFY : {
+				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_SELECT : {
+				query.append("ENQUIRY_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACTED : {
+				query.append("ENQUIRY_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String enquiryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("enquiryId", enquiryId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	public List<SubscribeWithUs> getSubscriptionList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "S.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_CONTACTED), S.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -655,6 +829,89 @@ public class AdminService implements AdminConstants {
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubscribeWithUsRowMapper());
+	}
+	
+	@Transactional
+	public void blacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET "
+				+ "IS_BLACKLISTED = 'Y', "
+				+ "BLACKLISTED_REMARKS = :comments, "
+				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_BLACKLISTED = :userId "
+				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeSubscriptionId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void unBlacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET "
+				+ "IS_BLACKLISTED = 'N', "
+				+ "UN_BLACKLISTED_REMARKS = :comments, "
+				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeSubscriptionId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
+			paramsMap.put("comments", comments);
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	public void takeActionOnSubscription(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
+		switch(button) {
+			case BUTTON_ACTION_CONTACTED : {
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACT : {
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_REJECT : {
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_VERIFY:
+			case BUTTON_ACTION_REVERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_FAIL_VERIFY : {
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_SELECT : {
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+			case BUTTON_ACTION_RECONTACTED : {
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tentativeSubscriptionId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
 	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {

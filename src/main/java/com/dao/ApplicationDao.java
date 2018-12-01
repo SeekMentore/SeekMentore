@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.constants.ApplicationConstants;
 import com.exception.ApplicationException;
 import com.utils.LoggerUtils;
+import com.utils.ValidationUtils;
 
 @Repository("applicationDao")
 @EnableTransactionManagement
@@ -100,6 +101,8 @@ public class ApplicationDao implements ApplicationConstants {
 			final SqlParameterSource parameters = getSqlParameterSource(params);
 			parameterList.add(parameters);
 		}
+		if (!ValidationUtils.checkNonEmptyList(parameterList))
+			throw new ApplicationException("Parameters cannot be NULL when using Paramterized Query.");
 		return parameterList.toArray(new SqlParameterSource[0]);
 	}
 	
