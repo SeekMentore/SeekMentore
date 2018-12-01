@@ -118,12 +118,13 @@ public class SchedulerService implements SchedulerConstants {
 		if (null != key) {
 			try {
 				LoggerUtils.logOnConsole("executeTutorRegisterJob");
-				final List<BecomeTutor> tutorObjList = tutorService.getSelectedTutorRegistrations(20);
+				final List<BecomeTutor> tutorObjList = tutorService.getBecomeTutorListForApplicationStatusSelected(true, 20);
+				final List<RegisteredTutor> registeredTutorList = new ArrayList<RegisteredTutor>();
 				for (final BecomeTutor tutorObj : tutorObjList) {
 					final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 					final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 					final RegisteredTutor registeredTutorObj = new RegisteredTutor();
-					registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase()+WHITESPACE+tutorObj.getLastName().toUpperCase());
+					registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase() + WHITESPACE + tutorObj.getLastName().toUpperCase());
 					registeredTutorObj.setContactNumber(tutorObj.getContactNumber());
 					registeredTutorObj.setEmailId(tutorObj.getEmailId());
 					registeredTutorObj.setTentativeTutorId(tutorObj.getTentativeTutorId());
@@ -140,10 +141,9 @@ public class SchedulerService implements SchedulerConstants {
 					registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
 					registeredTutorObj.setEncryptedPassword(encryptedTemporaryPassword);
 					registeredTutorObj.setUserId(tutorObj.getEmailId());
-					tutorService.feedRegisteredTutorRecords(registeredTutorObj);
-					tutorService.sendProfileGenerationEmailToTutor(registeredTutorObj, generateTemporaryPassword);
-					tutorService.updateBecomeTutorForDataMigrated(tutorObj.getTentativeTutorId());
+					registeredTutorList.add(registeredTutorObj);
 				}
+				tutorService.feedRegisteredTutorList(registeredTutorList);
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);
 				throw e;

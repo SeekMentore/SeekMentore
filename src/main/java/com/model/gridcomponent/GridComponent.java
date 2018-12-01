@@ -92,6 +92,45 @@ public class GridComponent implements Serializable {
 		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(otherParams);
 	}
 	
+	public GridComponent(
+			final Integer start,
+			final Integer limit,
+			final Class<? extends GridComponentObject> gridComponentObjectClass
+	) {
+		if (null != start && start > 0 && null != limit && limit > 0) {
+			this.start = start;
+			this.limit = limit;
+			this.end = this.start + this.limit - 1;
+			this.pagingAvailable = true;
+		} else {
+			this.start = -1;
+			this.limit = -1;
+			this.end = -1;
+			this.pagingAvailable = false;
+		}
+		this.otherParams = null;
+		this.filters = null;
+		this.sorters = null;
+		this.filterList = GridComponentUtils.createFilterListFromFilterJSON(this.filters);
+		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
+		this.gridComponentObjectClass = gridComponentObjectClass;
+		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(this.otherParams);
+	}
+	
+	public GridComponent(final Class<? extends GridComponentObject> gridComponentObjectClass) {
+		this.start = -1;
+		this.limit = -1;
+		this.end = -1;
+		this.pagingAvailable = false;
+		this.otherParams = null;
+		this.filters = null;
+		this.sorters = null;
+		this.filterList = GridComponentUtils.createFilterListFromFilterJSON(this.filters);
+		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
+		this.gridComponentObjectClass = gridComponentObjectClass;
+		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(this.otherParams);
+	}
+	
 	public String getOtherParams() {
 		return otherParams;
 	}

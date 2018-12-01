@@ -27,4 +27,10 @@ public interface MailConstants extends ApplicationConstants {
 	String PARAM_TO_ADDRESS_SEMICOLON_SEPARATED = "toAddressSemicolonSeparated";
 	String PARAM_FROM_ADDRESS = "fromAddress";
 	
+	String MAIL_PARAM_ATTACHMENTS = "attachments";
+	String MAIL_PARAM_MESSAGE = "message";
+	String MAIL_PARAM_SUBJECT = "subject";
+	String MAIL_PARAM_BCC = "bcc";
+	String MAIL_PARAM_CC = "cc";
+	String MAIL_PARAM_TO = "to";
 }

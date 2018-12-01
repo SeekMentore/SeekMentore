@@ -2,6 +2,7 @@ package com.service.components;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.MailConstants;
+import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
@@ -38,6 +41,7 @@ import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
+import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -53,6 +57,9 @@ public class TutorService implements TutorConstants {
 	
 	@Autowired
 	private transient CommonsService commonsService;
+	
+	@Autowired
+	private transient AdminService adminService;
 	
 	@PostConstruct
 	public void init() {}
@@ -588,5 +595,64 @@ public class TutorService implements TutorConstants {
 	
 	public void sendBankAccountListRejectionEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
 		// @ TODO - Email functionality 
+	}
+	
+	@Transactional
+	public void feedRegisteredTutorList(final List<RegisteredTutor> registeredTutorList) throws Exception {
+		final String baseQueryInsertRegisteredTutor = "INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encryptedPassword, (UNIX_TIMESTAMP(SYSDATE()) * 1000), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)";
+		final String baseQueryUpdateBecomeTutor = "UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final RegisteredTutor registeredTutorObj : registeredTutorList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("name", registeredTutorObj.getName());
+			paramsMap.put("contactNumber", registeredTutorObj.getContactNumber());
+			paramsMap.put("emailId", registeredTutorObj.getEmailId());
+			paramsMap.put("tentativeTutorId", registeredTutorObj.getTentativeTutorId());
+			paramsMap.put("dateOfBirth", registeredTutorObj.getDateOfBirth());
+			paramsMap.put("gender", registeredTutorObj.getGender());
+			paramsMap.put("qualification", registeredTutorObj.getQualification());
+			paramsMap.put("primaryProfession", registeredTutorObj.getPrimaryProfession());
+			paramsMap.put("transportMode", registeredTutorObj.getTransportMode());
+			paramsMap.put("teachingExp", registeredTutorObj.getTeachingExp());
+			paramsMap.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
+			paramsMap.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
+			paramsMap.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
+			paramsMap.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
+			paramsMap.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
+			paramsMap.put("encryptedPassword", registeredTutorObj.getEncryptedPassword());
+			paramsMap.put("userId", registeredTutorObj.getUserId());
+			paramsList.add(paramsMap);
+			sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
+		}
+		applicationDao.executeBatchUpdate(baseQueryInsertRegisteredTutor, paramsList);
+		applicationDao.executeBatchUpdate(baseQueryUpdateBecomeTutor, paramsList);
+	}
+	
+	public void sendProfileGenerationEmailToRegisteredTutorList(final List<RegisteredTutor> registeredTutorList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final RegisteredTutor registeredTutorObj : registeredTutorList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("addressName", registeredTutorObj.getName());
+			attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
+			attributes.put("userId", registeredTutorObj.getUserId());
+			attributes.put("temporaryPassword", SecurityUtil.decrypt(registeredTutorObj.getEncryptedPassword()));
+			final Map<String, Object> mailParams = new HashMap<String, Object>();
+			mailParams.put(MailConstants.MAIL_PARAM_TO, registeredTutorObj.getName());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore tutor profile is created");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
+			mailParamList.add(mailParams);
+		}
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+	}
+	
+	public List<BecomeTutor> getBecomeTutorListForApplicationStatusSelected(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, BecomeTutor.class);
+		} else {
+			gridComponent = new GridComponent(BecomeTutor.class);
+		}
+		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
+		return adminService.getBecomeTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
 	}
 }

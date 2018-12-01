@@ -532,31 +532,31 @@ public class AdminService implements AdminConstants {
 		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'N' AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'FRESH'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_FAILED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SELECTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y' AND IS_DATA_MIGRATED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'REJECTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
@@ -611,6 +611,7 @@ public class AdminService implements AdminConstants {
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
+	@Transactional
 	public void takeActionOnBecomeTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
 		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
 		switch(button) {
@@ -671,31 +672,31 @@ public class AdminService implements AdminConstants {
 		final String existingSorterQueryString = "ORDER BY ENQUIRY_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'FRESH'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'VERIFICATION_FAILED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'SELECTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'REJECTED'";
 				break;
 			}
 		}
@@ -740,6 +741,7 @@ public class AdminService implements AdminConstants {
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
+	@Transactional
 	public void takeActionOnFindTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
 		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
 		switch(button) {
@@ -800,31 +802,31 @@ public class AdminService implements AdminConstants {
 		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'FRESH'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_FAILED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SELECTED'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'";
+				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'REJECTED'";
 				break;
 			}
 		}
@@ -869,6 +871,7 @@ public class AdminService implements AdminConstants {
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
+	@Transactional
 	public void takeActionOnSubscription(final String button, final List<String> idList, final String comments, final User activeUser) {
 		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
 		switch(button) {
