@@ -657,6 +657,11 @@ public class AdminService implements AdminConstants {
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
+	@Transactional
+	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor) {
+		
+	}
+	
 	public List<FindTutor> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "F.*, "

@@ -35,6 +35,7 @@ import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
+import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_SCHEDULER_SERVICE)
 public class SchedulerService implements SchedulerConstants {
@@ -119,31 +120,33 @@ public class SchedulerService implements SchedulerConstants {
 			try {
 				LoggerUtils.logOnConsole("executeTutorRegisterJob");
 				final List<BecomeTutor> tutorObjList = tutorService.getBecomeTutorListForApplicationStatusSelected(true, 20);
-				final List<RegisteredTutor> registeredTutorList = new ArrayList<RegisteredTutor>();
-				for (final BecomeTutor tutorObj : tutorObjList) {
-					final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
-					final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
-					final RegisteredTutor registeredTutorObj = new RegisteredTutor();
-					registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase() + WHITESPACE + tutorObj.getLastName().toUpperCase());
-					registeredTutorObj.setContactNumber(tutorObj.getContactNumber());
-					registeredTutorObj.setEmailId(tutorObj.getEmailId());
-					registeredTutorObj.setTentativeTutorId(tutorObj.getTentativeTutorId());
-					registeredTutorObj.setDateOfBirth(tutorObj.getDateOfBirth());
-					registeredTutorObj.setGender(tutorObj.getGender());
-					registeredTutorObj.setQualification(tutorObj.getQualification());
-					registeredTutorObj.setPrimaryProfession(tutorObj.getPrimaryProfession());
-					registeredTutorObj.setTransportMode(tutorObj.getTransportMode());
-					registeredTutorObj.setTeachingExp(tutorObj.getTeachingExp());
-					registeredTutorObj.setInterestedStudentGrades(tutorObj.getStudentGrade());
-					registeredTutorObj.setInterestedSubjects(tutorObj.getSubjects());
-					registeredTutorObj.setComfortableLocations(tutorObj.getLocations());
-					registeredTutorObj.setPreferredTeachingType(tutorObj.getPreferredTeachingType());
-					registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
-					registeredTutorObj.setEncryptedPassword(encryptedTemporaryPassword);
-					registeredTutorObj.setUserId(tutorObj.getEmailId());
-					registeredTutorList.add(registeredTutorObj);
+				if (ValidationUtils.checkNonEmptyList(tutorObjList)) {
+					final List<RegisteredTutor> registeredTutorList = new ArrayList<RegisteredTutor>();
+					for (final BecomeTutor tutorObj : tutorObjList) {
+						final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
+						final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
+						final RegisteredTutor registeredTutorObj = new RegisteredTutor();
+						registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase() + WHITESPACE + tutorObj.getLastName().toUpperCase());
+						registeredTutorObj.setContactNumber(tutorObj.getContactNumber());
+						registeredTutorObj.setEmailId(tutorObj.getEmailId());
+						registeredTutorObj.setTentativeTutorId(tutorObj.getTentativeTutorId());
+						registeredTutorObj.setDateOfBirth(tutorObj.getDateOfBirth());
+						registeredTutorObj.setGender(tutorObj.getGender());
+						registeredTutorObj.setQualification(tutorObj.getQualification());
+						registeredTutorObj.setPrimaryProfession(tutorObj.getPrimaryProfession());
+						registeredTutorObj.setTransportMode(tutorObj.getTransportMode());
+						registeredTutorObj.setTeachingExp(tutorObj.getTeachingExp());
+						registeredTutorObj.setInterestedStudentGrades(tutorObj.getStudentGrade());
+						registeredTutorObj.setInterestedSubjects(tutorObj.getSubjects());
+						registeredTutorObj.setComfortableLocations(tutorObj.getLocations());
+						registeredTutorObj.setPreferredTeachingType(tutorObj.getPreferredTeachingType());
+						registeredTutorObj.setAdditionalDetails(tutorObj.getAdditionalDetails());
+						registeredTutorObj.setEncryptedPassword(encryptedTemporaryPassword);
+						registeredTutorObj.setUserId(tutorObj.getEmailId());
+						registeredTutorList.add(registeredTutorObj);
+					}
+					tutorService.feedRegisteredTutorList(registeredTutorList);
 				}
-				tutorService.feedRegisteredTutorList(registeredTutorList);
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);
 				throw e;
