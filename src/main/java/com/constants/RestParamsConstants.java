@@ -12,4 +12,6 @@ public interface RestParamsConstants extends GridComponentConstants {
 	
 	String REQUEST_PARAM_COMMENTS = "comments";
 	String REQUEST_PARAM_ALL_IDS_LIST = "allIdsList";
+	String REQUEST_PARAM_PARENT_ID = "parentId";
+	String REQUEST_PARAM_COMPLETE_UPDATED_RECORD = "completeUpdatedRecord";
 }

@@ -26,6 +26,7 @@ import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.GridQueryUtils;
+import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -261,5 +262,11 @@ import com.utils.VelocityUtils;
 			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	/***********************************************************************************************************************/
+
+	@Transactional
+	public void updateCustomerRecord(final SubscribedCustomer customer) {
+		LoggerUtils.logOnConsole(customer.toString());
 	}
 }

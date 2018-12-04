@@ -43,6 +43,9 @@ public class CommonsService implements CommonsConstants {
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
+	@Autowired
+	private transient ApplicationLookupDataService applicationLookupDataService;
+	
 	@PostConstruct
 	public void init() {}
 	
@@ -58,11 +61,6 @@ public class CommonsService implements CommonsConstants {
 		} catch (Exception e) {
 			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
 		}
-	}
-	
-	@Transactional
-	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
-		return applicationDao.findAllWithoutParams("SELECT * FROM SELECT_LOOKUP_TABLE_NAME WHERE HIDDEN IS NULL ORDER BY ORDER_OF_CATEGORY, ORDER_IN_CATEGORY".replaceAll("SELECT_LOOKUP_TABLE_NAME", selectLookUpTable), new SelectLookupRowMapper());
 	}
 	
 	@Transactional
@@ -198,5 +196,10 @@ public class CommonsService implements CommonsConstants {
 				questionMarks.append(":"+i);
 		}
 		return questionMarks.toString();
+	}
+	
+	/****************************************************************************************************************************/
+	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
+		return applicationLookupDataService.getSelectLookupList(selectLookUpTable);
 	}
 }

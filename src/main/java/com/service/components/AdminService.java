@@ -35,6 +35,7 @@ import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
+import com.utils.LoggerUtils;
 import com.utils.PDFUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -659,7 +660,7 @@ public class AdminService implements AdminConstants {
 	
 	@Transactional
 	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor) {
-		
+		LoggerUtils.logOnConsole(becomeTutor.toString());
 	}
 	
 	public List<FindTutor> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -792,6 +793,11 @@ public class AdminService implements AdminConstants {
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
 	
+	@Transactional
+	public void updateFindTutorRecord(final FindTutor findTutor) {
+		LoggerUtils.logOnConsole(findTutor.toString());
+	}
+	
 	public List<SubscribeWithUs> getSubscriptionList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "S.*, "
@@ -920,6 +926,11 @@ public class AdminService implements AdminConstants {
 			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void updateSubscriptionRecord(final SubscribeWithUs subscription) {
+		LoggerUtils.logOnConsole(subscription.toString());
 	}
 	
 	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {

@@ -133,6 +133,9 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_REJECT_BANK_ACCOUNT_LIST = "/rejectBankAccountList";
 	String REST_METHOD_NAME_CURRENT_PACKAGES = "/currentPackages";
 	String REST_METHOD_NAME_HISTORY_PACKAGES = "/historyPackages";
+	String REST_METHOD_NAME_UPDATE_TUTOR_RECORD = "/updateTutorRecord";
+	// Admin - SubscribedCustomer REST Methods
+	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";
 	// Sales REST methods
 	String REST_METHOD_NAME_PENDING_ENQUIRIES_LIST = "/pendingEnquiriesList";
 	String REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST = "/completedEnquiriesList";
@@ -175,6 +178,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST = "/blacklistEnquiryRequestList";
 	String REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST = "/unBlacklistEnquiryRequestList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR = "/takeActionOnFindTutor";
+	String REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD = "/updateFindTutorRecord";
 	String REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST = "/nonContactedSubscriptionsList";
 	String REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST = "/nonVerifiedSubscriptionsList";
 	String REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST = "/verifiedSubscriptionsList";
@@ -185,6 +189,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST = "/blacklistSubscriptionRequestList";
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST = "/unBlacklistSubscriptionRequestList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION = "/takeActionOnSubscription";
+	String REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD = "/updateSubscriptionRecord";
 	String REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST = "/nonContactedQueryList";
 	String REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST = "/nonAnsweredQueryList";
 	String REST_METHOD_NAME_ANSWERED_QUERY_LIST = "/answeredQueryList";

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -21,9 +22,14 @@ import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
+import com.constants.components.SelectLookupConstants;
+import com.constants.components.publicaccess.FindTutorConstants;
+import com.model.components.SubscribedCustomer;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
+import com.service.components.CustomerService;
 import com.service.components.SubscriptionPackageService;
 import com.utils.ApplicationUtils;
 import com.utils.GridComponentUtils;
@@ -38,6 +44,8 @@ import com.webservices.rest.AbstractRestWebservice;
 public class SubscribedCustomerRestService extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
 	
 	private Long customerId;
+	private SubscribedCustomer subscribedCustomerObject;
+	private Long parentId;
 	
 	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -97,19 +105,35 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		}
 	}
 	
-	@Path("/updateCustomerRecord")
+	@Path(REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public String updateCustomerRecord (
-			@FormDataParam("completeUpdatedRecord") final String completeUpdatedRecord,
-			@FormDataParam("parentId") final String parentId,
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD;
+		createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.subscribedCustomerObject.setCustomerId(Long.parseLong(parentId));
+			getCustomerService().updateCustomerRecord(this.subscribedCustomerObject);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	public CustomerService getCustomerService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE, CustomerService.class);
 	}
 	
 	public SubscriptionPackageService getSubscriptionPackageService() {
@@ -127,6 +151,11 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 				handleSelectedCustomerDataGridView();
 				break;
 			}
+			case REST_METHOD_NAME_UPDATE_TUTOR_RECORD : {
+				handleParentId();
+				handleCustomerSecurity();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
@@ -142,4 +171,81 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		}
 	} 
 	
+	private void handleParentId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.subscribedCustomerObject = new SubscribedCustomer();
+			this.subscribedCustomerObject.setName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
+			this.subscribedCustomerObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
+			this.subscribedCustomerObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
+			this.subscribedCustomerObject.setStudentGrades(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
+			this.subscribedCustomerObject.setInterestedSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
+			this.subscribedCustomerObject.setLocation(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
+			this.subscribedCustomerObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
+			this.subscribedCustomerObject.setAddressDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
+		}
+	}
+	
+	private void handleCustomerSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePhoneNumber(this.subscribedCustomerObject.getContactNumber(), 10)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateEmailAddress(this.subscribedCustomerObject.getEmailId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateNameString(this.subscribedCustomerObject.getName(), true)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscribedCustomerObject.getAddressDetails())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
 }

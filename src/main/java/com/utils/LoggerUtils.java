@@ -26,12 +26,20 @@ public class LoggerUtils implements LoggerConstants {
 	private static final transient boolean isErrorEnabled = LOGGER.isErrorEnabled();
 	
 	public static void logOnConsole(final String message) {
-		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL)) {
+		Boolean isServerLocal = false;
+		try {
+			isServerLocal = getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL);
+		} catch(Exception e) {}
+		if (isServerLocal) {
 			// Only print on console if Server is Local
 			System.out.println(message);
 		} else {
 			logDebugSteps(message);
 		}
+	}
+	
+	public static void logOnConsoleForcefully(final String message) {
+		System.out.println(message);
 	}
 	
 	public static void logInfoSteps(final String message) {

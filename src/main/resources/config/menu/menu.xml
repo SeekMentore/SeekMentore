@@ -121,7 +121,7 @@
 			<webservice id="blacklistEnquiryRequestList" url="/blacklistEnquiryRequestList"></webservice>	
 			<webservice id="unBlacklistEnquiryRequestList" url="/unBlacklistEnquiryRequestList"></webservice>
 			<webservice id="takeActionOnFindTutor" url="/takeActionOnFindTutor"></webservice>
-			<webservice id="updateEnquiryRequestRecord" url="/updateEnquiryRequestRecord"></webservice>	
+			<webservice id="updateFindTutorRecord" url="/updateFindTutorRecord"></webservice>	
 			<webservice id="nonContactedSubscriptionsList" url="/nonContactedSubscriptionsList"></webservice>
 			<webservice id="nonVerifiedSubscriptionsList" url="/nonVerifiedSubscriptionsList"></webservice>
 			<webservice id="verifiedSubscriptionsList" url="/verifiedSubscriptionsList"></webservice>
@@ -133,7 +133,7 @@
 			<webservice id="blacklistSubscriptionRequestList" url="/blacklistSubscriptionRequestList"></webservice>
 			<webservice id="unBlacklistSubscriptionRequestList" url="/unBlacklistSubscriptionRequestList"></webservice>	
 			<webservice id="takeActionOnSubscription" url="/takeActionOnSubscription"></webservice>
-			<webservice id="updateSubscriptionRequestRecord" url="/updateSubscriptionRequestRecord"></webservice>
+			<webservice id="updateSubscriptionRecord" url="/updateSubscriptionRecord"></webservice>
 			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
 			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>
 			<webservice id="answeredQueryList" url="/answeredQueryList"></webservice>

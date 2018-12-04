@@ -39,6 +39,7 @@ import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
+import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
 import com.utils.SecurityUtil;
@@ -654,5 +655,10 @@ public class TutorService implements TutorConstants {
 		}
 		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
 		return adminService.getBecomeTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
+	}
+	
+	@Transactional
+	public void updateTutorRecord(final RegisteredTutor tutor) {
+		LoggerUtils.logOnConsole(tutor.toString());
 	}
 }

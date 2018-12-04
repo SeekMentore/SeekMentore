@@ -1,5 +1,6 @@
 package com.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -8,6 +9,18 @@ import org.joda.time.DateTime;
 import com.constants.DateConstants;
 
 public class DateUtils implements DateConstants {
+	
+	public static Date parseYYYYMMDD(final String dateString) {
+		if (ValidationUtils.checkStringAvailability(dateString)) {
+			try {
+				final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+				return simpleDateFormatter.parse(dateString);
+			} catch(ParseException e) {
+				return null;
+			}
+		}
+		return null;
+	}
 	
 	public static String parseDateInIndianDTFormat(final Date date) {
 		if (!isValid(date))
