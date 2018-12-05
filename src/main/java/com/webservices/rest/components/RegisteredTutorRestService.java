@@ -33,12 +33,15 @@ import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
+import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscriptionPackage;
 import com.model.components.TutorDocument;
+import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
@@ -403,6 +406,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
+	public AdminService getAdminService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
+	}
+	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
 	}
@@ -532,6 +539,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			this.registeredTutorObject.setComfortableLocations(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "comfortableLocations", String.class));
 			this.registeredTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.registeredTutorObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
+			this.registeredTutorObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 		}
 	}
 	
@@ -557,6 +565,17 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
+						} else {
+							// Check contact number in system
+							final RegisteredTutor registeredTutorInDatabaseWithContactNumber = getTutorService().getRegisteredTutorInDatabaseWithContactNumber(this.registeredTutorObject.getContactNumber());
+							final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = getAdminService().getBecomeTutorApplicationInDatabaseWithContactNumber(this.registeredTutorObject.getContactNumber());
+							if (null != registeredTutorInDatabaseWithContactNumber || null != becomeTutorApplicationInDatabaseWithContactNumber) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
 						}
 						break;
 					}
@@ -567,6 +586,17 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
+						} else {
+							// Check email Id in system
+							final RegisteredTutor registeredTutorInDatabaseWithEmailId = getTutorService().getRegisteredTutorInDatabaseWithEmailId(this.registeredTutorObject.getEmailId());
+							final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = getAdminService().getBecomeTutorApplicationInDatabaseWithEmailId(this.registeredTutorObject.getEmailId());
+							if (null != registeredTutorInDatabaseWithEmailId || null != becomeTutorApplicationInDatabaseWithEmailId) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							} 
 						}
 						break;
 					}
@@ -671,6 +701,16 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 						break;
 					}
 					case "additionalDetails" : {
+						break;
+					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.registeredTutorObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
 						break;
 					}
 					case "documents" : {

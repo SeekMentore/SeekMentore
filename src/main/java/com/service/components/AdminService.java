@@ -569,6 +569,18 @@ public class AdminService implements AdminConstants {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new BecomeTutorRowMapper());
 	}
 	
+	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", emailId);
+		return applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new BecomeTutorRowMapper());
+	}
+	
+	public BecomeTutor getBecomeTutorApplicationInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", contactNumber);
+		return applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new BecomeTutorRowMapper());
+	}
+	
 	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
 		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
 		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class);
@@ -787,6 +799,11 @@ public class AdminService implements AdminConstants {
 						paramsMap.put("preferredTeachingType", becomeTutor.getPreferredTeachingType());
 						break;
 					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", becomeTutor.getAddressDetails());
+						break;
+					}
 				}
 			}
 		}
@@ -956,6 +973,11 @@ public class AdminService implements AdminConstants {
 					case "emailId" : {
 						updateAttributesQuery.add("EMAIL_ID = :emailId");
 						paramsMap.put("emailId", findTutor.getEmailId());
+						break;
+					}
+					case "subscribedCustomer" : {
+						updateAttributesQuery.add("SUBSCRIBED_CUSTOMER = :subscribedCustomer");
+						paramsMap.put("subscribedCustomer", findTutor.getSubscribedCustomer());
 						break;
 					}
 					case "studentGrade" : {
@@ -1167,6 +1189,11 @@ public class AdminService implements AdminConstants {
 					case "emailId" : {
 						updateAttributesQuery.add("EMAIL_ID = :emailId");
 						paramsMap.put("emailId", subscription.getEmailId());
+						break;
+					}
+					case "subscribedCustomer" : {
+						updateAttributesQuery.add("SUBSCRIBED_CUSTOMER = :subscribedCustomer");
+						paramsMap.put("subscribedCustomer", subscription.getSubscribedCustomer());
 						break;
 					}
 					case "studentGrade" : {

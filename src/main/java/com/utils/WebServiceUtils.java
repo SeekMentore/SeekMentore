@@ -40,6 +40,9 @@ public class WebServiceUtils implements WebServiceConstants {
 		// Not matching captcha if the server is local
 		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL))
 			return true;
+		// Not matching captcha if the captcha is shut off
+		if (getJNDIandControlConfigurationLoadService().getControlConfiguration().getCaptchaParams().getSwitchOffCaptcha())
+			return true;
 		// Verify captcha response and set values in securityFailureResponse
 		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(captchaResponse)) {
 			final Map<String, String> postParams = new HashMap<String, String>();

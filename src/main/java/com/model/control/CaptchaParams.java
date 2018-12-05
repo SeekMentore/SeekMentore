@@ -8,6 +8,7 @@ public class CaptchaParams implements Serializable {
 	
 	private static final long serialVersionUID = 6693618464803123134L;
 	
+	private Boolean switchOffCaptcha;
 	private String encryptedApiSecret;
 	private String apiVerifyURL;
 	
@@ -26,5 +27,14 @@ public class CaptchaParams implements Serializable {
 
 	public void setEncryptedApiSecret(String encryptedApiSecret) {
 		this.encryptedApiSecret = encryptedApiSecret;
+	}
+
+	public Boolean getSwitchOffCaptcha() {
+		return switchOffCaptcha;
+	}
+
+	@XmlElement
+	public void setSwitchOffCaptcha(Boolean switchOffCaptcha) {
+		this.switchOffCaptcha = switchOffCaptcha;
 	}
 }

@@ -148,6 +148,9 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
 	
+	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
+	private String addressDetails;
+	
 	private Long applicationDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -775,6 +778,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			case "whoSelectedName" : return "WHO_SELECTED_NAME";
 			case "whoRejectedName" : return "WHO_REJECTED_NAME";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "addressDetails" : return "ADDRESS_DETAILS";
 		}
 		return EMPTY_STRING;
 	}
@@ -841,5 +845,13 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 
 	public void setUpdatedByName(String updatedByName) {
 		this.updatedByName = updatedByName;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
 	}
 }

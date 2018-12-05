@@ -126,10 +126,6 @@ public class TutorService implements TutorConstants {
 				null);
 	}
 	
-	public String getFolderPathToUploadTutorDocuments(final String tutorId) {
-		return "secured/tutor/documents/" + tutorId;
-	}
-	
 	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> response = new HashMap<String, Object>();
 		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
@@ -402,6 +398,18 @@ public class TutorService implements TutorConstants {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
+	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", emailId);
+		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new RegisteredTutorRowMapper());
+	}
+	
+	public RegisteredTutor getRegisteredTutorInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", contactNumber);
+		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new RegisteredTutorRowMapper());
+	}
+	
 	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
@@ -651,10 +659,19 @@ public class TutorService implements TutorConstants {
 		return adminService.getBecomeTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
 	}
 	
+	public String getFolderPathToUploadTutorDocuments(final String tutorId) {
+		return "secured/tutor/documents/" + tutorId;
+	}
+	
 	@Transactional
-	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId) {
+	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId, final Boolean isAdminOverride, final User activeUser) {
 		final String baseQueryDelete = "DELETE FROM TUTOR_DOCUMENTS"; 
-		final String baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)"; 
+		String baseQueryInsert = EMPTY_STRING;
+		if (isAdminOverride) {
+			baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME, IS_APPROVED, WHO_ACTED, REMARKS, ACTION_DATE_MILLIS) VALUES(:tutorId, :fsKey, :filename, 'Y', :userId, :comments, (UNIX_TIMESTAMP(SYSDATE()) * 1000))";
+		} else {
+			baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)";
+		}
 		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId AND FS_KEY = :fsKey";
 		final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
@@ -666,6 +683,10 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("tutorId", tutorId);
 			paramsMap.put("fsKey", fsKey);
 			paramsMap.put("filename", filename);
+			if (isAdminOverride) {
+				paramsMap.put("userId", activeUser.getUserId());
+				paramsMap.put("comments", "Admin override");
+			}
 			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(WHITESPACE + baseQueryDelete + WHITESPACE + existingFilterQueryString + WHITESPACE, paramsList);
@@ -772,9 +793,14 @@ public class TutorService implements TutorConstants {
 						paramsMap.put("additionalDetails", tutor.getAdditionalDetails());
 						break;
 					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", tutor.getAddressDetails());
+						break;
+					}
 					case "documents" : {
 						if (ValidationUtils.checkNonEmptyList(tutor.getDocuments())) {
-							uploadTutorDocuments(tutor.getDocuments(), tutor.getTutorId());
+							uploadTutorDocuments(tutor.getDocuments(), tutor.getTutorId(), true, activeUser);
 						}
 						break;
 					}

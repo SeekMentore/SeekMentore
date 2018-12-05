@@ -12,4 +12,7 @@ public interface CustomerConstants extends ResponseMapConstants {
 	String PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER = VELOCITY_TEMPLATES_SUBSCRIBED_CUSTOMER_FOLDER_PATH + "/profile-created.vm";	
 	
 	String VALIDATION_MESSAGE_CUSTOMER_ID_ABSENT = "No 'customerId' found in request, hence cannot load data.";
+	
+	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
+	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
 }

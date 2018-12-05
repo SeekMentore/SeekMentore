@@ -226,6 +226,18 @@ import com.utils.VelocityUtils;
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 	
+	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("emailId", emailId);
+		return applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
+	}
+	
+	public SubscribedCustomer getSubscribedCustomerInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("contactNumber", contactNumber);
+		return applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
+	}
+	
 	@Transactional
 	public void blacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) {
 		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET "

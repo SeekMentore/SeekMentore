@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
@@ -30,8 +31,10 @@ import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
+import com.constants.components.publicaccess.PublicAccessConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.components.Complaint;
+import com.model.components.SubscribedCustomer;
 import com.model.components.TutorDocument;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
@@ -41,6 +44,7 @@ import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
 import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
@@ -1308,6 +1312,10 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
 	}
 	
+	public CustomerService getCustomerService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE, CustomerService.class);
+	}
+	
 	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
@@ -1489,6 +1497,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.becomeTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.becomeTutorObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
 			this.becomeTutorObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
+			this.becomeTutorObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 		}
 	}
 	
@@ -1534,6 +1543,16 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
+						} else {
+							// Check contact number in system
+							final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = getAdminService().getBecomeTutorApplicationInDatabaseWithContactNumber(this.becomeTutorObject.getContactNumber());
+							if (null != becomeTutorApplicationInDatabaseWithContactNumber) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										PublicAccessConstants.FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
 						}
 						break;
 					}
@@ -1544,6 +1563,16 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
+						} else {
+							// Check email Id in system
+							final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = getAdminService().getBecomeTutorApplicationInDatabaseWithEmailId(this.becomeTutorObject.getEmailId());
+							if (null != becomeTutorApplicationInDatabaseWithEmailId) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										PublicAccessConstants.FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							} 
 						}
 						break;
 					}
@@ -1660,6 +1689,16 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 						}
 						break;
 					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.becomeTutorObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
@@ -1679,7 +1718,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	private void createFindTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+	private void createFindTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.findTutorObject = new FindTutor();
 			this.findTutorObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
@@ -1692,6 +1731,24 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.findTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.findTutorObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 			this.findTutorObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
+			if (this.changedAttributes.contains("emailId") || this.changedAttributes.contains("contactNumber")) {
+				SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = null;
+				SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = null;
+				if (this.changedAttributes.contains("emailId")) {
+					// Check email Id in system for Subscribed Customer
+					subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(this.findTutorObject.getEmailId());
+				}
+				if (this.changedAttributes.contains("contactNumber")) {
+					// Check contact number in system for Subscribed Customer
+					subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(this.findTutorObject.getContactNumber());
+				}
+				if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
+					this.findTutorObject.setSubscribedCustomer(YES);
+				} else {
+					this.findTutorObject.setSubscribedCustomer(NO);
+				}
+				this.changedAttributes.add("subscribedCustomer");
+			}
 		}
 	}
 	
@@ -1812,7 +1869,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	private void createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+	private void createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscriptionObject = new SubscribeWithUs();
 			this.subscriptionObject.setFirstName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "firstName", String.class));
@@ -1826,6 +1883,24 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.subscriptionObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.subscriptionObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 			this.subscriptionObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
+			if (this.changedAttributes.contains("emailId") || this.changedAttributes.contains("contactNumber")) {
+				SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = null;
+				SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = null;
+				if (this.changedAttributes.contains("emailId")) {
+					// Check email Id in system for Subscribed Customer
+					subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(this.subscriptionObject.getEmailId());
+				}
+				if (this.changedAttributes.contains("contactNumber")) {
+					// Check contact number in system for Subscribed Customer
+					subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(this.subscriptionObject.getContactNumber());
+				}
+				if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
+					this.subscriptionObject.setSubscribedCustomer(YES);
+				} else {
+					this.subscriptionObject.setSubscribedCustomer(NO);
+				}
+				this.changedAttributes.add("subscribedCustomer");
+			}
 		}
 	}
 	

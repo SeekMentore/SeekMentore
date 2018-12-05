@@ -72,6 +72,7 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoSelectedName"), String.class));
 		becomeTutor.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoRejectedName"), String.class));
 		becomeTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("updatedByName"), String.class));
+		becomeTutor.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("addressDetails"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(becomeTutor, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(becomeTutor, row, rowNum);
 		return becomeTutor;

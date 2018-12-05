@@ -24,11 +24,11 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
-import com.model.rowmappers.BecomeTutorRowMapper;
-import com.model.rowmappers.RegisteredTutorRowMapper;
-import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.AdminService;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
+import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.MailUtils;
 import com.utils.VelocityUtils;
@@ -45,13 +45,22 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Autowired
 	private CommonsService commonsService;
 	
+	@Autowired
+	private AdminService adminService;
+	
+	@Autowired
+	private TutorService tutorService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
 	@PostConstruct
 	public void init() {}
 	
 	@Transactional
 	public Map<String, Object> submitApplication(final PublicApplication application) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		final Date currentTimestamp = new Date();
 		if (application instanceof BecomeTutor) {
@@ -68,7 +77,7 @@ public class PublicAccessService implements PublicAccessConstants {
 			return response;
 		}
 		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
-			feedRecordForApplication(application);
+			applicationDao.saveOrUpdate(application);
 			if (application instanceof BecomeTutor) {
 				sendNotificationAndConfirmationEmailsToTutor((BecomeTutor) application);
 			} else if (application instanceof FindTutor) {
@@ -80,7 +89,7 @@ public class PublicAccessService implements PublicAccessConstants {
 			} 
 		}
 		// Append contact information if Failure occurred
-		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
+		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			ApplicationUtils.appendMessageInMapAttribute(response, 
 														FAILURE_CONTACT_INFO,
 														RESPONSE_MAP_ATTRIBUTE_MESSAGE);
@@ -127,28 +136,26 @@ public class PublicAccessService implements PublicAccessConstants {
 		final BecomeTutor becomeTutorApplication = (BecomeTutor) application;
 		becomeTutorApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("emailId", becomeTutorApplication.getEmailId());
-		final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new BecomeTutorRowMapper());
+		final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = adminService.getBecomeTutorApplicationInDatabaseWithEmailId(becomeTutorApplication.getEmailId());
+		final RegisteredTutor registeredTutorInDatabaseWithEmailId = tutorService.getRegisteredTutorInDatabaseWithEmailId(becomeTutorApplication.getEmailId());
 		// Check contact number in system
-		paramsMap = new HashMap<String, Object>();
-		paramsMap.put("contactNumber", becomeTutorApplication.getContactNumber());
-		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new BecomeTutorRowMapper());
-		if (null != becomeTutorApplicationInDatabaseWithEmailId) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = adminService.getBecomeTutorApplicationInDatabaseWithContactNumber(becomeTutorApplication.getContactNumber());
+		final RegisteredTutor registeredTutorInDatabaseWithContactNumber = tutorService.getRegisteredTutorInDatabaseWithContactNumber(becomeTutorApplication.getContactNumber());
+		if (null != becomeTutorApplicationInDatabaseWithEmailId || null != registeredTutorInDatabaseWithEmailId) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
 					FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		} 
-		if (null != becomeTutorApplicationInDatabaseWithContactNumber) {
-			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+		if (null != becomeTutorApplicationInDatabaseWithContactNumber || null != registeredTutorInDatabaseWithContactNumber) {
+			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 			ApplicationUtils.appendMessageInMapAttribute(
 					response, 
 					FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		}
-		if (!(Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
+		if ((Boolean)response.get(RESPONSE_MAP_ATTRIBUTE_SUCCESS)) {
 			// Fresh Application Status
 			becomeTutorApplication.setApplicationDateMillis(currentTimestampMillis);
 			becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
@@ -191,13 +198,9 @@ public class PublicAccessService implements PublicAccessConstants {
 		final FindTutor findTutorApplication = (FindTutor) application;
 		findTutorApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system for Subscribed Customer
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("emailId", findTutorApplication.getEmailId());
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = customerService.getSubscribedCustomerInDatabaseWithEmailId(findTutorApplication.getEmailId());
 		// Check contact number in system for Subscribed Customer
-		paramsMap = new HashMap<String, Object>();
-		paramsMap.put("contactNumber", findTutorApplication.getContactNumber());
-		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = customerService.getSubscribedCustomerInDatabaseWithContactNumber(findTutorApplication.getContactNumber());
 		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
 			findTutorApplication.setSubscribedCustomer(YES);
 		} else {
@@ -240,13 +243,9 @@ public class PublicAccessService implements PublicAccessConstants {
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) application;
 		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check email Id in system for Subscribed Customer
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("emailId", subscribeWithUsApplication.getEmailId());
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = customerService.getSubscribedCustomerInDatabaseWithEmailId(subscribeWithUsApplication.getEmailId());
 		// Check contact number in system for Subscribed Customer
-		paramsMap = new HashMap<String, Object>();
-		paramsMap.put("contactNumber", subscribeWithUsApplication.getContactNumber());
-		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = customerService.getSubscribedCustomerInDatabaseWithContactNumber(subscribeWithUsApplication.getContactNumber());
 		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
 			subscribeWithUsApplication.setSubscribedCustomer(YES);
 		} else {
@@ -289,13 +288,9 @@ public class PublicAccessService implements PublicAccessConstants {
 		final SubmitQuery submitQueryApplication = (SubmitQuery) application;
 		submitQueryApplication.setRecordLastUpdatedMillis(currentTimestampMillis);
 		// Check contact number in system for Registered Tutor
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("emailId", submitQueryApplication.getEmailId());
-		final RegisteredTutor registeredTutorInDatabaseWithEmailId = applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new RegisteredTutorRowMapper());
+		final RegisteredTutor registeredTutorInDatabaseWithEmailId = tutorService.getRegisteredTutorInDatabaseWithEmailId(submitQueryApplication.getEmailId());
 		// Check email Id in system for Subscribed Customer
-		paramsMap = new HashMap<String, Object>();
-		paramsMap.put("emailId", submitQueryApplication.getEmailId());
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
+		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = customerService.getSubscribedCustomerInDatabaseWithEmailId(submitQueryApplication.getEmailId());
 		if (null != registeredTutorInDatabaseWithEmailId) {
 			submitQueryApplication.setRegisteredTutor(YES);
 		} else {
@@ -406,9 +401,5 @@ public class PublicAccessService implements PublicAccessConstants {
 				SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION, 
 				VelocityUtils.parseTemplate(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
-	}
-	
-	private void feedRecordForApplication(final PublicApplication application) {
-		applicationDao.saveOrUpdate(application);
 	}
 }

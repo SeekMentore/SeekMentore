@@ -33,6 +33,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	private String updatedBy;
 	private String updatedByName;
 	private String preferredTeachingType;
+	private String addressDetails;
 	private List<TutorDocument> documents;
 	
 	public RegisteredTutor() {}
@@ -59,6 +60,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		newInstance.recordLastUpdatedMillis = recordLastUpdatedMillis;
 		newInstance.updatedBy = updatedBy;
 		newInstance.preferredTeachingType = preferredTeachingType;
+		newInstance.addressDetails = addressDetails;
 		return newInstance;
 	}
 
@@ -302,6 +304,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "addressDetails" : return "ADDRESS_DETAILS";
 		}
 		return EMPTY_STRING;
 	}
@@ -320,5 +323,13 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 
 	public void setUpdatedByName(String updatedByName) {
 		this.updatedByName = updatedByName;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
 	}
 }

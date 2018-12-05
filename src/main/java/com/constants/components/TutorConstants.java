@@ -24,4 +24,7 @@ public interface TutorConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_INVALID_FILE_SIZE_FOR_DOCUMENTS = "Size of each document should not exceed 2MB";
 	
 	Double MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB = 2D;
+	
+	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
+	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
 }

@@ -232,7 +232,6 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 				}
 			}
 		}
-		
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
