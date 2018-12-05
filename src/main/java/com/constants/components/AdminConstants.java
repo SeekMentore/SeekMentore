@@ -43,4 +43,7 @@ public interface AdminConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_BUTTON_ABSENT = "No 'button' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_BUTTON_UNKNOWN = "Unknown 'button' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_PARENT_ID_ABSENT = "No 'parentId' found in request, hence cannot perform action.";
+	
+	String VALIDATION_MESSAGE_UNKONWN_PROPERTY = "Unknown change attribute found in the JSON request";
+	String VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED = "Please change some properties to update.";
 }

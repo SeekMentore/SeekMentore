@@ -22,17 +22,6 @@ public class ValidationUtils implements ValidationConstants {
 	    return false;
 	}
 	
-	public static Boolean checkNonNULLIFIEDUpdate(final Object object) {
-		if (checkObjectAvailability(object)) {
-			if (checkStringAvailability(object.toString())) {
-				if (!"NULLIFIED".equalsIgnoreCase(object.toString())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 	public static Boolean checkStringAvailability(final String stringObject) {
 	    if (checkObjectAvailability(stringObject)) {
 	      if (!EMPTY_STRING.equals(stringObject.trim())) {

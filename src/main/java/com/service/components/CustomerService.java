@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,6 @@ import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.GridQueryUtils;
-import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -232,7 +232,9 @@ import com.utils.VelocityUtils;
 				+ "IS_BLACKLISTED = 'Y', "
 				+ "BLACKLISTED_REMARKS = :comments, "
 				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId "
+				+ "WHO_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE CUSTOMER_ID = :customerId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String customerId : idList) {
@@ -251,7 +253,9 @@ import com.utils.VelocityUtils;
 				+ "IS_BLACKLISTED = 'N', "
 				+ "UN_BLACKLISTED_REMARKS = :comments, "
 				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHO_UN_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE CUSTOMER_ID = :customerId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String customerId : idList) {
@@ -263,10 +267,78 @@ import com.utils.VelocityUtils;
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
-	/***********************************************************************************************************************/
+	
+	private void sendEmailAboutEmailAndUserIdChange(final Long customerId, final String newEmailId) {
+		// TODO - Email
+	}
+	
+	private void sendEmailAboutContactNumberChange(final Long customerId, final String newContactNumber) {
+		// TODO - Email
+	}
 
 	@Transactional
-	public void updateCustomerRecord(final SubscribedCustomer customer) {
-		LoggerUtils.logOnConsole(customer.toString());
+	public void updateCustomerRecord(final SubscribedCustomer customer, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE CUSTOMER_ID = :customerId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						updateAttributesQuery.add("NAME = :name");
+						paramsMap.put("name", customer.getName());
+						break;
+					}
+					case "contactNumber" : {
+						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						sendEmailAboutContactNumberChange(customer.getCustomerId(), customer.getContactNumber());
+						paramsMap.put("contactNumber", customer.getContactNumber());
+						break;
+					}
+					case "emailId" : {
+						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						// If emailId is changed also change the userId
+						updateAttributesQuery.add("USER_ID = :emailId");
+						sendEmailAboutEmailAndUserIdChange(customer.getCustomerId(), customer.getEmailId());
+						paramsMap.put("emailId", customer.getEmailId());
+						break;
+					}
+					case "studentGrades" : {
+						updateAttributesQuery.add("STUDENT_GRADE = :studentGrades");
+						paramsMap.put("studentGrades", customer.getStudentGrades());
+						break;
+					}
+					case "interestedSubjects" : {
+						updateAttributesQuery.add("SUBJECTS = :interestedSubjects");
+						paramsMap.put("interestedSubjects", customer.getInterestedSubjects());
+						break;
+					}
+					case "location" : {
+						updateAttributesQuery.add("LOCATION = :location");
+						paramsMap.put("location", customer.getLocation());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", customer.getAdditionalDetails());
+						break;
+					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", customer.getAddressDetails());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("customerId", customer.getCustomerId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 }

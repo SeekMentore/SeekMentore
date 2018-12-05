@@ -123,16 +123,16 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/blacklistSubscribedCustomers";
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";
 	// Admin - RegisteredTutor REST Methods
-	String REST_METHOD_NAME_UPLOADED_DOCUMENTS = "/uploadedDocuments";
+	String REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST = "/uploadedDocumentList";
 	String REST_METHOD_NAME_APPROVE_TUTOR_DOCUMENT_LIST = "/approveTutorDocumentList";
 	String REST_METHOD_NAME_SEND_REMINDER_TUTOR_DOCUMENT_LIST = "/sendReminderTutorDocumentList";
 	String REST_METHOD_NAME_REJECT_TUTOR_DOCUMENT_LIST = "/rejectTutorDocumentList";
-	String REST_METHOD_NAME_BANK_DETAILS = "/bankDetails";
+	String REST_METHOD_NAME_BANK_DETAIL_LIST = "/bankDetailList";
 	String REST_METHOD_NAME_APPROVE_BANK_ACCOUNT_LIST = "/approveBankAccountList";
 	String REST_METHOD_NAME_MAKE_DEFAULT_BANK_ACCOUNT = "/makeDefaultBankAccount";
 	String REST_METHOD_NAME_REJECT_BANK_ACCOUNT_LIST = "/rejectBankAccountList";
-	String REST_METHOD_NAME_CURRENT_PACKAGES = "/currentPackages";
-	String REST_METHOD_NAME_HISTORY_PACKAGES = "/historyPackages";
+	String REST_METHOD_NAME_CURRENT_PACKAGE_LIST = "/currentPackageList";
+	String REST_METHOD_NAME_HISTORY_PACKAGE_LIST = "/historyPackageList";
 	String REST_METHOD_NAME_UPDATE_TUTOR_RECORD = "/updateTutorRecord";
 	// Admin - SubscribedCustomer REST Methods
 	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";

@@ -62,25 +62,64 @@ public class ApplicationUtils implements ApplicationConstants {
 	
 	public static Map<String, Object> computeFileSizeInIterativeManner(final Long bytes) {
 		final Map<String, Object> sizeResponse = new HashMap<String, Object>();
-		Double size = (double) bytes;
-		String sizeExt = "Bytes";
-		if (size > 0) {
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "KB";
-			}
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "MB";
-			}
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "GB";
+		sizeResponse.put("size", 0);
+		sizeResponse.put("sizeExt", "Bytes");
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = (double) bytes;
+				String sizeExt = "Bytes";
+				if (size > 0) {
+					if (size > 1024) {
+						size = computeFileSizeInKB(bytes);
+						sizeExt = "KB";
+					}
+					if (size > 1024) {
+						size = computeFileSizeInMB(bytes);
+						sizeExt = "MB";
+					}
+					if (size > 1024) {
+						size = computeFileSizeInGB(bytes);
+						sizeExt = "GB";
+					}
+				}
+				sizeResponse.put("size", size);
+				sizeResponse.put("sizeExt", sizeExt);
 			}
 		}
-		sizeResponse.put("size", size);
-		sizeResponse.put("sizeExt", sizeExt);
 		return sizeResponse;
+	}
+	
+	public static Double computeFileSizeInKB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = (double) bytes;
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
+	}
+	
+	public static Double computeFileSizeInMB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = computeFileSizeInKB(bytes);
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
+	}
+	
+	public static Double computeFileSizeInGB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = computeFileSizeInMB(bytes);
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
 	}
 	
 	public static String getStringFromCharacterArray(final Character[] array) {

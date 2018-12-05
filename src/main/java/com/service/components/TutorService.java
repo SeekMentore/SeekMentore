@@ -39,7 +39,6 @@ import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
-import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
 import com.utils.SecurityUtil;
@@ -284,7 +283,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
-		final String filename = getFileNameForDocument(documentType);
+		final String filename = getFileNameForDocumentType(documentType);
 		final TutorDocument tutorDocument = getTutorDocument(tutorId, filename);
 		removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystem(folderPathToUploadDocuments, tutorDocument.getFilename()));
@@ -294,15 +293,6 @@ public class TutorService implements TutorConstants {
 	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
 		tutorDocumentObj.setWhoActed(null);
 		tutorDocumentObj.setActionDateMillis(null);
-	}
-	
-	private String getFileNameForDocument(final String documentType) {
-		switch(documentType) {
-			case "PROFILE_PHOTO": return "PROFILE_PHOTO.jpg";
-			case "PAN_CARD": return "PAN_CARD.pdf";
-			case "AADHAAR_CARD": return "AADHAAR_CARD.pdf";
-		}
-		return null;
 	}
 	
 	/*
@@ -320,7 +310,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
-		final String filename = getFileNameForDocument(documentType);
+		final String filename = getFileNameForDocumentType(documentType);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
@@ -331,7 +321,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
-		final String filename = getFileNameForDocument(documentType);
+		final String filename = getFileNameForDocumentType(documentType);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
@@ -439,7 +429,9 @@ public class TutorService implements TutorConstants {
 				+ "IS_BLACKLISTED = 'Y', "
 				+ "BLACKLISTED_REMARKS = :comments, "
 				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId "
+				+ "WHO_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TUTOR_ID = :tutorId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tutorId : idList) {
@@ -458,7 +450,9 @@ public class TutorService implements TutorConstants {
 				+ "IS_BLACKLISTED = 'N', "
 				+ "UN_BLACKLISTED_REMARKS = :comments, "
 				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHO_UN_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TUTOR_ID = :tutorId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tutorId : idList) {
@@ -658,7 +652,142 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void updateTutorRecord(final RegisteredTutor tutor) {
-		LoggerUtils.logOnConsole(tutor.toString());
+	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId) {
+		final String baseQueryDelete = "DELETE FROM TUTOR_DOCUMENTS"; 
+		final String baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)"; 
+		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId AND FS_KEY = :fsKey";
+		final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final TutorDocument document : documents) {
+			final String filename = getFileNameForDocumentType(document.getDocumentType());
+			FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, filename);
+			final String fsKey = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, filename, document.getContent());
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tutorId", tutorId);
+			paramsMap.put("fsKey", fsKey);
+			paramsMap.put("filename", filename);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(WHITESPACE + baseQueryDelete + WHITESPACE + existingFilterQueryString + WHITESPACE, paramsList);
+		applicationDao.executeBatchUpdate(baseQueryInsert, paramsList);
+	}
+	
+	private String getFileNameForDocumentType(final String documentType) {
+		switch(documentType) {
+			case "PROFILE_PHOTO": return "PROFILE_PHOTO.jpg";
+			case "PAN_CARD": return "PAN_CARD.pdf";
+			case "AADHAAR_CARD": return "AADHAAR_CARD.pdf";
+		}
+		return null;
+	}
+	
+	private void sendEmailAboutEmailAndUserIdChange(final Long tutorId, final String newEmailId) {
+		// TODO - Email
+	}
+	
+	private void sendEmailAboutContactNumberChange(final Long tutorId, final String newContactNumber) {
+		// TODO - Email
+	}
+	
+	@Transactional
+	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE REGISTERED_TUTOR SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						updateAttributesQuery.add("NAME = :name");
+						paramsMap.put("name", tutor.getName());
+						break;
+					}
+					case "contactNumber" : {
+						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						sendEmailAboutContactNumberChange(tutor.getTutorId(), tutor.getContactNumber());
+						paramsMap.put("contactNumber", tutor.getContactNumber());
+						break;
+					}
+					case "emailId" : {
+						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						// If emailId is changed also change the userId
+						updateAttributesQuery.add("USER_ID = :emailId");
+						sendEmailAboutEmailAndUserIdChange(tutor.getTutorId(), tutor.getEmailId());
+						paramsMap.put("emailId", tutor.getEmailId());
+						break;
+					}
+					case "dateOfBirth" : {
+						updateAttributesQuery.add("DATE_OF_BIRTH = :dateOfBirth");
+						paramsMap.put("dateOfBirth", tutor.getDateOfBirth());
+						break;
+					}
+					case "gender" : {
+						updateAttributesQuery.add("GENDER = :gender");
+						paramsMap.put("gender", tutor.getGender());
+						break;
+					}
+					case "qualification" : {
+						updateAttributesQuery.add("QUALIFICATION = :qualification");
+						paramsMap.put("qualification", tutor.getQualification());
+						break;
+					}
+					case "primaryProfession" : {
+						updateAttributesQuery.add("PRIMARY_PROFESSION = :primaryProfession");
+						paramsMap.put("primaryProfession", tutor.getPrimaryProfession());
+						break;
+					}
+					case "transportMode" : {
+						updateAttributesQuery.add("TRANSPORT_MODE = :transportMode");
+						paramsMap.put("transportMode", tutor.getTransportMode());
+						break;
+					}
+					case "interestedStudentGrades" : {
+						updateAttributesQuery.add("INTERESTED_STUDENT_GRADES = :interestedStudentGrades");
+						paramsMap.put("interestedStudentGrades", tutor.getInterestedStudentGrades());
+						break;
+					}
+					case "interestedSubjects" : {
+						updateAttributesQuery.add("INTERESTED_SUBJECTS = :interestedSubjects");
+						paramsMap.put("interestedSubjects", tutor.getInterestedSubjects());
+						break;
+					}
+					case "comfortableLocations" : {
+						updateAttributesQuery.add("COMFORTABLE_LOCATIONS = :comfortableLocations");
+						paramsMap.put("comfortableLocations", tutor.getComfortableLocations());
+						break;
+					}
+					case "preferredTeachingType" : {
+						updateAttributesQuery.add("NAME = :preferredTeachingType");
+						paramsMap.put("preferredTeachingType", tutor.getPreferredTeachingType());
+						break;
+					}
+					case "teachingExp" : {
+						updateAttributesQuery.add("TEACHING_EXP = :teachingExp");
+						paramsMap.put("teachingExp", tutor.getTeachingExp());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", tutor.getAdditionalDetails());
+						break;
+					}
+					case "documents" : {
+						if (ValidationUtils.checkNonEmptyList(tutor.getDocuments())) {
+							uploadTutorDocuments(tutor.getDocuments(), tutor.getTutorId());
+						}
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("tutorId", tutor.getTutorId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 }

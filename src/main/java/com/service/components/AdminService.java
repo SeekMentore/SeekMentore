@@ -2,6 +2,7 @@ package com.service.components;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +36,8 @@ import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
-import com.utils.LoggerUtils;
 import com.utils.PDFUtils;
+import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
 
@@ -570,8 +571,38 @@ public class AdminService implements AdminConstants {
 	
 	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
 		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
-		workbookReport.createSheet("TUTOR_REGISTRATIONS", getBecomeTutorList(grid, gridComponent), BecomeTutor.class);
+		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class);
 		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	private String getBecomeTutorReportSheetName(final String grid) {
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
+				return "NON_CONTACTED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
+				return "NON_VERIFIED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
+				return "VERIFIED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
+				return "VERIFICATION_FAILED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
+				return "TO_BE_RECONTACTED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
+				return "SELECTED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
+				return "REJECTED_BECOME_TUTORS_LIST";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
+				return "REGISTERED_BECOME_TUTORS_LIST";
+			}
+		}
+		return "COMPLETE_BECOME_TUTORS_LIST";
 	}
 	
 	@Transactional
@@ -580,7 +611,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'Y', "
 				+ "BLACKLISTED_REMARKS = :comments, "
 				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId "
+				+ "WHO_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tentativeTutorId : idList) {
@@ -599,7 +632,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'N', "
 				+ "UN_BLACKLISTED_REMARKS = :comments, "
 				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHO_UN_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tentativeTutorId : idList) {
@@ -617,32 +652,32 @@ public class AdminService implements AdminConstants {
 		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
 				break;
 			}
 		}
@@ -659,8 +694,110 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor) {
-		LoggerUtils.logOnConsole(becomeTutor.toString());
+	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE BECOME_TUTOR SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "firstName" : {
+						updateAttributesQuery.add("FIRST_NAME = :firstName");
+						paramsMap.put("firstName", becomeTutor.getFirstName());
+						break;
+					}
+					case "lastName" : {
+						updateAttributesQuery.add("LAST_NAME = :lastName");
+						paramsMap.put("lastName", becomeTutor.getLastName());
+						break;
+					}
+					case "dateOfBirth" : {
+						updateAttributesQuery.add("DATE_OF_BIRTH = :dateOfBirth");
+						paramsMap.put("dateOfBirth", becomeTutor.getDateOfBirth());
+						break;
+					}
+					case "contactNumber" : {
+						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						paramsMap.put("contactNumber", becomeTutor.getContactNumber());
+						break;
+					}
+					case "emailId" : {
+						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						paramsMap.put("emailId", becomeTutor.getEmailId());
+						break;
+					}
+					case "gender" : {
+						updateAttributesQuery.add("GENDER = :gender");
+						paramsMap.put("gender", becomeTutor.getGender());
+						break;
+					}
+					case "qualification" : {
+						updateAttributesQuery.add("QUALIFICATION = :qualification");
+						paramsMap.put("qualification", becomeTutor.getQualification());
+						break;
+					}
+					case "primaryProfession" : {
+						updateAttributesQuery.add("PRIMARY_PROFESSION = :primaryProfession");
+						paramsMap.put("primaryProfession", becomeTutor.getPrimaryProfession());
+						break;
+					}
+					case "transportMode" : {
+						updateAttributesQuery.add("TRANSPORT_MODE = :transportMode");
+						paramsMap.put("transportMode", becomeTutor.getTransportMode());
+						break;
+					}
+					case "teachingExp" : {
+						updateAttributesQuery.add("TEACHING_EXP = :teachingExp");
+						paramsMap.put("teachingExp", becomeTutor.getTeachingExp());
+						break;
+					}
+					case "studentGrades" : {
+						updateAttributesQuery.add("STUDENT_GRADE = :studentGrades");
+						paramsMap.put("studentGrades", becomeTutor.getStudentGrade());
+						break;
+					}
+					case "subjects" : {
+						updateAttributesQuery.add("SUBJECTS = :subjects");
+						paramsMap.put("subjects", becomeTutor.getSubjects());
+						break;
+					}
+					case "locations" : {
+						updateAttributesQuery.add("LOCATIONS = :locations");
+						paramsMap.put("locations", becomeTutor.getLocations());
+						break;
+					}
+					case "preferredTimeToCall" : {
+						updateAttributesQuery.add("PREFERRED_TIME_TO_CALL = :preferredTimeToCall");
+						paramsMap.put("preferredTimeToCall", becomeTutor.getPreferredTimeToCall());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", becomeTutor.getAdditionalDetails());
+						break;
+					}
+					case "reference" : {
+						updateAttributesQuery.add("REFERENCE = :reference");
+						paramsMap.put("reference", becomeTutor.getReference());
+						break;
+					}
+					case "preferredTeachingType" : {
+						updateAttributesQuery.add("PREFERRED_TEACHING_TYPE = :preferredTeachingType");
+						paramsMap.put("preferredTeachingType", becomeTutor.getPreferredTeachingType());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("tentativeTutorId", becomeTutor.getTentativeTutorId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 	
 	public List<FindTutor> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -715,7 +852,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'Y', "
 				+ "BLACKLISTED_REMARKS = :comments, "
 				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId "
+				+ "WHO_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE ENQUIRY_ID = :enquiryId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String enquiryId : idList) {
@@ -734,7 +873,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'N', "
 				+ "UN_BLACKLISTED_REMARKS = :comments, "
 				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHO_UN_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE ENQUIRY_ID = :enquiryId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String enquiryId : idList) {
@@ -752,32 +893,32 @@ public class AdminService implements AdminConstants {
 		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("ENQUIRY_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("ENQUIRY_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("ENQUIRY_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("ENQUIRY_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE ENQUIRY_ID = :enquiryId");
+				query.append("ENQUIRY_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
 				break;
 			}
 		}
@@ -794,8 +935,75 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void updateFindTutorRecord(final FindTutor findTutor) {
-		LoggerUtils.logOnConsole(findTutor.toString());
+	public void updateFindTutorRecord(final FindTutor findTutor, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE FIND_TUTOR SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE ENQUIRY_ID = :enquiryId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						updateAttributesQuery.add("NAME = :name");
+						paramsMap.put("name", findTutor.getName());
+						break;
+					}
+					case "contactNumber" : {
+						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						paramsMap.put("contactNumber", findTutor.getContactNumber());
+						break;
+					}
+					case "emailId" : {
+						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						paramsMap.put("emailId", findTutor.getEmailId());
+						break;
+					}
+					case "studentGrade" : {
+						updateAttributesQuery.add("STUDENT_GRADE = :studentGrade");
+						paramsMap.put("studentGrade", findTutor.getStudentGrade());
+						break;
+					}
+					case "subjects" : {
+						updateAttributesQuery.add("SUBJECTS = :subjects");
+						paramsMap.put("subjects", findTutor.getSubjects());
+						break;
+					}
+					case "preferredTimeToCall" : {
+						updateAttributesQuery.add("PREFERRED_TIME_TO_CALL = :preferredTimeToCall");
+						paramsMap.put("preferredTimeToCall", findTutor.getPreferredTimeToCall());
+						break;
+					}
+					case "location" : {
+						updateAttributesQuery.add("LOCATION = :location");
+						paramsMap.put("location", findTutor.getLocation());
+						break;
+					}
+					case "reference" : {
+						updateAttributesQuery.add("REFERENCE = :reference");
+						paramsMap.put("reference", findTutor.getReference());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", findTutor.getAdditionalDetails());
+						break;
+					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", findTutor.getAddressDetails());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("enquiryId", findTutor.getEnquiryId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 	
 	public List<SubscribeWithUs> getSubscriptionList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -850,7 +1058,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'Y', "
 				+ "BLACKLISTED_REMARKS = :comments, "
 				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId "
+				+ "WHO_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tentativeSubscriptionId : idList) {
@@ -869,7 +1079,9 @@ public class AdminService implements AdminConstants {
 				+ "IS_BLACKLISTED = 'N', "
 				+ "UN_BLACKLISTED_REMARKS = :comments, "
 				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId "
+				+ "WHO_UN_BLACKLISTED = :userId, "
+				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
+				+ "UPDATED_BY = :userId "
 				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final String tentativeSubscriptionId : idList) {
@@ -887,32 +1099,32 @@ public class AdminService implements AdminConstants {
 		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
 				break;
 			}
 		}
@@ -929,8 +1141,80 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void updateSubscriptionRecord(final SubscribeWithUs subscription) {
-		LoggerUtils.logOnConsole(subscription.toString());
+	public void updateSubscriptionRecord(final SubscribeWithUs subscription, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "firstName" : {
+						updateAttributesQuery.add("FIRST_NAME = :firstName");
+						paramsMap.put("firstName", subscription.getFirstName());
+						break;
+					}
+					case "lastName" : {
+						updateAttributesQuery.add("LAST_NAME = :lastName");
+						paramsMap.put("lastName", subscription.getLastName());
+						break;
+					}
+					case "contactNumber" : {
+						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						paramsMap.put("contactNumber", subscription.getContactNumber());
+						break;
+					}
+					case "emailId" : {
+						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						paramsMap.put("emailId", subscription.getEmailId());
+						break;
+					}
+					case "studentGrade" : {
+						updateAttributesQuery.add("STUDENT_GRADE = :studentGrade");
+						paramsMap.put("studentGrade", subscription.getStudentGrade());
+						break;
+					}
+					case "subjects" : {
+						updateAttributesQuery.add("SUBJECTS = :subjects");
+						paramsMap.put("subjects", subscription.getSubjects());
+						break;
+					}
+					case "preferredTimeToCall" : {
+						updateAttributesQuery.add("PREFERRED_TIME_TO_CALL = :preferredTimeToCall");
+						paramsMap.put("preferredTimeToCall", subscription.getPreferredTimeToCall());
+						break;
+					}
+					case "location" : {
+						updateAttributesQuery.add("LOCATION = :location");
+						paramsMap.put("location", subscription.getLocation());
+						break;
+					}
+					case "reference" : {
+						updateAttributesQuery.add("REFERENCE = :reference");
+						paramsMap.put("reference", subscription.getReference());
+						break;
+					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", subscription.getAddressDetails());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", subscription.getAdditionalDetails());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("tentativeSubscriptionId", subscription.getTentativeSubscriptionId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 	
 	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {

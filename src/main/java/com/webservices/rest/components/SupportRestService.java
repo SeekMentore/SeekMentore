@@ -1,6 +1,7 @@
 package com.webservices.rest.components;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,6 @@ import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
-import com.utils.DateUtils;
 import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
@@ -415,7 +415,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.becomeTutorObject.setTentativeTutorId(Long.parseLong(parentId));
-			getAdminService().updateBecomeTutorRecord(this.becomeTutorObject);
+			getAdminService().updateBecomeTutorRecord(this.becomeTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -726,7 +726,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.findTutorObject.setEnquiryId(Long.parseLong(parentId));
-			getAdminService().updateFindTutorRecord(this.findTutorObject);
+			getAdminService().updateFindTutorRecord(this.findTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1037,7 +1037,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.subscriptionObject.setTentativeSubscriptionId(Long.parseLong(parentId));
-			getAdminService().updateSubscriptionRecord(this.subscriptionObject);
+			getAdminService().updateSubscriptionRecord(this.subscriptionObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1472,252 +1472,341 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	private void createBecomeTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.becomeTutorObject = new BecomeTutor();
-			this.becomeTutorObject.setFirstName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
-			this.becomeTutorObject.setLastName(JSONUtils.getValueFromJSONObject(jsonObject, "lastName", String.class));
-			this.becomeTutorObject.setDateOfBirth(DateUtils.parseYYYYMMDD(JSONUtils.getValueFromJSONObject(jsonObject, "dateOfBirth", String.class)));
-			this.becomeTutorObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
-			this.becomeTutorObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
-			this.becomeTutorObject.setGender(JSONUtils.getValueFromJSONObject(jsonObject, "gender", String.class));
-			this.becomeTutorObject.setQualification(JSONUtils.getValueFromJSONObject(jsonObject, "qualification", String.class));
-			this.becomeTutorObject.setPrimaryProfession(JSONUtils.getValueFromJSONObject(jsonObject, "primaryProfession", String.class));
-			this.becomeTutorObject.setTransportMode(JSONUtils.getValueFromJSONObject(jsonObject, "transportMode", String.class));
-			this.becomeTutorObject.setTeachingExp(JSONUtils.getValueFromJSONObject(jsonObject, "teachingExp", Integer.class));
-			this.becomeTutorObject.setStudentGrade(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
-			this.becomeTutorObject.setSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
-			this.becomeTutorObject.setLocations(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
-			this.becomeTutorObject.setPreferredTimeToCall(JSONUtils.getValueFromJSONObject(jsonObject, "preferredTimeToCall", String.class));
-			this.becomeTutorObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.becomeTutorObject.setReference(JSONUtils.getValueFromJSONObject(jsonObject, "reference", String.class));
-			this.becomeTutorObject.setPreferredTeachingType(JSONUtils.getValueFromJSONObject(jsonObject, "preferredTeachingType", String.class));
+			this.becomeTutorObject.setFirstName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "firstName", String.class));
+			this.becomeTutorObject.setLastName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "lastName", String.class));
+			this.becomeTutorObject.setDateOfBirth(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "dateOfBirth", Date.class));
+			this.becomeTutorObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
+			this.becomeTutorObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
+			this.becomeTutorObject.setGender(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "gender", String.class));
+			this.becomeTutorObject.setQualification(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "qualification", String.class));
+			this.becomeTutorObject.setPrimaryProfession(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "primaryProfession", String.class));
+			this.becomeTutorObject.setTransportMode(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "transportMode", String.class));
+			this.becomeTutorObject.setTeachingExp(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "teachingExp", Integer.class));
+			this.becomeTutorObject.setStudentGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrades", String.class));
+			this.becomeTutorObject.setSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "subjects", String.class));
+			this.becomeTutorObject.setLocations(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "locations", String.class));
+			this.becomeTutorObject.setPreferredTimeToCall(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTimeToCall", String.class));
+			this.becomeTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.becomeTutorObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
+			this.becomeTutorObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
 		}
 	}
 	
 	private void handleBecomeTutorSecurity() throws Exception {
 		this.securityPassed = true;
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getFirstName())) {
-			if (!ValidationUtils.validateNameString(this.becomeTutorObject.getFirstName(), true)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "firstName" : {
+						if (!ValidationUtils.validateNameString(this.becomeTutorObject.getFirstName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "lastName" : {
+						if (!ValidationUtils.validateNameString(this.becomeTutorObject.getLastName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "dateOfBirth" : {
+						if (!ValidationUtils.validateDate(this.becomeTutorObject.getDateOfBirth())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_DATE_OF_BIRTH,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "contactNumber" : {
+						if (!ValidationUtils.validatePhoneNumber(this.becomeTutorObject.getContactNumber(), 10)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "emailId" : {
+						if (!ValidationUtils.validateEmailAddress(this.becomeTutorObject.getEmailId())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "gender" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getGender(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_GENDER,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "qualification" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_QUALIFICATION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "primaryProfession" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_PRIMARY_PROFESSION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "transportMode" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "teachingExp" : {
+						if (!ValidationUtils.validateNumber(this.becomeTutorObject.getTeachingExp(), true, 99, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_TEACHING_EXPERIENCE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "studentGrades" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "subjects" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "locations" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTimeToCall" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					case "reference" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTeachingType" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
 			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getLastName())) {
-			if (!ValidationUtils.validateNameString(this.becomeTutorObject.getLastName(), true)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getContactNumber())) {
-			if (!ValidationUtils.validatePhoneNumber(this.becomeTutorObject.getContactNumber(), 10)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getEmailId())) {
-			if (!ValidationUtils.validateEmailAddress(this.becomeTutorObject.getEmailId())) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getDateOfBirth())) {
-			if (!ValidationUtils.validateDate(this.becomeTutorObject.getDateOfBirth())) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_DATE_OF_BIRTH,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getGender())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getGender(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_GENDER,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getQualification())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_QUALIFICATION,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getPrimaryProfession())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_PRIMARY_PROFESSION,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getTransportMode())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getStudentGrade())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getSubjects())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getLocations())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getReference())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getPreferredTeachingType())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getTeachingExp())) {
-			if (!ValidationUtils.validateNumber(this.becomeTutorObject.getTeachingExp(), true, 99, false, 0)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_TEACHING_EXPERIENCE,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
-		}
-		if (ValidationUtils.checkNonNULLIFIEDUpdate(this.becomeTutorObject.getPreferredTimeToCall())) {
-			if (!ValidationUtils.validateAgainstSelectLookupValues(this.becomeTutorObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
-			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
 		}
 	}
 	
 	private void createFindTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.findTutorObject = new FindTutor();
-			this.findTutorObject.setName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
-			this.findTutorObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
-			this.findTutorObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
-			this.findTutorObject.setStudentGrade(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
-			this.findTutorObject.setSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
-			this.findTutorObject.setLocation(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
-			this.findTutorObject.setPreferredTimeToCall(JSONUtils.getValueFromJSONObject(jsonObject, "preferredTimeToCall", String.class));
-			this.findTutorObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.findTutorObject.setAddressDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.findTutorObject.setReference(JSONUtils.getValueFromJSONObject(jsonObject, "reference", String.class));
+			this.findTutorObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
+			this.findTutorObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
+			this.findTutorObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
+			this.findTutorObject.setStudentGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrade", String.class));
+			this.findTutorObject.setSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "subjects", String.class));
+			this.findTutorObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
+			this.findTutorObject.setPreferredTimeToCall(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTimeToCall", String.class));
+			this.findTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.findTutorObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
+			this.findTutorObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
 		}
 	}
 	
 	private void handleFindTutorSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePhoneNumber(this.findTutorObject.getContactNumber(), 10)) {
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						if (!ValidationUtils.validateNameString(this.findTutorObject.getName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "contactNumber" : {
+						if (!ValidationUtils.validatePhoneNumber(this.findTutorObject.getContactNumber(), 10)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "emailId" : {
+						if (!ValidationUtils.validateEmailAddress(this.findTutorObject.getEmailId())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "studentGrade" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "subjects" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTimeToCall" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "location" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "reference" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.findTutorObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateEmailAddress(this.findTutorObject.getEmailId())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNameString(this.findTutorObject.getName(), true)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.findTutorObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.findTutorObject.getAddressDetails())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -1726,89 +1815,142 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	private void createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscriptionObject = new SubscribeWithUs();
-			this.subscriptionObject.setFirstName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
-			this.subscriptionObject.setLastName(JSONUtils.getValueFromJSONObject(jsonObject, "lastName", String.class));
-			this.subscriptionObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
-			this.subscriptionObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
-			this.subscriptionObject.setStudentGrade(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
-			this.subscriptionObject.setSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
-			this.subscriptionObject.setLocation(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
-			this.subscriptionObject.setPreferredTimeToCall(JSONUtils.getValueFromJSONObject(jsonObject, "preferredTimeToCall", String.class));
-			this.subscriptionObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.subscriptionObject.setAddressDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.subscriptionObject.setReference(JSONUtils.getValueFromJSONObject(jsonObject, "reference", String.class));
+			this.subscriptionObject.setFirstName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "firstName", String.class));
+			this.subscriptionObject.setLastName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "lastName", String.class));
+			this.subscriptionObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
+			this.subscriptionObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
+			this.subscriptionObject.setStudentGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrade", String.class));
+			this.subscriptionObject.setSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "subjects", String.class));
+			this.subscriptionObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
+			this.subscriptionObject.setPreferredTimeToCall(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTimeToCall", String.class));
+			this.subscriptionObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.subscriptionObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
+			this.subscriptionObject.setReference(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reference", String.class));
 		}
 	}
 	
 	private void handleSubscribeWithUsSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePhoneNumber(this.subscriptionObject.getContactNumber(), 10)) {
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "firstName" : {
+						if (!ValidationUtils.validateNameString(this.subscriptionObject.getFirstName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "lastName" : {
+						if (!ValidationUtils.validateNameString(this.subscriptionObject.getLastName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "contactNumber" : {
+						if (!ValidationUtils.validatePhoneNumber(this.subscriptionObject.getContactNumber(), 10)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "emailId" : {
+						if (!ValidationUtils.validateEmailAddress(this.subscriptionObject.getEmailId())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "studentGrade" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "subjects" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTimeToCall" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "location" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "reference" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateEmailAddress(this.subscriptionObject.getEmailId())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNameString(this.subscriptionObject.getFirstName(), true)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNameString(this.subscriptionObject.getLastName(), true)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getPreferredTimeToCall(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getReference(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionObject.getAddressDetails())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

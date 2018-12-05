@@ -38,11 +38,11 @@ public class SubscriptionPackageService {
 		String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId";
 		final String existingSorterQueryString = "ORDER BY START_DATE_MILLIS ASC";
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_PACKAGES : {
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_PACKAGE_LIST : {
 				existingFilterQueryString += " AND END_DATE_MILLIS IS NULL";
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_HISTORY_PACKAGES : {
+			case RestMethodConstants.REST_METHOD_NAME_HISTORY_PACKAGE_LIST : {
 				existingFilterQueryString += " AND END_DATE_MILLIS IS NOT NULL";
 				break;
 			}
@@ -61,11 +61,11 @@ public class SubscriptionPackageService {
 		String existingFilterQueryString = "WHERE CUSTOMER_ID = :customerId";
 		final String existingSorterQueryString = "ORDER BY START_DATE_MILLIS ASC";
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_PACKAGES : {
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_PACKAGE_LIST : {
 				existingFilterQueryString += " AND END_DATE_MILLIS IS NULL";
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_HISTORY_PACKAGES : {
+			case RestMethodConstants.REST_METHOD_NAME_HISTORY_PACKAGE_LIST : {
 				existingFilterQueryString += " AND END_DATE_MILLIS IS NOT NULL";
 				break;
 			}

@@ -20,4 +20,8 @@ public interface TutorConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_BANK_ACCOUNT_ID_ABSENT = "No 'bankAccountId' found in request, hence cannot take action.";
 	
 	String REQUEST_PARAM_TUTOR_ID = "tutorId";
+	String VALIDATION_MESSAGE_INVALID_FILE_TYPE_FOR_DOCUMENTS = "Only PDF/JPEG/JPG/PNG files are allowed for documents";
+	String VALIDATION_MESSAGE_INVALID_FILE_SIZE_FOR_DOCUMENTS = "Size of each document should not exceed 2MB";
+	
+	Double MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB = 2D;
 }

@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -60,10 +61,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	private RegisteredTutor registeredTutorObject;
 	private Long parentId;
 	
-	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENTS)
+	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String uploadedDocuments (
+	public String uploadedDocumentList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -72,7 +73,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENTS;
+		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
@@ -89,10 +90,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_BANK_DETAILS)
+	@Path(REST_METHOD_NAME_BANK_DETAIL_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String bankDetails (
+	public String bankDetailList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -101,7 +102,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_BANK_DETAILS;
+		this.methodName = REST_METHOD_NAME_BANK_DETAIL_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BankDetail.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
@@ -118,10 +119,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
+	@Path(REST_METHOD_NAME_CURRENT_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentPackages (
+	public String currentPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -130,13 +131,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGES;
+		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_PACKAGES, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_PACKAGE_LIST, tutorId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -147,10 +148,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_HISTORY_PACKAGES)
+	@Path(REST_METHOD_NAME_HISTORY_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String historyPackages (
+	public String historyPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -159,13 +160,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGES;
+		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_PACKAGES, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_PACKAGE_LIST, tutorId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -379,10 +380,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		if (null != uploadedInputStreamFilePhoto) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePhoto);
 			if (fileBytes.length > 0) {
-				tutorDocuments.add(new TutorDocument("PHOTO", uploadedFileDetailFilePANCard.getFileName(), fileBytes));
+				tutorDocuments.add(new TutorDocument("PROFILE_PHOTO", uploadedFileDetailFilePANCard.getFileName(), fileBytes));
 			}
 		}
-		this.registeredTutorObject.setDocuments(tutorDocuments);
+		if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
+			this.registeredTutorObject.setDocuments(tutorDocuments);
+			this.changedAttributes.add("documents");
+		}
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
@@ -390,7 +394,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.registeredTutorObject.setTutorId(Long.parseLong(parentId));
-			getTutorService().updateTutorRecord(this.registeredTutorObject);
+			getTutorService().updateTutorRecord(this.registeredTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -421,10 +425,10 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_UPLOADED_DOCUMENTS : 
-			case REST_METHOD_NAME_BANK_DETAILS :
-			case REST_METHOD_NAME_CURRENT_PACKAGES : 
-			case REST_METHOD_NAME_HISTORY_PACKAGES : {
+			case REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST : 
+			case REST_METHOD_NAME_BANK_DETAIL_LIST :
+			case REST_METHOD_NAME_CURRENT_PACKAGE_LIST : 
+			case REST_METHOD_NAME_HISTORY_PACKAGE_LIST : {
 				handleSelectedTutorDataView();
 				break;
 			}
@@ -511,120 +515,207 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private void createRegisteredTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.registeredTutorObject = new RegisteredTutor();
-			this.registeredTutorObject.setName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
-			this.registeredTutorObject.setDateOfBirth(new Date(JSONUtils.getValueFromJSONObject(jsonObject, "dateOfBirth", String.class)));
-			this.registeredTutorObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
-			this.registeredTutorObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
-			this.registeredTutorObject.setGender(JSONUtils.getValueFromJSONObject(jsonObject, "gender", String.class));
-			this.registeredTutorObject.setQualification(JSONUtils.getValueFromJSONObject(jsonObject, "qualification", String.class));
-			this.registeredTutorObject.setPrimaryProfession(JSONUtils.getValueFromJSONObject(jsonObject, "primaryProfession", String.class));
-			this.registeredTutorObject.setTransportMode(JSONUtils.getValueFromJSONObject(jsonObject, "transportMode", String.class));
-			this.registeredTutorObject.setTeachingExp(JSONUtils.getValueFromJSONObject(jsonObject, "teachingExp", Integer.class));
-			this.registeredTutorObject.setInterestedStudentGrades(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
-			this.registeredTutorObject.setInterestedSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
-			this.registeredTutorObject.setComfortableLocations(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
-			this.registeredTutorObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.registeredTutorObject.setPreferredTeachingType(JSONUtils.getValueFromJSONObject(jsonObject, "preferredTeachingType", String.class));
+			this.registeredTutorObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
+			this.registeredTutorObject.setDateOfBirth(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "dateOfBirth", Date.class));
+			this.registeredTutorObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
+			this.registeredTutorObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
+			this.registeredTutorObject.setGender(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "gender", String.class));
+			this.registeredTutorObject.setQualification(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "qualification", String.class));
+			this.registeredTutorObject.setPrimaryProfession(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "primaryProfession", String.class));
+			this.registeredTutorObject.setTransportMode(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "transportMode", String.class));
+			this.registeredTutorObject.setTeachingExp(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "teachingExp", Integer.class));
+			this.registeredTutorObject.setInterestedStudentGrades(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "interestedStudentGrades", String.class));
+			this.registeredTutorObject.setInterestedSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "interestedSubjects", String.class));
+			this.registeredTutorObject.setComfortableLocations(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "comfortableLocations", String.class));
+			this.registeredTutorObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.registeredTutorObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
 		}
 	}
 	
 	private void handleTutorSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePhoneNumber(this.registeredTutorObject.getContactNumber(), 10)) {
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						if (!ValidationUtils.validateNameString(this.registeredTutorObject.getName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "contactNumber" : {
+						if (!ValidationUtils.validatePhoneNumber(this.registeredTutorObject.getContactNumber(), 10)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "emailId" : {
+						if (!ValidationUtils.validateEmailAddress(this.registeredTutorObject.getEmailId())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "dateOfBirth" : {
+						if (!ValidationUtils.validateDate(this.registeredTutorObject.getDateOfBirth())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_DATE_OF_BIRTH,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "gender" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getGender(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_GENDER,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "qualification" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_QUALIFICATION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "primaryProfession" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_PRIMARY_PROFESSION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "transportMode" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "interestedStudentGrades" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getInterestedStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "interestedSubjects" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "comfortableLocations" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getComfortableLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTeachingType" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "teachingExp" : {
+						if (!ValidationUtils.validateNumber(this.registeredTutorObject.getTeachingExp(), true, 99, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_TEACHING_EXPERIENCE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					case "documents" : {
+						if (ValidationUtils.checkNonEmptyList(this.registeredTutorObject.getDocuments())) {
+							for (final TutorDocument document : this.registeredTutorObject.getDocuments()) {
+								final String fileExtension = document.getFilename().substring(document.getFilename().lastIndexOf(PERIOD) + 1);
+								if (!(FileConstants.EXTENSION_PDF.equalsIgnoreCase(fileExtension) 
+										|| FileConstants.EXTENSION_JPEG.equalsIgnoreCase(fileExtension)
+										|| FileConstants.EXTENSION_JPG.equalsIgnoreCase(fileExtension)
+										|| FileConstants.EXTENSION_PNG.equalsIgnoreCase(fileExtension))) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											VALIDATION_MESSAGE_INVALID_FILE_TYPE_FOR_DOCUMENTS,
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+									break;
+								}
+								if (ApplicationUtils.computeFileSizeInMB((long)document.getContent().length) > MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											VALIDATION_MESSAGE_INVALID_FILE_SIZE_FOR_DOCUMENTS,
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+									break;
+								}
+							}
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validateEmailAddress(this.registeredTutorObject.getEmailId())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNameString(this.registeredTutorObject.getName(), true)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateDate(this.registeredTutorObject.getDateOfBirth())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_DATE_OF_BIRTH,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getGender(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_GENDER,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_QUALIFICATION,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_PRIMARY_PROFESSION,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getInterestedStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getComfortableLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.registeredTutorObject.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNumber(this.registeredTutorObject.getTeachingExp(), true, 99, false, 0)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					BecomeTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_TEACHING_EXPERIENCE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		// Handle documents
 	}
 }

@@ -47,10 +47,10 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	private SubscribedCustomer subscribedCustomerObject;
 	private Long parentId;
 	
-	@Path(REST_METHOD_NAME_CURRENT_PACKAGES)
+	@Path(REST_METHOD_NAME_CURRENT_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentPackages (
+	public String currentPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -59,13 +59,13 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGES;
+		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_PACKAGES, customerId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_PACKAGE_LIST, customerId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -76,10 +76,10 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_HISTORY_PACKAGES)
+	@Path(REST_METHOD_NAME_HISTORY_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String historyPackages (
+	public String historyPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -88,13 +88,13 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGES;
+		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_PACKAGES, customerId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_PACKAGE_LIST, customerId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -123,7 +123,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.subscribedCustomerObject.setCustomerId(Long.parseLong(parentId));
-			getCustomerService().updateCustomerRecord(this.subscribedCustomerObject);
+			getCustomerService().updateCustomerRecord(this.subscribedCustomerObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -146,8 +146,8 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_CURRENT_PACKAGES : 
-			case REST_METHOD_NAME_HISTORY_PACKAGES :{
+			case REST_METHOD_NAME_CURRENT_PACKAGE_LIST : 
+			case REST_METHOD_NAME_HISTORY_PACKAGE_LIST :{
 				handleSelectedCustomerDataGridView();
 				break;
 			}
@@ -185,65 +185,109 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	private void createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscribedCustomerObject = new SubscribedCustomer();
-			this.subscribedCustomerObject.setName(JSONUtils.getValueFromJSONObject(jsonObject, "firstName", String.class));
-			this.subscribedCustomerObject.setContactNumber(JSONUtils.getValueFromJSONObject(jsonObject, "contactNumber", String.class));
-			this.subscribedCustomerObject.setEmailId(JSONUtils.getValueFromJSONObject(jsonObject, "emailId", String.class));
-			this.subscribedCustomerObject.setStudentGrades(JSONUtils.getValueFromJSONObject(jsonObject, "studentGrades", String.class));
-			this.subscribedCustomerObject.setInterestedSubjects(JSONUtils.getValueFromJSONObject(jsonObject, "subjects", String.class));
-			this.subscribedCustomerObject.setLocation(JSONUtils.getValueFromJSONObject(jsonObject, "locations", String.class));
-			this.subscribedCustomerObject.setAdditionalDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
-			this.subscribedCustomerObject.setAddressDetails(JSONUtils.getValueFromJSONObject(jsonObject, "additionalDetails", String.class));
+			this.subscribedCustomerObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
+			this.subscribedCustomerObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
+			this.subscribedCustomerObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
+			this.subscribedCustomerObject.setStudentGrades(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrades", String.class));
+			this.subscribedCustomerObject.setInterestedSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "interestedSubjects", String.class));
+			this.subscribedCustomerObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
+			this.subscribedCustomerObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.subscribedCustomerObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 		}
 	}
 	
 	private void handleCustomerSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePhoneNumber(this.subscribedCustomerObject.getContactNumber(), 10)) {
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "name" : {
+						if (!ValidationUtils.validateNameString(this.subscribedCustomerObject.getName(), true)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "contactNumber" : {
+						if (!ValidationUtils.validatePhoneNumber(this.subscribedCustomerObject.getContactNumber(), 10)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "emailId" : {
+						if (!ValidationUtils.validateEmailAddress(this.subscribedCustomerObject.getEmailId())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "studentGrades" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "interestedSubjects" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "location" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscribedCustomerObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateEmailAddress(this.subscribedCustomerObject.getEmailId())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateNameString(this.subscribedCustomerObject.getName(), true)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscribedCustomerObject.getAddressDetails())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

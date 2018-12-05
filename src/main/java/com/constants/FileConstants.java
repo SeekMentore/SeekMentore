@@ -7,6 +7,7 @@ public interface FileConstants extends ApplicationConstants {
 	String APPLICATION_TYPE_OCTET_STEAM = "application/octet-stream";
 	
 	String EXTENSION_PDF = "pdf";
+	String EXTENSION_PNG = "png";
 	String EXTENSION_TEXT = "txt";
 	String EXTENSION_XLSX = "xlsx";
 	String EXTENSION_JPG = "jpg";

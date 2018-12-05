@@ -45,10 +45,10 @@
 			<webservice id="unBlacklistSubscribedCustomers" url="/unBlacklistSubscribedCustomers"></webservice>
 		</page>
 		<page id="registeredTutorRest" url="/rest/registeredTutor" pageAccessType="admin">
-			<webservice id="uploadedDocuments" url="/uploadedDocuments"></webservice>
-			<webservice id="bankDetails" url="/bankDetails"></webservice>
-			<webservice id="currentPackages" url="/currentPackages"></webservice>
-			<webservice id="historyPackages" url="/historyPackages"></webservice>
+			<webservice id="uploadedDocumentList" url="/uploadedDocumentList"></webservice>
+			<webservice id="bankDetailList" url="/bankDetailList"></webservice>
+			<webservice id="currentPackageList" url="/currentPackageList"></webservice>
+			<webservice id="historyPackageList" url="/historyPackageList"></webservice>
 			<webservice id="approveTutorDocumentList" url="/approveTutorDocumentList"></webservice>
 			<webservice id="sendReminderTutorDocumentList" url="/sendReminderTutorDocumentList"></webservice>
 			<webservice id="rejectTutorDocumentList" url="/rejectTutorDocumentList"></webservice>

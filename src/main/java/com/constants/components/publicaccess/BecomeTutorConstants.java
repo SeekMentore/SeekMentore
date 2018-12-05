@@ -68,5 +68,4 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME = "Please enter a valid 'Last Name'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME = "Please enter a valid 'First Name'";
-	
 }
