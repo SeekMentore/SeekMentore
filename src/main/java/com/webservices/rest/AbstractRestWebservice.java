@@ -31,13 +31,14 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 		LoggerUtils.logOnConsole("Update record JSON Object >> " + jsonObject);
 		if (ValidationUtils.checkObjectAvailability(JSONUtils.getValueFromJSONObject(jsonObject, propertyName, String.class))) {
 			LoggerUtils.logOnConsole("JSON Property >> " + propertyName);
+			T typeValue = null;
 			if (!ValidationConstants.NULLIFIED.equalsIgnoreCase(JSONUtils.getValueFromJSONObject(jsonObject, propertyName, String.class))) {
 				final String value = JSONUtils.getValueFromJSONObject(jsonObject, propertyName, String.class);
 				LoggerUtils.logOnConsole("JSON Property STRING value is >> " + value);
 				LoggerUtils.logOnConsole("(type) class >> " + type.toString());
 				if (Integer.class.equals(type)) {
 					try {
-						return type.cast(Integer.parseInt(value));
+						typeValue = type.cast(Integer.parseInt(value));
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to Integer");
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -45,7 +46,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 					}
 				} else if (Float.class.equals(type)) {
 					try {
-						return type.cast(Float.parseFloat(value));
+						typeValue = type.cast(Float.parseFloat(value));
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to Float");
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -53,7 +54,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 					}
 				} else if (Double.class.equals(type)) {
 					try {
-						return type.cast(Double.parseDouble(value));
+						typeValue = type.cast(Double.parseDouble(value));
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to Double");
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -61,7 +62,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 					}
 				} else if (Long.class.equals(type)) {
 					try {
-						return type.cast(Long.parseLong(value));
+						typeValue = type.cast(Long.parseLong(value));
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to Long");
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -69,7 +70,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 					}
 				} else if (Date.class.equals(type)) {
 					try {
-						return type.cast(DateUtils.parseYYYYMMDD(value));
+						typeValue = type.cast(DateUtils.parseYYYYMMDD(value));
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to Date");
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -77,7 +78,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 					}
 				} else {
 					try {
-						return type.cast(value);
+						typeValue = type.cast(value);
 					} catch (Exception e) {
 						LoggerUtils.logOnConsole("Cannot cast value (" + value + ") to " + type.toString());
 						LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
@@ -88,8 +89,9 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 				LoggerUtils.logOnConsole("JSON Property value is >> " + ValidationConstants.NULLIFIED);
 			}
 			this.changedAttributes.add(propertyName);
+			return typeValue;
 		} else {
-			LoggerUtils.logOnConsole("JSON Object is NULL");
+			LoggerUtils.logOnConsole("JSON Object 'property' is NULL >> " + propertyName);
 		}
 		return null;
 	}

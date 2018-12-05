@@ -58,8 +58,8 @@
 			<webservice id="updateTutorRecord" url="/updateTutorRecord"></webservice>
 		</page>
 		<page id="subscribedCustomerRest" url="/rest/subscribedCustomer" pageAccessType="admin">
-			<webservice id="currentPackages" url="/currentPackages"></webservice>
-			<webservice id="historyPackages" url="/historyPackages"></webservice>
+			<webservice id="currentPackageList" url="/currentPackageList"></webservice>
+			<webservice id="historyPackageList" url="/historyPackageList"></webservice>
 			<webservice id="updateCustomerRecord" url="/updateCustomerRecord"></webservice>
 		</page>
 		<page id="salesRest" url="/rest/sales" pageAccessType="sales">
