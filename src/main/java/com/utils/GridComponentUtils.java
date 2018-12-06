@@ -2,6 +2,7 @@ package com.utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +42,19 @@ public class GridComponentUtils implements GridComponentConstants {
 				final String mapping = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_ATTRIBUTE_MAPPING, String.class);
 				final String columnId = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_ATTRIBUTE_COLUMN_ID, String.class);
 				final Boolean multiList = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_ATTRIBUTE_MULTILIST, Boolean.class);
-				final Filter filter = new Filter(id, type, mapping, columnId, multiList);
+				Boolean clubbedFilterMapping = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_ATTRIBUTE_CLUBBED_FILTER_MAPPING, Boolean.class);
+				if (!ValidationUtils.checkObjectAvailability(clubbedFilterMapping)) {
+					clubbedFilterMapping = false;
+				}
+				final List<String> clubbedFilterProperties = new ArrayList<String>();
+				if (clubbedFilterMapping) {
+					final JsonArray listValueJSONArray = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_ATTRIBUTE_CLUBBED_FILTER_PROPERTIES, JsonArray.class);
+					for (Object listValueObject : listValueJSONArray) {
+						final String value = listValueObject.toString().replaceAll(INVERTED_COMMA, EMPTY_STRING);
+						clubbedFilterProperties.add(value);
+					}
+				}
+				final Filter filter = new Filter(id, type, mapping, columnId, multiList, clubbedFilterMapping, clubbedFilterProperties);
 				switch (type) {
 					case COLUMN_FILTER_MAPPING_STRING : {
 						final String stringValue = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_STRING_VALUE, String.class);
@@ -99,7 +112,19 @@ public class GridComponentUtils implements GridComponentConstants {
 				final String columnId = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_SORTER_ATTRIBUTE_COLUMN_ID, String.class);
 				final String columnName = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_SORTER_ATTRIBUTE_COLUMN_NAME, String.class);
 				final Integer order = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_SORTER_ATTRIBUTE_ORDER, Integer.class);
-				final Sorter sorter = new Sorter(id, type, mapping, columnId, columnName, order);
+				Boolean clubbedSorterMapping = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_SORTER_ATTRIBUTE_CLUBBED_FILTER_MAPPING, Boolean.class);
+				if (!ValidationUtils.checkObjectAvailability(clubbedSorterMapping)) {
+					clubbedSorterMapping = false;
+				}
+				final List<String> clubbedSorterProperties = new ArrayList<String>();
+				if (clubbedSorterMapping) {
+					final JsonArray listValueJSONArray = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_SORTER_ATTRIBUTE_CLUBBED_FILTER_PROPERTIES, JsonArray.class);
+					for (Object listValueObject : listValueJSONArray) {
+						final String value = listValueObject.toString().replaceAll(INVERTED_COMMA, EMPTY_STRING);
+						clubbedSorterProperties.add(value);
+					}
+				}
+				final Sorter sorter = new Sorter(id, type, mapping, columnId, columnName, order, clubbedSorterMapping, clubbedSorterProperties);
 				sorterList.add(sorter);
 			}
 		}

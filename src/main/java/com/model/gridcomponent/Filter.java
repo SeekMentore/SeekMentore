@@ -25,15 +25,27 @@ public class Filter implements Serializable {
 	private Long onDateMillis;
 	private Long afterDateMillis;
 	private List<String> listValue;
+	private Boolean clubbedFilterMapping;
+	private List<String> clubbedFilterProperties;
 
 	public Filter() {}
 	
-	public Filter(String id, String type, String mapping, String columnId, Boolean multiList) {
+	public Filter (
+		final String id, 
+		final String type, 
+		final String mapping, 
+		final String columnId, 
+		final Boolean multiList, 
+		final Boolean clubbedFilterMapping, 
+		final List<String> clubbedFilterProperties
+	) {
 		this.id = id;
 		this.type = type;
 		this.mapping = mapping;
 		this.columnId = columnId;
 		this.multiList = multiList;
+		this.clubbedFilterMapping = clubbedFilterMapping;
+		this.clubbedFilterProperties = clubbedFilterProperties;
 	}
 
 	public String getId() {
@@ -200,5 +212,21 @@ public class Filter implements Serializable {
 
 	public void setMultiList(Boolean multiList) {
 		this.multiList = multiList;
+	}
+
+	public Boolean getClubbedFilterMapping() {
+		return clubbedFilterMapping;
+	}
+
+	public void setClubbedFilterMapping(Boolean clubbedFilterMapping) {
+		this.clubbedFilterMapping = clubbedFilterMapping;
+	}
+
+	public List<String> getClubbedFilterProperties() {
+		return clubbedFilterProperties;
+	}
+
+	public void setClubbedFilterProperties(List<String> clubbedFilterProperties) {
+		this.clubbedFilterProperties = clubbedFilterProperties;
 	}
 }

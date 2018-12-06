@@ -1,6 +1,7 @@
 package com.model.gridcomponent;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Sorter implements Serializable {
 
@@ -12,16 +13,29 @@ public class Sorter implements Serializable {
 	private String columnId;
 	private String columnName;
 	private Integer order;
+	private Boolean clubbedSorterMapping;
+	private List<String> clubbedSorterProperties;
 	
 	public Sorter() {}
 	
-	public Sorter(String id, String type, String mapping, String columnId, String columnName, Integer order) {
+	public Sorter (
+			final String id, 
+			final String type, 
+			final String mapping, 
+			final String columnId, 
+			final String columnName, 
+			final Integer order,
+			final Boolean clubbedSorterMapping, 
+			final List<String> clubbedSorterProperties
+	) {
 		this.id = id;
 		this.type = type;
 		this.mapping = mapping;
 		this.columnId = columnId;
 		this.columnName = columnName;
 		this.order = order;
+		this.clubbedSorterMapping = clubbedSorterMapping;
+		this.clubbedSorterProperties = clubbedSorterProperties;
 	}
 
 	public String getId() {
@@ -75,5 +89,21 @@ public class Sorter implements Serializable {
 	@Override
 	public String toString() {
 		return this.id + " " + this.type + " " + this.mapping + " " + this.columnId + " " + this.columnName + " " + this.order;
+	}
+
+	public Boolean getClubbedSorterMapping() {
+		return clubbedSorterMapping;
+	}
+
+	public void setClubbedSorterMapping(Boolean clubbedSorterMapping) {
+		this.clubbedSorterMapping = clubbedSorterMapping;
+	}
+
+	public List<String> getClubbedSorterProperties() {
+		return clubbedSorterProperties;
+	}
+
+	public void setClubbedSorterProperties(List<String> clubbedSorterProperties) {
+		this.clubbedSorterProperties = clubbedSorterProperties;
 	}
 }
