@@ -46,4 +46,5 @@ public interface AdminConstants extends ResponseMapConstants {
 	
 	String VALIDATION_MESSAGE_UNKONWN_PROPERTY = "Unknown change attribute found in the JSON request";
 	String VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED = "Please change some properties to update.";
+	String ACTION_SUCCESSFUL = "Action successful";
 }
