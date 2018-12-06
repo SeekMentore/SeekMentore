@@ -16,6 +16,7 @@ public class LogonTrackerRowMapper implements RowMapper<LogonTracker> {
 		final LogonTracker logonTracker = new LogonTracker();
 		logonTracker.setLogonId(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOGON_ID", Long.class));
 		logonTracker.setLoginTime(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOGIN_TIME", Timestamp.class));
+		logonTracker.setLoginTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOGIN_TIME_MILLIS", Long.class));
 		logonTracker.setLoginFrom(ExceptionUtils.exceptionHandlerForRowMapper(row, "LOGIN_FROM", String.class));
 		logonTracker.setMachineIp(ExceptionUtils.exceptionHandlerForRowMapper(row, "MACHINE_IP", String.class));
 		logonTracker.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_TYPE", String.class));

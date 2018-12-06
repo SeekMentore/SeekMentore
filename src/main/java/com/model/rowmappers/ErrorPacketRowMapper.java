@@ -16,6 +16,7 @@ public class ErrorPacketRowMapper implements RowMapper<ErrorPacket> {
 		final ErrorPacket errorPacket = new ErrorPacket();
 		errorPacket.setErrorId(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_ID", Long.class));
 		errorPacket.setOccuredAt(ExceptionUtils.exceptionHandlerForRowMapper(row, "OCCURED_AT", Timestamp.class));
+		errorPacket.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "OCCURED_AT_MILLIS", Long.class));
 		errorPacket.setRequestURI(ExceptionUtils.exceptionHandlerForRowMapper(row, "REQUEST_URI", String.class));
 		errorPacket.setErrorTrace(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_TRACE", String.class));
 		return errorPacket;

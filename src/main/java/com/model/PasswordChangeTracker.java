@@ -11,6 +11,7 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 	
 	private Long passwordChangeId;
 	private Date changeTime;
+	private Long changeTimeMillis;
 	private String userType;
 	private String userId;
 	private String encryptedPasswordOld;
@@ -64,6 +65,14 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 
 	public void setEncryptedPasswordNew(String encryptedPasswordNew) {
 		this.encryptedPasswordNew = encryptedPasswordNew;
+	}
+
+	public Long getChangeTimeMillis() {
+		return changeTimeMillis;
+	}
+
+	public void setChangeTimeMillis(Long changeTimeMillis) {
+		this.changeTimeMillis = changeTimeMillis;
 	}
 	
 }

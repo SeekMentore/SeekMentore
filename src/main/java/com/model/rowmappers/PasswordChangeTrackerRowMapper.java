@@ -16,6 +16,7 @@ public class PasswordChangeTrackerRowMapper implements RowMapper<PasswordChangeT
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
 		passwordChangeTracker.setPasswordChangeId(ExceptionUtils.exceptionHandlerForRowMapper(row, "PASSWORD_CHANGE_ID", Long.class));
 		passwordChangeTracker.setChangeTime(ExceptionUtils.exceptionHandlerForRowMapper(row, "CHANGE_TIME", Timestamp.class));
+		passwordChangeTracker.setChangeTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "CHANGE_TIME_MILLIS", Long.class));
 		passwordChangeTracker.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_TYPE", String.class));
 		passwordChangeTracker.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, "USER_ID", String.class));
 		passwordChangeTracker.setEncryptedPasswordOld(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENCRYPTED_PASSWORD_OLD", String.class));

@@ -72,9 +72,10 @@ public class LoginService implements LoginConstants {
 		paramsMap.put("userId", logonTracker.getUserId());
 		paramsMap.put("userType", logonTracker.getUserType());
 		paramsMap.put("loginTime", logonTracker.getLoginTime());
+		paramsMap.put("loginTimeMillis", logonTracker.getLoginTimeMillis());
 		paramsMap.put("loginFrom", logonTracker.getLoginFrom());
 		paramsMap.put("machineIp", logonTracker.getMachineIp());
-		applicationDao.executeUpdate("INSERT INTO LOGON_TRACKER(USER_ID, USER_TYPE, LOGIN_TIME, LOGIN_FROM, MACHINE_IP) VALUES(:userId, :userType, :loginTime, :loginFrom, :machineIp)", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO LOGON_TRACKER(USER_ID, USER_TYPE, LOGIN_TIME, LOGIN_TIME_MILLIS, LOGIN_FROM, MACHINE_IP) VALUES(:userId, :userType, :loginTime, :loginTimeMillis, :loginFrom, :machineIp)", paramsMap);
 	}
 	
 	@Transactional
@@ -83,9 +84,10 @@ public class LoginService implements LoginConstants {
 		paramsMap.put("userId", passwordChangeTracker.getUserId());
 		paramsMap.put("userType", passwordChangeTracker.getUserType());
 		paramsMap.put("changeTime", passwordChangeTracker.getChangeTime());
+		paramsMap.put("changeTimeMillis", passwordChangeTracker.getChangeTimeMillis());
 		paramsMap.put("encryptedPasswordOld", passwordChangeTracker.getEncryptedPasswordOld());
 		paramsMap.put("encryptedPasswordNew", passwordChangeTracker.getEncryptedPasswordNew());
-		applicationDao.executeUpdate("INSERT INTO PASSWORD_CHANGE_TRACKER(USER_ID, USER_TYPE, CHANGE_TIME, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) VALUES(:userId, :userType, :changeTime, :encryptedPasswordOld, :encryptedPasswordNew)", paramsMap);
+		applicationDao.executeUpdate("INSERT INTO PASSWORD_CHANGE_TRACKER(USER_ID, USER_TYPE, CHANGE_TIME, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) VALUES(:userId, :userType, :changeTime, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)", paramsMap);
 	}
 	
 	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -155,6 +157,7 @@ public class LoginService implements LoginConstants {
 		passwordChangeTracker.setUserId(user.getUserId());
 		passwordChangeTracker.setUserType(user.getUserType());
 		passwordChangeTracker.setChangeTime(new Timestamp(new Date().getTime()));
+		passwordChangeTracker.setChangeTimeMillis(passwordChangeTracker.getChangeTime().getTime());
 		passwordChangeTracker.setEncryptedPasswordOld(encryptedOldPassword);
 		passwordChangeTracker.setEncryptedPasswordNew(encryptedNewPassword);
 		feedPasswordChangeTracker(passwordChangeTracker);

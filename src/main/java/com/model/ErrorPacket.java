@@ -11,6 +11,7 @@ public class ErrorPacket implements Serializable, UserConstants {
 	
 	private Long errorId;
 	private Date occuredAt;
+	private Long occuredAtMillis;
 	private String requestURI;
 	private String errorTrace;
 	
@@ -23,6 +24,7 @@ public class ErrorPacket implements Serializable, UserConstants {
 			String errorTrace
 	) {
 		this.occuredAt = occuredAt;
+		this.occuredAtMillis = occuredAt.getTime();
 		this.requestURI = requestURI;
 		this.errorTrace = errorTrace;
 	}
@@ -57,5 +59,13 @@ public class ErrorPacket implements Serializable, UserConstants {
 
 	public void setErrorId(Long errorId) {
 		this.errorId = errorId;
+	}
+
+	public Long getOccuredAtMillis() {
+		return occuredAtMillis;
+	}
+
+	public void setOccuredAtMillis(Long occuredAtMillis) {
+		this.occuredAtMillis = occuredAtMillis;
 	}
 }

@@ -11,6 +11,7 @@ public class ApplicationMail implements Serializable {
 	private long mailId;
 	private String mailType;
 	private Date entryDate;
+	private Long entryDateMillis;
 	private String fromAddress;
 	private String toAddress;
 	private String ccAddress;
@@ -19,8 +20,10 @@ public class ApplicationMail implements Serializable {
 	private String messageContent;
 	private String mailSent;
 	private Date sendDate;
+	private Long sendDateMillis;
 	private String errorOccuredWhileSending;
 	private Date errorDate;
+	private Long errorDateMillis;
 	private String errorTrace;
 	private List<MailAttachment> attachments;
 	
@@ -39,6 +42,7 @@ public class ApplicationMail implements Serializable {
 	) {
 		this.mailType = mailType;
 		this.entryDate = entryDate;
+		this.entryDateMillis = entryDate.getTime();
 		this.fromAddress = fromAddress;
 		this.toAddress = toAddress;
 		this.ccAddress = ccAddress;
@@ -166,6 +170,30 @@ public class ApplicationMail implements Serializable {
 
 	public void setErrorTrace(String errorTrace) {
 		this.errorTrace = errorTrace;
+	}
+
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
+
+	public Long getSendDateMillis() {
+		return sendDateMillis;
+	}
+
+	public void setSendDateMillis(Long sendDateMillis) {
+		this.sendDateMillis = sendDateMillis;
+	}
+
+	public Long getErrorDateMillis() {
+		return errorDateMillis;
+	}
+
+	public void setErrorDateMillis(Long errorDateMillis) {
+		this.errorDateMillis = errorDateMillis;
 	}
 
 }

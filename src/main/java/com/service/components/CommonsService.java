@@ -50,20 +50,6 @@ public class CommonsService implements CommonsConstants {
 	public void init() {}
 	
 	@Transactional
-	public void feedErrorRecord(final ErrorPacket errorPacket) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("occurredAt", errorPacket.getOccuredAt());
-		paramsMap.put("requestURI", errorPacket.getRequestURI());
-		paramsMap.put("errorTrace", errorPacket.getErrorTrace());
-		applicationDao.executeUpdate("INSERT INTO APP_ERROR_REPORT(OCCURED_AT, REQUEST_URI, ERROR_TRACE) VALUES(:occurredAt, :requestURI, :errorTrace)", paramsMap);
-		try {
-			MailUtils.sendErrorMessageEmail(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace(), null);
-		} catch (Exception e) {
-			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
-		}
-	}
-	
-	@Transactional
 	public List<ApplicationMail> getPedingEmailList(final int numberOfRecords) {
 		return applicationDao.findAllWithoutParams("SELECT MAIL_ID, MAIL_TYPE, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT FROM MAIL_QUEUE WHERE MAIL_SENT = 'N' ORDER BY ENTRY_DATE", new ApplicationMailRowMapper());
 	}
@@ -201,5 +187,20 @@ public class CommonsService implements CommonsConstants {
 	/****************************************************************************************************************************/
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
 		return applicationLookupDataService.getSelectLookupList(selectLookUpTable);
+	}
+	
+	@Transactional
+	public void feedErrorRecord(final ErrorPacket errorPacket) {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("occurredAt", errorPacket.getOccuredAt());
+		paramsMap.put("occuredAtMillis", errorPacket.getOccuredAt().getTime());
+		paramsMap.put("requestURI", errorPacket.getRequestURI());
+		paramsMap.put("errorTrace", errorPacket.getErrorTrace());
+		applicationDao.executeUpdate("INSERT INTO APP_ERROR_REPORT(OCCURED_AT, OCCURED_AT_MILLIS, REQUEST_URI, ERROR_TRACE) VALUES(:occurredAt, :occuredAtMillis, :requestURI, :errorTrace)", paramsMap);
+		try {
+			MailUtils.sendErrorMessageEmail(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace(), null);
+		} catch (Exception e) {
+			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
+		}
 	}
 }

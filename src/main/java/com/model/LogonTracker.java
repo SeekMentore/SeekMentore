@@ -11,6 +11,7 @@ public class LogonTracker implements Serializable, UserConstants {
 	
 	private Long logonId;
 	private Date loginTime;
+	private Long loginTimeMillis;
 	private String loginFrom;
 	private String machineIp;
 	private String userType;
@@ -64,6 +65,14 @@ public class LogonTracker implements Serializable, UserConstants {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public Long getLoginTimeMillis() {
+		return loginTimeMillis;
+	}
+
+	public void setLoginTimeMillis(Long loginTimeMillis) {
+		this.loginTimeMillis = loginTimeMillis;
 	}
 	
 }

@@ -35,6 +35,7 @@ public class MailService implements MailConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("mailType", mailObject.getMailType());
 		paramsMap.put("entryDate", mailObject.getEntryDate());
+		paramsMap.put("entryDateMillis", mailObject.getEntryDate().getTime());
 		paramsMap.put("fromAddress", mailObject.getFromAddress());
 		paramsMap.put("toAddress", mailObject.getToAddress());
 		paramsMap.put("ccAddress", mailObject.getCcAddress());
@@ -42,7 +43,7 @@ public class MailService implements MailConstants {
 		paramsMap.put("subjectContent", mailObject.getSubjectContent());
 		paramsMap.put("messageContent", mailObject.getMessageContent());
 		paramsMap.put("mailSent", NO);
-		final long mailId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)", paramsMap);
+		final long mailId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, ENTRY_DATE_MILLIS, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:entryDateMillis,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)", paramsMap);
 		if (null != mailObject.getAttachments() && !mailObject.getAttachments().isEmpty()) {
 			for(final MailAttachment attachment : mailObject.getAttachments()) {
 				final Map<String, Object> attachmentsPramsMap = new HashMap<String, Object>();
@@ -57,7 +58,7 @@ public class MailService implements MailConstants {
 	
 	@Transactional
 	public void insertListIntoMailQueue(final List<ApplicationMail> mailList) {
-		final String baseQuery = "INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)";
+		final String baseQuery = "INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, ENTRY_DATE_MILLIS, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:entryDateMillis,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)";
 		final List<ApplicationMail> mailListWithAttachments = new ArrayList<ApplicationMail>();
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		for (final ApplicationMail mailObject : mailList) {
@@ -67,6 +68,7 @@ public class MailService implements MailConstants {
 				final Map<String, Object> paramsMap = new HashMap<String, Object>();
 				paramsMap.put("mailType", mailObject.getMailType());
 				paramsMap.put("entryDate", mailObject.getEntryDate());
+				paramsMap.put("entryDateMillis", mailObject.getEntryDate().getTime());
 				paramsMap.put("fromAddress", mailObject.getFromAddress());
 				paramsMap.put("toAddress", mailObject.getToAddress());
 				paramsMap.put("ccAddress", mailObject.getCcAddress());

@@ -33,6 +33,7 @@ public class LoginUtils implements LoginConstants {
 		logonTracker.setUserId(user.getUserId());
 		logonTracker.setUserType(user.getUserType());
 		logonTracker.setLoginTime(new Timestamp(new Date().getTime()));
+		logonTracker.setLoginTimeMillis(logonTracker.getLoginTime().getTime());
 		logonTracker.setLoginFrom(WebServiceUtils.getUserAgent(httpRequest));
 		logonTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
 		getLoginService().feedLogonTracker(logonTracker);

@@ -94,17 +94,21 @@ public class SchedulerService implements SchedulerConstants {
 						final Map<String, Object> paramsMap = new HashMap<String, Object>();
 						paramsMap.put("errorOccuredWhileSending", YES);
 						paramsMap.put("errorDate", errorPacket.getOccuredAt());
+						paramsMap.put("errorDateMillis", errorPacket.getOccuredAt().getTime());
 						paramsMap.put("errorTrace", errorPacket.getErrorTrace());
 						paramsMap.put("mailId", mailObj.getMailId());
-						applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
+						applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_DATE_MILLIS = :errorDateMillis, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
 						continue;
 						// If exception occurred do not update the record as sent
 					}
 					final Map<String, Object> paramsMap = new HashMap<String, Object>();
+					final Long currentMillis = new Date().getTime();
+					final Timestamp sendTimestamp = new Timestamp(currentMillis); 
 					paramsMap.put("mailSent", YES);
-					paramsMap.put("sendDate", new Timestamp(new Date().getTime()));
+					paramsMap.put("sendDate", sendTimestamp);
+					paramsMap.put("sendDateMillis", currentMillis);
 					paramsMap.put("mailId", mailObj.getMailId());
-					applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate WHERE MAIL_ID = :mailId", paramsMap);
+					applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate, SEND_DATE_MILLIS = :sendDateMillis WHERE MAIL_ID = :mailId", paramsMap);
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeEmailSenderJob", key);
