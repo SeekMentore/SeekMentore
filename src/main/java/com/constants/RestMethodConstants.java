@@ -193,8 +193,12 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST = "/nonContactedQueryList";
 	String REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST = "/nonAnsweredQueryList";
 	String REST_METHOD_NAME_ANSWERED_QUERY_LIST = "/answeredQueryList";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY = "/takeActionOnSubmitQuery";
+	String REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD = "/updateSubmitQueryRecord";
 	String REST_METHOD_CUSTOMER_COMPLAINT_LIST = "/customerComplaintList";
 	String REST_METHOD_TUTOR_COMPLAINT_LIST = "/tutorComplaintList";
 	String REST_METHOD_EMPLOYEE_COMPLAINT_LIST = "/employeeComplaintList";
 	String REST_METHOD_RESOLVED_COMPLAINT_LIST = "/resolvedComplaintList";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT = "/takeActionOnComplaint";
+	String REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD = "/updateComplaintRecord";
 }

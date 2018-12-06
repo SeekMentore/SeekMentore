@@ -65,6 +65,8 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	private BecomeTutor becomeTutorObject;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
+	private SubmitQuery submitQueryObject;
+	private Complaint complaintObject;
 	private Long parentId;
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST)
@@ -381,7 +383,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	public String takeActionOnBecomeTutor (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam("button") final String button,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -692,7 +694,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	public String takeActionOnFindTutor (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam("button") final String button,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -1003,7 +1005,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	public String takeActionOnSubscription (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam("button") final String button,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -1134,10 +1136,10 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	@Path("/submittedQueryCheckDataAccess")
+	@Path("/submitQueryCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String submittedQueryCheckDataAccess (
+	public String submitQueryCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -1148,19 +1150,57 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/updateSubmittedQueryRecord")
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnSubmitQuery (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getAdminService().takeActionOnSubmitQuery(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
-	public String updateSubmittedQueryRecord (
+	public String updateSubmitQueryRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
 			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD;
+		createSubmitQueryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.submitQueryObject.setQueryId(Long.parseLong(parentId));
+			getAdminService().updateSubmitQueryRecord(this.submitQueryObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_CUSTOMER_COMPLAINT_LIST)
@@ -1289,7 +1329,33 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/updateComplaintRecord")
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnComplaint (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public String updateComplaintRecord (
@@ -1298,10 +1364,22 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD;
+		createComplaintObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.complaintObject.setComplaintId(Long.parseLong(parentId));
+			getAdminService().updateComplaintRecord(this.complaintObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	public AdminService getAdminService() {
@@ -1370,7 +1448,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			}
 			case REST_METHOD_NAME_TAKE_ACTION_ON_BECOME_TUTOR : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR : 
-			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION : {
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT : {
 				handleTakeAction();
 				break;
 			}
@@ -1417,7 +1497,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 				}
 				case AdminConstants.BUTTON_ACTION_RECONTACT : 
 				case AdminConstants.BUTTON_ACTION_REJECT : 
-				case AdminConstants.BUTTON_ACTION_FAIL_VERIFY : {
+				case AdminConstants.BUTTON_ACTION_FAIL_VERIFY : 
+				case AdminConstants.BUTTON_ACTION_RESPOND : 
+				case AdminConstants.BUTTON_ACTION_PUT_ON_HOLD : {
 					handleComments();
 					break;
 				}
@@ -2028,6 +2110,18 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
+		}
+	}
+	
+	private void createSubmitQueryObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			
+		}
+	}
+	
+	private void createComplaintObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			
 		}
 	}
 }

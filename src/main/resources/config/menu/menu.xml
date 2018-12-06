@@ -137,8 +137,9 @@
 			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
 			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>
 			<webservice id="answeredQueryList" url="/answeredQueryList"></webservice>
-			<webservice id="submittedQueryCheckDataAccess" url="/submittedQueryCheckDataAccess"></webservice>	
-			<webservice id="updateSubmittedQueryRecord" url="/updateSubmittedQueryRecord"></webservice>
+			<webservice id="takeActionOnSubmitQuery" url="/takeActionOnSubmitQuery"></webservice>
+			<webservice id="submitQueryCheckDataAccess" url="/submitQueryCheckDataAccess"></webservice>	
+			<webservice id="updateSubmitQueryRecord" url="updateSubmitQueryRecord"></webservice>
 			<webservice id="customerComplaintList" url="/customerComplaintList"></webservice>
 			<webservice id="tutorComplaintList" url="/tutorComplaintList"></webservice>
 			<webservice id="employeeComplaintList" url="/employeeComplaintList"></webservice>

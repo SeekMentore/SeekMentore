@@ -1255,19 +1255,49 @@ public class AdminService implements AdminConstants {
 		final String existingSorterQueryString = "ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'N'";
+				existingFilterQueryString = "WHERE QUERY_STATUS = 'FRESH'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND QUERY_RESPONSE IS NULL";
+				existingFilterQueryString = "WHERE QUERY_STATUS = 'PUT_ON_HOLD'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE IS_CONTACTED = 'Y' AND QUERY_RESPONSE IS NOT NULL";
+				existingFilterQueryString = "WHERE QUERY_STATUS = 'RESPONDED'";
 				break;
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubmitQueryRowMapper());
+	}
+	
+	@Transactional
+	public void takeActionOnSubmitQuery(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder("UPDATE SUBMIT_QUERY SET ");
+		switch(button) {
+			case BUTTON_ACTION_RESPOND : {
+				query.append("QUERY_STATUS = 'RESPONDED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), QUERY_RESPONSE = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				break;
+			}
+			case BUTTON_ACTION_PUT_ON_HOLD : {
+				query.append("QUERY_STATUS = 'PUT_ON_HOLD', NOT_ANSWERED = 'Y', WHO_NOT_ANSWERED = :userId, NOT_ANSWERED_REASON = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String queryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("queryId", queryId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void updateSubmitQueryRecord(final SubmitQuery query, final List<String> changedAttributes, final User activeUser) {
+		
 	}
 	
 	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -1281,22 +1311,52 @@ public class AdminService implements AdminConstants {
 		final String existingSorterQueryString = "ORDER BY COMPLAINT_FILED_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_CUSTOMER_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'C'";
+				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'C'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_TUTOR_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'T'";
+				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'T'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_EMPLOYEE_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE (RESOLVED IS NULL OR RESOLVED <> 'Y') AND COMPLAINT_USER = 'E'";
+				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'E'";
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_RESOLVED_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE RESOLVED = 'Y'";
+				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'RESOLVED'";
 				break;
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new ComplaintRowMapper());
+	}
+	
+	@Transactional
+	public void takeActionOnComplaint(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder("UPDATE COMPLAINT SET ");
+		switch(button) {
+			case BUTTON_ACTION_RESPOND : {
+				query.append("COMPLAINT_STATUS = 'RESPONDED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), QUERY_RESPONSE = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				break;
+			}
+			case BUTTON_ACTION_PUT_ON_HOLD : {
+				query.append("COMPLAINT_STATUS = 'PUT_ON_HOLD', NOT_ANSWERED = 'Y', WHO_NOT_ANSWERED = :userId, NOT_ANSWERED_REASON = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String queryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("queryId", queryId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void updateComplaintRecord(final Complaint complaint, final List<String> changedAttributes, final User activeUser) {
+		
 	}
 }

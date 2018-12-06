@@ -13,6 +13,9 @@ public interface AdminConstants extends ResponseMapConstants {
 	String BUTTON_ACTION_RECONTACT = "recontact";
 	String BUTTON_ACTION_CONTACTED = "contacted";
 	
+	String BUTTON_ACTION_RESPOND = "respond";
+	String BUTTON_ACTION_PUT_ON_HOLD = "hold";
+	
 	String VALIDATION_MESSAGE_INVALID_GRID_REFERENCE_ACCESS = "Invalid Grid Reference Access.";
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";
 	String VALIDATION_MESSAGE_INVALID_UNIQUE_ID = "Invalid Unique {Tutor Id / Enquiry Id / Subscription Id} Id.";
