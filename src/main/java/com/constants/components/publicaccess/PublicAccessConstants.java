@@ -25,7 +25,8 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String PAGE_REFERENCE_SUBSCRIBE_WITH_US = "SUBSCRIBE_WITH_US";
 	String PAGE_REFERENCE_TUTOR_REGISTRATION = "TUTOR_REGISTRATION";
 	String RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE = "PAGE_REFERNCE";
-	String RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE = "UNKNOWN_PUBLIC_PAGE_REFERENCE";
+	String RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE = "Unknown Object passed in request";
+	String RESPONSE_MAP_ATTRIBUTE_MISMATCH_PUBLIC_PAGE_REFERENCE = "The function accessed and the Object passed in request do not match";	
 	
 	String VELOCITY_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/publicaccess";
 	String SUPPORT_MAIL_LIST_ID_VM_OBJECT = "supportMailListId";
@@ -76,5 +77,8 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String CAPTCHA_PROPERTY_SECRET = "secret";
 	String CAPTCHA_PROPERTY_RESPONSE = "response";
 	String CAPTCHA_PROPERTY_REMOTEIP = "remoteip";
-
+	
+	String PUBLIC_APPLICATION_RECEIVE_SUCCESS_MESSAGE = "Your entry and has been received and will be contacted shortly.";
+	String RESPONSE_MAP_DROPDOWN_LIST = "dropdownList";
+	String FRESH_ENTRY = "FRESH_ENTRY";
 }

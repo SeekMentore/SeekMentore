@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryNamespace>
+	<namespace name="publicapplication" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
+</queryNamespace>

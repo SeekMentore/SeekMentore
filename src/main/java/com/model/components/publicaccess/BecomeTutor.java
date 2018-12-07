@@ -3,154 +3,54 @@ package com.model.components.publicaccess;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-@Entity
-@Table( name = BecomeTutorConstants.TABLE_NAME,
-		catalog = DatabaseConstants.DATABASE_CATALOG_NAME
-)
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class BecomeTutor extends PublicApplication implements Serializable, BecomeTutorConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = COLUMN_NAME_TENTATIVE_TUTOR_ID, unique = true, nullable = false)
 	private Long tentativeTutorId;
-	
-	@Column(name = COLUMN_NAME_APPLICATION_STATUS, unique = true, nullable = false)
 	private String applicationStatus;
-	
-	@Temporal(TemporalType.DATE)
-	@Column(name = COLUMN_NAME_DATE_OF_BIRTH, length = 10, nullable = false)
 	private Date dateOfBirth;
-	
-	@Column(name = COLUMN_NAME_CONTACT_NUMBER, unique = true, nullable = false)
 	private String contactNumber;
-	
-	@Column(name = COLUMN_NAME_EMAIL_ID, unique = true, nullable = false)
 	private String emailId;
-	
-	@Column(name = COLUMN_NAME_FIRST_NAME, nullable = false)
 	private String firstName;
-	
-	@Column(name = COLUMN_NAME_LAST_NAME, nullable = false)
 	private String lastName;
-	
-	@Column(name = COLUMN_NAME_GENDER, nullable = false)
 	private String gender;
-	
-	@Column(name = COLUMN_NAME_QUALIFICATION, nullable = false)
 	private String qualification;
-	
-	@Column(name = COLUMN_NAME_PRIMARY_PROFESSION, nullable = false)
 	private String primaryProfession;
-	
-	@Column(name = COLUMN_NAME_TRANSPORT_MODE, nullable = false)
 	private String transportMode;
-	
-	@Column(name = COLUMN_NAME_TEACHING_EXPERIENCE, nullable = false)
 	private Integer teachingExp;
-	
-	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
 	private String studentGrade;
-	
-	@Column(name = COLUMN_NAME_SUBJECTS, nullable = false)
 	private String subjects;
-	
-	@Column(name = COLUMN_NAME_LOCATIONS, nullable = false)
 	private String locations;
-	
-	@Column(name = COLUMN_NAME_PREFERRED_TIME_TO_CALL, nullable = false)
 	private String preferredTimeToCall;
-	
-	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS)
 	private String additionalDetails;
-	
-	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
-	
-	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
-	
-	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_AUTHENTICATION_VERIFIED)
 	private String isAuthenticationVerified;
-	
-	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_TO_BE_RECONTACTED)
 	private String isToBeRecontacted;
-	
-	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
-	
-	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
-	
-	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_SELECTED)
 	private String isSelected;
-	
-	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
-	
-	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_REJECTED)
 	private String isRejected;
-	
-	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
-	
-	@Column(name = COLUMN_NAME_REJECTION_COUNT)
 	private Integer rejectionCount;
-	
-	@Column(name = COLUMN_NAME_REFERENCE)
 	private String reference;
-	
-	@Column(name = COLUMN_NAME_PREFERRED_TEACHING_TYPE)
 	private String preferredTeachingType;
-	
-	@Column(name = COLUMN_NAME_RE_APPLIED)
 	private String reApplied;
-	
-	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
 	private String addressDetails;
-	
 	private Long applicationDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -552,7 +452,6 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
 		becomeTutorApplication.append(PrintFormatterUtils.startATable());
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_TUTOR_ID, this.tentativeTutorId));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, new Date(this.applicationDateMillis)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_DATE_OF_BIRTH, this.dateOfBirth));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
@@ -571,33 +470,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, this.reference));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TEACHING_TYPE, this.preferredTeachingType));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, this.isContacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, this.whoContacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(this.contactedDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, this.contactedRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, this.isAuthenticationVerified));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, this.whoVerified));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(this.verificationDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, this.verificationRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, this.isToBeRecontacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, this.whoSuggestedForRecontact));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(this.suggestionDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, this.suggestionRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, this.whoRecontacted));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(this.recontactedDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, this.recontactedRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, this.isSelected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, this.whoSelected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(this.selectionDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, this.selectionRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, this.isRejected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, this.whoRejected));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(this.rejectionDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, this.rejectionRemarks));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_COUNT, this.rejectionCount));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RE_APPLIED, this.reApplied));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREVIOUS_APPLICATION_DATE, new Date(this.previousApplicationDateMillis)));
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(this.recordLastUpdatedMillis)));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, this.addressDetails));
 		becomeTutorApplication.append(PrintFormatterUtils.endATable());
 		return becomeTutorApplication.toString();
 	}

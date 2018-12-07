@@ -3,127 +3,46 @@ package com.model.components.publicaccess;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-@Entity
-@Table( name = SubscribeWithUsConstants.TABLE_NAME, 
-		catalog = DatabaseConstants.DATABASE_CATALOG_NAME
-)
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class SubscribeWithUs extends PublicApplication implements Serializable, SubscribeWithUsConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, unique = true, nullable = false)
 	private Long tentativeSubscriptionId;
-	
-	@Column(name = COLUMN_NAME_APPLICATION_STATUS, unique = true, nullable = false)
 	private String applicationStatus;
-	
-	@Column(name = COLUMN_NAME_FIRST_NAME, nullable = false)
 	private String firstName;
-	
-	@Column(name = COLUMN_NAME_LAST_NAME, nullable = false)
 	private String lastName;
-	
-	@Column(name = COLUMN_NAME_CONTACT_NUMBER, unique = true, nullable = false)
 	private String contactNumber;
-	
-	@Column(name = COLUMN_NAME_EMAIL_ID, unique = true, nullable = false)
 	private String emailId;
-	
-	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
 	private String studentGrade;
-	
-	@Column(name = COLUMN_NAME_SUBJECTS, nullable = false)
 	private String subjects;
-	
-	@Column(name = COLUMN_NAME_PREFERRED_TIME_TO_CALL, nullable = false)
 	private String preferredTimeToCall;
-	
-	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS)
 	private String additionalDetails;
-	
-	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)
 	private String subscribedCustomer;
-	
-	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
-	
-	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
-	
-	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_AUTHENTICATION_VERIFIED)
 	private String isAuthenticationVerified;
-	
-	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_TO_BE_RECONTACTED)
 	private String isToBeRecontacted;
-	
-	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
-	
-	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
-	
-	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_SELECTED)
 	private String isSelected;
-	
-	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
-	
-	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_REJECTED)
 	private String isRejected;
-	
-	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
-	
-	@Column(name = COLUMN_NAME_LOCATION)
 	private String location;
-	
-	@Column(name = COLUMN_NAME_REFERENCE)
 	private String reference;
-	
-	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
 	private String addressDetails;
-	
 	private Long applicationDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -452,7 +371,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
 		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, tentativeSubscriptionId));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_DATE, new Date(applicationDateMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, applicationStatus));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, firstName));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, lastName));
@@ -466,30 +384,6 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, contactedRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, isAuthenticationVerified));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, whoVerified));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(verificationDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, verificationRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, isToBeRecontacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, whoSuggestedForRecontact));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(suggestionDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, suggestionRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, whoRecontacted));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(recontactedDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, recontactedRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, isSelected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, whoSelected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(selectionDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, selectionRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, isRejected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, whoRejected));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(rejectionDateMillis)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
 	}

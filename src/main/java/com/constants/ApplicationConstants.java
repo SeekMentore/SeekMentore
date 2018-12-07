@@ -22,6 +22,8 @@ public interface ApplicationConstants {
 	String ASSIGNMENT_OPERATOR = "=";
 	String AMPERSAND_OPERATOR = "&";
 	String APOSTROPHE = "'";
+	String LEFT_ROUND_BRACKET = "(";
+	String RIGHT_ROUND_BRACKET = ")";
 	
 	String YES = "Y";
 	String NO = "N";

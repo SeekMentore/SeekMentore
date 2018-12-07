@@ -2,8 +2,6 @@ package com.model.components.publicaccess;
 
 import java.io.Serializable;
 
-import javax.persistence.Transient;
-
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
@@ -11,16 +9,9 @@ public abstract class PublicApplication extends GridComponentObject implements S
 
 	private static final long serialVersionUID = -2232244327975645054L;
 	
-	@Transient
 	private Boolean flag;
-	
-	@Transient
 	private String isDataMigrated;
-	
-	@Transient
 	private Long whenMigratedMillis;
-	
-	@Transient
 	private String captchaResponse;
 
 	public Boolean isFlag() {

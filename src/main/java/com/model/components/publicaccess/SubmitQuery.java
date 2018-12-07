@@ -1,71 +1,27 @@
 package com.model.components.publicaccess;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-@Entity
-@Table( name = SubmitQueryConstants.TABLE_NAME, 
-		catalog = DatabaseConstants.DATABASE_CATALOG_NAME
-)
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class SubmitQuery extends PublicApplication implements Serializable, SubmitQueryConstants {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = COLUMN_NAME_QUERY_ID, unique = true, nullable = false)
 	private Long queryId;
-	
-	@Column(name = COLUMN_NAME_QUERY_STATUS, unique = true, nullable = false)
 	private String queryStatus;
-	
-	@Column(name = COLUMN_NAME_EMAIL_ID, unique = true, nullable = false)
 	private String emailId;
-	
-	@Column(name = COLUMN_NAME_QUERY_DETAILS, nullable = false)
 	private String queryDetails;
-	
-	@Column(name = COLUMN_NAME_REGISTERED_TUTOR, nullable = false)
 	private String registeredTutor;
-	
-	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)
 	private String subscribedCustomer;
-	
-	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
-	
-	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
-	
-	@Column(name = COLUMN_NAME_QUERY_RESPONSE)
 	private String queryResponse;
-	
-	@Column(name = COLUMN_NAME_NOT_ANSWERED)
 	private String notAnswered;
-	
-	@Column(name = COLUMN_NAME_NOT_ANSWERED_REASON)
 	private String notAnsweredReason;
-	
-	@Column(name = COLUMN_NAME_WHO_NOT_ANSWERED)
 	private String whoNotAnswered;
-	
 	private Long queryRequestedDateMillis;
 	private Long contactedDateMillis;
 	private Long recordLastUpdatedMillis;
@@ -201,20 +157,11 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
 		submitQueryApplication.append(PrintFormatterUtils.startATable());
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_ID, queryId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_REQUESTED_DATE, new Date(queryRequestedDateMillis)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, queryStatus));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, queryDetails));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REGISTERED_TUTOR, registeredTutor));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_RESPONSE, queryResponse));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED, notAnswered));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NOT_ANSWERED_REASON, notAnsweredReason));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_NOT_ANSWERED, whoNotAnswered));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		submitQueryApplication.append(PrintFormatterUtils.endATable());
 		return submitQueryApplication.toString();
 	}

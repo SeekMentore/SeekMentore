@@ -4,6 +4,7 @@
 	<appEncyptionAlgorithm>AES</appEncyptionAlgorithm>
 	<appEncodingStandard>UTF-8</appEncodingStandard>
 	<remoteConnectionAcceptedLanguage>en-US,en;q=0.5</remoteConnectionAcceptedLanguage>
+	<defaultDatabaseEngine>MYSQL</defaultDatabaseEngine>
 	<captchaParams>
 		<switchOffCaptcha>true</switchOffCaptcha>
 		<apiVerifyURL>https://www.google.com/recaptcha/api/siteverify</apiVerifyURL>

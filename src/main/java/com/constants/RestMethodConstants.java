@@ -1,19 +1,6 @@
 package com.constants;
 
 public interface RestMethodConstants extends RestParamsConstants {
-	
-	
-	// Public Access REST methods
-	// REST methods to submit data
-	String REST_METHOD_NAME_TO_BECOME_TUTOR = "/becomeTutor";
-	String REST_METHOD_NAME_TO_FIND_TUTOR = "/findTutor";
-	String REST_METHOD_NAME_TO_SUBMIT_QUERY = "/submitQuery";
-	String REST_METHOD_NAME_TO_SUBSCRIBE = "/subscribe";
-	// REST methods to receive data
-	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_BECOME_TUTOR = "/getDropdownListDataBecomeTutor";
-	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FIND_TUTOR = "/getDropdownListDataFindTutor";
-	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US = "/getDropdownListDataSubscribeWithUs";
-	
 	// Admin REST methods
 	// Tutor Registrations
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_REGISTRATION_PROFILE_PDF = "/downloadAdminTutorRegistrationProfilePdf";
@@ -97,6 +84,14 @@ public interface RestMethodConstants extends RestParamsConstants {
 	
 	/************************************************************************************************************/
 	String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+	// PublicAccess REST methods
+	String REST_METHOD_NAME_TO_BECOME_TUTOR = "/becomeTutor";
+	String REST_METHOD_NAME_TO_FIND_TUTOR = "/findTutor";
+	String REST_METHOD_NAME_TO_SUBMIT_QUERY = "/submitQuery";
+	String REST_METHOD_NAME_TO_SUBSCRIBE = "/subscribe";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_BECOME_TUTOR = "/getDropdownListDataBecomeTutor";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FIND_TUTOR = "/getDropdownListDataFindTutor";
+	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US = "/getDropdownListDataSubscribeWithUs";
 	// Login REST methods
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
 	String REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS = "/checkUIpathAccess";

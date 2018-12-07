@@ -1,6 +1,7 @@
 package com.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.constants.ApplicationConstants;
 import com.exception.ApplicationException;
+import com.service.QueryMapperService;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
 
@@ -31,6 +33,9 @@ public class ApplicationDao implements ApplicationConstants {
 	
 	@Autowired
 	private transient NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	private QueryMapperService queryMapperService;
 	
 	/**
 	 * HibernateTemplate DAO calls
@@ -67,16 +72,54 @@ public class ApplicationDao implements ApplicationConstants {
 	
 	/**
 	 * JdbcTemplate DAO calls
+	 * @throws InstantiationException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws  
 	 */
 	
 	/*
 	 * Use the below query for 
 	 * INSERT, UPDATE, DELETE
 	 */
+	@SuppressWarnings("unchecked")
+	public void executeUpdateWithQueryMapper(final String namespaceName, final String queryId, final Object paramObject) throws Exception {
+		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
+		LoggerUtils.logOnConsole(query);
+		Map<String, Object> params;
+		if (!(paramObject instanceof Map)) {
+			params = queryMapperService.getQueryParams(namespaceName, queryId, paramObject);
+		} else {
+			params = (Map<String, Object>)paramObject;
+		}
+		final SqlParameterSource parameters = getSqlParameterSource(params);
+		namedParameterJdbcTemplate.update(query, parameters);
+    }
+	
 	public void executeUpdate(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		namedParameterJdbcTemplate.update(query, parameters);
+    }
+	
+	@SuppressWarnings("unchecked")
+	public void executeBatchUpdateWithQueryMapper(final String namespaceName, final String queryId, final List<?> paramObjectList) throws Exception {
+		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
+		LoggerUtils.logOnConsole(query);
+		List<Map<String, Object>> paramsList = null;
+		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
+			final Object paramObject = paramObjectList.get(0);
+			if (!(paramObject instanceof Map)) {
+				paramsList = queryMapperService.getQueryParamsList(namespaceName, queryId, paramObjectList);
+			} else {
+				paramsList = (List<Map<String, Object>>)paramObjectList;
+			}
+		}
+		final SqlParameterSource[] parametersBatch = getSqlParameterSourceBatch(paramsList);
+		namedParameterJdbcTemplate.batchUpdate(query, parametersBatch);
     }
 	
 	public void executeBatchUpdate(final String query, final List<Map<String, Object>> paramsList) {

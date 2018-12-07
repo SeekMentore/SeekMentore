@@ -3,124 +3,45 @@ package com.model.components.publicaccess;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.constants.DatabaseConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-@Entity
-@Table( name = FindTutorConstants.TABLE_NAME, 
-		catalog = DatabaseConstants.DATABASE_CATALOG_NAME
-)
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class FindTutor extends PublicApplication implements Serializable, FindTutorConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = COLUMN_NAME_ENQUIRY_ID, unique = true, nullable = false)
+	
 	private Long enquiryId;
-	
-	@Column(name = COLUMN_NAME_ENQUIRY_STATUS, unique = true, nullable = false)
 	private String enquiryStatus;
-	
-	@Column(name = COLUMN_NAME_NAME, unique = true, nullable = false)
 	private String name;
-	
-	@Column(name = COLUMN_NAME_CONTACT_NUMBER, unique = true, nullable = false)
 	private String contactNumber;
-	
-	@Column(name = COLUMN_NAME_EMAIL_ID, unique = true, nullable = false)
 	private String emailId;
-	
-	@Column(name = COLUMN_NAME_STUDENT_GRADE, nullable = false)
 	private String studentGrade;
-	
-	@Column(name = COLUMN_NAME_SUBJECTS, nullable = false)
 	private String subjects;
-	
-	@Column(name = COLUMN_NAME_PREFERRED_TIME_TO_CALL, nullable = false)
 	private String preferredTimeToCall;
-	
-	@Column(name = COLUMN_NAME_ADDITIONAL_DETAILS)
 	private String additionalDetails;
-	
-	@Column(name = COLUMN_NAME_SUBSCRIBED_CUSTOMER, nullable = false)
 	private String subscribedCustomer;
-	
-	@Column(name = COLUMN_NAME_IS_CONTACTED, nullable = false)
 	private String isContacted;
-	
-	@Column(name = COLUMN_NAME_WHO_CONTACTED)
 	private String whoContacted;
-	
-	@Column(name = COLUMN_NAME_CONTACTED_REMARKS)
 	private String contactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_AUTHENTICATION_VERIFIED)
 	private String isAuthenticationVerified;
-	
-	@Column(name = COLUMN_NAME_WHO_VERIFIED)
 	private String whoVerified;
-	
-	@Column(name = COLUMN_NAME_VERIFICATION_REMARKS)
 	private String verificationRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_TO_BE_RECONTACTED)
 	private String isToBeRecontacted;
-	
-	@Column(name = COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT)
 	private String whoSuggestedForRecontact;
-	
-	@Column(name = COLUMN_NAME_SUGGESTION_REMARKS)
 	private String suggestionRemarks;
-	
-	@Column(name = COLUMN_NAME_WHO_RECONTACTED)
 	private String whoRecontacted;
-	
-	@Column(name = COLUMN_NAME_RECONTACTED_REMARKS)
 	private String recontactedRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_SELECTED)
 	private String isSelected;
-	
-	@Column(name = COLUMN_NAME_WHO_SELECTED)
 	private String whoSelected;
-	
-	@Column(name = COLUMN_NAME_SELECTION_REMARKS)
 	private String selectionRemarks;
-	
-	@Column(name = COLUMN_NAME_IS_REJECTED)
 	private String isRejected;
-	
-	@Column(name = COLUMN_NAME_WHO_REJECTED)
 	private String whoRejected;
-	
-	@Column(name = COLUMN_NAME_REJECTION_REMARKS)
 	private String rejectionRemarks;
-	
-	@Column(name = COLUMN_NAME_LOCATION)
 	private String location;
-	
-	@Column(name = COLUMN_NAME_REFERENCE)
 	private String reference;
-	
-	@Column(name = COLUMN_NAME_ADDRESS_DETAILS)
 	private String addressDetails;
-	
 	private Long enquiryDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
@@ -449,7 +370,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
 		findTutorApplication.append(PrintFormatterUtils.startATable());
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_ID, enquiryId));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_DATE, new Date(enquiryDateMillis)));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, enquiryStatus));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, name));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, contactNumber));
@@ -462,30 +382,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_CONTACTED, isContacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_CONTACTED, whoContacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_DATE, new Date(contactedDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACTED_REMARKS, contactedRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_AUTHENTICATION_VERIFIED, isAuthenticationVerified));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_VERIFIED, whoVerified));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_DATE, new Date(verificationDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_VERIFICATION_REMARKS, verificationRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_TO_BE_RECONTACTED, isToBeRecontacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT, whoSuggestedForRecontact));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_DATE, new Date(suggestionDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUGGESTION_REMARKS, suggestionRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_RECONTACTED, whoRecontacted));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_DATE, new Date(recontactedDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECONTACTED_REMARKS, recontactedRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_SELECTED, isSelected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_SELECTED, whoSelected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_DATE, new Date(selectionDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SELECTION_REMARKS, selectionRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_IS_REJECTED, isRejected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_WHO_REJECTED, whoRejected));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_DATE, new Date(rejectionDateMillis)));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REJECTION_REMARKS, rejectionRemarks));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_RECORD_LAST_UPDATED, new Date(recordLastUpdatedMillis)));
 		findTutorApplication.append(PrintFormatterUtils.endATable());
 		return findTutorApplication.toString();
 	}
