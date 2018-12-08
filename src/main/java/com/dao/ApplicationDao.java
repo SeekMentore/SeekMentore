@@ -1,7 +1,6 @@
 package com.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.constants.ApplicationConstants;
 import com.exception.ApplicationException;
+import com.model.rowmappers.MapRowMapper;
 import com.service.QueryMapperService;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
@@ -202,6 +202,39 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
+	public Map<String, Object> find(final String query, final Map<String, Object> params) throws DataAccessException, InstantiationException, IllegalAccessException {
+		LoggerUtils.logOnConsole(query);
+		final SqlParameterSource parameters = getSqlParameterSource(params);
+		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());
+		if (list != null) {
+			if (list.isEmpty()) {
+				return null;
+			}
+			if (list.size() > 1) {
+				throw new ApplicationException("Single record query returns more than one record <" + query + ">");
+			}
+			final Map<String, Object> object = list.get(0);
+			return object;
+		}
+		return null;
+    }
+	
+	public Map<String, Object> findWithoutParams(final String query) {
+		LoggerUtils.logOnConsole(query);
+		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(query, new MapRowMapper());
+		if (list != null) {
+			if (list.isEmpty()) {
+				return null;
+			}
+			if (list.size() > 1) {
+				throw new ApplicationException("Single record query returns more than one record <" + query + ">");
+			}
+			final Map<String, Object> object = list.get(0);
+			return object;
+		}
+		return null;
+    }
+	
 	/*
 	 * Use the below query for
 	 * SELECT multiple records
@@ -215,5 +248,16 @@ public class ApplicationDao implements ApplicationConstants {
 	public < T extends Object > List<T> findAllWithoutParams(final String query, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
 		return namedParameterJdbcTemplate.query(query, rowmapper);
+    }
+	
+	public List<Map<String, Object>> findAll(final String query, final Map<String, Object> params) {
+		LoggerUtils.logOnConsole(query);
+		final SqlParameterSource parameters = getSqlParameterSource(params);
+		return namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());
+    }
+	
+	public List<Map<String, Object>> findAllWithoutParams(final String query) {
+		LoggerUtils.logOnConsole(query);
+		return namedParameterJdbcTemplate.query(query, new MapRowMapper());
     }
 }
