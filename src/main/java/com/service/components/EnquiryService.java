@@ -675,7 +675,7 @@ public class EnquiryService implements EnquiryConstants {
 						paramsMap.put("negotiatedRateWithTutor", tutorMapperObject.getNegotiatedRateWithTutor());
 						break;
 					}
-					case "clientNegotiationRemarks" : {
+					case "tutorNegotiationRemarks" : {
 						updateAttributesQuery.add("TUTOR_NEGOTIATION_REMARKS = :tutorNegotiationRemarks");
 						paramsMap.put("tutorNegotiationRemarks", tutorMapperObject.getTutorNegotiationRemarks());
 						break;
@@ -685,7 +685,7 @@ public class EnquiryService implements EnquiryConstants {
 		}
 		paramsMap.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
