@@ -68,7 +68,7 @@
 			<webservice id="abortedEnquiriesList" url="/abortedEnquiriesList"></webservice>
 			<webservice id="pendingEnquiryCheckDataAccess" url="/pendingEnquiryCheckDataAccess"></webservice>
 			<webservice id="currentCustomerAllPendingEnquiriesList" url="/currentCustomerAllPendingEnquiriesList"></webservice>
-			<webservice id="updatePendingEnquiryRecord" url="/updatePendingEnquiryRecord"></webservice>
+			<webservice id="updateEnquiryRecord" url="/updateEnquiryRecord"></webservice>
 			<webservice id="toBeMappedEnquiriesGridList" url="/toBeMappedEnquiriesGridList"></webservice>
 			<webservice id="mapTutorToEnquiryCheckDataAccess" url="/mapTutorToEnquiryCheckDataAccess"></webservice>
 			<webservice id="allMappingEligibleTutorsList" url="/allMappingEligibleTutorsList"></webservice>

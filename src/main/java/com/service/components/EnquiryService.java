@@ -30,6 +30,7 @@ import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.QueryMapperService;
 import com.utils.DateUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
@@ -54,6 +55,9 @@ public class EnquiryService implements EnquiryConstants {
 	
 	@Autowired
 	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
+	
+	@Autowired
+	private QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -525,20 +529,9 @@ public class EnquiryService implements EnquiryConstants {
 	/**************************************************************************************************************/
 	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final String baseQuery = "SELECT "
-				+ "EN.*, "
-				+ "C.NAME AS CUSTOMER_NAME, "
-				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, "
-				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, "
-				+ "T.NAME AS TUTOR_NAME, "
-				+ "T.EMAIL_ID AS TUTOR_EMAIL, "
-				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EN.WHO_ACTED), EN.WHO_ACTED) AS WHO_ACTED_NAME "
-				+ "FROM ENQUIRIES EN "
-				+ "LEFT OUTER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID "
-				+ "LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID";
-		String existingFilterQueryString = "WHERE EN.MATCH_STATUS = :matchStatus";
-		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";		
+		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryExistingFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryExistingSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_PENDING_ENQUIRIES_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
@@ -557,7 +550,7 @@ public class EnquiryService implements EnquiryConstants {
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST : {
-				existingFilterQueryString += " AND EN.CUSTOMER_ID = :customerId";
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-enquiry", "enquiryCurrentCustomerAdditionalFilter");
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
 				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
 				break;
@@ -568,25 +561,9 @@ public class EnquiryService implements EnquiryConstants {
 	
 	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final String baseQuery = "SELECT "
-				+ "TM.*, "
-				+ "C.NAME AS CUSTOMER_NAME, " 
-				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, " 
-				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, " 
-				+ "EN.SUBJECT AS ENQUIRY_SUBJECT, "
-				+ "EN.GRADE AS ENQUIRY_GRADE, "
-				+ "EN.LOCATION_DETAILS AS ENQUIRY_LOCATION, "
-				+ "EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE, "
-				+ "T.NAME AS TUTOR_NAME, "
-				+ "T.EMAIL_ID AS TUTOR_EMAIL, "
-				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME "
-				+ "FROM TUTOR_MAPPER TM "
-				+ "INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID "
-				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID "
-				+ "INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID";
-		String existingFilterQueryString = "WHERE TM.MAPPING_STATUS = :mappingStatus";
-		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
+		final String baseQuery = queryMapperService.getQuerySQL("sales-tutor-mapper", "selectTutorMapper");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST : {
 				paramsMap.put("mappingStatus", "PENDING");
@@ -601,16 +578,118 @@ public class EnquiryService implements EnquiryConstants {
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE TM.ENQUIRY_ID = :enquiryId";
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentEnquiryAllMappedTutors");
 				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : {
-				existingFilterQueryString = "WHERE TM.TUTOR_ID = :tutorId";
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorAllMappingFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}
 		}
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
+	}
+
+	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE ENQUIRIES SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE ENQUIRY_ID = :enquiryId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "subject" : {
+						updateAttributesQuery.add("SUBJECT = :subject");
+						paramsMap.put("subject", enquiryObject.getSubject());
+						break;
+					}
+					case "grade" : {
+						updateAttributesQuery.add("GRADE = :grade");
+						paramsMap.put("grade", enquiryObject.getGrade());
+						break;
+					}
+					case "quotedClientRate" : {
+						updateAttributesQuery.add("QUOTED_CLIENT_RATE = :quotedClientRate");
+						paramsMap.put("quotedClientRate", enquiryObject.getQuotedClientRate());
+						break;
+					}
+					case "negotiatedRateWithClient" : {
+						updateAttributesQuery.add("NEGOTIATED_RATE_WITH_CLIENT = :negotiatedRateWithClient");
+						paramsMap.put("negotiatedRateWithClient", enquiryObject.getNegotiatedRateWithClient());
+						break;
+					}
+					case "clientNegotiationRemarks" : {
+						updateAttributesQuery.add("CLIENT_NEGOTIATION_REMARKS = :clientNegotiationRemarks");
+						paramsMap.put("clientNegotiationRemarks", enquiryObject.getClientNegotiationRemarks());
+						break;
+					}
+					case "locationDetails" : {
+						updateAttributesQuery.add("LOCATION_DETAILS = :locationDetails");
+						paramsMap.put("locationDetails", enquiryObject.getLocationDetails());
+						break;
+					}
+					case "addressDetails" : {
+						updateAttributesQuery.add("ADDRESS_DETAILS = :addressDetails");
+						paramsMap.put("addressDetails", enquiryObject.getAddressDetails());
+						break;
+					}
+					case "additionalDetails" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS = :additionalDetails");
+						paramsMap.put("additionalDetails", enquiryObject.getAdditionalDetails());
+						break;
+					}
+					case "preferredTeachingType" : {
+						updateAttributesQuery.add("PREFERRED_TEACHING_TYPE = :preferredTeachingType");
+						paramsMap.put("preferredTeachingType", enquiryObject.getPreferredTeachingType());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("enquiryId", enquiryObject.getEnquiryId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("WHO_ACTED = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
+	}
+	
+	public void updateTutorMapperRecord(final TutorMapper tutorMapperObject, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE TUTOR_MAPPER SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_ID = :tutorMapperId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "quotedTutorRate" : {
+						updateAttributesQuery.add("QUOTED_TUTOR_RATE = :quotedTutorRate");
+						paramsMap.put("quotedTutorRate", tutorMapperObject.getQuotedTutorRate());
+						break;
+					}
+					case "negotiatedRateWithTutor" : {
+						updateAttributesQuery.add("NEGOTIATED_RATE_WITH_TUTOR = :negotiatedRateWithTutor");
+						paramsMap.put("negotiatedRateWithTutor", tutorMapperObject.getNegotiatedRateWithTutor());
+						break;
+					}
+					case "clientNegotiationRemarks" : {
+						updateAttributesQuery.add("TUTOR_NEGOTIATION_REMARKS = :tutorNegotiationRemarks");
+						paramsMap.put("tutorNegotiationRemarks", tutorMapperObject.getTutorNegotiationRemarks());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("WHO_ACTED = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
 	}
 }

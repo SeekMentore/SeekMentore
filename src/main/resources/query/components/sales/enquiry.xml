@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="sales-enquiry">
+	<query type="select" id="selectEnquiry">
+		SELECT
+			EN.*,
+			C.NAME AS CUSTOMER_NAME,
+			C.EMAIL_ID AS CUSTOMER_EMAIL,
+			C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER,
+			T.NAME AS TUTOR_NAME,
+			T.EMAIL_ID AS TUTOR_EMAIL,
+			T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EN.WHO_ACTED), EN.WHO_ACTED) AS WHO_ACTED_NAME
+			FROM ENQUIRIES EN
+			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
+			LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID
+	</query>
+	<query type="filter" id="enquiryExistingFilter">
+		WHERE EN.MATCH_STATUS = :matchStatus
+	</query>
+	<query type="filter" id="enquiryCurrentCustomerAdditionalFilter">
+		 AND EN.CUSTOMER_ID = :customerId
+	</query>
+	<query type="sorter" id="enquiryExistingSorter">
+		ORDER BY ENTRY_DATE_MILLIS
+	</query>
+</queryMapper>
