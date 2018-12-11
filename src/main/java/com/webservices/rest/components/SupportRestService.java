@@ -423,7 +423,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.becomeTutorObject.setTentativeTutorId(Long.parseLong(parentId));
 			getAdminService().updateBecomeTutorRecord(this.becomeTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -734,7 +734,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.findTutorObject.setEnquiryId(Long.parseLong(parentId));
 			getAdminService().updateFindTutorRecord(this.findTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1045,7 +1045,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.subscriptionObject.setTentativeSubscriptionId(Long.parseLong(parentId));
 			getAdminService().updateSubscriptionRecord(this.subscriptionObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1196,7 +1196,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.submitQueryObject.setQueryId(Long.parseLong(parentId));
 			getAdminService().updateSubmitQueryRecord(this.submitQueryObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1375,7 +1375,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.complaintObject.setComplaintId(Long.parseLong(parentId));
 			getAdminService().updateComplaintRecord(this.complaintObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);

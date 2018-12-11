@@ -3,18 +3,19 @@ package com.model.query;
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlValue;
 
+import com.constants.ApplicationConstants;
 import com.constants.QueryMapperConstants;
 import com.exception.ApplicationException;
 
-public class Query  implements Serializable {
+public class Query  implements Serializable, ApplicationConstants {
 	
 	private static final long serialVersionUID = 3511351046667431853L;
 	
 	private String id;
 	private String type;
-	private String mysqlSql;
+	private String description;
 	private String paramClass;
 	
 	public String getId() {
@@ -44,18 +45,18 @@ public class Query  implements Serializable {
 		this.paramClass = paramClass;
 	}
 
-	public String getMysqlSql() {
-		return mysqlSql;
+	public String getDescription() {
+		return description;
 	}
 
-	@XmlElement
-	public void setMysqlSql(String mysqlSql) {
-		this.mysqlSql = getFormattedSQL(mysqlSql);
+	@XmlValue
+	public void setDescription(String description) {
+		this.description = WHITESPACE + getFormattedSQL(description) + WHITESPACE;
 	}
 	
 	public String getSQL(final String engineName) {
 		switch(engineName) {
-			case QueryMapperConstants.ENGINE_NAME_MYSQL : return this.mysqlSql;
+			case QueryMapperConstants.ENGINE_NAME_MYSQL : return this.description;
 			default : {
 				throw new ApplicationException("No SQL found for Engine : " + engineName);
 			}

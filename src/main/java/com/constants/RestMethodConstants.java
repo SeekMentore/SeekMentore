@@ -135,10 +135,12 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_PENDING_ENQUIRIES_LIST = "/pendingEnquiriesList";
 	String REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST = "/completedEnquiriesList";
 	String REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST = "/abortedEnquiriesList";
+	String REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD = "/updateEnquiryRecord";
 	String REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST = "/currentCustomerAllPendingEnquiriesList";
 	String REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST = "/toBeMappedEnquiriesGridList";
 	String REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST = "/allMappingEligibleTutorsList";
 	String REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST = "/currentEnquiryAllMappedTutorsList";
+	String REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD = "/updateTutorMapperRecord";
 	String REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST = "/allPendingMappedTutorsList";
 	String REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST = "/allDemoReadyMappedTutorsList";
 	String REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST = "/allDemoScheduledMappedTutorsList";

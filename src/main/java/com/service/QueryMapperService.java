@@ -100,6 +100,8 @@ public class QueryMapperService implements QueryMapperConstants {
 		switch(type) {
 			case "insert":
 			case "select":
+			case "filter":
+			case "sorter":
 			case "delete":
 			case "update": {
 				return true;

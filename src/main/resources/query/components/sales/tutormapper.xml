@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="sales-tutor-mapper">
+	<query type="select" id="selectTutorMapper">
+		SELECT
+			TM.*,
+			C.NAME AS CUSTOMER_NAME, 
+			C.EMAIL_ID AS CUSTOMER_EMAIL, 
+			C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, 
+			EN.SUBJECT AS ENQUIRY_SUBJECT,
+			EN.GRADE AS ENQUIRY_GRADE,
+			EN.LOCATION_DETAILS AS ENQUIRY_LOCATION,
+			EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE,
+			T.NAME AS TUTOR_NAME,
+			T.EMAIL_ID AS TUTOR_EMAIL,
+			T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME
+			FROM TUTOR_MAPPER TM
+			INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
+			INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID
+			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
+	</query>
+	<query type="filter" id="tutorMapperExistingFilter">
+		WHERE TM.MAPPING_STATUS = :mappingStatus
+	</query>
+	<query type="filter" id="tutorMapperCurrentTutorAllMappingFilter">
+		 WHERE TM.TUTOR_ID = :tutorId
+	</query>
+	<query type="filter" id="tutorMapperCurrentEnquiryAllMappedTutors">
+		WHERE TM.ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="sorter" id="tutorMapperExistingSorter">
+		ORDER BY ENTRY_DATE_MILLIS
+	</query>
+</queryMapper>

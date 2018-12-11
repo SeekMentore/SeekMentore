@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -20,8 +21,10 @@ import org.springframework.stereotype.Component;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.ScopeConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.EnquiryConstants;
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.model.components.DemoTracker;
 import com.model.components.Enquiry;
@@ -49,6 +52,9 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
+	private Long parentId;
+	private Enquiry enquiryObject;
+	private TutorMapper tutorMapperObject;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -148,19 +154,31 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/updateEnquiryRecord")
+	@Path(REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public String updateEnquiryRecord (
-			@FormDataParam("completeUpdatedRecord") final String completeUpdatedRecord,
-			@FormDataParam("parentId") final String parentId,
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD;
+		createEnquiryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.enquiryObject.setEnquiryId(Long.parseLong(parentId));
+			getEnquiryService().updateEnquiryRecord(this.enquiryObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST)
@@ -368,19 +386,31 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/updateTutorMapperRecord")
+	@Path(REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
 	public String updateTutorMapperRecord (
-			@FormDataParam("completeUpdatedRecord") final String completeUpdatedRecord,
-			@FormDataParam("parentId") final String parentId,
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD;
+		createTutorMapperObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
+			getEnquiryService().updateTutorMapperRecord(this.tutorMapperObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST)
@@ -798,8 +828,216 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 				handleSelectedTutorDataGridView();
 				break;
 			}
+			case REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD : {
+				handleParentId();
+				handleEnquirySecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD : {
+				handleParentId();
+				handleTutorMapperSecurity();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
+	}
+	
+	private void handleParentId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createEnquiryObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.enquiryObject = new Enquiry();
+			this.enquiryObject.setSubject(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "subject", String.class));
+			this.enquiryObject.setGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "grade", String.class));
+			this.enquiryObject.setQuotedClientRate(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "quotedClientRate", Integer.class));
+			this.enquiryObject.setNegotiatedRateWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedRateWithClient", Integer.class));
+			this.enquiryObject.setClientNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientNegotiationRemarks", String.class));
+			this.enquiryObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
+			this.enquiryObject.setLocationDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "locationDetails", String.class));
+			this.enquiryObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
+			this.enquiryObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
+		}
+	}
+	
+	private void handleEnquirySecurity() throws Exception {
+		this.securityPassed = true;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "subject" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getSubject(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select valid 'Subject'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "grade" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Grade'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "quotedClientRate" : {
+						if (!ValidationUtils.validateNumber(this.enquiryObject.getQuotedClientRate(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Quoted Client Rate'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "negotiatedRateWithClient" : {
+						if (!ValidationUtils.validateNumber(this.enquiryObject.getNegotiatedRateWithClient(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Negotiated Rate With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else if (ValidationUtils.checkObjectAvailability(this.enquiryObject.getNegotiatedRateWithClient())) {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.enquiryObject.getClientNegotiationRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										"Please provide 'Client Negotiation Remarks'",
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+						}
+						break;
+					}
+					case "clientNegotiationRemarks" : {
+						break;
+					}
+					case "additionalDetails" : {
+						break;
+					}
+					case "locationDetails" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getLocationDetails(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select valid 'Location'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "addressDetails" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.enquiryObject.getAddressDetails())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please provide 'Address Details'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "preferredTeachingType" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select valid multiple 'Preferred Tutoring Type'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createTutorMapperObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.tutorMapperObject = new TutorMapper();
+			this.tutorMapperObject.setQuotedTutorRate(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "quotedTutorRate", Integer.class));
+			this.tutorMapperObject.setNegotiatedRateWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedRateWithTutor", Integer.class));
+			this.tutorMapperObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
+		}
+	}
+	
+	private void handleTutorMapperSecurity() throws Exception {
+		this.securityPassed = true;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "quotedTutorRate" : {
+						if (!ValidationUtils.validateNumber(this.tutorMapperObject.getQuotedTutorRate(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Quoted Tutor Rate'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "negotiatedRateWithTutor" : {
+						if (!ValidationUtils.validateNumber(this.tutorMapperObject.getNegotiatedRateWithTutor(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Negotiated Rate With Tutor'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else if (ValidationUtils.checkObjectAvailability(this.tutorMapperObject.getNegotiatedRateWithTutor())) {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getTutorNegotiationRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										"Please provide 'Tutor Negotiation Remarks'",
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+						}
+						break;
+					}
+					case "tutorNegotiationRemarks" : {
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 	
 	private void handleSelectedCustomerDataGridView() throws Exception {
