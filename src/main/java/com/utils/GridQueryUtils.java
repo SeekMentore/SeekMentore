@@ -102,13 +102,13 @@ public class GridQueryUtils implements GridComponentConstants {
 									if (null != filter.getLessThan()) {
 										filterQuery.append(gridComponentObject.resolveColumnNameForMapping(mapping)).append(LESS_THAN_APPENDER).append(filter.getLessThan());
 										if (null != filter.getEqualTo() || null != filter.getGreaterThan()) {
-											filterQuery.append(OR_APPENDER);
+											filterQuery.append(AND_APPENDER);
 										}
 									}
 									if (null != filter.getEqualTo()) {
 										filterQuery.append(gridComponentObject.resolveColumnNameForMapping(mapping)).append(EQUAL_TO_APPENDER).append(filter.getEqualTo());
 										if (null != filter.getGreaterThan()) {
-											filterQuery.append(OR_APPENDER);
+											filterQuery.append(AND_APPENDER);
 										}
 									}
 									if (null != filter.getGreaterThan()) {
@@ -132,13 +132,13 @@ public class GridQueryUtils implements GridComponentConstants {
 								if (null != filter.getLessThan()) {
 									filterQuery.append(gridComponentObject.resolveColumnNameForMapping(filter.getMapping())).append(LESS_THAN_APPENDER).append(filter.getLessThan());
 									if (null != filter.getEqualTo() || null != filter.getGreaterThan()) {
-										filterQuery.append(OR_APPENDER);
+										filterQuery.append(AND_APPENDER);
 									}
 								}
 								if (null != filter.getEqualTo()) {
 									filterQuery.append(gridComponentObject.resolveColumnNameForMapping(filter.getMapping())).append(EQUAL_TO_APPENDER).append(filter.getEqualTo());
 									if (null != filter.getGreaterThan()) {
-										filterQuery.append(OR_APPENDER);
+										filterQuery.append(AND_APPENDER);
 									}
 								}
 								if (null != filter.getGreaterThan()) {
@@ -165,19 +165,19 @@ public class GridQueryUtils implements GridComponentConstants {
 										filterQuery.append(LEFT_BRACKET_APPENDER);
 									}
 									if (null != filter.getBeforeDateMillis()) {
-										filterQuery.append(gridComponentObject.resolveColumnNameForMapping(mapping)).append(LESS_THAN_APPENDER).append(filter.getBeforeDateMillis());
+										filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(mapping))).append(LESS_THAN_APPENDER).append(filter.getBeforeDateMillis());
 										if (null != filter.getOnDateMillis() || null != filter.getAfterDateMillis()) {
-											filterQuery.append(OR_APPENDER);
+											filterQuery.append(AND_APPENDER);
 										}
 									}
 									if (null != filter.getOnDateMillis()) {
-										filterQuery.append(gridComponentObject.resolveColumnNameForMapping(mapping)).append(EQUAL_TO_APPENDER).append(filter.getOnDateMillis());
+										filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(mapping))).append(EQUAL_TO_APPENDER).append(filter.getOnDateMillis());
 										if (null != filter.getAfterDateMillis()) {
-											filterQuery.append(OR_APPENDER);
+											filterQuery.append(AND_APPENDER);
 										}
 									}
 									if (null != filter.getAfterDateMillis()) {
-										filterQuery.append(gridComponentObject.resolveColumnNameForMapping(mapping)).append(GREATER_THAN_APPENDER).append(filter.getAfterDateMillis()).append(WHITESPACE);
+										filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(mapping))).append(GREATER_THAN_APPENDER).append(filter.getAfterDateMillis()).append(WHITESPACE);
 									}
 									if (null != filter.getBeforeDateMillis() || null != filter.getOnDateMillis() || null != filter.getAfterDateMillis()) {
 										filterQuery.append(RIGHT_BRACKET_APPENDER);
@@ -195,19 +195,19 @@ public class GridQueryUtils implements GridComponentConstants {
 									filterQuery.append(LEFT_BRACKET_APPENDER);
 								}
 								if (null != filter.getBeforeDateMillis()) {
-									filterQuery.append(gridComponentObject.resolveColumnNameForMapping(filter.getMapping())).append(LESS_THAN_APPENDER).append(filter.getBeforeDateMillis());
+									filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(filter.getMapping()))).append(LESS_THAN_APPENDER).append(filter.getBeforeDateMillis());
 									if (null != filter.getOnDateMillis() || null != filter.getAfterDateMillis()) {
-										filterQuery.append(OR_APPENDER);
+										filterQuery.append(AND_APPENDER);
 									}
 								}
 								if (null != filter.getOnDateMillis()) {
-									filterQuery.append(gridComponentObject.resolveColumnNameForMapping(filter.getMapping())).append(EQUAL_TO_APPENDER).append(filter.getOnDateMillis());
+									filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(filter.getMapping()))).append(EQUAL_TO_APPENDER).append(filter.getOnDateMillis());
 									if (null != filter.getAfterDateMillis()) {
-										filterQuery.append(OR_APPENDER);
+										filterQuery.append(AND_APPENDER);
 									}
 								}
 								if (null != filter.getAfterDateMillis()) {
-									filterQuery.append(gridComponentObject.resolveColumnNameForMapping(filter.getMapping())).append(GREATER_THAN_APPENDER).append(filter.getAfterDateMillis()).append(WHITESPACE);
+									filterQuery.append(STRIPPED_DATED_MILLISECONDS_CALCULATOR_QUERY.replace(MAPPING_COLUMN_REPLACE_TEXT, gridComponentObject.resolveColumnNameForMapping(filter.getMapping()))).append(GREATER_THAN_APPENDER).append(filter.getAfterDateMillis()).append(WHITESPACE);
 								}
 								if (null != filter.getBeforeDateMillis() || null != filter.getOnDateMillis() || null != filter.getAfterDateMillis()) {
 									filterQuery.append(RIGHT_BRACKET_APPENDER);

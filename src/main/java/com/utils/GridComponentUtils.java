@@ -68,11 +68,17 @@ public class GridComponentUtils implements GridComponentConstants {
 						final Long onDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_ON_DATE_MILLIS, Long.class);
 						final Long afterDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_AFTER_DATE_MILLIS, Long.class);
 						filter.setBeforeDateMillis(beforeDateMillis);
-						filter.setBeforeDate(new Date(beforeDateMillis));
+						if (ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
+							filter.setBeforeDate(new Date(beforeDateMillis));
+						}
 						filter.setOnDateMillis(onDateMillis);
-						filter.setOnDate(new Date(onDateMillis));
+						if (ValidationUtils.checkObjectAvailability(onDateMillis)) {
+							filter.setOnDate(new Date(onDateMillis));
+						}
 						filter.setAfterDateMillis(afterDateMillis);
-						filter.setAfterDate(new Date(afterDateMillis));
+						if (ValidationUtils.checkObjectAvailability(afterDateMillis)) {
+							filter.setAfterDate(new Date(afterDateMillis));
+						}
 						break;
 					}
 					case COLUMN_FILTER_MAPPING_NUMBER : {
