@@ -58,11 +58,8 @@ import com.webservices.rest.AbstractRestWebservice;
 public class RegisteredTutorRestService extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 	
 	private Long tutorId;
-	private String allIdsList;
-	private String comments;
 	private Long bankAccountId;
 	private RegisteredTutor registeredTutorObject;
-	private Long parentId;
 	
 	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -484,39 +481,6 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	}
-	
-	private void handleAllIds() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkStringAvailability(this.allIdsList) || !ValidationUtils.checkNonEmptyList(Arrays.asList(this.allIdsList.split(SEMICOLON)))) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	} 
-	
-	private void handleComments() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkStringAvailability(this.comments)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_COMMENTS_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	}
-	
-	private void handleParentId() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

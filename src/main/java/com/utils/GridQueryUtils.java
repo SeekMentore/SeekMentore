@@ -320,7 +320,7 @@ public class GridQueryUtils implements GridComponentConstants {
 		if (ValidationUtils.checkStringAvailability(filterQueryString)) {
 			completeFilterQuery += WHITESPACE + filterQueryString;
 			if (ValidationUtils.checkStringAvailability(additionalFilterQueryString)) {
-				additionalFilterQueryString = additionalFilterQueryString.replace(WHERE_CLAUSE, AND_CLAUSE);
+				additionalFilterQueryString = additionalFilterQueryString.replaceFirst(WHERE_CLAUSE, AND_CLAUSE);
 			}
 		}
 		if (ValidationUtils.checkStringAvailability(additionalFilterQueryString)) {
@@ -331,16 +331,16 @@ public class GridQueryUtils implements GridComponentConstants {
 		if (ValidationUtils.checkStringAvailability(sorterQueryString)) {
 			completeSorterQuery += WHITESPACE + sorterQueryString;
 			if (ValidationUtils.checkStringAvailability(additionalSorterQueryString)) {
-				additionalSorterQueryString = additionalSorterQueryString.replace(ORDER_BY_CLAUSE, COMMA);
+				additionalSorterQueryString = additionalSorterQueryString.replaceFirst(ORDER_BY_CLAUSE, COMMA);
 			}
 			if (ValidationUtils.checkStringAvailability(existingSorterQueryString)) {
-				existingSorterQueryString = existingSorterQueryString.replace(ORDER_BY_CLAUSE, COMMA);
+				existingSorterQueryString = existingSorterQueryString.replaceFirst(ORDER_BY_CLAUSE, COMMA);
 			}
 		}
 		if (ValidationUtils.checkStringAvailability(additionalSorterQueryString)) {
 			completeSorterQuery += WHITESPACE + additionalSorterQueryString;
 			if (ValidationUtils.checkStringAvailability(existingSorterQueryString)) {
-				existingSorterQueryString = existingSorterQueryString.replace(ORDER_BY_CLAUSE, COMMA);
+				existingSorterQueryString = existingSorterQueryString.replaceFirst(ORDER_BY_CLAUSE, COMMA);
 			}
 		}
 		if (ValidationUtils.checkStringAvailability(existingSorterQueryString)) {

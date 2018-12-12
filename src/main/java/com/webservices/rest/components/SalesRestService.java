@@ -1,5 +1,6 @@
 package com.webservices.rest.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,12 @@ import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.EnquiryConstants;
+import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.model.components.DemoTracker;
@@ -46,13 +49,12 @@ import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
-@Path("/sales") 
-public class SalesRestService extends AbstractRestWebservice implements RestMethodConstants {
+@Path(RestPathConstants.REST_SERVICE_PATH_SALES) 
+public class SalesRestService extends AbstractRestWebservice implements SalesConstants, RestMethodConstants {
 	
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
-	private Long parentId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	
@@ -134,6 +136,32 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnEnquiry (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getEnquiryService().takeActionOnEnquiry(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -266,10 +294,11 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
-		enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
+		this.enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			gridComponent.setAdditionalFilterQueryString("WHERE TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = "+this.enquiryId+")");
 			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(registeredTutorsList, gridComponent));
@@ -281,37 +310,32 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path("/mapRegisteredTutors")
+	@Path(REST_METHOD_NAME_MAP_REGISTERED_TUTORS)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapRegisteredTutors (
-			@FormParam("enquiryId") final String enquiryId,
-			@FormParam("allIdsList") final String allIdsList,
-			@FormParam("comments") final String comments,
+			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_MAP_REGISTERED_TUTORS;
+		this.allIdsList = allIdsList;
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getEnquiryService().mapRegisteredTutors(Long.parseLong(parentId), Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
-	@Path("/mapRegisteredTutor")
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String mapRegisteredTutor (
-			@FormParam("enquiryId") final String enquiryId,
-			@FormParam("tutorId") final String tutorId,
-			@FormParam("comments") final String comments,
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids mapped "+tutorId+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -342,34 +366,26 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path("/unmapRegisteredTutors")
+	@Path(REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String unmapRegisteredTutors (
-			@FormParam("allIdsList") final String allIdsList,
-			@FormParam("comments") final String comments,
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-	}
-	
-	@Path("/unmapRegisteredTutor")
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String unmapRegisteredTutor (
-			@FormParam("tutorMapperId") final String tutorMapperId,
-			@FormParam("comments") final String comments,
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids mapped "+tutorMapperId+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS;
+		this.allIdsList = allIdsList;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getEnquiryService().unmapRegisteredTutors(Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path("/mappedTutorCheckDataAccess")
@@ -413,10 +429,10 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST)
+	@Path(REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String allPendingMappedTutorsList (
+	public String pendingMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -425,12 +441,12 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST;
+		this.methodName = REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -441,10 +457,10 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST)
+	@Path(REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String allDemoReadyMappedTutorsList (
+	public String demoReadyMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -453,12 +469,12 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST;
+		this.methodName = REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -469,10 +485,10 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST)
+	@Path(REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String allDemoScheduledMappedTutorsList (
+	public String demoScheduledMappedTutorsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -481,16 +497,42 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST;
+		this.methodName = REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnMappedTutor (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getEnquiryService().takeActionOnTutorMapper(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -803,9 +845,9 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 			case REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST :
 			case REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST :
 			case REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST :
-			case REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST : 
-			case REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST : 
-			case REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
+			case REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : 
+			case REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : 
+			case REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_SCHEDULED_DEMO_LIST : 
 			case REST_METHOD_NAME_RESCHEDULED_DEMO_LIST : 
 			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
@@ -838,18 +880,45 @@ public class SalesRestService extends AbstractRestWebservice implements RestMeth
 				handleTutorMapperSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR : {
+				handleTakeAction();
+				break;
+			}
+			case REST_METHOD_NAME_MAP_REGISTERED_TUTORS : {
+				handleParentId();
+				handleAllIds();
+			}
+			case REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS : {
+				handleAllIds();
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleParentId() throws Exception {
+	public void handleTakeAction() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+		super.handleTakeAction();
+		if (this.securityPassed) {
+			switch(button) {
+				case BUTTON_ACTION_TO_BE_MAPPED : 
+				case BUTTON_ACTION_DEMO_READY : {
+					break;
+				}
+				case BUTTON_ACTION_ABORTED : 
+				case BUTTON_ACTION_PENDING : {
+					handleComments();
+					break;
+				}
+				default : {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							AdminConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN,
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+					break;
+				}
+			}
 		}
 	}
 	

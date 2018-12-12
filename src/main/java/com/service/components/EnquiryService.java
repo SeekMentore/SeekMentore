@@ -3,6 +3,7 @@ package com.service.components;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.EnquiryConstants;
+import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
@@ -39,7 +41,7 @@ import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE)
-public class EnquiryService implements EnquiryConstants {
+public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -559,38 +561,39 @@ public class EnquiryService implements EnquiryConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
 	}
 	
-	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final String baseQuery = queryMapperService.getQuerySQL("sales-tutor-mapper", "selectTutorMapper");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingFilter");
-		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingSorter");
-		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_ALL_PENDING_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", "PENDING");
+	@Transactional
+	public void takeActionOnEnquiry(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("sales-enquiry", "updateEnquiry"));
+		query.append(queryMapperService.getQuerySQL("sales-enquiry", "updateEnquiryMatchStatus"));
+		String matchStatus = EMPTY_STRING;
+		switch(button) {
+			case BUTTON_ACTION_TO_BE_MAPPED : {
+				matchStatus = MATCH_STATUS_TO_BE_MAPPED;
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_ALL_DEMO_READY_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", "DEMO_READY");
+			case BUTTON_ACTION_ABORTED : {
+				matchStatus = MATCH_STATUS_ABORTED;
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_ALL_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", "DEMO_SCHEDULED");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentEnquiryAllMappedTutors");
-				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorAllMappingFilter");
-				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+			case BUTTON_ACTION_PENDING : {
+				matchStatus = MATCH_STATUS_PENDING;
 				break;
 			}
 		}
-		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String enquiryId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("matchStatus", matchStatus);
+			paramsMap.put("enquiryId", enquiryId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
 	}
-
+	
+	@Transactional
 	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE ENQUIRIES SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
@@ -657,6 +660,96 @@ public class EnquiryService implements EnquiryConstants {
 		}
 	}
 	
+	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		final String baseQuery = queryMapperService.getQuerySQL("sales-tutor-mapper", "selectTutorMapper");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingSorter");
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", MATCH_STATUS_PENDING);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", MATCH_STATUS_DEMO_READY);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
+				paramsMap.put("mappingStatus", MATCH_STATUS_DEMO_SCHEDULED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentEnquiryAllMappedTutors");
+				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorAllMappingFilter");
+				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				break;
+			}
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
+	}
+	
+	@Transactional
+	public void mapRegisteredTutors(final Long enquiryId, final List<String> idList, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<TutorMapper> tutorMapperList = new LinkedList<TutorMapper>();
+		for (final String tutorId : idList) {
+			final TutorMapper tutorMapperObject = new TutorMapper();
+			tutorMapperObject.setEnquiryId(enquiryId);
+			tutorMapperObject.setTutorId(Long.valueOf(tutorId));
+			tutorMapperObject.setMappingStatus(MATCH_STATUS_PENDING);
+			tutorMapperObject.setWhoActed(activeUser.getUserId());
+			tutorMapperObject.setIsDemoScheduled(NO);
+			tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
+			tutorMapperObject.setEntryDateMillis(currentTimestamp.getTime());
+			tutorMapperList.add(tutorMapperObject);
+		}
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "insertTutorMapper", tutorMapperList);
+	}
+	
+	@Transactional
+	public void unmapRegisteredTutors(final List<String> idList, final User activeUser) throws Exception {
+		final List<TutorMapper> tutorMapperList = new LinkedList<TutorMapper>();
+		for (final String tutorMapperId : idList) {
+			final TutorMapper tutorMapperObject = new TutorMapper();
+			tutorMapperObject.setTutorMapperId(Long.valueOf(tutorMapperId));
+			tutorMapperList.add(tutorMapperObject);
+		}
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "deleteTutorMapper", tutorMapperList);
+	}
+	
+	@Transactional
+	public void takeActionOnTutorMapper(final String button, final List<String> idList, final String comments, final User activeUser) {
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapper"));
+		query.append(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapperMappingStatus"));
+		String mappingStatus = EMPTY_STRING;
+		switch(button) {
+			case BUTTON_ACTION_DEMO_READY : {
+				mappingStatus = MATCH_STATUS_DEMO_READY;
+				break;
+			}
+			case BUTTON_ACTION_PENDING : {
+				mappingStatus = MATCH_STATUS_PENDING;
+				break;
+			}
+		}
+		final String baseQuery = query.toString();
+		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		for (final String tutorMapperId : idList) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", activeUser.getUserId());
+			paramsMap.put("remarks", comments);
+			paramsMap.put("mappingStatus", mappingStatus);
+			paramsMap.put("tutorMapperId", tutorMapperId);
+			paramsList.add(paramsMap);
+		}
+		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
 	public void updateTutorMapperRecord(final TutorMapper tutorMapperObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE TUTOR_MAPPER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();

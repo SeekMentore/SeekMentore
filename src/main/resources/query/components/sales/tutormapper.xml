@@ -31,4 +31,19 @@
 	<query type="sorter" id="tutorMapperExistingSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
+	<query type="insert" id="insertTutorMapper" paramClass="com.model.components.TutorMapper">
+		INSERT INTO TUTOR_MAPPER
+			(ENQUIRY_ID, TUTOR_ID, MAPPING_STATUS, WHO_ACTED, IS_DEMO_SCHEDULED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
+		VALUES
+			(:enquiryId, :tutorId, :mappingStatus, :whoActed, :isDemoScheduled, :adminActionDateMillis, :entryDateMillis)
+	</query>
+	<query type="delete" id="deleteTutorMapper" paramClass="com.model.components.TutorMapper">
+		DELETE FROM TUTOR_MAPPER WHERE TUTOR_MAPPER_ID = :tutorMapperId
+	</query>
+	<query type="update" id="updateTutorMapper" paramClass="com.model.components.TutorMapper">
+		UPDATE TUTOR_MAPPER SET
+	</query>
+	<query type="update" id="updateTutorMapperMappingStatus" paramClass="com.model.components.TutorMapper">
+		MAPPING_STATUS = :mappingStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_ACTION_REMARKS = :remarks WHERE TUTOR_MAPPER_ID = :tutorMapperId
+	</query>
 </queryMapper>

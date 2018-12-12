@@ -3,4 +3,5 @@
 	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
 	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>
 	<namespace name="sales-tutor-mapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
+	<namespace name="sales-demo" mapperFilePath="query/components/sales/demo.xml"/>
 </queryNamespace>

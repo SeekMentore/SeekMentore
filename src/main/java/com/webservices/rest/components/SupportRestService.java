@@ -58,16 +58,12 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_SUPPORT) 
 public class SupportRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
-	private String allIdsList;
-	private String comments;
-	private String grid;
 	private String button;
 	private BecomeTutor becomeTutorObject;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
 	private SubmitQuery submitQueryObject;
 	private Complaint complaintObject;
-	private Long parentId;
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST)
 	@Produces({MediaType.APPLICATION_JSON})
@@ -1455,7 +1451,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 				break;
 			}
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST : {
-				handleDownload();
+				handleGridDownload();
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD : {
@@ -1477,16 +1473,10 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	private void handleTakeAction() throws Exception {
+	public void handleTakeAction() throws Exception {
 		this.securityPassed = true;
-		handleAllIds();
-		if (!ValidationUtils.checkStringAvailability(this.button)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_BUTTON_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		} else {
+		super.handleTakeAction();
+		if (this.securityPassed) {
 			switch(button) {
 				case AdminConstants.BUTTON_ACTION_CONTACTED : 
 				case AdminConstants.BUTTON_ACTION_VERIFY:
@@ -1512,50 +1502,6 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 					break;
 				}
 			}
-		}
-	}
-	
-	private void handleAllIds() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkStringAvailability(this.allIdsList) || !ValidationUtils.checkNonEmptyList(Arrays.asList(this.allIdsList.split(SEMICOLON)))) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	} 
-	
-	private void handleComments() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkStringAvailability(this.comments)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_COMMENTS_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	} 
-	
-	private void handleDownload() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkStringAvailability(this.grid)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_GRID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	}
-	
-	private void handleParentId() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
 		}
 	}
 	

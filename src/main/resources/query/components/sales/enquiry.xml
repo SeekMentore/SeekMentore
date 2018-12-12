@@ -23,4 +23,10 @@
 	<query type="sorter" id="enquiryExistingSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
+	<query type="update" id="updateEnquiry" paramClass="com.model.components.Enquiry">
+		UPDATE ENQUIRIES SET
+	</query>
+	<query type="update" id="updateEnquiryMatchStatus" paramClass="com.model.components.Enquiry">
+		MATCH_STATUS = :matchStatus, WHO_ACTED = :userId, LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_REMARKS = :remarks WHERE ENQUIRY_ID = :enquiryId
+	</query>
 </queryMapper>

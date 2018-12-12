@@ -45,7 +45,6 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	
 	private Long customerId;
 	private SubscribedCustomer subscribedCustomerObject;
-	private Long parentId;
 	
 	@Path(REST_METHOD_NAME_CURRENT_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -170,17 +169,6 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			this.securityPassed = false;
 		}
 	} 
-	
-	private void handleParentId() throws Exception {
-		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
-		}
-	}
 	
 	private void createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {

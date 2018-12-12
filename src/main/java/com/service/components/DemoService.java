@@ -25,6 +25,7 @@ import com.model.components.TutorMapper;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.DemoTrackerRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.QueryMapperService;
 import com.utils.DateUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
@@ -49,6 +50,9 @@ public class DemoService implements DemoTrackerConstants {
 	
 	@Autowired
 	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
+	
+	@Autowired
+	private QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -434,30 +438,13 @@ public class DemoService implements DemoTrackerConstants {
 	/**********************************************************************************************/
 	public List<DemoTracker> getDemoList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final String baseQuery = "SELECT "
-				+ "D.*, " 
-				+ "C.NAME AS CUSTOMER_NAME, " 
-				+ "C.EMAIL_ID AS CUSTOMER_EMAIL, " 
-				+ "C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, " 
-				+ "T.NAME AS TUTOR_NAME, " 
-				+ "T.EMAIL_ID AS TUTOR_EMAIL, " 
-				+ "T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER, " 
-				+ "EN.SUBJECT AS ENQUIRY_SUBJECT,  " 
-				+ "EN.GRADE AS ENQUIRY_GRADE,  "
-				+ "EN.LOCATION_DETAILS AS ENQUIRY_LOCATION,  " 
-				+ "EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE,  "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = D.WHO_ACTED), D.WHO_ACTED) AS WHO_ACTED_NAME " 
-				+ "FROM DEMO_TRACKER D "
-				+ "INNER JOIN TUTOR_MAPPER TM ON D.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID "
-				+ "INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID "
-				+ "INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID " 
-				+ "INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID";
-		String existingFilterQueryString = "WHERE D.DEMO_STATUS = :demoStatus";
-		final String existingSorterQueryString = "ORDER BY ENTRY_DATE_MILLIS";	
+		final String baseQuery = queryMapperService.getQuerySQL("sales-demo", "selectDemo");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
-				existingFilterQueryString += " AND TM.TUTOR_ID = :tutorId";
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}

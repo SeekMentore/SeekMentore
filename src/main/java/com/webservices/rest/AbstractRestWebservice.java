@@ -1,6 +1,7 @@
 package com.webservices.rest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.constants.ValidationConstants;
+import com.constants.components.AdminConstants;
+import com.constants.components.ResponseMapConstants;
+import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
 import com.utils.ExceptionUtils;
 import com.utils.JSONUtils;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
 
-public abstract class AbstractRestWebservice extends AbstractWebservice {
+public abstract class AbstractRestWebservice extends AbstractWebservice implements ResponseMapConstants {
 	
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -24,6 +28,11 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 	protected String methodName;
 	protected boolean securityPassed = false;
 	protected List<String> changedAttributes = new ArrayList<String>();
+	protected Long parentId;
+	protected String allIdsList;
+	protected String comments;
+	protected String button;
+	protected String grid;
 	
 	protected abstract void doSecurity(final HttpServletRequest request) throws Exception;
 	
@@ -94,5 +103,61 @@ public abstract class AbstractRestWebservice extends AbstractWebservice {
 			LoggerUtils.logOnConsole("JSON Object 'property' is NULL >> " + propertyName);
 		}
 		return null;
+	}
+	
+	protected void handleParentId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	protected void handleTakeAction() throws Exception {
+		this.securityPassed = true;
+		handleAllIds();
+		if (!ValidationUtils.checkStringAvailability(this.button)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_BUTTON_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	protected void handleAllIds() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.allIdsList) || !ValidationUtils.checkNonEmptyList(Arrays.asList(this.allIdsList.split(SEMICOLON)))) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
+	
+	protected void handleComments() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.comments)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_COMMENTS_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	protected void handleGridDownload() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.grid)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_GRID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 }
