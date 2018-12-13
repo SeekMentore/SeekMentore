@@ -755,6 +755,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_ID = :tutorMapperId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		Boolean isTutorContacted = false;
+		Boolean isClientContacted = false;
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
 				switch(attributeName) {
@@ -773,11 +775,76 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 						paramsMap.put("tutorNegotiationRemarks", tutorMapperObject.getTutorNegotiationRemarks());
 						break;
 					}
+					case "isTutorAgreed" : {
+						updateAttributesQuery.add("IS_TUTOR_AGREED = :isTutorAgreed");
+						paramsMap.put("isTutorAgreed", tutorMapperObject.getIsTutorAgreed());
+						isTutorContacted = true;
+						break;
+					}
+					case "tutorResponse" : {
+						updateAttributesQuery.add("TUTOR_RESPONSE = :tutorResponse");
+						paramsMap.put("tutorResponse", tutorMapperObject.getTutorResponse());
+						break;
+					}
+					case "adminRemarksForTutor" : {
+						updateAttributesQuery.add("ADMIN_REMARKS_FOR_TUTOR = :adminRemarksForTutor");
+						paramsMap.put("adminRemarksForTutor", tutorMapperObject.getAdminRemarksForTutor());
+						break;
+					}
+					case "isTutorRejectionValid" : {
+						updateAttributesQuery.add("IS_TUTOR_REJECTION_VALID = :isTutorRejectionValid");
+						paramsMap.put("isTutorRejectionValid", tutorMapperObject.getIsTutorRejectionValid());
+						break;
+					}
+					case "adminTutorRejectionValidityResponse" : {
+						updateAttributesQuery.add("ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE = :adminTutorRejectionValidityResponse");
+						paramsMap.put("adminTutorRejectionValidityResponse", tutorMapperObject.getAdminTutorRejectionValidityResponse());
+						break;
+					}
+					case "isClientAgreed" : {
+						updateAttributesQuery.add("IS_CLIENT_AGREED = :isClientAgreed");
+						paramsMap.put("isClientAgreed", tutorMapperObject.getIsClientAgreed());
+						isClientContacted = true;
+						break;
+					}
+					case "clientResponse" : {
+						updateAttributesQuery.add("CLIENT_RESPONSE = :clientResponse");
+						paramsMap.put("clientResponse", tutorMapperObject.getClientResponse());
+						break;
+					}
+					case "adminRemarksForClient" : {
+						updateAttributesQuery.add("ADMIN_REMARKS_FOR_CLIENT = :adminRemarksForClient");
+						paramsMap.put("adminRemarksForClient", tutorMapperObject.getAdminRemarksForClient());
+						break;
+					}
+					case "isClientRejectionValid" : {
+						updateAttributesQuery.add("IS_CLIENT_REJECTION_VALID = :isClientRejectionValid");
+						paramsMap.put("isClientRejectionValid", tutorMapperObject.getIsClientRejectionValid());
+						break;
+					}
+					case "adminClientRejectionValidityResponse" : {
+						updateAttributesQuery.add("ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE = :adminClientRejectionValidityResponse");
+						paramsMap.put("adminClientRejectionValidityResponse", tutorMapperObject.getAdminClientRejectionValidityResponse());
+						break;
+					}
+					case "adminActionRemarks" : {
+						updateAttributesQuery.add("ADMIN_ACTION_REMARKS = :adminActionRemarks");
+						paramsMap.put("adminActionRemarks", tutorMapperObject.getAdminActionRemarks());
+						break;
+					}
 				}
 			}
 		}
 		paramsMap.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			if (isTutorContacted) {
+				updateAttributesQuery.add("IS_TUTOR_CONTACTED = 'Y'");
+				updateAttributesQuery.add("TUTOR_CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			}
+			if (isClientContacted) {
+				updateAttributesQuery.add("IS_CLIENT_CONTACTED = 'Y'");
+				updateAttributesQuery.add("CLIENT_CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			}
 			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
 			paramsMap.put("userId", activeUser.getUserId());

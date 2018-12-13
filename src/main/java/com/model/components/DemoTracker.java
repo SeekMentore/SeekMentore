@@ -9,6 +9,7 @@ import com.utils.ValidationUtils;
 public class DemoTracker extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
+	
 	private Long demoTrackerId;
 	private Long tutorMapperId;
 	private Long demoDateAndTimeMillis;
@@ -207,72 +208,36 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 		this.customerName = customerName;
 	}
 
-	/**
-	 * @return the tutorName
-	 */
 	public String getTutorName() {
 		return tutorName;
 	}
 
-	/**
-	 * @param tutorName the tutorName to set
-	 */
 	public void setTutorName(String tutorName) {
 		this.tutorName = tutorName;
 	}
 
-	/**
-	 * @return the adminFinalizingRemarks
-	 */
 	public String getAdminFinalizingRemarks() {
 		return adminFinalizingRemarks;
 	}
 
-	/**
-	 * @param adminFinalizingRemarks the adminFinalizingRemarks to set
-	 */
 	public void setAdminFinalizingRemarks(String adminFinalizingRemarks) {
 		this.adminFinalizingRemarks = adminFinalizingRemarks;
 	}
 	
-	/**
-	 * @return the reschedulingRemarks
-	 */
 	public String getReschedulingRemarks() {
 		return reschedulingRemarks;
 	}
 
-	/**
-	 * @param reschedulingRemarks the reschedulingRemarks to set
-	 */
 	public void setReschedulingRemarks(String reschedulingRemarks) {
 		this.reschedulingRemarks = reschedulingRemarks;
 	}
 	
-	/**
-	 * @return the demoDateAndTimeMillis
-	 */
 	public Long getDemoDateAndTimeMillis() {
 		return demoDateAndTimeMillis;
 	}
 
-	/**
-	 * @param demoDateAndTimeMillis the demoDateAndTimeMillis to set
-	 */
 	public void setDemoDateAndTimeMillis(Long demoDateAndTimeMillis) {
 		this.demoDateAndTimeMillis = demoDateAndTimeMillis;
-	}
-
-	@Override
-	public Object[] getReportHeaders(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] getReportRecords(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Long getAdminActionDateMillis() {
@@ -355,6 +320,24 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 		this.enquiryPreferredTeachingType = enquiryPreferredTeachingType;
 	}
 	
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -396,13 +379,5 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 			case "tutorEmail" : return "TUTOR_EMAIL";
 		}
 		return EMPTY_STRING;
-	}
-
-	public Long getEntryDateMillis() {
-		return entryDateMillis;
-	}
-
-	public void setEntryDateMillis(Long entryDateMillis) {
-		this.entryDateMillis = entryDateMillis;
 	}
 }

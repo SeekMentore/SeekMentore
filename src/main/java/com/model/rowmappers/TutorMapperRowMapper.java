@@ -20,6 +20,9 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		tutorMapperObject.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryLocation"), String.class));
 		tutorMapperObject.setEnquiryPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryPreferredTeachingType"), String.class));
+		tutorMapperObject.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
+		tutorMapperObject.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));
+		tutorMapperObject.setEnquiryClientNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryClientNegotiationRemarks"), String.class));
 		tutorMapperObject.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerName"), String.class));
 		tutorMapperObject.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerEmail"), String.class));
 		tutorMapperObject.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerContactNumber"), String.class));

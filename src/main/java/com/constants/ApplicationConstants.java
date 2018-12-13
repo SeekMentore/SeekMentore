@@ -27,6 +27,8 @@ public interface ApplicationConstants {
 	
 	String YES = "Y";
 	String NO = "N";
+	String YES_TEXT = "Yes";
+	String NO_TEXT = "No";
 	
 	String COMPANY_NAME = "Seek Mentore";
 	String COMPANY_NAME_IN_QUOTES = INVERTED_COMMA + COMPANY_NAME + INVERTED_COMMA;

@@ -16,18 +16,13 @@ public class SelectLookup implements Serializable, SelectLookupConstants {
 	
 	public SelectLookup() {}
 	
-	public SelectLookup (String value) {
+	public SelectLookup(String value) {
 		this.value = value;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof SelectLookup && obj != null && this.value.equals(((SelectLookup)obj).getValue());
-	}
-	
-	@Override
-	public int hashCode() {
-		return this.value.hashCode();
+	public SelectLookup(String value, String label) {
+		this.value = value;
+		this.label = label;
 	}
 	
 	public String getValue() {
@@ -69,5 +64,15 @@ public class SelectLookup implements Serializable, SelectLookupConstants {
 
 	public void setOrderInCategory(String orderInCategory) {
 		this.orderInCategory = orderInCategory;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof SelectLookup && obj != null && this.value.equals(((SelectLookup)obj).getValue());
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.value.hashCode();
 	}
 }

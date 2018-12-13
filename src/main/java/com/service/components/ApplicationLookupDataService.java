@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import com.utils.QueryUtils;
 @Service(BeanConstants.BEAN_NAME_APPLICATION_LOOKUP_DATA_SERVICE)
 public class ApplicationLookupDataService implements SelectLookupConstants {
 	
+	private List<SelectLookup> yesNoLookupData;
 	private List<SelectLookup> genderLookupData;
 	private List<SelectLookup> qualificationLookupData;
 	private List<SelectLookup> professionLookupData;
@@ -36,6 +38,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 		final String baseQuery = "SELECT LT.* FROM SELECT_LOOKUP_TABLE_NAME LT";
 		final String existingFilterQueryString = "WHERE LT.HIDDEN IS NULL";
 		final String existingSorterQueryString = "ORDER BY LT.ORDER_OF_CATEGORY, LT.ORDER_IN_CATEGORY";
+		this.yesNoLookupData = new LinkedList<SelectLookup>();
+		yesNoLookupData.add(new SelectLookup(YES, YES_TEXT));
+		yesNoLookupData.add(new SelectLookup(NO, NO_TEXT));
 		this.genderLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_GENDER_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.qualificationLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.professionLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
@@ -50,6 +55,7 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
 		switch(selectLookUpTable) {
+			case SELECT_LOOKUP_TABLE_YES_NO_LOOKUP : return this.yesNoLookupData;
 			case SELECT_LOOKUP_TABLE_GENDER_LOOKUP : return this.genderLookupData;
 			case SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP : return this.qualificationLookupData;
 			case SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP : return this.professionLookupData;

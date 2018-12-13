@@ -10,12 +10,16 @@ import com.utils.ValidationUtils;
 public class TutorMapper extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
+	
 	private Long tutorMapperId;
 	private Long enquiryId;
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
 	private String enquiryPreferredTeachingType;
+	private Integer enquiryQuotedClientRate ;
+	private Integer enquiryNegotiatedRateWithClient;
+	private String enquiryClientNegotiationRemarks;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
@@ -250,18 +254,6 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.mappingStatus = mappingStatus;
 	}
 	
-	@Override
-	public Object[] getReportHeaders(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] getReportRecords(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Long getTutorContactedDateMillis() {
 		return tutorContactedDateMillis;
 	}
@@ -294,52 +286,6 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.whoActedName = whoActedName;
 	}
 	
-	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
-			case "enquiryId" : return "ENQUIRY_ID";
-			case "enquirySubject" : return "ENQUIRY_SUBJECT";
-			case "enquiryGrade" : return "ENQUIRY_GRADE";
-			case "enquiryLocation" : return "ENQUIRY_LOCATION";
-			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
-			case "customerName" : return "CUSTOMER_NAME";
-			case "customerEmail" : return "CUSTOMER_EMAIL";
-			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
-			case "tutorId" : return "TUTOR_ID";
-			case "tutorName" : return "TUTOR_NAME";
-			case "tutorEmail" : return "TUTOR_EMAIL";
-			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
-			case "quotedTutorRate" : return "QUOTED_TUTOR_RATE";
-			case "negotiatedRateWithTutor" : return "NEGOTIATED_RATE_WITH_TUTOR";
-			case "tutorNegotiationRemarks" : return "TUTOR_NEGOTIATION_REMARKS";
-			case "isTutorContacted" : return "IS_TUTOR_CONTACTED";
-			case "tutorContactedDateMillis" : return "TUTOR_CONTACTED_DATE_MILLIS";
-			case "isTutorAgreed" : return "IS_TUTOR_AGREED";
-			case "isTutorRejectionValid" : return "IS_TUTOR_REJECTION_VALID";
-			case "adminTutorRejectionValidityResponse" : return "ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE";
-			case "tutorResponse" : return "TUTOR_RESPONSE";
-			case "adminRemarksForTutor" : return "ADMIN_REMARKS_FOR_TUTOR";
-			case "isClientContacted" : return "IS_CLIENT_CONTACTED";
-			case "clientContactedDateMillis" : return "CLIENT_CONTACTED_DATE_MILLIS";
-			case "isClientAgreed" : return "IS_CLIENT_AGREED";
-			case "clientResponse" : return "CLIENT_RESPONSE";
-			case "isClientRejectionValid" : return "IS_CLIENT_REJECTION_VALID";
-			case "adminClientRejectionValidityResponse" : return "ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE";
-			case "adminRemarksForClient" : return "ADMIN_REMARKS_FOR_CLIENT";
-			case "adminActionDateMillis" : return "ADMIN_ACTION_DATE_MILLIS";
-			case "adminActionRemarks" : return "ADMIN_ACTION_REMARKS";
-			case "whoActed" : return "WHO_ACTED";
-			case "whoActedName" : return "WHO_ACTED_NAME";
-			case "isDemoScheduled" : return "IS_DEMO_SCHEDULED";
-			case "mappingStatus" : return "MAPPING_STATUS";
-			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
-		}
-		return EMPTY_STRING;
-	}
-
 	public Long getEntryDateMillis() {
 		return entryDateMillis;
 	}
@@ -402,5 +348,88 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 
 	public void setCustomerContactNumber(String customerContactNumber) {
 		this.customerContactNumber = customerContactNumber;
+	}
+
+	public Integer getEnquiryQuotedClientRate() {
+		return enquiryQuotedClientRate;
+	}
+
+	public void setEnquiryQuotedClientRate(Integer enquiryQuotedClientRate) {
+		this.enquiryQuotedClientRate = enquiryQuotedClientRate;
+	}
+
+	public Integer getEnquiryNegotiatedRateWithClient() {
+		return enquiryNegotiatedRateWithClient;
+	}
+
+	public void setEnquiryNegotiatedRateWithClient(Integer enquiryNegotiatedRateWithClient) {
+		this.enquiryNegotiatedRateWithClient = enquiryNegotiatedRateWithClient;
+	}
+
+	public String getEnquiryClientNegotiationRemarks() {
+		return enquiryClientNegotiationRemarks;
+	}
+
+	public void setEnquiryClientNegotiationRemarks(String enquiryClientNegotiationRemarks) {
+		this.enquiryClientNegotiationRemarks = enquiryClientNegotiationRemarks;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySubject" : return "ENQUIRY_SUBJECT";
+			case "enquiryGrade" : return "ENQUIRY_GRADE";
+			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
+			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
+			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
+			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorId" : return "TUTOR_ID";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "quotedTutorRate" : return "QUOTED_TUTOR_RATE";
+			case "negotiatedRateWithTutor" : return "NEGOTIATED_RATE_WITH_TUTOR";
+			case "tutorNegotiationRemarks" : return "TUTOR_NEGOTIATION_REMARKS";
+			case "isTutorContacted" : return "IS_TUTOR_CONTACTED";
+			case "tutorContactedDateMillis" : return "TUTOR_CONTACTED_DATE_MILLIS";
+			case "isTutorAgreed" : return "IS_TUTOR_AGREED";
+			case "isTutorRejectionValid" : return "IS_TUTOR_REJECTION_VALID";
+			case "adminTutorRejectionValidityResponse" : return "ADMIN_TUTOR_REJECTION_VALIDITY_RESPONSE";
+			case "tutorResponse" : return "TUTOR_RESPONSE";
+			case "adminRemarksForTutor" : return "ADMIN_REMARKS_FOR_TUTOR";
+			case "isClientContacted" : return "IS_CLIENT_CONTACTED";
+			case "clientContactedDateMillis" : return "CLIENT_CONTACTED_DATE_MILLIS";
+			case "isClientAgreed" : return "IS_CLIENT_AGREED";
+			case "clientResponse" : return "CLIENT_RESPONSE";
+			case "isClientRejectionValid" : return "IS_CLIENT_REJECTION_VALID";
+			case "adminClientRejectionValidityResponse" : return "ADMIN_CLIENT_REJECTION_VALIDITY_RESPONSE";
+			case "adminRemarksForClient" : return "ADMIN_REMARKS_FOR_CLIENT";
+			case "adminActionDateMillis" : return "ADMIN_ACTION_DATE_MILLIS";
+			case "adminActionRemarks" : return "ADMIN_ACTION_REMARKS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "isDemoScheduled" : return "IS_DEMO_SCHEDULED";
+			case "mappingStatus" : return "MAPPING_STATUS";
+			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+		}
+		return EMPTY_STRING;
 	}
 }

@@ -9,6 +9,7 @@ import com.utils.ValidationUtils;
 public class Enquiry extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
+	
 	private Long enquiryId;
 	private Long customerId;
 	private String customerName;
@@ -189,18 +190,6 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 		this.tutorContactNumber = tutorContactNumber;
 	}
 
-	@Override
-	public Object[] getReportHeaders(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object[] getReportRecords(String reportSwitch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -241,6 +230,24 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 		this.whoActedName = whoActedName;
 	}
 	
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -273,13 +280,5 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 		}
 		return EMPTY_STRING;
-	}
-
-	public Long getEntryDateMillis() {
-		return entryDateMillis;
-	}
-
-	public void setEntryDateMillis(Long entryDateMillis) {
-		this.entryDateMillis = entryDateMillis;
 	}
 }

@@ -1051,6 +1051,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.tutorMapperObject.setQuotedTutorRate(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "quotedTutorRate", Integer.class));
 			this.tutorMapperObject.setNegotiatedRateWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedRateWithTutor", Integer.class));
 			this.tutorMapperObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
+			this.tutorMapperObject.setIsTutorAgreed(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isTutorAgreed", String.class));
+			this.tutorMapperObject.setIsTutorRejectionValid(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isTutorRejectionValid", String.class));
+			this.tutorMapperObject.setTutorResponse(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorResponse", String.class));
+			this.tutorMapperObject.setAdminTutorRejectionValidityResponse(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminTutorRejectionValidityResponse", String.class));
+			this.tutorMapperObject.setAdminRemarksForTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarksForTutor", String.class));
+			this.tutorMapperObject.setIsClientAgreed(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isClientAgreed", String.class));
+			this.tutorMapperObject.setIsClientRejectionValid(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isClientRejectionValid", String.class));
+			this.tutorMapperObject.setClientResponse(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientResponse", String.class));
+			this.tutorMapperObject.setAdminClientRejectionValidityResponse(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminClientRejectionValidityResponse", String.class));
+			this.tutorMapperObject.setAdminRemarksForClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarksForClient", String.class));
+			this.tutorMapperObject.setAdminActionRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminActionRemarks", String.class));
 		}
 	}
 	
@@ -1088,6 +1099,128 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "tutorNegotiationRemarks" : {
+						break;
+					}
+					case "isTutorAgreed" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.tutorMapperObject.getIsTutorAgreed(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Tutor Agreed'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.tutorMapperObject.getIsTutorAgreed()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getTutorResponse())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Tutor Response'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getAdminRemarksForTutor())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Admin Remarks For Tutor'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.tutorMapperObject.getIsTutorRejectionValid(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please select a valid 'Is Tutor Rejection Valid'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								} else {
+									if (NO.equals((this.tutorMapperObject.getIsTutorRejectionValid()))) {
+										if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getAdminTutorRejectionValidityResponse())) {
+											ApplicationUtils.appendMessageInMapAttribute(
+													this.securityFailureResponse, 
+													"Please provide 'Admin Tutor Rejection Validity Response'",
+													RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+											this.securityPassed = false;
+										}
+									}
+								}
+							}
+						}
+						break;
+					}
+					case "tutorResponse" : {
+						break;
+					}
+					case "adminRemarksForTutor" : {
+						break;
+					}
+					case "isTutorRejectionValid" : {
+						break;
+					}
+					case "adminTutorRejectionValidityResponse" : {
+						break;
+					}
+					case "isClientAgreed" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.tutorMapperObject.getIsClientAgreed(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Client Agreed'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.tutorMapperObject.getIsClientAgreed()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getClientResponse())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Client Response'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getAdminRemarksForClient())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Admin Remarks For Client'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.tutorMapperObject.getIsClientRejectionValid(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please select a valid 'Is Client Rejection Valid'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								} else {
+									if (NO.equals((this.tutorMapperObject.getIsTutorRejectionValid()))) {
+										if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getAdminClientRejectionValidityResponse())) {
+											ApplicationUtils.appendMessageInMapAttribute(
+													this.securityFailureResponse, 
+													"Please provide 'Admin Client Rejection Validity Response'",
+													RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+											this.securityPassed = false;
+										}
+									}
+								}
+							}
+						}
+						break;
+					}
+					case "clientResponse" : {
+						break;
+					}
+					case "adminRemarksForClient" : {
+						break;
+					}
+					case "isClientRejectionValid" : {
+						break;
+					}
+					case "adminClientRejectionValidityResponse" : {
+						break;
+					}
+					case "adminActionRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tutorMapperObject.getAdminActionRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please provide 'Admin Action Remarks'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
 						break;
 					}
 					default : {
