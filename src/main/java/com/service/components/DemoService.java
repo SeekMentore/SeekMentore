@@ -442,10 +442,16 @@ public class DemoService implements DemoTrackerConstants {
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingFilter");
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingSorter");
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
 				existingFilterQueryString += queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST : {
+				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
+				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SCHEDULED_DEMO_LIST : {

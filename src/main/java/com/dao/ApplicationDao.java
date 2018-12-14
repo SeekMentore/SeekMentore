@@ -95,8 +95,7 @@ public class ApplicationDao implements ApplicationConstants {
 		} else {
 			params = (Map<String, Object>)paramObject;
 		}
-		final SqlParameterSource parameters = getSqlParameterSource(params);
-		namedParameterJdbcTemplate.update(query, parameters);
+		executeUpdate(query, params);
     }
 	
 	public void executeUpdate(final String query, final Map<String, Object> params) {
@@ -118,8 +117,7 @@ public class ApplicationDao implements ApplicationConstants {
 				paramsList = (List<Map<String, Object>>)paramObjectList;
 			}
 		}
-		final SqlParameterSource[] parametersBatch = getSqlParameterSourceBatch(paramsList);
-		namedParameterJdbcTemplate.batchUpdate(query, parametersBatch);
+		executeBatchUpdate(query, paramsList);
     }
 	
 	public void executeBatchUpdate(final String query, final List<Map<String, Object>> paramsList) {
@@ -127,6 +125,19 @@ public class ApplicationDao implements ApplicationConstants {
 		final SqlParameterSource[] parametersBatch = getSqlParameterSourceBatch(paramsList);
 		namedParameterJdbcTemplate.batchUpdate(query, parametersBatch);
     }
+	
+	@SuppressWarnings("unchecked")
+	public Long insertAndReturnGeneratedKeyWithQueryMapper(final String namespaceName, final String queryId, final Object paramObject) throws Exception {
+		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
+		LoggerUtils.logOnConsole(query);
+		Map<String, Object> params;
+		if (!(paramObject instanceof Map)) {
+			params = queryMapperService.getQueryParams(namespaceName, queryId, paramObject);
+		} else {
+			params = (Map<String, Object>)paramObject;
+		}
+		return insertAndReturnGeneratedKey(query, params);
+	}
 	
 	public Long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);

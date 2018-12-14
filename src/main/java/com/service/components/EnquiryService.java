@@ -16,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.components.DemoTrackerConstants;
 import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
+import com.model.components.DemoTracker;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
@@ -31,14 +33,10 @@ import com.model.rowmappers.EnquiryRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.TutorMapperRowMapper;
-import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
-import com.utils.DateUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
-import com.utils.MailUtils;
 import com.utils.ValidationUtils;
-import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE)
 public class EnquiryService implements EnquiryConstants, SalesConstants {
@@ -54,9 +52,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Autowired
 	private transient TutorService tutorService;
-	
-	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@Autowired
 	private QueryMapperService queryMapperService;
@@ -481,7 +476,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		paramsMap.put("demoDateAndTimeMillis", demoDateAndTime.getTime());
 		applicationDao.executeUpdate("UPDATE TUTOR_MAPPER SET IS_DEMO_SCHEDULED = 'Y', MAPPING_STATUS = 'SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
 		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS) VALUES(:tutorMapperId, :demoDateAndTime, :demoDateAndTimeMillis, 'PENDING')", paramsMap);
-		sendDemoScheduledNotificationEmails(tutorMapperId, demoDateAndTime.getTime());
+		sendDemoScheduledNotificationEmails(tutorMapperId);
 		return response;
 	}
 	
@@ -495,37 +490,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		return applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryRowMapper());
-	}
-	
-	public void sendDemoScheduledNotificationEmails(final Long tutorMapperId, final Long demoTimeInMillis) throws Exception {
-		final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
-		final Enquiry enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoDateAndTimeIST", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(demoTimeInMillis));
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo has been scheduled with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes),
-				null);
-		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo has been scheduled for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
-				null);
 	}
 	
 	/**************************************************************************************************************/
@@ -667,15 +631,15 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", MATCH_STATUS_PENDING);
+				paramsMap.put("mappingStatus", MAPPING_STATUS_PENDING);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", MATCH_STATUS_DEMO_READY);
+				paramsMap.put("mappingStatus", MAPPING_STATUS_DEMO_READY);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
-				paramsMap.put("mappingStatus", MATCH_STATUS_DEMO_SCHEDULED);
+				paramsMap.put("mappingStatus", MAPPING_STATUS_DEMO_SCHEDULED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
@@ -683,9 +647,14 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorAllMappingFilter");
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorMappingFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentCustomerMappingFilter");
+				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
 				break;
 			}
 		}
@@ -700,7 +669,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			final TutorMapper tutorMapperObject = new TutorMapper();
 			tutorMapperObject.setEnquiryId(enquiryId);
 			tutorMapperObject.setTutorId(Long.valueOf(tutorId));
-			tutorMapperObject.setMappingStatus(MATCH_STATUS_PENDING);
+			tutorMapperObject.setMappingStatus(MAPPING_STATUS_PENDING);
 			tutorMapperObject.setWhoActed(activeUser.getUserId());
 			tutorMapperObject.setIsDemoScheduled(NO);
 			tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
@@ -728,11 +697,11 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		String mappingStatus = EMPTY_STRING;
 		switch(button) {
 			case BUTTON_ACTION_DEMO_READY : {
-				mappingStatus = MATCH_STATUS_DEMO_READY;
+				mappingStatus = MAPPING_STATUS_DEMO_READY;
 				break;
 			}
 			case BUTTON_ACTION_PENDING : {
-				mappingStatus = MATCH_STATUS_PENDING;
+				mappingStatus = MAPPING_STATUS_PENDING;
 				break;
 			}
 		}
@@ -851,5 +820,55 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
 		}
+	}
+	
+	@Transactional
+	public void scheduleDemo(final TutorMapper tutorMapperObject, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		tutorMapperObject.setIsDemoScheduled(YES);
+		tutorMapperObject.setMappingStatus(MAPPING_STATUS_DEMO_SCHEDULED);
+		tutorMapperObject.setWhoActed(activeUser.getUserId());
+		tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
+		applicationDao.executeUpdateWithQueryMapper("sales-tutor-mapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
+		final DemoTracker demoTracker = new DemoTracker();
+		demoTracker.setTutorMapperId(tutorMapperObject.getTutorMapperId());
+		demoTracker.setDemoDateAndTimeMillis(tutorMapperObject.getDemoDateAndTimeMillis());
+		demoTracker.setDemoStatus(DemoTrackerConstants.DEMO_STATUS_SCHEDULED);
+		demoTracker.setWhoActed(activeUser.getUserId());
+		demoTracker.setAdminActionDateMillis(currentTimestamp.getTime());
+		demoTracker.setEntryDateMillis(currentTimestamp.getTime());
+		final Long demoTrackerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", "insertDemoTracker", demoTracker);
+		sendDemoScheduledNotificationEmails(demoTrackerId);
+	}
+	
+	public void sendDemoScheduledNotificationEmails(final Long demoTrackerId) throws Exception {
+		/*final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
+		final Enquiry enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
+		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
+		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
+		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		attributes.put("enquiryObject", enquiryObject);
+		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
+		attributes.put("registeredTutorObj", registeredTutorObj);
+		attributes.put("tutorMapperObject", tutorMapperObject);
+		attributes.put("demoDateAndTimeIST", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(demoTimeInMillis));
+		// Tutor Email
+		MailUtils.sendMimeMessageEmail( 
+				registeredTutorObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Your demo has been scheduled with Client - " + subscribedCustomerObj.getName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes),
+				null);
+		// Client Email
+		MailUtils.sendMimeMessageEmail( 
+				subscribedCustomerObj.getEmailId(), 
+				null,
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
+				"Tutor demo has been scheduled for your enquiry", 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
+				null);*/
 	}
 }

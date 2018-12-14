@@ -553,10 +553,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path(REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST)
+	@Path(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentTutorAllMappingList (
+	public String currentTutorMappingList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -565,13 +565,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST;
+		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST, gridComponent);
+			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllMappingList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllMappingList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -582,10 +582,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST)
+	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentTutorAllScheduledDemoList (
+	public String currentCustomerMappingList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -594,13 +594,42 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
+		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST, gridComponent);
+			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllMappingList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllMappingList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String currentTutorScheduledDemoList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllScheduledDemoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllScheduledDemoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -611,19 +640,60 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path("/updateScheduleDemoMappedTutorRecord")
-	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String updateScheduleDemoMappedTutorRecord (
-			@FormDataParam("completeUpdatedRecord") final String completeUpdatedRecord,
-			@FormDataParam("parentId") final String parentId,
+	public String currentCustomerScheduledDemoList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllScheduledDemoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllScheduledDemoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_SCHEDULE_DEMO)
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public String scheduleDemo (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_SCHEDULE_DEMO;
+		createTutorMapperSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
+			getEnquiryService().scheduleDemo(this.tutorMapperObject, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Scheduled Demo Successfully");
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_SCHEDULED_DEMO_LIST)
@@ -865,9 +935,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				handleSelectedEnquiryDataGridView();
 				break;
 			}
-			case REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST : 
-			case REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST : {
+			case REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST : 
+			case REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST : {
 				handleSelectedTutorDataGridView();
+				break;
+			}
+			case REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST : 
+			case REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST : {
+				handleSelectedCustomerDataGridView();
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD : {
@@ -891,6 +966,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			}
 			case REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS : {
 				handleAllIds();
+			}
+			case REST_METHOD_NAME_SCHEDULE_DEMO : {
+				handleParentId();
+				handleScheduleDemoSecurity();
+				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
@@ -1237,6 +1317,28 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createTutorMapperSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.tutorMapperObject = new TutorMapper();
+			final Long demoDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoDateMillis", Long.class);
+			final Long demoTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoTimeMillis", Long.class);
+			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis)) {
+				this.tutorMapperObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis);
+			}
+		}
+	}
+	
+	private void handleScheduleDemoSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.tutorMapperObject.getDemoDateAndTimeMillis())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"Please select a valid 'Demo Date' & 'Demo Time'",
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

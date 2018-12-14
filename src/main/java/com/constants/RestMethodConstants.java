@@ -57,7 +57,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_MAP_TUTORS = "/mapTutors";
 	String REST_METHOD_NAME_UNMAP_TUTORS = "/unmapTutors";
 	String REST_METHOD_NAME_TO_UPDATE_TUTOR_MAPPER_DETAILS = "/updateTutorMapperDetails";
-	String REST_METHOD_NAME_SCHEDULE_DEMO = "/scheduleDemo";
 	// Demo
 	String REST_METHOD_NAME_DISPLAY_SCHEDULED_DEMOS = "/displayScheduledDemos";
 	String REST_METHOD_NAME_DISPLAY_RESCHEDULED_DEMOS = "/displayRescheduledDemos";
@@ -148,8 +147,11 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST = "/demoReadyMappedTutorsList";
 	String REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST = "/demoScheduledMappedTutorsList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR = "/takeActionOnMappedTutor";
-	String REST_METHOD_NAME_CURRENT_TUTOR_ALL_MAPPING_LIST = "/currentTutorAllMappingList";
-	String REST_METHOD_NAME_CURRENT_TUTOR_ALL_SCHEDULED_DEMO_LIST = "/currentTutorAllScheduledDemoList";
+	String REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST = "/currentTutorMappingList";
+	String REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST = "/currentCustomerMappingList";
+	String REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST = "/currentTutorScheduledDemoList";
+	String REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST = "/currentCustomerScheduledDemoList";
+	String REST_METHOD_NAME_SCHEDULE_DEMO = "/scheduleDemo";
 	String REST_METHOD_NAME_SCHEDULED_DEMO_LIST = "/scheduledDemoList";
 	String REST_METHOD_NAME_RESCHEDULED_DEMO_LIST = "/reScheduledDemoList";
 	String REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST = "/successfulDemoList";

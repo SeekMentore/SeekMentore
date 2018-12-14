@@ -23,6 +23,7 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
 		tutorMapperObject.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));
 		tutorMapperObject.setEnquiryClientNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryClientNegotiationRemarks"), String.class));
+		tutorMapperObject.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerId"), Long.class));
 		tutorMapperObject.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerName"), String.class));
 		tutorMapperObject.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerEmail"), String.class));
 		tutorMapperObject.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerContactNumber"), String.class));

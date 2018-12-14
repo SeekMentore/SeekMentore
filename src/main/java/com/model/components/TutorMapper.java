@@ -20,6 +20,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private Integer enquiryQuotedClientRate ;
 	private Integer enquiryNegotiatedRateWithClient;
 	private String enquiryClientNegotiationRemarks;
+	private Long customerId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
@@ -49,6 +50,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private String whoActed;
 	private String whoActedName;
 	private String isDemoScheduled;
+	private Long demoDateAndTimeMillis;
 	private String mappingStatus;
 	private Long entryDateMillis;
 	
@@ -374,6 +376,22 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.enquiryClientNegotiationRemarks = enquiryClientNegotiationRemarks;
 	}
 	
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+	
+	public Long getDemoDateAndTimeMillis() {
+		return demoDateAndTimeMillis;
+	}
+
+	public void setDemoDateAndTimeMillis(Long demoDateAndTimeMillis) {
+		this.demoDateAndTimeMillis = demoDateAndTimeMillis;
+	}
+	
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -398,8 +416,9 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
-			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerEmail" : return "CUSTOMER_NAME_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
 			case "tutorId" : return "TUTOR_ID";
 			case "tutorName" : return "TUTOR_NAME";

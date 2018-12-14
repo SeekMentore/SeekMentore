@@ -32,16 +32,25 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 	private Integer negotiatedOverrideRateWithClient;
 	private Integer negotiatedOverrideRateWithTutor;
 	private Long adminActionDateMillis;
+	private Long customerId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
+	private Long tutorId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
+	private Long enquiryId;
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
 	private String enquiryPreferredTeachingType;
+	private Integer enquiryQuotedClientRate ;
+	private Integer enquiryNegotiatedRateWithClient;
+	private String enquiryClientNegotiationRemarks;
+	private Integer tutorMapperQuotedTutorRate;
+	private Integer tutorMapperNegotiatedRateWithTutor;
+	private String tutorMapperTutorNegotiationRemarks;
 	private String adminFinalizingRemarks;
 	private String reschedulingRemarks;
 	private Long entryDateMillis;
@@ -328,6 +337,78 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 		this.entryDateMillis = entryDateMillis;
 	}
 	
+	public Integer getEnquiryQuotedClientRate() {
+		return enquiryQuotedClientRate;
+	}
+
+	public void setEnquiryQuotedClientRate(Integer enquiryQuotedClientRate) {
+		this.enquiryQuotedClientRate = enquiryQuotedClientRate;
+	}
+
+	public Integer getEnquiryNegotiatedRateWithClient() {
+		return enquiryNegotiatedRateWithClient;
+	}
+
+	public void setEnquiryNegotiatedRateWithClient(Integer enquiryNegotiatedRateWithClient) {
+		this.enquiryNegotiatedRateWithClient = enquiryNegotiatedRateWithClient;
+	}
+
+	public String getEnquiryClientNegotiationRemarks() {
+		return enquiryClientNegotiationRemarks;
+	}
+
+	public void setEnquiryClientNegotiationRemarks(String enquiryClientNegotiationRemarks) {
+		this.enquiryClientNegotiationRemarks = enquiryClientNegotiationRemarks;
+	}
+	
+	public Integer getTutorMapperQuotedTutorRate() {
+		return tutorMapperQuotedTutorRate;
+	}
+
+	public void setTutorMapperQuotedTutorRate(Integer tutorMapperQuotedTutorRate) {
+		this.tutorMapperQuotedTutorRate = tutorMapperQuotedTutorRate;
+	}
+
+	public Integer getTutorMapperNegotiatedRateWithTutor() {
+		return tutorMapperNegotiatedRateWithTutor;
+	}
+
+	public void setTutorMapperNegotiatedRateWithTutor(Integer tutorMapperNegotiatedRateWithTutor) {
+		this.tutorMapperNegotiatedRateWithTutor = tutorMapperNegotiatedRateWithTutor;
+	}
+
+	public String getTutorMapperTutorNegotiationRemarks() {
+		return tutorMapperTutorNegotiationRemarks;
+	}
+
+	public void setTutorMapperTutorNegotiationRemarks(String tutorMapperTutorNegotiationRemarks) {
+		this.tutorMapperTutorNegotiationRemarks = tutorMapperTutorNegotiationRemarks;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public Long getTutorId() {
+		return tutorId;
+	}
+
+	public void setTutorId(Long tutorId) {
+		this.tutorId = tutorId;
+	}
+
+	public Long getEnquiryId() {
+		return enquiryId;
+	}
+
+	public void setEnquiryId(Long enquiryId) {
+		this.enquiryId = enquiryId;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -368,15 +449,25 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "enquiryId" : return "ENQUIRY_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
 			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
+			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
+			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
+			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
+			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
+			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
+			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorId" : return "TUTOR_ID";
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
 		}
 		return EMPTY_STRING;
 	}

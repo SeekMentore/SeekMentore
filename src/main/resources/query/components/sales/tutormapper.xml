@@ -3,6 +3,7 @@
 	<query type="select" id="selectTutorMapper">
 		SELECT
 			TM.*,
+			C.CUSTOMER_ID AS CUSTOMER_ID,
 			C.NAME AS CUSTOMER_NAME, 
 			C.EMAIL_ID AS CUSTOMER_EMAIL, 
 			C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, 
@@ -12,7 +13,7 @@
 			EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE,
 			EN.QUOTED_CLIENT_RATE AS ENQUIRY_QUOTED_CLIENT_RATE,
 			EN.NEGOTIATED_RATE_WITH_CLIENT AS ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT,
-			EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_CLIENT_NEGOTIATION_REMARKS,
+			EN.CLIENT_NEGOTIATION_REMARKS AS ENQUIRY_CLIENT_NEGOTIATION_REMARKS,
 			T.NAME AS TUTOR_NAME,
 			T.EMAIL_ID AS TUTOR_EMAIL,
 			T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
@@ -25,8 +26,11 @@
 	<query type="filter" id="tutorMapperExistingFilter">
 		WHERE TM.MAPPING_STATUS = :mappingStatus
 	</query>
-	<query type="filter" id="tutorMapperCurrentTutorAllMappingFilter">
+	<query type="filter" id="tutorMapperCurrentTutorMappingFilter">
 		 WHERE TM.TUTOR_ID = :tutorId
+	</query>
+	<query type="filter" id="tutorMapperCurrentCustomerMappingFilter">
+		 WHERE C.CUSTOMER_ID = :customerId
 	</query>
 	<query type="filter" id="tutorMapperCurrentEnquiryAllMappedTutors">
 		WHERE TM.ENQUIRY_ID = :enquiryId
@@ -48,5 +52,13 @@
 	</query>
 	<query type="update" id="updateTutorMapperMappingStatus" paramClass="com.model.components.TutorMapper">
 		MAPPING_STATUS = :mappingStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_ACTION_REMARKS = :remarks WHERE TUTOR_MAPPER_ID = :tutorMapperId
+	</query>
+	<query type="update" id="updateTutorMapperForDemoScheduled" paramClass="com.model.components.TutorMapper">
+		UPDATE TUTOR_MAPPER SET 
+			IS_DEMO_SCHEDULED 			= :isDemoScheduled, 
+			MAPPING_STATUS 				= :mappingStatus, 
+			ADMIN_ACTION_DATE_MILLIS 	= :adminActionDateMillis, 
+			WHO_ACTED 					= :whoActed 
+		WHERE TUTOR_MAPPER_ID 			= :tutorMapperId
 	</query>
 </queryMapper>

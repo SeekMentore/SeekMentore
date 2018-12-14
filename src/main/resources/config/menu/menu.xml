@@ -83,9 +83,11 @@
 			<webservice id="demoScheduledMappedTutorsList" url="/demoScheduledMappedTutorsList"></webservice>
 			<webservice id="takeActionOnMappedTutor" url="/takeActionOnMappedTutor"></webservice>
 			<webservice id="mappedTutorCheckScheduleDemoAccess" url="/mappedTutorCheckScheduleDemoAccess"></webservice>
-			<webservice id="currentTutorAllMappingList" url="/currentTutorAllMappingList"></webservice>
-			<webservice id="currentTutorAllScheduledDemoList" url="/currentTutorAllScheduledDemoList"></webservice>
-			<webservice id="updateScheduleDemoMappedTutorRecord" url="/updateScheduleDemoMappedTutorRecord"></webservice>
+			<webservice id="currentTutorMappingList" url="/currentTutorMappingList"></webservice>
+			<webservice id="currentCustomerMappingList" url="/currentCustomerMappingList"></webservice>
+			<webservice id="currentTutorScheduledDemoList" url="/currentTutorScheduledDemoList"></webservice>
+			<webservice id="currentCustomerScheduledDemoList" url="/currentCustomerScheduledDemoList"></webservice>
+			<webservice id="scheduleDemo" url="/scheduleDemo"></webservice>
 			<webservice id="scheduledDemoList" url="/scheduledDemoList"></webservice>
 			<webservice id="reScheduledDemoList" url="/reScheduledDemoList"></webservice>
 			<webservice id="successfulDemoList" url="/successfulDemoList"></webservice>
