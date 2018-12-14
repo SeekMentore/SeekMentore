@@ -94,8 +94,9 @@
 			<webservice id="failedDemoList" url="/failedDemoList"></webservice>
 			<webservice id="canceledDemoList" url="/canceledDemoList"></webservice>
 			<webservice id="demoTrackerModifyCheckDataAccess" url="/demoTrackerModifyCheckDataAccess"></webservice>
-			<webservice id="cancelDemos" url="/cancelDemos"></webservice>
-			<webservice id="updateDemoTrackerRecord" url="/updateDemoTrackerRecord"></webservice>
+			<webservice id="takeActionOnDemo" url="/takeActionOnDemo"></webservice>
+			<webservice id="reScheduleDemo" url="/reScheduleDemo"></webservice>
+			<webservice id="updateDemoRecord" url="/updateDemoRecord"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

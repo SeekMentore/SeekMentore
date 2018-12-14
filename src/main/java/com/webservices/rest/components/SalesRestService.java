@@ -57,6 +57,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long tutorId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
+	private DemoTracker demoTrackerObject;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -836,6 +837,32 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_DEMO)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnDemo (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_DEMO;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getDemoService().takeActionOnDemo(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path("/demoTrackerModifyCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -850,34 +877,58 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path("/cancelDemos")
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String cancelDemos (
-			@FormParam("allIdsList") final String allIdsList,
-			@FormParam("comments") final String comments,
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "All Ids blacklisted "+allIdsList+" "+comments);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-	}
-	
-	@Path("/updateDemoTrackerRecord")
+	@Path(REST_METHOD_NAME_RE_SCHEDULE_DEMO)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
-	public String updateDemoTrackerRecord (
-			@FormDataParam("completeUpdatedRecord") final String completeUpdatedRecord,
-			@FormDataParam("parentId") final String parentId,
+	public String reScheduleDemo (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("message", "Record Updated "+completeUpdatedRecord);		
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		this.methodName = REST_METHOD_NAME_RE_SCHEDULE_DEMO;
+		createDemoReSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.demoTrackerObject.setDemoTrackerId(Long.parseLong(parentId));
+			getDemoService().reScheduleDemo(this.demoTrackerObject, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Re-Scheduled Demo Successfully");
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UPDATE_DEMO_RECORD)
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public String updateDemoRecord (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UPDATE_DEMO_RECORD;
+		createDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.demoTrackerObject.setDemoTrackerId(Long.parseLong(parentId));
+			getDemoService().updateDemoRecord(this.demoTrackerObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 
@@ -956,7 +1007,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY : 
-			case REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR : {
+			case REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_DEMO : {
 				handleTakeAction();
 				break;
 			}
@@ -970,6 +1022,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_SCHEDULE_DEMO : {
 				handleParentId();
 				handleScheduleDemoSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_RE_SCHEDULE_DEMO : {
+				handleParentId();
+				handleReScheduleDemoSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UPDATE_DEMO_RECORD : {
+				handleParentId();
+				handleDemoSecurity();
 				break;
 			}
 		}
@@ -986,7 +1048,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					break;
 				}
 				case BUTTON_ACTION_ABORTED : 
-				case BUTTON_ACTION_PENDING : {
+				case BUTTON_ACTION_PENDING : 
+				case BUTTON_ACTION_CANCEL : {
 					handleComments();
 					break;
 				}
@@ -1339,6 +1402,306 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					"Please select a valid 'Demo Date' & 'Demo Time'",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createDemoReSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.demoTrackerObject = new DemoTracker();
+			final Long demoDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoDateMillis", Long.class);
+			final Long demoTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoTimeMillis", Long.class);
+			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis)) {
+				this.demoTrackerObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis);
+			}
+			this.demoTrackerObject.setTutorMapperId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorMapperId", Long.class));
+			this.demoTrackerObject.setReschedulingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reschedulingRemarks", String.class));
+			this.demoTrackerObject.setReScheduleCount(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reScheduleCount", Integer.class));
+		}
+	}
+	
+	private void handleReScheduleDemoSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getDemoDateAndTimeMillis())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"Please select a valid 'New Demo Date' & 'New Demo Time'",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getTutorMapperId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"Request does not contains a 'TutorMapperId' hence cannot perform action",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getReschedulingRemarks())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"Please provide 'Rescheduling Remarks'",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getReScheduleCount())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"Request does not contains a 'ReScheduleCount' hence cannot perform action",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createDemoObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.demoTrackerObject = new DemoTracker();
+			this.demoTrackerObject.setDemoOccurred(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoOccurred", String.class));
+			this.demoTrackerObject.setClientSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientSatisfiedFromTutor", String.class));
+			this.demoTrackerObject.setClientRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientRemarks", String.class));
+			this.demoTrackerObject.setTutorSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorSatisfiedWithClient", String.class));
+			this.demoTrackerObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
+			this.demoTrackerObject.setAdminSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedFromTutor", String.class));
+			this.demoTrackerObject.setAdminSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedWithClient", String.class));
+			this.demoTrackerObject.setIsDemoSuccess(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isDemoSuccess", String.class));
+			this.demoTrackerObject.setNeedPriceNegotiationWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithClient", String.class));
+			this.demoTrackerObject.setNegotiatedOverrideRateWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithClient", Integer.class));
+			this.demoTrackerObject.setClientNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientNegotiationRemarks", String.class));
+			this.demoTrackerObject.setNeedPriceNegotiationWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithTutor", String.class));
+			this.demoTrackerObject.setNegotiatedOverrideRateWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithTutor", Integer.class));
+			this.demoTrackerObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
+			this.demoTrackerObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+			this.demoTrackerObject.setAdminFinalizingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminFinalizingRemarks", String.class));
+		}
+	}
+	
+	private void handleDemoSecurity() throws Exception {
+		this.securityPassed = true;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "demoOccurred" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getDemoOccurred(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Demo Occurred'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "clientSatisfiedFromTutor" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getClientSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Client Satisfied From Tutor'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Client Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "clientRemarks" : {
+						break;
+					}
+					case "tutorSatisfiedWithClient" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getTutorSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Tutor Satisfied With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Tutor Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "tutorRemarks" : {
+						break;
+					}
+					case "adminSatisfiedFromTutor" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getAdminSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Admin Satisfied From Tutor'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Admin Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "adminSatisfiedWithClient" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getAdminSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Admin Satisfied With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Admin Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "isDemoSuccess" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getIsDemoSuccess(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Is Admin Satisfied With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "needPriceNegotiationWithClient" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getNeedPriceNegotiationWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Need Price Negotiation With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.demoTrackerObject.getNeedPriceNegotiationWithClient()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientNegotiationRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Client Negotiation Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "negotiatedOverrideRateWithClient" : {
+						if (!ValidationUtils.validateNumber(this.demoTrackerObject.getNegotiatedOverrideRateWithClient(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Negotiated Override Rate With Client'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientNegotiationRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										"Please provide 'Client Negotiation Remarks'",
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+						}
+						break;
+					}
+					case "clientNegotiationRemarks" : {
+						break;
+					}
+					case "needPriceNegotiationWithTutor" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getNeedPriceNegotiationWithTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please select a valid 'Need Price Negotiation With Tutor'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.demoTrackerObject.getNeedPriceNegotiationWithClient()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorNegotiationRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											"Please provide 'Tutor Negotiation Remarks'",
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "negotiatedOverrideRateWithTutor" : {
+						if (!ValidationUtils.validateNumber(this.demoTrackerObject.getNegotiatedOverrideRateWithTutor(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please enter a valid 'Negotiated Override Rate With Tutor'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorNegotiationRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										"Please provide 'Tutor Negotiation Remarks'",
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+						}
+						break;
+					}
+					case "tutorNegotiationRemarks" : {
+						break;
+					}
+					case "adminRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please provide 'Admin Remarks'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "adminFinalizingRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminFinalizingRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									"Please provide 'Admin Finalizing Remarks'",
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

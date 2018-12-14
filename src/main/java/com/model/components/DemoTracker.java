@@ -53,6 +53,7 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 	private String tutorMapperTutorNegotiationRemarks;
 	private String adminFinalizingRemarks;
 	private String reschedulingRemarks;
+	private Integer reScheduleCount;
 	private Long entryDateMillis;
 	
 	public DemoTracker() {}
@@ -408,6 +409,14 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 	public void setEnquiryId(Long enquiryId) {
 		this.enquiryId = enquiryId;
 	}
+	
+	public Integer getReScheduleCount() {
+		return reScheduleCount;
+	}
+
+	public void setReScheduleCount(Integer reScheduleCount) {
+		this.reScheduleCount = reScheduleCount;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -446,6 +455,7 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 			case "adminActionDateMillis" : return "ADMIN_ACTION_DATE_MILLIS";
 			case "adminFinalizingRemarks" : return "ADMIN_FINALIZING_REMARKS";
 			case "reschedulingRemarks" : return "RESCHEDULING_REMARKS";
+			case "reScheduleCount" : return "RE_SCHEDULE_COUNT";
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";

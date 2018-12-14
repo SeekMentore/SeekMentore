@@ -16,13 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
-import com.constants.components.DemoTrackerConstants;
 import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
-import com.model.components.DemoTracker;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
@@ -54,7 +52,10 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	private transient TutorService tutorService;
 	
 	@Autowired
-	private QueryMapperService queryMapperService;
+	private transient QueryMapperService queryMapperService;
+	
+	@Autowired
+	private transient DemoService demoService;
 	
 	@PostConstruct
 	public void init() {}
@@ -476,7 +477,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		paramsMap.put("demoDateAndTimeMillis", demoDateAndTime.getTime());
 		applicationDao.executeUpdate("UPDATE TUTOR_MAPPER SET IS_DEMO_SCHEDULED = 'Y', MAPPING_STATUS = 'SCHEDULED', ADMIN_ACTION_DATE = SYSDATE(), WHO_ACTED = :whoActed WHERE TUTOR_MAPPER_ID = :tutorMapperId", paramsMap);
 		applicationDao.executeUpdate("INSERT INTO DEMO_TRACKER(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS) VALUES(:tutorMapperId, :demoDateAndTime, :demoDateAndTimeMillis, 'PENDING')", paramsMap);
-		sendDemoScheduledNotificationEmails(tutorMapperId);
+		//sendDemoScheduledNotificationEmails(tutorMapperId);
 		return response;
 	}
 	
@@ -826,49 +827,10 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public void scheduleDemo(final TutorMapper tutorMapperObject, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		tutorMapperObject.setIsDemoScheduled(YES);
-		tutorMapperObject.setMappingStatus(MAPPING_STATUS_DEMO_SCHEDULED);
+		tutorMapperObject.setMappingStatus(EnquiryConstants.MAPPING_STATUS_DEMO_SCHEDULED);
 		tutorMapperObject.setWhoActed(activeUser.getUserId());
 		tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
 		applicationDao.executeUpdateWithQueryMapper("sales-tutor-mapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
-		final DemoTracker demoTracker = new DemoTracker();
-		demoTracker.setTutorMapperId(tutorMapperObject.getTutorMapperId());
-		demoTracker.setDemoDateAndTimeMillis(tutorMapperObject.getDemoDateAndTimeMillis());
-		demoTracker.setDemoStatus(DemoTrackerConstants.DEMO_STATUS_SCHEDULED);
-		demoTracker.setWhoActed(activeUser.getUserId());
-		demoTracker.setAdminActionDateMillis(currentTimestamp.getTime());
-		demoTracker.setEntryDateMillis(currentTimestamp.getTime());
-		final Long demoTrackerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", "insertDemoTracker", demoTracker);
-		sendDemoScheduledNotificationEmails(demoTrackerId);
-	}
-	
-	public void sendDemoScheduledNotificationEmails(final Long demoTrackerId) throws Exception {
-		/*final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
-		final Enquiry enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoDateAndTimeIST", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(demoTimeInMillis));
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo has been scheduled with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes),
-				null);
-		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo has been scheduled for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
-				null);*/
+		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null);
 	}
 }

@@ -36,6 +36,7 @@ public class DemoTrackerRowMapper implements RowMapper<DemoTracker> {
 		demoTracker.setAdminActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("adminActionDateMillis"), Long.class));
 		demoTracker.setAdminFinalizingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("adminFinalizingRemarks"), String.class));
 		demoTracker.setReschedulingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("reschedulingRemarks"), String.class));
+		demoTracker.setReScheduleCount(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("reScheduleCount"), Integer.class));
 		demoTracker.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("whoActed"), String.class));
 		demoTracker.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("customerId"), Long.class));
 		demoTracker.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, demoTracker.resolveColumnNameForMapping("customerName"), String.class));
