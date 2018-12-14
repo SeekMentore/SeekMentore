@@ -36,6 +36,7 @@ import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
@@ -60,6 +61,9 @@ public class TutorService implements TutorConstants {
 	
 	@Autowired
 	private transient AdminService adminService;
+	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -413,11 +417,21 @@ public class TutorService implements TutorConstants {
 	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		final String baseQuery = "SELECT "
-				+ "T.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.WHO_ACTED), T.WHO_ACTED) AS WHO_ACTED_NAME "
-				+ "FROM TUTOR_DOCUMENTS T";
-		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, "WHERE TUTOR_ID = :tutorId", "ORDER BY FILENAME", gridComponent), paramsMap, new TutorDocumentRowMapper());
+		return applicationDao.findAll(
+				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectTutorDocument"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentExistingFilter"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentExistingSorter"), 
+											gridComponent), paramsMap, new TutorDocumentRowMapper());
+	}
+	
+	public TutorDocument getTutorDocument(final Long documentId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("documentId", documentId);
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor", "selectTutorDocument"));
+		query.append(queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentDocumentIdFilter"));
+		final TutorDocument tutorDocument = applicationDao.find(query.toString(), paramsMap, new TutorDocumentRowMapper());
+		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()));
+		return tutorDocument;
 	}
 	
 	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {

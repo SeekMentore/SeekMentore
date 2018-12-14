@@ -46,6 +46,7 @@
 		</page>
 		<page id="registeredTutorRest" url="/rest/registeredTutor" pageAccessType="admin">
 			<webservice id="uploadedDocumentList" url="/uploadedDocumentList"></webservice>
+			<webservice id="downloadTutorDocument" url="/downloadTutorDocument"></webservice>
 			<webservice id="bankDetailList" url="/bankDetailList"></webservice>
 			<webservice id="currentPackageList" url="/currentPackageList"></webservice>
 			<webservice id="historyPackageList" url="/historyPackageList"></webservice>

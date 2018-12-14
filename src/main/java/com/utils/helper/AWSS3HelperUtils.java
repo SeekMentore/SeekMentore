@@ -26,6 +26,10 @@ import com.utils.context.AppContext;
 
 public class AWSS3HelperUtils {
 	
+	/**
+	 * All 'folderName' are just the path till the folder minus the last \ sign
+	 */
+	
 	public static PutObjectResult createFolderInBucket(final String folderName, final boolean enablePublicAccess) {
 		return putObjectInS3Client(createPutObjectRequest(folderName, null, new byte[0], false));
 	}
@@ -96,6 +100,12 @@ public class AWSS3HelperUtils {
 	
 	public static byte[] readContentFromFileInS3Client(final String folderName, final String filename) throws IOException {
 		final String key = folderName + ApplicationConstants.FORWARD_SLASH + filename;
+		final S3Object s3object = getAWSHelperService().getS3client().getObject(new GetObjectRequest(getAWSHelperService().getBucketName(), key));
+	    final InputStream stream = s3object.getObjectContent();
+	    return IOUtils.toByteArray(stream);
+	}
+	
+	public static byte[] readContentFromFileUsingKeyInS3Client(final String key) throws IOException {
 		final S3Object s3object = getAWSHelperService().getS3client().getObject(new GetObjectRequest(getAWSHelperService().getBucketName(), key));
 	    final InputStream stream = s3object.getObjectContent();
 	    return IOUtils.toByteArray(stream);

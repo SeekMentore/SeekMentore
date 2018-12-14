@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.RestMethodConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
@@ -42,6 +43,9 @@ import com.utils.VelocityUtils;
 	
 	@Autowired
 	private transient CommonsService commonsService;
+	
+	@Autowired
+	private transient AdminService adminService;
 	
 	@PostConstruct
 	public void init() {}
@@ -352,5 +356,16 @@ import com.utils.VelocityUtils;
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
 		}
+	}
+	
+	public List<FindTutor> getFindTutorListForEnquiryStatusSelected(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, FindTutor.class);
+		} else {
+			gridComponent = new GridComponent(FindTutor.class);
+		}
+		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
+		return adminService.getEnquiryList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 	}
 }

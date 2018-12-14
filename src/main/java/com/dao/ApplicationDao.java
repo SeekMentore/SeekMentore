@@ -88,7 +88,6 @@ public class ApplicationDao implements ApplicationConstants {
 	@SuppressWarnings("unchecked")
 	public void executeUpdateWithQueryMapper(final String namespaceName, final String queryId, final Object paramObject) throws Exception {
 		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
-		LoggerUtils.logOnConsole(query);
 		Map<String, Object> params;
 		if (!(paramObject instanceof Map)) {
 			params = queryMapperService.getQueryParams(namespaceName, queryId, paramObject);
@@ -107,7 +106,6 @@ public class ApplicationDao implements ApplicationConstants {
 	@SuppressWarnings("unchecked")
 	public void executeBatchUpdateWithQueryMapper(final String namespaceName, final String queryId, final List<?> paramObjectList) throws Exception {
 		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
-		LoggerUtils.logOnConsole(query);
 		List<Map<String, Object>> paramsList = null;
 		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
 			final Object paramObject = paramObjectList.get(0);
@@ -129,7 +127,6 @@ public class ApplicationDao implements ApplicationConstants {
 	@SuppressWarnings("unchecked")
 	public Long insertAndReturnGeneratedKeyWithQueryMapper(final String namespaceName, final String queryId, final Object paramObject) throws Exception {
 		final String query = queryMapperService.getQuerySQL(namespaceName, queryId);
-		LoggerUtils.logOnConsole(query);
 		Map<String, Object> params;
 		if (!(paramObject instanceof Map)) {
 			params = queryMapperService.getQueryParams(namespaceName, queryId, paramObject);

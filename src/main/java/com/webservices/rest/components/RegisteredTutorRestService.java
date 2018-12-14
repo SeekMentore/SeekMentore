@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -46,6 +47,7 @@ import com.service.components.CommonsService;
 import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
+import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -58,6 +60,7 @@ import com.webservices.rest.AbstractRestWebservice;
 public class RegisteredTutorRestService extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 	
 	private Long tutorId;
+	private Long documentId;
 	private Long bankAccountId;
 	private RegisteredTutor registeredTutorObject;
 	
@@ -75,7 +78,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
+		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -89,6 +92,26 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT)
+	@Produces({MediaType.APPLICATION_JSON})  
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadTutorDocument (
+    		@FormParam("documentId") final String documentId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT;
+		try {
+			this.documentId = Long.parseLong(documentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			final TutorDocument tutorDocument = getTutorService().getTutorDocument(Long.parseLong(documentId));
+			FileUtils.writeFileToResponse(response, tutorDocument.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, tutorDocument.getContent());
+		}
+    }
 	
 	@Path(REST_METHOD_NAME_BANK_DETAIL_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -460,8 +483,23 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 				handleTutorSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT : {
+				handleDocumentId();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
+	}
+	
+	protected void handleDocumentId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.documentId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					"No 'documentId' found in request, hence cannot perform action.",
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 	
 	private void handleSelectedTutorDataView() throws Exception {

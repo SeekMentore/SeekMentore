@@ -61,4 +61,8 @@ public class FileSystemUtils implements FileConstants {
 	public static byte[] readContentFromFileOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final String filename) throws IOException {
 		return AWSS3HelperUtils.readContentFromFileInS3Client(folderNameWithPathFromRootFolder, filename);
 	}
+	
+	public static byte[] readContentFromFileOnApplicationFileSystemUsingKey(final String fsKey) throws IOException {
+		return AWSS3HelperUtils.readContentFromFileUsingKeyInS3Client(fsKey);
+	}
 }

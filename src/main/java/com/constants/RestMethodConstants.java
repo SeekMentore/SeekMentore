@@ -74,7 +74,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_LOAD_TUTOR_RECORD = "/loadTutorRecord";
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR = "/getDropdownListDataRegisteredTutor";
 	String REST_METHOD_NAME_TO_UPDATE_DETAILS = "/updateDetails";
-	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadDocument";
 	//Customer Rest methods
 	String REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBED_CUSTOMER = "/getDropdownListDataSubscribedCustomer";
 	String REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD = "/loadSubscribedCustomerRecord";
@@ -118,6 +117,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";
 	// Admin - RegisteredTutor REST Methods
 	String REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST = "/uploadedDocumentList";
+	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadTutorDocument";
 	String REST_METHOD_NAME_APPROVE_TUTOR_DOCUMENT_LIST = "/approveTutorDocumentList";
 	String REST_METHOD_NAME_SEND_REMINDER_TUTOR_DOCUMENT_LIST = "/sendReminderTutorDocumentList";
 	String REST_METHOD_NAME_REJECT_TUTOR_DOCUMENT_LIST = "/rejectTutorDocumentList";

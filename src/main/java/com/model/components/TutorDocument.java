@@ -8,6 +8,7 @@ import com.utils.ValidationUtils;
 public class TutorDocument extends GridComponentObject implements Serializable {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
+	
 	private Long documentId;
 	private Long tutorId;
 	private String documentType;
