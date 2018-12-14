@@ -39,7 +39,7 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logOnConsoleForcefully(final String message) {
-		System.out.println(message);
+		//System.out.println(message);
 	}
 	
 	public static void logInfoSteps(final String message) {
