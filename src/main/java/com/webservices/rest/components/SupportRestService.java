@@ -58,7 +58,6 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_SUPPORT) 
 public class SupportRestService extends AbstractRestWebservice implements RestMethodConstants {
 	
-	private String button;
 	private BecomeTutor becomeTutorObject;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
@@ -894,7 +893,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1868,6 +1867,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 					case "additionalDetails" : {
 						break;
 					}
+					case "subscribedCustomer" : {
+						break;
+					}
 					case "addressDetails" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.findTutorObject.getAddressDetails())) {
 							ApplicationUtils.appendMessageInMapAttribute(
@@ -1904,9 +1906,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			this.subscriptionObject.setLastName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "lastName", String.class));
 			this.subscriptionObject.setContactNumber(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "contactNumber", String.class));
 			this.subscriptionObject.setEmailId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "emailId", String.class));
-			this.subscriptionObject.setStudentGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrade", String.class));
+			this.subscriptionObject.setStudentGrade(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentGrades", String.class));
 			this.subscriptionObject.setSubjects(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "subjects", String.class));
-			this.subscriptionObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
+			this.subscriptionObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "locations", String.class));
 			this.subscriptionObject.setPreferredTimeToCall(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTimeToCall", String.class));
 			this.subscriptionObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.subscriptionObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
@@ -1977,7 +1979,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 						}
 						break;
 					}
-					case "studentGrade" : {
+					case "studentGrades" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getStudentGrade(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
@@ -2007,7 +2009,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 						}
 						break;
 					}
-					case "location" : {
+					case "locations" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
@@ -2038,6 +2040,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 						break;
 					}
 					case "additionalDetails" : {
+						break;
+					}
+					case "subscribedCustomer" : {
 						break;
 					}
 					default : {

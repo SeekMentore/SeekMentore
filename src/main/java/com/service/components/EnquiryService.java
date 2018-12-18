@@ -61,19 +61,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public void init() {}
 	
 	@Transactional
-	public void addEnquiry(final Enquiry enquiryObject) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("customerId", enquiryObject.getCustomerId());
-		paramsMap.put("subject", enquiryObject.getSubject());
-		paramsMap.put("grade", enquiryObject.getGrade());
-		paramsMap.put("matchStatus", enquiryObject.getMatchStatus());
-		paramsMap.put("locationDetails", enquiryObject.getLocationDetails());
-		paramsMap.put("addressDetails", enquiryObject.getAddressDetails());
-		paramsMap.put("additionalDetails", enquiryObject.getAdditionalDetails());
-		applicationDao.executeUpdate("INSERT INTO ENQUIRIES(CUSTOMER_ID, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS) VALUES(:customerId, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails)", paramsMap);
-	}
-	
-	@Transactional
 	public List<SubscribedCustomer> displayCustomerWithEnquiries(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final StringBuilder query = new StringBuilder("SELECT * FROM SUBSCRIBED_CUSTOMER S WHERE S.CUSTOMER_ID IN (SELECT DISTINCT CUSTOMER_ID FROM ENQUIRIES E WHERE E.MATCH_STATUS = :matchStatus)");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -556,6 +543,11 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			paramsList.add(paramsMap);
 		}
 		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+	}
+	
+	@Transactional
+	public void feedEnquiryList(final List<Enquiry> enquiryList) throws Exception {
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "insertEnquiry", enquiryList);
 	}
 	
 	@Transactional

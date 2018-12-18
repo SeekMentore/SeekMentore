@@ -122,7 +122,7 @@ import com.utils.VelocityUtils;
 	
 	public void removeAllSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
-		subscriberCustomerObj.setEnquiryID(null);
+		//subscriberCustomerObj.setEnquiryID(null);
 		subscriberCustomerObj.setEncryptedPassword(null);
 		subscriberCustomerObj.setUserId(null);
 		subscriberCustomerObj.setRecordLastUpdatedMillis(null);
@@ -132,7 +132,7 @@ import com.utils.VelocityUtils;
 	public void removeUltraSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
 		subscriberCustomerObj.setEncryptedPassword(null);
-		subscriberCustomerObj.setEnquiryID(null);
+		//subscriberCustomerObj.setEnquiryID(null);
 	}
 	
 	public void removePasswordFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
@@ -147,13 +147,6 @@ import com.utils.VelocityUtils;
 	public List<FindTutor> getNonSubscribedCustomer(final int numberOfRecords) {
 		return applicationDao.findAllWithoutParams("SELECT * FROM FIND_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new FindTutorRowMapper());
 	}
-	@Transactional
-	public void updateFindTutorForDataMigrated(final Long enquiryId) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("enquiryId", enquiryId);
-		applicationDao.executeUpdate("UPDATE FIND_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId", paramsMap);
-	}
-	
 	/*
 	 * Admin Functions
 	 */
@@ -189,23 +182,6 @@ import com.utils.VelocityUtils;
 	}
 	
 
-	@Transactional
-	public Long feedSubscribedCustomerRecords(final SubscribedCustomer subscribedCustomerObj) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("name", subscribedCustomerObj.getName());
-		paramsMap.put("contactNumber", subscribedCustomerObj.getContactNumber());
-		paramsMap.put("emailId", subscribedCustomerObj.getEmailId());
-		paramsMap.put("enquiryId", subscribedCustomerObj.getEnquiryID());
-		paramsMap.put("studentGrades", subscribedCustomerObj.getStudentGrades());
-		paramsMap.put("subjects", subscribedCustomerObj.getInterestedSubjects());
-		paramsMap.put("location", subscribedCustomerObj.getLocation());
-		paramsMap.put("additionalDetails", subscribedCustomerObj.getAdditionalDetails());
-		paramsMap.put("addressDetails", subscribedCustomerObj.getAddressDetails());
-		paramsMap.put("encryptedPassword", subscribedCustomerObj.getEncryptedPassword());
-		paramsMap.put("userId", subscribedCustomerObj.getUserId());
-		return applicationDao.insertAndReturnGeneratedKey("INSERT INTO SUBSCRIBED_CUSTOMER(NAME, CONTACT_NUMBER, EMAIL_ID, ENQUIRY_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID) VALUES(:name, :contactNumber, :emailId, :enquiryId, :studentGrades, :subjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId)", paramsMap);
-	}
-	
 	public void sendProfileGenerationEmailToCustomer(final SubscribedCustomer subscribedCustomerObj, final String temporaryPassword) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", subscribedCustomerObj.getName());

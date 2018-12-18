@@ -59,6 +59,9 @@ public class SchedulerService implements SchedulerConstants {
 	@Autowired
 	private transient EnquiryService enquiryService;
 	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
+	
 	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
 		if (null != key) {
@@ -166,76 +169,83 @@ public class SchedulerService implements SchedulerConstants {
 		if (null != key) {
 			try {
 				LoggerUtils.logOnConsole("executeSubscribedCustomerJob");
+				final Date currenTimestamp = new Date();
 				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForEnquiryStatusSelected(true, 20);
-				for (final FindTutor findTutorObj : findTutorObjList) {
-					final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
-					if (NO.equalsIgnoreCase(findTutorObj.getSubscribedCustomer())) {
-						final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
-						final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
-						final SubscribedCustomer subscribedCustomerObj = new SubscribedCustomer();
-						subscribedCustomerObj.setName(findTutorObj.getName().toUpperCase());
-						subscribedCustomerObj.setContactNumber(findTutorObj.getContactNumber());
-						subscribedCustomerObj.setEmailId(findTutorObj.getEmailId());
-						subscribedCustomerObj.setEnquiryID(findTutorObj.getEnquiryId());
-						subscribedCustomerObj.setStudentGrades(findTutorObj.getStudentGrade());
-						subscribedCustomerObj.setInterestedSubjects(findTutorObj.getSubjects());
-						subscribedCustomerObj.setLocation(findTutorObj.getLocation());
-						subscribedCustomerObj.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-						subscribedCustomerObj.setAddressDetails(findTutorObj.getAddressDetails());
-						subscribedCustomerObj.setEncryptedPassword(encryptedTemporaryPassword);
-						subscribedCustomerObj.setUserId(findTutorObj.getEmailId());
-						final Long customerId = customerService.feedSubscribedCustomerRecords(subscribedCustomerObj);
-						final Enquiry enquiryObject = new Enquiry();
-						enquiryObject.setCustomerId(customerId);
-						enquiryObject.setSubject(findTutorObj.getSubjects());
-						enquiryObject.setGrade(findTutorObj.getStudentGrade());
-						enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-						enquiryObject.setLocationDetails(findTutorObj.getLocation());
-						enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-						enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-						enquiryObjectList.add(enquiryObject);
-						customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
-					} else {
-						Map<String, Object> paramsMap = new HashMap<String, Object>();
-						paramsMap.put("emailId", findTutorObj.getEmailId());
-						final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
-						if (null != subscribedCustomerInDatabaseWithEmailId) {
-							if (null != subscribedCustomerInDatabaseWithEmailId.getCustomerId()) {
-								final Enquiry enquiryObject = new Enquiry();
-								enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
-								enquiryObject.setSubject(findTutorObj.getSubjects());
-								enquiryObject.setGrade(findTutorObj.getStudentGrade());
-								enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-								enquiryObject.setLocationDetails(findTutorObj.getLocation());
-								enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-								enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-								enquiryObjectList.add(enquiryObject);
-							}
-						} 
-						paramsMap = new HashMap<String, Object>();
-						paramsMap.put("contactNumber", findTutorObj.getContactNumber());
-						final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
-						if (null != subscribedCustomerInDatabaseWithContactNumber) {
-							if (null != subscribedCustomerInDatabaseWithContactNumber.getCustomerId()) {
-								final Enquiry enquiryObject = new Enquiry();
-								enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
-								enquiryObject.setSubject(findTutorObj.getSubjects());
-								enquiryObject.setGrade(findTutorObj.getStudentGrade());
-								enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-								enquiryObject.setLocationDetails(findTutorObj.getLocation());
-								enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-								enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-								enquiryObjectList.add(enquiryObject);
-							}
-						} 
-						
-					}
-					if (!enquiryObjectList.isEmpty()) {
-						for (final Enquiry enquiryObject : enquiryObjectList) {
-							enquiryService.addEnquiry(enquiryObject);
+				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
+					for (final FindTutor findTutorObj : findTutorObjList) {
+						final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
+						if (NO.equalsIgnoreCase(findTutorObj.getSubscribedCustomer())) {
+							final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
+							final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
+							final SubscribedCustomer subscribedCustomerObj = new SubscribedCustomer();
+							subscribedCustomerObj.setName(findTutorObj.getName().toUpperCase());
+							subscribedCustomerObj.setContactNumber(findTutorObj.getContactNumber());
+							subscribedCustomerObj.setEmailId(findTutorObj.getEmailId());
+							subscribedCustomerObj.setFindTutorId(findTutorObj.getEnquiryId());
+							subscribedCustomerObj.setStudentGrades(findTutorObj.getStudentGrade());
+							subscribedCustomerObj.setInterestedSubjects(findTutorObj.getSubjects());
+							subscribedCustomerObj.setLocation(findTutorObj.getLocation());
+							subscribedCustomerObj.setAdditionalDetails(findTutorObj.getAdditionalDetails());
+							subscribedCustomerObj.setAddressDetails(findTutorObj.getAddressDetails());
+							subscribedCustomerObj.setEncryptedPassword(encryptedTemporaryPassword);
+							subscribedCustomerObj.setUserId(findTutorObj.getEmailId());
+							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
+							subscribedCustomerObj.setRecordLastUpdatedMillis(currenTimestamp.getTime());
+							final Long customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
+							final Enquiry enquiryObject = new Enquiry();
+							enquiryObject.setCustomerId(customerId);
+							enquiryObject.setSubject(findTutorObj.getSubjects());
+							enquiryObject.setGrade(findTutorObj.getStudentGrade());
+							enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
+							enquiryObject.setLocationDetails(findTutorObj.getLocation());
+							enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
+							enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
+							enquiryObjectList.add(enquiryObject);
+							customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
+						} else {
+							Map<String, Object> paramsMap = new HashMap<String, Object>();
+							paramsMap.put("emailId", findTutorObj.getEmailId());
+							StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+							query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailFilter"));
+							final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
+							if (null != subscribedCustomerInDatabaseWithEmailId) {
+								if (null != subscribedCustomerInDatabaseWithEmailId.getCustomerId()) {
+									final Enquiry enquiryObject = new Enquiry();
+									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
+									enquiryObject.setSubject(findTutorObj.getSubjects());
+									enquiryObject.setGrade(findTutorObj.getStudentGrade());
+									enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
+									enquiryObject.setLocationDetails(findTutorObj.getLocation());
+									enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
+									enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
+									enquiryObjectList.add(enquiryObject);
+								}
+							} 
+							paramsMap = new HashMap<String, Object>();
+							paramsMap.put("contactNumber", findTutorObj.getContactNumber());
+							query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+							query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberFilter"));
+							final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
+							if (null != subscribedCustomerInDatabaseWithContactNumber) {
+								if (null != subscribedCustomerInDatabaseWithContactNumber.getCustomerId()) {
+									final Enquiry enquiryObject = new Enquiry();
+									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
+									enquiryObject.setSubject(findTutorObj.getSubjects());
+									enquiryObject.setGrade(findTutorObj.getStudentGrade());
+									enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
+									enquiryObject.setLocationDetails(findTutorObj.getLocation());
+									enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
+									enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
+									enquiryObjectList.add(enquiryObject);
+								}
+							} 
+							
+						}
+						if (!enquiryObjectList.isEmpty()) {
+							enquiryService.feedEnquiryList(enquiryObjectList);
 						}
 					}
-					customerService.updateFindTutorForDataMigrated(findTutorObj.getEnquiryId());
+					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateFindTutorDataMigrated", findTutorObjList);
 				}
 			} catch (Exception e) {
 				lockService.releaseLock("executeSubscribedCustomerJob", key);

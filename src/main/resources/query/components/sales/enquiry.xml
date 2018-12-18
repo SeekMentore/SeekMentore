@@ -29,4 +29,10 @@
 	<query type="update" id="updateEnquiryMatchStatus" paramClass="com.model.components.Enquiry">
 		MATCH_STATUS = :matchStatus, WHO_ACTED = :userId, LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_REMARKS = :remarks WHERE ENQUIRY_ID = :enquiryId
 	</query>
+	<query type="insert" id="insertEnquiry" paramClass="com.model.components.Enquiry">
+		INSERT INTO ENQUIRIES
+			(CUSTOMER_ID, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
+		VALUES
+			(:customerId, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails, :entryDateMillis)
+	</query>
 </queryMapper>

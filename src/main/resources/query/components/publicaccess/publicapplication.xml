@@ -16,6 +16,12 @@
 		VALUES(:enquiryDateMillis, :enquiryStatus, :name, :emailId, :contactNumber, :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
 			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
+	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET 
+			IS_DATA_MIGRATED = 'Y', 
+			WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
 	<query type="insert" id="insertSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		INSERT INTO SUBSCRIBE_WITH_US
 			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, EMAIL_ID, CONTACT_NUMBER, 

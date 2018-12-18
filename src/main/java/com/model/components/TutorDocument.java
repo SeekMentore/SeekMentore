@@ -23,8 +23,9 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 	
 	public TutorDocument() {}
 	
-	public TutorDocument(final String documentType, String filename, final byte[] content) {
+	public TutorDocument(final String documentType, final String filename, final byte[] content) {
 		this.documentType = documentType;
+		this.filename = filename;
 		this.content = content;
 	}
 	

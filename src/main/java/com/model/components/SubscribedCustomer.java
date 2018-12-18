@@ -15,7 +15,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 	private String name;
 	private String contactNumber;
 	private String emailId;
-	private Long enquiryID ;
+	private Long findTutorId ;
 	private String studentGrades;
 	private String interestedSubjects;
 	private String location;
@@ -35,7 +35,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		newInstance.name = name;
 		newInstance.contactNumber = contactNumber;
 		newInstance.emailId = emailId;
-		newInstance.enquiryID = enquiryID;
+		newInstance.findTutorId = findTutorId;
 		newInstance.studentGrades = studentGrades;
 		newInstance.interestedSubjects = interestedSubjects;
 		newInstance.location = location;
@@ -80,12 +80,12 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		this.emailId = emailId;
 	}
 
-	public Long getEnquiryID() {
-		return enquiryID;
+	public Long getFindTutorId() {
+		return findTutorId;
 	}
 
-	public void setEnquiryID(Long enquiryID) {
-		this.enquiryID = enquiryID;
+	public void setFindTutorId(Long findTutorId) {
+		this.findTutorId = findTutorId;
 	}
 
 	public String getStudentGrades() {
@@ -213,7 +213,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 			case "name" : return "NAME";
 			case "contactNumber" : return "CONTACT_NUMBER";
 			case "emailId" : return "EMAIL_ID";
-			case "enquiryID" : return "ENQUIRY_ID";
+			case "findTutorId" : return "FIND_TUTOR_ID";
 			case "studentGrades" : return "STUDENT_GRADE";
 			case "interestedSubjects" : return "SUBJECTS";
 			case "location" : return "LOCATION";

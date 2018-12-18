@@ -19,7 +19,7 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("name"), String.class));
 		subscribedCustomer.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("contactNumber"), String.class));
 		subscribedCustomer.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("emailId"), String.class));
-		subscribedCustomer.setEnquiryID(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("enquiryID"), Long.class));
+		subscribedCustomer.setFindTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("findTutorId"), Long.class));
 		subscribedCustomer.setStudentGrades(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("studentGrades"), String.class));
 		subscribedCustomer.setInterestedSubjects(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("interestedSubjects"), String.class));
 		subscribedCustomer.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("location"), String.class));

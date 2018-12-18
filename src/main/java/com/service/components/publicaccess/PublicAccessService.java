@@ -55,7 +55,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	@Transactional
 	public void submitApplication(final PublicApplication application) throws Exception {
 		final Date currentTimestamp = new Date();
-		final String namespaceName = "publicapplication";
+		final String namespaceName = "public-application";
 		String queryId = EMPTY_STRING;
 		if (application instanceof BecomeTutor) {
 			prepareBecomeTutorApplication((BecomeTutor) application, currentTimestamp);

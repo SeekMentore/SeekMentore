@@ -1196,7 +1196,7 @@ public class AdminService implements AdminConstants {
 						paramsMap.put("subscribedCustomer", subscription.getSubscribedCustomer());
 						break;
 					}
-					case "studentGrade" : {
+					case "studentGrades" : {
 						updateAttributesQuery.add("STUDENT_GRADE = :studentGrade");
 						paramsMap.put("studentGrade", subscription.getStudentGrade());
 						break;
@@ -1211,7 +1211,7 @@ public class AdminService implements AdminConstants {
 						paramsMap.put("preferredTimeToCall", subscription.getPreferredTimeToCall());
 						break;
 					}
-					case "location" : {
+					case "locations" : {
 						updateAttributesQuery.add("LOCATION = :location");
 						paramsMap.put("location", subscription.getLocation());
 						break;

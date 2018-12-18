@@ -5,4 +5,5 @@
 	<namespace name="sales-tutor-mapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
 	<namespace name="sales-demo" mapperFilePath="query/components/sales/demo.xml"/>
 	<namespace name="admin-registeredtutor" mapperFilePath="query/components/admin/registeredtutor.xml"/>
+	<namespace name="admin-subscribedcustomer" mapperFilePath="query/components/admin/subscribedcustomer.xml"/>
 </queryNamespace>

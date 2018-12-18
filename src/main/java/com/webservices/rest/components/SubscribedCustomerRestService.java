@@ -150,7 +150,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 				handleSelectedCustomerDataGridView();
 				break;
 			}
-			case REST_METHOD_NAME_UPDATE_TUTOR_RECORD : {
+			case REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD : {
 				handleParentId();
 				handleCustomerSecurity();
 				break;

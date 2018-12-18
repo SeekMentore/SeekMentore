@@ -794,7 +794,7 @@ public class TutorService implements TutorConstants {
 						break;
 					}
 					case "preferredTeachingType" : {
-						updateAttributesQuery.add("NAME = :preferredTeachingType");
+						updateAttributesQuery.add("PREFERRED_TEACHING_TYPE = :preferredTeachingType");
 						paramsMap.put("preferredTeachingType", tutor.getPreferredTeachingType());
 						break;
 					}
