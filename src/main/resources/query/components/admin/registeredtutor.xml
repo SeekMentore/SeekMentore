@@ -1,18 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="admin-registeredtutor">
-	<query type="select" id="selectTutorDocument">
-		SELECT
-			T.*,
-			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.WHO_ACTED), T.WHO_ACTED) AS WHO_ACTED_NAME
-		FROM TUTOR_DOCUMENTS T
-	</query>
-	<query type="filter" id="tutorDocumentDocumentIdFilter">
-		WHERE DOCUMENT_ID = :documentId
-	</query>
-	<query type="filter" id="tutorDocumentExistingFilter">
-		WHERE TUTOR_ID = :tutorId
-	</query>
-	<query type="sorter" id="tutorDocumentExistingSorter">
-		ORDER BY FILENAME
-	</query>
 </queryMapper>

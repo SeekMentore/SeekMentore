@@ -98,6 +98,10 @@ public class AWSS3HelperUtils {
 		deleteObjectFromS3Client(key);
 	}
 	
+	public static void deleteFileInFolderUsingKeyInS3Client(final String key) {
+		deleteObjectFromS3Client(key);
+	}
+	
 	public static byte[] readContentFromFileInS3Client(final String folderName, final String filename) throws IOException {
 		final String key = folderName + ApplicationConstants.FORWARD_SLASH + filename;
 		final S3Object s3object = getAWSHelperService().getS3client().getObject(new GetObjectRequest(getAWSHelperService().getBucketName(), key));

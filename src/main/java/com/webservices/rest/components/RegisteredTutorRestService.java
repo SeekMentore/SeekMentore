@@ -391,19 +391,19 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		if (null != uploadedInputStreamFilePANCard) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePANCard);
 			if (fileBytes.length > 0) {
-				tutorDocuments.add(new TutorDocument("PAN_CARD", uploadedFileDetailFilePANCard.getFileName(), fileBytes));
-			}
-		}
-		if (null != uploadedInputStreamFileAadhaarCard) {
-			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileAadhaarCard);
-			if (fileBytes.length > 0) {
-				tutorDocuments.add(new TutorDocument("AADHAAR_CARD", uploadedFileDetailFilePANCard.getFileName(), fileBytes));
+				tutorDocuments.add(new TutorDocument(DOCUMENT_TYPE_PAN_CARD, uploadedFileDetailFilePANCard.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFilePhoto) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePhoto);
 			if (fileBytes.length > 0) {
-				tutorDocuments.add(new TutorDocument("PROFILE_PHOTO", uploadedFileDetailFilePANCard.getFileName(), fileBytes));
+				tutorDocuments.add(new TutorDocument(DOCUMENT_TYPE_PROFILE_PHOTO, uploadedFileDetailFilePhoto.getFileName(), fileBytes));
+			}
+		}
+		if (null != uploadedInputStreamFileAadhaarCard) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileAadhaarCard);
+			if (fileBytes.length > 0) {
+				tutorDocuments.add(new TutorDocument(DOCUMENT_TYPE_AADHAAR_CARD, uploadedFileDetailFileAadhaarCard.getFileName(), fileBytes));
 			}
 		}
 		if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {

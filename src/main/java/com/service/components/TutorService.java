@@ -3,6 +3,7 @@ package com.service.components;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
+import com.exception.ApplicationException;
 import com.model.User;
 import com.model.WorkbookReport;
 import com.model.components.BankDetail;
@@ -283,7 +285,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
-		final String filename = getFileNameForDocumentType(documentType);
+		final String filename = null;
 		final TutorDocument tutorDocument = getTutorDocument(tutorId, filename);
 		removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystem(folderPathToUploadDocuments, tutorDocument.getFilename()));
@@ -310,7 +312,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
-		final String filename = getFileNameForDocumentType(documentType);
+		final String filename = null;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
@@ -321,7 +323,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
-		final String filename = getFileNameForDocumentType(documentType);
+		final String filename = null;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
 		paramsMap.put("tutorId", tutorId);
@@ -418,17 +420,17 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll(
-				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectTutorDocument"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentExistingFilter"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentExistingSorter"), 
+				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentExistingFilter"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentExistingSorter"), 
 											gridComponent), paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public TutorDocument getTutorDocument(final Long documentId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("documentId", documentId);
-		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor", "selectTutorDocument"));
-		query.append(queryMapperService.getQuerySQL("admin-registeredtutor", "tutorDocumentDocumentIdFilter"));
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"));
+		query.append(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentDocumentIdFilter"));
 		final TutorDocument tutorDocument = applicationDao.find(query.toString(), paramsMap, new TutorDocumentRowMapper());
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()));
 		return tutorDocument;
@@ -489,7 +491,7 @@ public class TutorService implements TutorConstants {
 	
 	@Transactional
 	public void aprroveTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE TUTOR_DOCUMENTS SET "
+		final String baseQuery = "UPDATE TUTOR_DOCUMENT SET "
 				+ "IS_APPROVED = 'Y', "
 				+ "WHO_ACTED = :userId, "
 				+ "REMARKS = :comments, "
@@ -508,7 +510,7 @@ public class TutorService implements TutorConstants {
 	
 	@Transactional
 	public void rejectTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		final String baseQuery = "UPDATE TUTOR_DOCUMENTS SET "
+		final String baseQuery = "UPDATE TUTOR_DOCUMENT SET "
 				+ "IS_APPROVED = 'N', "
 				+ "WHO_ACTED = :userId, "
 				+ "REMARKS = :comments, "
@@ -679,42 +681,53 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId, final Boolean isAdminOverride, final User activeUser) {
-		final String baseQueryDelete = "DELETE FROM TUTOR_DOCUMENTS"; 
-		String baseQueryInsert = EMPTY_STRING;
-		if (isAdminOverride) {
-			baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME, IS_APPROVED, WHO_ACTED, REMARKS, ACTION_DATE_MILLIS) VALUES(:tutorId, :fsKey, :filename, 'Y', :userId, :comments, (UNIX_TIMESTAMP(SYSDATE()) * 1000))";
-		} else {
-			baseQueryInsert = "INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)";
-		}
-		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId AND FS_KEY = :fsKey";
-		final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
-		for (final TutorDocument document : documents) {
-			final String filename = getFileNameForDocumentType(document.getDocumentType());
-			FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, filename);
-			final String fsKey = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, filename, document.getContent());
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tutorId", tutorId);
-			paramsMap.put("fsKey", fsKey);
-			paramsMap.put("filename", filename);
+	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId, final Boolean isAdminOverride, final User activeUser) throws Exception {
+		if (ValidationUtils.checkNonEmptyList(documents)) {
+			final Date currentTimeStamp = new Date();
+			String queryIdInsert = EMPTY_STRING;
 			if (isAdminOverride) {
-				paramsMap.put("userId", activeUser.getUserId());
-				paramsMap.put("comments", "Admin override");
+				queryIdInsert = "insertTutorDocumentFromAdmin";
+			} else {
+				queryIdInsert = "insertTutorDocumentFromTutor";
 			}
-			paramsList.add(paramsMap);
+			final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
+			final List<String> documentTypes = new ArrayList<String>();
+			for (final TutorDocument document : documents) {
+				documentTypes.add(APOSTROPHE + document.getDocumentType() + APOSTROPHE);
+			}
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put("tutorId", tutorId);
+			final String queryToSelectOlderFileName = queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocumentFileNameAndFSKey") + 
+														queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentTypeFilter") + 
+														"( " + String.join(COMMA, documentTypes) + ")";
+			final List<Map<String, Object>> documentsToBeDeletedFromFileSystem = applicationDao.findAll(queryToSelectOlderFileName, params);
+			for (final Map<String, Object> document : documentsToBeDeletedFromFileSystem) {
+				FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(String.valueOf(document.get("FS_KEY")));
+			}
+			for (final TutorDocument document : documents) {
+				document.setTutorId(tutorId);
+				document.setFilename(generateFileNameForDocumentTypeAndIncomingFile(document));
+				document.setFsKey(FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, document.getFilename(), document.getContent()));
+				if (isAdminOverride) {
+					document.setIsApproved(YES);
+					document.setWhoActed(activeUser.getUserId());
+					document.setActionDateMillis(currentTimeStamp.getTime());
+					document.setRemarks("Admin override");
+				}
+			}
+			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "deleteTutorDocumentForTutorIdDocumentType", documents);
+			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", queryIdInsert, documents);
 		}
-		applicationDao.executeBatchUpdate(WHITESPACE + baseQueryDelete + WHITESPACE + existingFilterQueryString + WHITESPACE, paramsList);
-		applicationDao.executeBatchUpdate(baseQueryInsert, paramsList);
 	}
 	
-	private String getFileNameForDocumentType(final String documentType) {
-		switch(documentType) {
-			case "PROFILE_PHOTO": return "PROFILE_PHOTO.jpg";
-			case "PAN_CARD": return "PAN_CARD.pdf";
-			case "AADHAAR_CARD": return "AADHAAR_CARD.pdf";
+	private String generateFileNameForDocumentTypeAndIncomingFile(final TutorDocument tutorDocument) {
+		final String fileExtension = tutorDocument.getFilename().substring(tutorDocument.getFilename().lastIndexOf(PERIOD) + 1);
+		switch(tutorDocument.getDocumentType()) {
+			case DOCUMENT_TYPE_PROFILE_PHOTO : return "Profile_Photo." + fileExtension;
+			case DOCUMENT_TYPE_PAN_CARD : return "PAN_Card." + fileExtension;
+			case DOCUMENT_TYPE_AADHAAR_CARD : return "Aadhaar_Card." + fileExtension;
 		}
-		return null;
+		throw new ApplicationException("Invalid Document Type");
 	}
 	
 	private void sendEmailAboutEmailAndUserIdChange(final Long tutorId, final String newEmailId) {
@@ -726,7 +739,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) {
+	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) throws Exception {
 		final String baseQuery = "UPDATE REGISTERED_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId";

@@ -58,6 +58,10 @@ public class FileSystemUtils implements FileConstants {
 		AWSS3HelperUtils.deleteFileInFolder(folderNameWithPathFromRootFolder, filename);
 	}
 	
+	public static void deleteFileInFolderOnApplicationFileSystemUsingKey(final String fsKey) {
+		AWSS3HelperUtils.deleteFileInFolderUsingKeyInS3Client(fsKey);
+	}
+	
 	public static byte[] readContentFromFileOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final String filename) throws IOException {
 		return AWSS3HelperUtils.readContentFromFileInS3Client(folderNameWithPathFromRootFolder, filename);
 	}

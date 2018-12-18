@@ -27,4 +27,8 @@ public interface TutorConstants extends ResponseMapConstants {
 	
 	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
 	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
+	
+	String DOCUMENT_TYPE_AADHAAR_CARD = "03";
+	String DOCUMENT_TYPE_PROFILE_PHOTO = "02";
+	String DOCUMENT_TYPE_PAN_CARD = "01";
 }
