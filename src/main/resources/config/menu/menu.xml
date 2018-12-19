@@ -173,6 +173,5 @@
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
 			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
 		</page>
-		<page id="error" url="/error.html"></page>
 	</pageList>
 </menu>
