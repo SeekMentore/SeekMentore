@@ -147,7 +147,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			if (null != uploadedInputStreamFilePhoto) {
 				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePhoto);
 				if (fileBytes.length > 0) {
-					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PROFILE_PHOTO.jpg");
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PROFILE_PHOTO.jpg", getActiveUser(request));
 					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "PROFILE_PHOTO.jpg", fileBytes);
 					uploadedFiles.put("PROFILE_PHOTO.jpg", key);
 				}
@@ -155,7 +155,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			if (null != uploadedInputStreamFilePan) {
 				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFilePan);
 				if (fileBytes.length > 0) {
-					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PAN_CARD.pdf");
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "PAN_CARD.pdf", getActiveUser(request));
 					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "PAN_CARD.pdf", fileBytes);
 					uploadedFiles.put("PAN_CARD.pdf", key);
 				}
@@ -163,7 +163,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			if (null != uploadedInputStreamFileAadhaarCard) {
 				byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileAadhaarCard);
 				if (fileBytes.length > 0) {
-					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "AADHAAR_CARD.pdf");
+					FileSystemUtils.deleteFileInFolderOnApplicationFileSystem(folderPathToUploadDocuments, "AADHAAR_CARD.pdf", getActiveUser(request));
 					final String key = FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, "AADHAAR_CARD.pdf", fileBytes);
 					uploadedFiles.put("AADHAAR_CARD.pdf", key);
 				}

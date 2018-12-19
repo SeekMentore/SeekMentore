@@ -1015,9 +1015,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_MAP_REGISTERED_TUTORS : {
 				handleParentId();
 				handleAllIds();
+				break;
 			}
 			case REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS : {
 				handleAllIds();
+				break;
 			}
 			case REST_METHOD_NAME_SCHEDULE_DEMO : {
 				handleParentId();
@@ -1390,8 +1392,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.tutorMapperObject = new TutorMapper();
 			final Long demoDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoDateMillis", Long.class);
 			final Long demoTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoTimeMillis", Long.class);
-			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis)) {
-				this.tutorMapperObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis);
+			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
+			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis) && ValidationUtils.checkObjectAvailability(localTimezoneOffsetInMilliseconds)) {
+				this.tutorMapperObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis + localTimezoneOffsetInMilliseconds);
 			}
 		}
 	}
@@ -1412,8 +1415,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.demoTrackerObject = new DemoTracker();
 			final Long demoDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoDateMillis", Long.class);
 			final Long demoTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoTimeMillis", Long.class);
-			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis)) {
-				this.demoTrackerObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis);
+			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
+			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis) && ValidationUtils.checkObjectAvailability(localTimezoneOffsetInMilliseconds)) {
+				this.demoTrackerObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis + localTimezoneOffsetInMilliseconds);
 			}
 			this.demoTrackerObject.setTutorMapperId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorMapperId", Long.class));
 			this.demoTrackerObject.setReschedulingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reschedulingRemarks", String.class));

@@ -702,7 +702,7 @@ public class TutorService implements TutorConstants {
 														"( " + String.join(COMMA, documentTypes) + ")";
 			final List<Map<String, Object>> documentsToBeDeletedFromFileSystem = applicationDao.findAll(queryToSelectOlderFileName, params);
 			for (final Map<String, Object> document : documentsToBeDeletedFromFileSystem) {
-				FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(String.valueOf(document.get("FS_KEY")));
+				FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(String.valueOf(document.get("FS_KEY")), activeUser);
 			}
 			for (final TutorDocument document : documents) {
 				document.setTutorId(tutorId);

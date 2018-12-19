@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.constants.FileConstants;
+import com.model.User;
 import com.utils.helper.AWSS3HelperUtils;
 
 public class FileSystemUtils implements FileConstants {
@@ -50,16 +51,16 @@ public class FileSystemUtils implements FileConstants {
 		return AWSS3HelperUtils.getAllFileNamesAndContentFromFolder(folderNameWithPathFromRootFolder);
 	}
 	
-	public static void deleteFolderOnApplicationFileSystem(final String folderNameWithPathFromRootFolder) {
-		AWSS3HelperUtils.deleteFolder(folderNameWithPathFromRootFolder);
+	public static void deleteFolderOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final User activeUser) {
+		AWSS3HelperUtils.deleteFolder(folderNameWithPathFromRootFolder, activeUser);
 	}
 	
-	public static void deleteFileInFolderOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final String filename) {
-		AWSS3HelperUtils.deleteFileInFolder(folderNameWithPathFromRootFolder, filename);
+	public static void deleteFileInFolderOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final String filename, final User activeUser) {
+		AWSS3HelperUtils.deleteFileInFolder(folderNameWithPathFromRootFolder, filename, activeUser);
 	}
 	
-	public static void deleteFileInFolderOnApplicationFileSystemUsingKey(final String fsKey) {
-		AWSS3HelperUtils.deleteFileInFolderUsingKeyInS3Client(fsKey);
+	public static void deleteFileInFolderOnApplicationFileSystemUsingKey(final String fsKey, final User activeUser) {
+		AWSS3HelperUtils.deleteFileInFolderUsingKeyInS3Client(fsKey, activeUser);
 	}
 	
 	public static byte[] readContentFromFileOnApplicationFileSystem(final String folderNameWithPathFromRootFolder, final String filename) throws IOException {

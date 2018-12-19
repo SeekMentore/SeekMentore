@@ -2,6 +2,7 @@ package com.constants;
 
 public interface BeanConstants extends ApplicationConstants {
 	
+	String BEAN_NAME_APPLICATION_DAO = "applicationDao";
 	// Core architecture services
 	String BEAN_NAME_LOGIN_SERVICE = "loginService";
 	String BEAN_NAME_MENU_SERVICE = "menuService";
@@ -26,4 +27,5 @@ public interface BeanConstants extends ApplicationConstants {
 	String BEAN_NAME_APPLICATION_LOOKUP_DATA_SERVICE = "applicationLookupDataService";
 	// Public Access Service
 	String BEAN_NAME_PUBLIC_ACCESS_SERVICE = "publicAccessService";
+	
 }

@@ -9,12 +9,12 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.constants.ApplicationConstants;
+import com.constants.AWSConstants;
 import com.constants.BeanConstants;
 import com.utils.SecurityUtil;
 
 @Service(BeanConstants.BEAN_NAME_AWS_HELPER_SERVICE)
-public class AWSHelperService implements ApplicationConstants {
+public class AWSHelperService implements AWSConstants {
 	
 	private AmazonS3 s3client;
 	private String bucketName;

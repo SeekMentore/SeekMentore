@@ -29,6 +29,17 @@ public class ErrorPacket implements Serializable, UserConstants {
 		this.errorTrace = errorTrace;
 	}
 	
+	public ErrorPacket (
+			Long occuredAtMillis,
+			String requestURI,
+			String errorTrace
+	) {
+		this.occuredAtMillis = occuredAtMillis;
+		this.occuredAt = new Date(occuredAtMillis);
+		this.requestURI = requestURI;
+		this.errorTrace = errorTrace;
+	}
+	
 	public Date getOccuredAt() {
 		return occuredAt;
 	}

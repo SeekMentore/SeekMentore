@@ -18,13 +18,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.constants.ApplicationConstants;
+import com.constants.BeanConstants;
 import com.exception.ApplicationException;
 import com.model.rowmappers.MapRowMapper;
 import com.service.QueryMapperService;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
 
-@Repository("applicationDao")
+@Repository(BeanConstants.BEAN_NAME_APPLICATION_DAO)
 @EnableTransactionManagement
 public class ApplicationDao implements ApplicationConstants {
 	
