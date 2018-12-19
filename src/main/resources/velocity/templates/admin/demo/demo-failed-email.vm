@@ -1,0 +1,67 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+Hello Team,
+
+<br/><br/>
+<p>
+	Tutor demo was failed for the below enquiry, please find below the details.
+	<br/><br/>
+	<b>Subject</b> - $enquiryObject.getSubject()
+	<br/>
+	<b>Grade</b> - $enquiryObject.getGrade()
+	<br/>
+	<b>Tutor Name</b> - $registeredTutorObj.getName()
+	<br/>
+	<b>Tutor Mobile Number</b> - $registeredTutorObj.getContactNumber()
+	<br/>
+	<b>Tutor Email</b> - $registeredTutorObj.getEmail()
+	<br/>
+	<b>Client</b> - $subscribedCustomerObj.getName()
+	<br/>
+	<b>Client Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
+	<br/>
+	<b>Client Email</b> - $subscribedCustomerObj.getEmail()
+	<br/>
+	<b>Demo Occurred At Date & Time</b> - $demoTrackerObject.getDemoDateAndTime()
+	<br/>
+	<b>Client Remarks</b> - $demoTrackerObject.getClientRemarks()
+	<br/>
+	<b>Tutor Remarks</b> - $demoTrackerObject.getTutorRemarks()
+	<br/>
+	<b>Admin Remarks</b> - $demoTrackerObject.getAdminRemarks()
+</p>
+<br/><br/>
+<p>
+	Please look into this situation and check what was missing from our end.
+</p>
+<br/><br/>
+
+Thanks & Regards
+<br/>
+$companyContactInfo
+</body>
+</html>

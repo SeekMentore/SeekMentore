@@ -21,6 +21,9 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import com.constants.SchedulerConstants;
 import com.scheduler.jobs.EmailSenderJob;
+import com.scheduler.jobs.SubscribedCustomerJob;
+import com.scheduler.jobs.TutorRegisterJob;
+import com.service.LockService;
 import com.utils.context.AppContext;
 
 @Configuration
@@ -30,6 +33,9 @@ public class SchedulerConfig implements SchedulerConstants {
 
     @Autowired
     private DataSource dataSource;
+    
+    @Autowired
+	private transient LockService lockService;
     
     @Bean
     public JobFactory jobFactory() {
@@ -59,6 +65,8 @@ public class SchedulerConfig implements SchedulerConstants {
     private Trigger[] getTriggerArray() {
     	final List<Trigger> triggerList = new ArrayList<Trigger>();
     	triggerList.add(emailSenderJobTrigger().getObject());
+    	triggerList.add(tutorRegisterJobTrigger().getObject());
+    	triggerList.add(subscribedCustomerJobTrigger().getObject());
         return triggerList.toArray(new Trigger[0]);
     }
     
@@ -87,4 +95,63 @@ public class SchedulerConfig implements SchedulerConstants {
     /**
      * Configuring Trigger & JobDetails for "EmailSenderJob"
      */
+    /**
+     * Configuring Trigger & JobDetails for "TutorRegisterJob"
+     */
+    @Bean(name = "tutorRegisterJobTrigger")
+    public CronTriggerFactoryBean tutorRegisterJobTrigger() {
+        final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
+        factoryBean.setJobDetail(tutorRegisterJobDetails().getObject());
+        factoryBean.setStartDelay(TutorRegisterJob.START_DELAY);
+        factoryBean.setCronExpression(TutorRegisterJob.CRON_EXPRESSION);
+        factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+        return factoryBean;
+    }
+
+    @Bean(name = "tutorRegisterJobDetails")
+    public JobDetailFactoryBean tutorRegisterJobDetails() {
+        final JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+        jobDetailFactoryBean.setJobClass(TutorRegisterJob.class);
+        jobDetailFactoryBean.setDescription(TutorRegisterJob.DESCRIPTION);
+        jobDetailFactoryBean.setDurability(true);
+        jobDetailFactoryBean.setName(TutorRegisterJob.KEY);
+        return jobDetailFactoryBean;
+    }
+    /**
+     * Configuring Trigger & JobDetails for "TutorRegisterJob"
+     */
+    
+    /**
+     * Configuring Trigger & JobDetails for SubscribedCustomer Job
+     **/
+    
+    @Bean(name = "subscribedCustomerJobTrigger")
+    public CronTriggerFactoryBean subscribedCustomerJobTrigger() {
+    	final String key = lockService.lockObject("subscribedCustomerJobTrigger");
+    	final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
+		if (null != key) {        
+        factoryBean.setJobDetail(subscribedCustomerJobDetails().getObject());
+        factoryBean.setStartDelay(SubscribedCustomerJob.START_DELAY);
+        factoryBean.setCronExpression(SubscribedCustomerJob.CRON_EXPRESSION);
+        factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+        lockService.releaseLock("subscribedCustomerJobTrigger", key);
+        }
+		return factoryBean;
+    }
+
+    @Bean(name = "subscribedCustomerJobDetails")
+    public JobDetailFactoryBean subscribedCustomerJobDetails() {
+        final JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+        jobDetailFactoryBean.setJobClass(SubscribedCustomerJob.class);
+        jobDetailFactoryBean.setDescription(SubscribedCustomerJob.DESCRIPTION);
+        jobDetailFactoryBean.setDurability(true);
+        jobDetailFactoryBean.setName(SubscribedCustomerJob.KEY);
+        return jobDetailFactoryBean;
+    }
+    
+    
+    /**
+     * Configuring Trigger & JobDetails for SubscribedCustomer Job
+     **/
+     
 }

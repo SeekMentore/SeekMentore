@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="admin-registeredtutor-tutordocument">
+	<query type="select" id="selectTutorDocument">
+		SELECT
+			T.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.WHO_ACTED), T.WHO_ACTED) AS WHO_ACTED_NAME
+		FROM TUTOR_DOCUMENT T
+	</query>
+	<query type="filter" id="tutorDocumentDocumentIdFilter">
+		WHERE DOCUMENT_ID = :documentId
+	</query>
+	<query type="filter" id="tutorDocumentExistingFilter">
+		WHERE TUTOR_ID = :tutorId
+	</query>
+	<query type="sorter" id="tutorDocumentExistingSorter">
+		ORDER BY FILENAME
+	</query>
+	<query type="delete" id="deleteTutorDocumentForTutorIdDocumentType" paramClass="com.model.components.TutorDocument">
+		DELETE FROM TUTOR_DOCUMENT WHERE TUTOR_ID = :tutorId AND DOCUMENT_TYPE = :documentType
+	</query>
+	<query type="insert" id="insertTutorDocumentFromAdmin" paramClass="com.model.components.TutorDocument">
+		INSERT INTO TUTOR_DOCUMENT
+			(TUTOR_ID, FS_KEY, FILENAME, IS_APPROVED, WHO_ACTED, REMARKS, ACTION_DATE_MILLIS, DOCUMENT_TYPE) 
+		VALUES
+			(:tutorId, :fsKey, :filename, :isApproved, :whoActed, :remarks, :actionDateMillis, :documentType)
+	</query>
+	<query type="insert" id="insertTutorDocumentFromTutor" paramClass="com.model.components.TutorDocument">
+		INSERT INTO TUTOR_DOCUMENT
+			(TUTOR_ID, FS_KEY, FILENAME, DOCUMENT_TYPE) 
+		VALUES
+			(:tutorId, :fsKey, :filename, :documentType)
+	</query>
+	<query type="select" id="selectTutorDocumentFileNameAndFSKey">
+		SELECT
+			FS_KEY, FILENAME
+		FROM TUTOR_DOCUMENT T
+	</query>
+	<query type="filter" id="tutorDocumentMultiDocumentTypeFilter">
+		WHERE TUTOR_ID = :tutorId AND DOCUMENT_TYPE IN 
+	</query>
+</queryMapper>

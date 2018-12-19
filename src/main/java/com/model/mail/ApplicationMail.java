@@ -1,7 +1,7 @@
 package com.model.mail;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class ApplicationMail implements Serializable {
@@ -10,7 +10,8 @@ public class ApplicationMail implements Serializable {
 	
 	private long mailId;
 	private String mailType;
-	private Timestamp entryDate;
+	private Date entryDate;
+	private Long entryDateMillis;
 	private String fromAddress;
 	private String toAddress;
 	private String ccAddress;
@@ -18,9 +19,11 @@ public class ApplicationMail implements Serializable {
 	private String subjectContent;
 	private String messageContent;
 	private String mailSent;
-	private Timestamp sendDate;
+	private Date sendDate;
+	private Long sendDateMillis;
 	private String errorOccuredWhileSending;
-	private Timestamp errorDate;
+	private Date errorDate;
+	private Long errorDateMillis;
 	private String errorTrace;
 	private List<MailAttachment> attachments;
 	
@@ -28,7 +31,7 @@ public class ApplicationMail implements Serializable {
 	
 	public ApplicationMail(
 		String mailType,
-		Timestamp entryDate,
+		Date entryDate,
 		String fromAddress,
 		String toAddress,
 		String ccAddress,
@@ -39,6 +42,7 @@ public class ApplicationMail implements Serializable {
 	) {
 		this.mailType = mailType;
 		this.entryDate = entryDate;
+		this.entryDateMillis = entryDate.getTime();
 		this.fromAddress = fromAddress;
 		this.toAddress = toAddress;
 		this.ccAddress = ccAddress;
@@ -56,11 +60,11 @@ public class ApplicationMail implements Serializable {
 		this.mailId = mailId;
 	}
 
-	public Timestamp getEntryDate() {
+	public Date getEntryDate() {
 		return entryDate;
 	}
 
-	public void setEntryDate(Timestamp entryDate) {
+	public void setEntryDate(Date entryDate) {
 		this.entryDate = entryDate;
 	}
 
@@ -112,11 +116,11 @@ public class ApplicationMail implements Serializable {
 		this.messageContent = messageContent;
 	}
 
-	public Timestamp getSendDate() {
+	public Date getSendDate() {
 		return sendDate;
 	}
 
-	public void setSendDate(Timestamp sendDate) {
+	public void setSendDate(Date sendDate) {
 		this.sendDate = sendDate;
 	}
 
@@ -152,11 +156,11 @@ public class ApplicationMail implements Serializable {
 		this.errorOccuredWhileSending = errorOccuredWhileSending;
 	}
 
-	public Timestamp getErrorDate() {
+	public Date getErrorDate() {
 		return errorDate;
 	}
 
-	public void setErrorDate(Timestamp errorDate) {
+	public void setErrorDate(Date errorDate) {
 		this.errorDate = errorDate;
 	}
 
@@ -166,6 +170,30 @@ public class ApplicationMail implements Serializable {
 
 	public void setErrorTrace(String errorTrace) {
 		this.errorTrace = errorTrace;
+	}
+
+	public Long getEntryDateMillis() {
+		return entryDateMillis;
+	}
+
+	public void setEntryDateMillis(Long entryDateMillis) {
+		this.entryDateMillis = entryDateMillis;
+	}
+
+	public Long getSendDateMillis() {
+		return sendDateMillis;
+	}
+
+	public void setSendDateMillis(Long sendDateMillis) {
+		this.sendDateMillis = sendDateMillis;
+	}
+
+	public Long getErrorDateMillis() {
+		return errorDateMillis;
+	}
+
+	public void setErrorDateMillis(Long errorDateMillis) {
+		this.errorDateMillis = errorDateMillis;
 	}
 
 }

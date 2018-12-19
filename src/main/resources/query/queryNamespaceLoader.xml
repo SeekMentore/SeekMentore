@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryNamespace>
+	<namespace name="aws" mapperFilePath="query/components/aws.xml"/>
+	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
+	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>
+	<namespace name="sales-tutor-mapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
+	<namespace name="sales-demo" mapperFilePath="query/components/sales/demo.xml"/>
+	<!-- <namespace name="admin-registeredtutor" mapperFilePath="query/components/admin/registeredtutor.xml"/> -->
+	<namespace name="admin-registeredtutor-tutordocument" mapperFilePath="query/components/admin/tutordocument.xml"/>
+	<namespace name="admin-subscribedcustomer" mapperFilePath="query/components/admin/subscribedcustomer.xml"/>
+</queryNamespace>

@@ -3,16 +3,16 @@ var successMessage = '';
 var callbackAfterCommonSuccess = null;
 
 commonErrorHandler = function(error) {
-	showNotificationModal('Connection lost.<br/>Please check your network connection and refresh the page.', false);
+	showNotificationModal('Error Occurred', 'Connection lost.<br/>Please check your network connection and refresh the page.', false);
 }
 
 commmonSuccessHandler = function(response) {
-	var failure = response.FAILURE;
-	if (failure) {
-		showNotificationModal(response.FAILURE_MESSAGE, false);
+	var success = response.success;
+	if (!success) {
+		showNotificationModal('Error Occurred', response.message, false);
 		return;
 	}
-	showNotificationModal(successMessage, true);
+	showNotificationModal('Success', successMessage, true);
 	if (null != callbackAfterCommonSuccess) {
 		callbackAfterCommonSuccess(response);
 		callbackAfterCommonSuccess = null;
@@ -29,9 +29,7 @@ function decodeObjectFromJSON(json) {
 
 function callWebservice(url, data, success, failure, method, contentType) {
 	// Show Pop up loader 
-	if (null != $('#loader-popup-modal')) {
-		$('#loader-popup-modal').removeClass('noscreen');
-	}
+	showLoader();
 	$.ajax({
         url			: ctxPath + url,
         type		: ((null != method) ? method : 'POST'),
@@ -40,9 +38,7 @@ function callWebservice(url, data, success, failure, method, contentType) {
         cache		: false,
         dataType	: 'json',
         success		: function(data) {
-        				if (null != $('#loader-popup-modal')) {
-        					$('#loader-popup-modal').addClass('noscreen');
-        				}
+        				removeLoader();
         				var response = decodeObjectFromJSON(data.response)
 			        	if (null != success) {
 			        		success(response);
@@ -51,9 +47,7 @@ function callWebservice(url, data, success, failure, method, contentType) {
 			        	}
 		},
 		error		: function(error) {
-						if (null != $('#loader-popup-modal')) {
-							$('#loader-popup-modal').addClass('noscreen');
-						}
+						removeLoader();
 			        	if (null != failure) {
 			        		failure(error);
 			        	} else {
@@ -63,32 +57,23 @@ function callWebservice(url, data, success, failure, method, contentType) {
     });
 }
 
-var queryParams = new Object();
-function readGetParameters() {
-	var url = location.href;
-	var queryParamStart = url.indexOf('?');
-	if (queryParamStart != -1) {
-		var paramsString = url.substring(queryParamStart + 1);
-		var paramArray = paramsString.split('&');
-		for (var i = 0; i < paramArray.length; i++) {
-			var paramString = paramArray[i];
-			var paramValueArray = paramString.split('=');
-			queryParams[paramValueArray[0]] = paramValueArray[1];
-		}
+function showLoader() {
+	if (null != $('#loader-popup-modal')) {
+		$('#loader-popup-modal').removeClass('noscreen');
 	}
 }
 
-var form = document.getElementById('signout_form');
-function logout() {
-	form.action = ctxPath + '/rest/login/logout';
-	form.submit();
+function removeLoader() {
+	if (null != $('#loader-popup-modal')) {
+		$('#loader-popup-modal').addClass('noscreen');
+	}
 }
 
-function showNotificationModal(message, isSuccess) {
+function showNotificationModal(header, message, isSuccess) {
 	$('#notification-popup-modal').removeClass('noscreen');
 	$('#notification-popup-model-content-section').html(message);
 	if (isSuccess) {
-		$('#alert-title').html('Success');
+		$('#alert-title').html(header);
 		
 		$('#alert-title').addClass('successMessage');
 		$('#alert-title').removeClass('failureMessage');
@@ -96,7 +81,7 @@ function showNotificationModal(message, isSuccess) {
 		$('#notification-popup-model-content-section').addClass('successMessage');
 		$('#notification-popup-model-content-section').removeClass('failureMessage');
 	} else {
-		$('#alert-title').html('Error');
+		$('#alert-title').html(header);
 		
 		$('#alert-title').addClass('failureMessage');
 		$('#alert-title').removeClass('successMessage');
@@ -117,5 +102,3 @@ window.onclick = function(event) {
 		$('#notification-popup-modal').addClass('noscreen');
 	}
 }
-
-readGetParameters();

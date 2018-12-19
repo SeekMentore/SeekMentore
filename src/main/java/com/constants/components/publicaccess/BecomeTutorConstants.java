@@ -6,6 +6,7 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	
 	String COLUMN_NAME_RECORD_LAST_UPDATED = "RECORD_LAST_UPDATED";
 	String COLUMN_NAME_PREVIOUS_APPLICATION_DATE = "PREVIOUS_APPLICATION_DATE";
+	String COLUMN_NAME_ADDRESS_DETAILS = "ADDRESS_DETAILS";
 	String COLUMN_NAME_RE_APPLIED = "RE_APPLIED";
 	String COLUMN_NAME_REJECTION_COUNT = "REJECTION_COUNT";
 	String COLUMN_NAME_REJECTION_REMARKS = "REJECTION_REMARKS";
@@ -49,8 +50,12 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_APPLICATION_STATUS = "APPLICATION_STATUS";
 	String COLUMN_NAME_APPLICATION_DATE = "APPLICATION_DATE";
 	String COLUMN_NAME_TENTATIVE_TUTOR_ID = "TENTATIVE_TUTOR_ID";
+	String COLUMN_NAME_REFERENCE = "REFERENCE";
+	String COLUMN_NAME_PREFERRED_TEACHING_TYPE = "PREFERRED_TEACHING_TYPE";
 	
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_TUTORING_TYPE = "Please select valid multiple 'Preferred Tutoring Type'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE = "Please select valid 'Reference'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_LOCATIONS = "Please select valid multiple 'Locations'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_A_VALID_TRANSPORT_MODE = "Please select a valid 'Transport Mode'";
@@ -64,5 +69,4 @@ public interface BecomeTutorConstants extends PublicAccessConstants {
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_LAST_NAME = "Please enter a valid 'Last Name'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_FIRST_NAME = "Please enter a valid 'First Name'";
-	
 }

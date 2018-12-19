@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
+import com.constants.LoginConstants;
 import com.constants.MessageConstants;
 import com.model.ErrorPacket;
 import com.service.components.CommonsService;
 import com.utils.ExceptionUtils;
+import com.utils.LoginUtils;
+import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
 import com.utils.localization.Message;
 
@@ -51,8 +54,9 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     } else {
 	    	 errorText = ExceptionUtils.generateErrorLog(throwable);
 	     }
-	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri, errorText);
+	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
 	     getCommonsService().feedErrorRecord(errorPacket);
+	     WebServiceUtils.writeError(500, requestUri + " - Server error occurred while accessing the URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, response);
 	}
 	
 	public CommonsService getCommonsService() {

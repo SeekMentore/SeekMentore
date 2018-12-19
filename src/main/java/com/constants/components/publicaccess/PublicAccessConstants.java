@@ -1,9 +1,9 @@
 package com.constants.components.publicaccess;
 
-import com.constants.ApplicationConstants;
 import com.constants.VelocityConstants;
+import com.constants.components.ResponseMapConstants;
 
-public interface PublicAccessConstants extends ApplicationConstants {
+public interface PublicAccessConstants extends ResponseMapConstants {
 	
 	String APPLICATION_STATUS = "APPLICATION_STATUS";
 	String APPLICATION_STATUS_FRESH = "FRESH";
@@ -17,17 +17,16 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String APPLICATION_STATUS_RE_APPLIED = "RE_APPLIED";
 	
 	String FAILURE_CONTACT_INFO = "If you believe you are receiving this error wrong.<br/>Please contact 'Seek Mentore' Support team from our 'Connect with us' section on home page.";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE = "FAILURE";
 	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
 	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
-	String RESPONSE_MAP_ATTRIBUTE_FAILURE_MESSAGE = "FAILURE_MESSAGE";
 	
 	String PAGE_REFERENCE_SUBMIT_QUERY = "SUBMIT_QUERY";
 	String PAGE_REFERENCE_TUTOR_ENQUIRY = "TUTOR_ENQUIRY";
 	String PAGE_REFERENCE_SUBSCRIBE_WITH_US = "SUBSCRIBE_WITH_US";
 	String PAGE_REFERENCE_TUTOR_REGISTRATION = "TUTOR_REGISTRATION";
 	String RESPONSE_MAP_ATTRIBUTE_PAGE_REFERNCE = "PAGE_REFERNCE";
-	String RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE = "UNKNOWN_PUBLIC_PAGE_REFERENCE";
+	String RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE = "Unknown Object passed in request";
+	String RESPONSE_MAP_ATTRIBUTE_MISMATCH_PUBLIC_PAGE_REFERENCE = "The function accessed and the Object passed in request do not match";	
 	
 	String VELOCITY_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH = VelocityConstants.VELOCITY_TEMPLATES_FOLDER_PATH + "/publicaccess";
 	String SUPPORT_MAIL_LIST_ID_VM_OBJECT = "supportMailListId";
@@ -78,5 +77,8 @@ public interface PublicAccessConstants extends ApplicationConstants {
 	String CAPTCHA_PROPERTY_SECRET = "secret";
 	String CAPTCHA_PROPERTY_RESPONSE = "response";
 	String CAPTCHA_PROPERTY_REMOTEIP = "remoteip";
-
+	
+	String PUBLIC_APPLICATION_RECEIVE_SUCCESS_MESSAGE = "Your entry and has been received and will be contacted shortly.";
+	String RESPONSE_MAP_DROPDOWN_LIST = "dropdownList";
+	String FRESH_ENTRY = "FRESH_ENTRY";
 }

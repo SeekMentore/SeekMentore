@@ -15,6 +15,7 @@ import com.constants.EncyptionConstants;
 import com.constants.JNDIandControlConfigurationConstants;
 
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 public class EncryptedDataSourceFactory extends BasicDataSourceFactory implements EncyptionConstants {
 	
@@ -47,5 +48,12 @@ public class EncryptedDataSourceFactory extends BasicDataSourceFactory implement
         Cipher cipher = Cipher.getInstance(DATSOURCE_PASSWORD_ENCYPTION_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyString.getBytes(), DATSOURCE_PASSWORD_ENCYPTION_ALGORITHM));
         return new String(cipher.doFinal(new BASE64Decoder().decodeBuffer(value)), DATASOURCE_ENCODING_STANDARD);
+    }
+	
+	@SuppressWarnings("unused")
+	private static String encrypt (final String value, final String keyString) throws Exception {
+		Cipher cipher = Cipher.getInstance(DATSOURCE_PASSWORD_ENCYPTION_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(keyString.getBytes(), DATSOURCE_PASSWORD_ENCYPTION_ALGORITHM));
+        return new BASE64Encoder().encode(cipher.doFinal(value.getBytes(DATASOURCE_ENCODING_STANDARD)));
     }
 }

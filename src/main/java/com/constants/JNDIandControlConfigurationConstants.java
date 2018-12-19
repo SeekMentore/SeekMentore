@@ -12,6 +12,9 @@ public interface JNDIandControlConfigurationConstants extends ApplicationConstan
 	String ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD = "encryptedSupportMailGroupPassword";
 	String ENCRYPTED_SUPPORT_MAIL_GROUP_USERNAME = "encryptedSupportMailGroupUsername";
 	String ENCRYPTED_CAPTCHA_SECRET = "encryptedCaptchaSecret";
+	String BUCKET_NAME_ENCYPTED = "bucketNameEncypted";
+	String SECRET_ACCESS_ENCRYPTED = "secretAccessEncrypted";
+	String ACCESS_KEY_ID_ENCRYPTED = "accessKeyIDEncrypted";
 	
 	String SERVER_NAME_PROD = "Prod";
 	String SERVER_NAME_LOCAL = "Local";

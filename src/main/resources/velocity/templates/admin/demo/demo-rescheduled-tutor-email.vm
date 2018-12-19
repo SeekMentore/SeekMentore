@@ -1,0 +1,61 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+Hello $registeredTutorObj.getName(),
+
+<br/><br/>
+<p>
+	Your demo has been re-scheduled with client, please find below the details.
+	<br/><br/>
+	<b>Client</b> - $subscribedCustomerObj.getName()
+	<br/>
+	<b>Subject</b> - $enquiryObject.getSubject()
+	<br/>
+	<b>Grade</b> - $enquiryObject.getGrade()
+	<br/>
+	<b>Mobile Number</b> - $subscribedCustomerObj.getContactNumber()
+	<br/>
+	<b>Initial Demo Date & Time</b> - $demoDateAndTimeISTOld
+	<br/>
+	<b>Re-Scheduled Demo Date & Time</b> - $demoDateAndTimeISTNew
+	<br/>
+	<b>Address</b> - $enquiryObject.getAddressDetails()
+</p>
+<br/><br/>
+<p>
+	Please contact the client on the afore-mentioned contact details. 
+	<br/>
+	In case you are not able to connect with client please call our Tutor Service Center on the below provided details.
+	<br/>
+	All the best!!! 
+</p>
+<br/><br/>
+
+Thanks & Regards
+<br/>
+$companyContactInfo
+</body>
+</html>

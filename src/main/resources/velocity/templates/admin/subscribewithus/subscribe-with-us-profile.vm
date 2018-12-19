@@ -1,0 +1,186 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+		<h3 align="center">Subscription Details</h3>
+		<br/>
+		<table align="center">
+	    	<tr>
+	    		<td>Application Date</td>
+	    		<td>$subscribeWithUsObject.applicationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Application Status</td>
+	    		<td>$subscribeWithUsObject.applicationStatus</td>
+	    	</tr>
+                 <tr>
+	    		<td>First Name</td>
+	    		<td>$subscribeWithUsObject.firstName</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Last Name</td>
+	    		<td>$subscribeWithUsObject.lastName</td>
+	    	</tr>
+
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td>$subscribeWithUsObject.contactNumber</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td>$subscribeWithUsObject.emailId</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Student Grade</td>
+	    		<td>$subscribeWithUsObject.studentGrade</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subjects</td>
+	    		<td>$subscribeWithUsObject.subjects</td>
+	    	</tr>
+	       	<tr>
+	    		<td>Preferred Time To Call</td>
+	    		<td>$subscribeWithUsObject.preferredTimeToCall</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Location</td>
+	    		<td>$subscribeWithUsObject.location</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$subscribeWithUsObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Address Details</td>
+	    		<td>$subscribeWithUsObject.addressDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td>$subscribeWithUsObject.additionalDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subscribed Customer</td>
+	    		<td>$subscribeWithUsObject.subscribedCustomer</td>
+	    	</tr> 
+	    	<tr>
+	    		<td>Is Contacted</td>
+	    		<td>$subscribeWithUsObject.isContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Contacted</td>
+	    		<td>$subscribeWithUsObject.whoContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Date</td>
+	    		<td>$subscribeWithUsObject.contactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Remarks</td>
+	    		<td>$subscribeWithUsObject.contactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Authentication Verified</td>
+	    		<td>$subscribeWithUsObject.isAuthenticationVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Verified</td>
+	    		<td>$subscribeWithUsObject.whoVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Date</td>
+	    		<td>$subscribeWithUsObject.verificationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Remarks</td>
+	    		<td>$subscribeWithUsObject.verificationRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is To Be Recontacted</td>
+	    		<td>$subscribeWithUsObject.isToBeRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Suggested For Re-contact</td>
+	    		<td>$subscribeWithUsObject.whoSuggestedForRecontact</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Date</td>
+	    		<td>$subscribeWithUsObject.suggestionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Remarks</td>
+	    		<td>$subscribeWithUsObject.suggestionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Recontacted</td>
+	    		<td>$subscribeWithUsObject.whoRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Date</td>
+	    		<td>$subscribeWithUsObject.recontactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Remarks</td>
+	    		<td>$subscribeWithUsObject.recontactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Selected</td>
+	    		<td>$subscribeWithUsObject.isSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Selected</td>
+	    		<td>$subscribeWithUsObject.whoSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Date</td>
+	    		<td>$subscribeWithUsObject.selectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Remarks</td>
+	    		<td>$subscribeWithUsObject.selectionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Rejected</td>
+	    		<td>$subscribeWithUsObject.isRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Rejected</td>
+	    		<td>$subscribeWithUsObject.whoRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Date</td>
+	    		<td>$subscribeWithUsObject.rejectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Remarks</td>
+	    		<td>$subscribeWithUsObject.rejectionRemarks</td>
+	    	</tr>    
+	    	<tr>
+	    		<td>Record Last Updated</td>
+	    		<td>$subscribeWithUsObject.recordLastUpdated</td>
+	    	</tr>
+		</table>
+
+</body>
+</html>

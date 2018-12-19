@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="sales-tutor-mapper">
+	<query type="select" id="selectTutorMapper">
+		SELECT
+			TM.*,
+			C.CUSTOMER_ID AS CUSTOMER_ID,
+			C.NAME AS CUSTOMER_NAME, 
+			C.EMAIL_ID AS CUSTOMER_EMAIL, 
+			C.CONTACT_NUMBER AS CUSTOMER_CONTACT_NUMBER, 
+			EN.SUBJECT AS ENQUIRY_SUBJECT,
+			EN.GRADE AS ENQUIRY_GRADE,
+			EN.LOCATION_DETAILS AS ENQUIRY_LOCATION,
+			EN.PREFERRED_TEACHING_TYPE AS ENQUIRY_PREFERRED_TEACHING_TYPE,
+			EN.QUOTED_CLIENT_RATE AS ENQUIRY_QUOTED_CLIENT_RATE,
+			EN.NEGOTIATED_RATE_WITH_CLIENT AS ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT,
+			EN.CLIENT_NEGOTIATION_REMARKS AS ENQUIRY_CLIENT_NEGOTIATION_REMARKS,
+			T.NAME AS TUTOR_NAME,
+			T.EMAIL_ID AS TUTOR_EMAIL,
+			T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME
+			FROM TUTOR_MAPPER TM
+			INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
+			INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID
+			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
+	</query>
+	<query type="filter" id="tutorMapperExistingFilter">
+		WHERE TM.MAPPING_STATUS = :mappingStatus
+	</query>
+	<query type="filter" id="tutorMapperCurrentTutorMappingFilter">
+		 WHERE TM.TUTOR_ID = :tutorId
+	</query>
+	<query type="filter" id="tutorMapperCurrentCustomerMappingFilter">
+		 WHERE C.CUSTOMER_ID = :customerId
+	</query>
+	<query type="filter" id="tutorMapperCurrentEnquiryAllMappedTutors">
+		WHERE TM.ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="sorter" id="tutorMapperExistingSorter">
+		ORDER BY ENTRY_DATE_MILLIS
+	</query>
+	<query type="insert" id="insertTutorMapper" paramClass="com.model.components.TutorMapper">
+		INSERT INTO TUTOR_MAPPER
+			(ENQUIRY_ID, TUTOR_ID, MAPPING_STATUS, WHO_ACTED, IS_DEMO_SCHEDULED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
+		VALUES
+			(:enquiryId, :tutorId, :mappingStatus, :whoActed, :isDemoScheduled, :adminActionDateMillis, :entryDateMillis)
+	</query>
+	<query type="delete" id="deleteTutorMapper" paramClass="com.model.components.TutorMapper">
+		DELETE FROM TUTOR_MAPPER WHERE TUTOR_MAPPER_ID = :tutorMapperId
+	</query>
+	<query type="update" id="updateTutorMapper" paramClass="com.model.components.TutorMapper">
+		UPDATE TUTOR_MAPPER SET
+	</query>
+	<query type="update" id="updateTutorMapperMappingStatus" paramClass="com.model.components.TutorMapper">
+		MAPPING_STATUS = :mappingStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_ACTION_REMARKS = :remarks WHERE TUTOR_MAPPER_ID = :tutorMapperId
+	</query>
+	<query type="update" id="updateTutorMapperForDemoScheduled" paramClass="com.model.components.TutorMapper">
+		UPDATE TUTOR_MAPPER SET 
+			IS_DEMO_SCHEDULED 			= :isDemoScheduled, 
+			MAPPING_STATUS 				= :mappingStatus, 
+			ADMIN_ACTION_DATE_MILLIS 	= :adminActionDateMillis, 
+			WHO_ACTED 					= :whoActed 
+		WHERE TUTOR_MAPPER_ID 			= :tutorMapperId
+	</query>
+</queryMapper>

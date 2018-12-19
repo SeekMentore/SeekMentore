@@ -15,8 +15,31 @@ import com.utils.context.AppContext;
 
 public class ValidationUtils implements ValidationConstants {
 	
-	public static boolean validatePlainNotNullAndEmptyTextString(final String text) {
-		if (null != text && !EMPTY_STRING.equals(text))
+	public static Boolean checkObjectAvailability(final Object object) {
+	    if (null != object) {
+	      return true;
+	    }
+	    return false;
+	}
+	
+	public static Boolean checkStringAvailability(final String stringObject) {
+	    if (checkObjectAvailability(stringObject)) {
+	      if (!EMPTY_STRING.equals(stringObject.trim())) {
+	        return true;
+	      }
+	    }
+	    return false;
+	}
+	
+	public static Boolean checkNonEmptyList(final List<?> dataList) {
+		if (checkObjectAvailability(dataList)) {
+			return !dataList.isEmpty();
+		}
+		return false;
+	}
+	
+	public static boolean validatePlainNotNullAndEmptyTextString(final Object text) {
+		if (null != text && !EMPTY_STRING.equals(text.toString()))
 			return true;
 		return false;
 	}
@@ -53,12 +76,14 @@ public class ValidationUtils implements ValidationConstants {
 	}
 	
 	public static boolean validateNumber (
-			final int number, 
+			final Integer number, 
 			final boolean hasMaxCount,
 			final int maxCount,
 			final boolean hasMinCount,
 			final int minCount
 	) {
+		if (null == number)
+			return false;
 		final boolean patternMatched = Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(String.valueOf(number)).find();
 		final boolean isUnderMaxCountLimit = hasMaxCount ? number <= maxCount : true;
 		final boolean isUnderMinCountLimit = hasMinCount ? number >= minCount : true;
@@ -88,6 +113,20 @@ public class ValidationUtils implements ValidationConstants {
 				new InternetAddress(email).validate();
 				return true;
 			} catch (AddressException ex) {}
+		}
+		return false;
+	}
+	
+	public static boolean validateFileExtension(final String[] extensions, final String filename) {
+		if (validatePlainNotNullAndEmptyTextString(filename)) {
+			final String fileExtension = filename.substring(filename.lastIndexOf(DOT) + 1);
+			if (filename.indexOf(DOT) == filename.lastIndexOf(DOT)) {
+				for (final String extension : extensions) {
+					if (extension.equalsIgnoreCase(fileExtension)) {
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}

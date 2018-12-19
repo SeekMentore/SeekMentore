@@ -16,11 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.constants.BeanConstants;
 import com.constants.FilterConstants;
+import com.constants.LoginConstants;
 import com.constants.PageConstants;
 import com.model.ErrorPacket;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.MenuService;
 import com.service.components.CommonsService;
+import com.utils.LoginUtils;
 import com.utils.WebServiceUtils;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractWebservice;
@@ -55,9 +57,9 @@ public class PageAvailableFilter extends AbstractWebservice implements Filter, F
 			if (menuService.pageExists(pageURL)) {
 				chain.doFilter(request, response);
 			} else {
-				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL, "Page not found on Server.");
+				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Page not found on Server.");
 				commonsService.feedErrorRecord(errorPacket);
-				WebServiceUtils.redirectToPage("/error.html", httpRequest, httpResponse);
+				WebServiceUtils.writeError(404, pageURL + " - Is not available on server", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 			}
 			
 		} else {

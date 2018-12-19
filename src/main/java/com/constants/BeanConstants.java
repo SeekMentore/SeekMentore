@@ -2,6 +2,8 @@ package com.constants;
 
 public interface BeanConstants extends ApplicationConstants {
 	
+	String BEAN_NAME_DATA_SOURCE = "dataSource";
+	String BEAN_NAME_APPLICATION_DAO = "applicationDao";
 	// Core architecture services
 	String BEAN_NAME_LOGIN_SERVICE = "loginService";
 	String BEAN_NAME_MENU_SERVICE = "menuService";
@@ -13,9 +15,18 @@ public interface BeanConstants extends ApplicationConstants {
 	String BEAN_NAME_SCHEDULER_SERVICE = "schedulerService";
 	String BEAN_NAME_MAIl_SERVICE = "mailService";
 	String BEAN_NAME_LOCK_SERVICE = "lockService";
+	String BEAN_NAME_AWS_HELPER_SERVICE = "awsHelperService";
 	// Restricted functional services
 	String BEAN_NAME_ADMIN_SERVICE = "adminService";
 	String BEAN_NAME_COMMONS_SERVICE = "commonsService";
+	String BEAN_NAME_TUTOR_SERVICE = "tutorService";
+	String BEAN_NAME_CUSTOMER_SERVICE = "customerService";
+	String BEAN_NAME_ENQUIRY_SERVICE = "enquiryService";
+	String BEAN_NAME_DEMO_SERVICE = "demoService";
+	String BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE = "subscriptionPackageService";
+	String BEAN_NAME_SUBSCRIPTION_NOTIFICATION_SERVICE = "notificationService";
+	String BEAN_NAME_APPLICATION_LOOKUP_DATA_SERVICE = "applicationLookupDataService";
 	// Public Access Service
 	String BEAN_NAME_PUBLIC_ACCESS_SERVICE = "publicAccessService";
+	
 }

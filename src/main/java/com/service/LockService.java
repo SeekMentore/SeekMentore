@@ -45,7 +45,7 @@ public class LockService implements LockConstants {
 	}
 	
 	@PostConstruct
-	public void parseControlConfigurationFromXML() {
+	public void init() {
 		objectLockStatus = new HashMap<String, Lock>();
 	}
 	

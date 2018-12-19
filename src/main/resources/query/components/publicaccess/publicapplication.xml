@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="public-application">
+	<query type="insert" id="insertBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		INSERT INTO BECOME_TUTOR
+			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, GENDER, EMAIL_ID, CONTACT_NUMBER, DATE_OF_BIRTH, PRIMARY_PROFESSION, QUALIFICATION, TRANSPORT_MODE, 
+			STUDENT_GRADE, SUBJECTS, TEACHING_EXP, LOCATIONS, PREFERRED_TEACHING_TYPE, PREFERRED_TIME_TO_CALL, REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS, 
+			IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES(:applicationDateMillis, :applicationStatus, :firstName, :lastName, :gender, :emailId, :contactNumber, :dateOfBirth, :primaryProfession, :qualification, :transportMode,
+			   :studentGrade, :subjects, :teachingExp, :locations, :preferredTeachingType, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
+			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+	<query type="insert" id="insertFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		INSERT INTO FIND_TUTOR
+			(ENQUIRY_DATE_MILLIS, ENQUIRY_STATUS, NAME,  EMAIL_ID, CONTACT_NUMBER, STUDENT_GRADE, SUBJECTS, LOCATION, SUBSCRIBED_CUSTOMER, PREFERRED_TIME_TO_CALL, 
+			REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS,	IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES(:enquiryDateMillis, :enquiryStatus, :name, :emailId, :contactNumber, :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
+			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET 
+			IS_DATA_MIGRATED = 'Y', 
+			WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="insert" id="insertSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		INSERT INTO SUBSCRIBE_WITH_US
+			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, EMAIL_ID, CONTACT_NUMBER, 
+			STUDENT_GRADE, SUBJECTS, LOCATION, SUBSCRIBED_CUSTOMER, PREFERRED_TIME_TO_CALL, REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS, 
+			IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES(:applicationDateMillis, :applicationStatus, :firstName, :lastName, :emailId, :contactNumber,
+			   :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
+			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+	<query type="insert" id="insertSubmitQuery" paramClass="com.model.components.publicaccess.SubmitQuery">
+		INSERT INTO SUBMIT_QUERY
+			(QUERY_REQUESTED_DATE_MILLIS, QUERY_STATUS, EMAIL_ID, QUERY_DETAILS, REGISTERED_TUTOR, SUBSCRIBED_CUSTOMER, IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES(:queryRequestedDateMillis, :queryStatus, :emailId, :queryDetails, :registeredTutor, :subscribedCustomer, :isContacted, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+</queryMapper>

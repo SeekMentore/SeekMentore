@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
 import com.constants.JNDIandControlConfigurationConstants;
+import com.model.control.AWSParams;
 import com.model.control.ControlConfiguration;
 import com.model.control.MailingDuringDevelopmentAndTestingFeatures;
+import com.model.control.S3ClientParams;
 import com.utils.ApplicationUtils;
 
 @Service(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE)
@@ -41,6 +43,11 @@ public class JNDIandControlConfigurationLoadService implements JNDIandControlCon
 		this.controlConfiguration.getMailConfiguration().setEncryptedPassword(environment.getProperty(ENCRYPTED_SUPPORT_MAIL_GROUP_PASSWORD));
 		this.controlConfiguration.getCaptchaParams().setEncryptedApiSecret(environment.getProperty(ENCRYPTED_CAPTCHA_SECRET));
 		this.controlConfiguration.getMailConfiguration().setMailingDuringDevelopmentAndTestingFeatures(new MailingDuringDevelopmentAndTestingFeatures());
+		this.controlConfiguration.setAwsParams(new AWSParams());
+		this.controlConfiguration.getAwsParams().setS3ClientParams(new S3ClientParams());
+		this.controlConfiguration.getAwsParams().getS3ClientParams().setAccessKeyEncypted(environment.getProperty(ACCESS_KEY_ID_ENCRYPTED));
+		this.controlConfiguration.getAwsParams().getS3ClientParams().setSecretAccessEncypted(environment.getProperty(SECRET_ACCESS_ENCRYPTED));
+		this.controlConfiguration.getAwsParams().getS3ClientParams().setBucketNameEncypted(environment.getProperty(BUCKET_NAME_ENCYPTED));
 		if (!SERVER_NAME_LOCAL.equals(this.serverName)) {
 			this.controlConfiguration.getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().setSendOutActualEmails(true);
 			this.controlConfiguration.getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().setShowOnConsoleWhatEmailWillBeSent(false);

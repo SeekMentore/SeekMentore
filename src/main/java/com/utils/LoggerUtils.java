@@ -26,12 +26,20 @@ public class LoggerUtils implements LoggerConstants {
 	private static final transient boolean isErrorEnabled = LOGGER.isErrorEnabled();
 	
 	public static void logOnConsole(final String message) {
-		if (getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL)) {
+		Boolean isServerLocal = false;
+		try {
+			isServerLocal = getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL);
+		} catch(Exception e) {}
+		if (isServerLocal) {
 			// Only print on console if Server is Local
 			System.out.println(message);
 		} else {
 			logDebugSteps(message);
 		}
+	}
+	
+	public static void logOnConsoleForcefully(final String message) {
+		//System.out.println(message);
 	}
 	
 	public static void logInfoSteps(final String message) {
@@ -73,7 +81,9 @@ public class LoggerUtils implements LoggerConstants {
 	
 	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
 		final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
-		getCommonsService().feedErrorRecord(errorPacket);
+		try {
+			getCommonsService().feedErrorRecord(errorPacket);
+		} catch (Exception e) {}
 		if (isErrorEnabled)
 			LOGGER.error(errorPacket.getErrorTrace());
 		if (isTraceEnabled)

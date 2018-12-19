@@ -1,7 +1,7 @@
 package com.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.constants.UserConstants;
 
@@ -9,8 +9,9 @@ public class ErrorPacket implements Serializable, UserConstants {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private long errorId;
-	private Timestamp occuredAt;
+	private Long errorId;
+	private Date occuredAt;
+	private Long occuredAtMillis;
 	private String requestURI;
 	private String errorTrace;
 	
@@ -18,20 +19,32 @@ public class ErrorPacket implements Serializable, UserConstants {
 	}
 	
 	public ErrorPacket (
-			Timestamp occuredAt,
+			Date occuredAt,
 			String requestURI,
 			String errorTrace
 	) {
 		this.occuredAt = occuredAt;
+		this.occuredAtMillis = occuredAt.getTime();
 		this.requestURI = requestURI;
 		this.errorTrace = errorTrace;
 	}
 	
-	public Timestamp getOccuredAt() {
+	public ErrorPacket (
+			Long occuredAtMillis,
+			String requestURI,
+			String errorTrace
+	) {
+		this.occuredAtMillis = occuredAtMillis;
+		this.occuredAt = new Date(occuredAtMillis);
+		this.requestURI = requestURI;
+		this.errorTrace = errorTrace;
+	}
+	
+	public Date getOccuredAt() {
 		return occuredAt;
 	}
 
-	public void setOccuredAt(Timestamp occuredAt) {
+	public void setOccuredAt(Date occuredAt) {
 		this.occuredAt = occuredAt;
 	}
 
@@ -51,11 +64,19 @@ public class ErrorPacket implements Serializable, UserConstants {
 		this.errorTrace = errorTrace;
 	}
 
-	public long getErrorId() {
+	public Long getErrorId() {
 		return errorId;
 	}
 
-	public void setErrorId(long errorId) {
+	public void setErrorId(Long errorId) {
 		this.errorId = errorId;
+	}
+
+	public Long getOccuredAtMillis() {
+		return occuredAtMillis;
+	}
+
+	public void setOccuredAtMillis(Long occuredAtMillis) {
+		this.occuredAtMillis = occuredAtMillis;
 	}
 }

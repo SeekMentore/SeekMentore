@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="admin-subscribedcustomer">
+	<query type="insert" id="insertSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
+		INSERT INTO SUBSCRIBED_CUSTOMER
+			(NAME, CONTACT_NUMBER, EMAIL_ID, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID) 
+		VALUES
+			(:name, :contactNumber, :emailId, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId)
+	</query>
+	<query type="select" id="selectSubscribedCustomer">
+		SELECT
+			C.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME
+			FROM SUBSCRIBED_CUSTOMER C
+	</query>
+	<query type="filter" id="subscribedCustomerEmailFilter">
+		WHERE EMAIL_ID = :emailId
+	</query>
+	<query type="filter" id="subscribedCustomerContactNumberFilter">
+		WHERE CONTACT_NUMBER = :contactNumber
+	</query>
+</queryMapper>

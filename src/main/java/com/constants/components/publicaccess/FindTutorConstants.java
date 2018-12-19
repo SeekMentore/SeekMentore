@@ -39,6 +39,11 @@ public interface FindTutorConstants extends PublicAccessConstants {
 	String COLUMN_NAME_ENQUIRY_STATUS = "ENQUIRY_STATUS";
 	String COLUMN_NAME_ENQUIRY_DATE = "ENQUIRY_DATE";
 	String COLUMN_NAME_ENQUIRY_ID = "ENQUIRY_ID";
+	String COLUMN_NAME_LOCATION ="LOCATION";
+	String COLUMN_NAME_REFERENCE = "REFERENCE";
+	String COLUMN_NAME_ADDRESS_DETAILS = "ADDRESS_DETAILS";
+	String COLUMN_NAME_IS_DATA_MIGRATED = "IS_DATA_MIGRATED";
+	String COLUMN_NAME_WHEN_MIGRATED = "WHEN_MIGRATED";
 	
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE = "Please enter a valid 'Contact Number(Mobile)'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID = "Please enter a valid 'Email Id'";
@@ -46,4 +51,7 @@ public interface FindTutorConstants extends PublicAccessConstants {
 	String VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE = "Please select a valid 'Student Grade'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS = "Please select valid multiple 'Subjects'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_PREFERRED_TIME_TO_CALL = "Please select valid multiple 'Preferred Time to Call'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION = "Please select valid 'Location'";
+	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE = "Please select valid 'Reference'";
+	String VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS = "Please provide 'Address Details'";
 }

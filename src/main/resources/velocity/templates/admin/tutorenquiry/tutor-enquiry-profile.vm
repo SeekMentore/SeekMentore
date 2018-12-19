@@ -1,0 +1,181 @@
+<html>
+<head>
+<style>
+
+body {
+	font-family: "Times New Roman", Times, serif;
+}
+
+.tborder, .tborder td {
+  border: solid black;
+}
+.tborder {
+  border-width: 1px 1px 0 0;
+}
+.tborder td {
+  border-width: 0 0 1px 1px;
+}
+
+.noborder tbody {
+	border: none;
+}
+
+
+</style>
+</head>
+<body>
+		<h3 align="center">Tutor Profile</h3>
+		<br/>
+		<table align="center">
+	    	<tr>
+	    		<td>Enquiry Date</td>
+	    		<td>$tutorEnquiryObject.enquiryDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Enquiry Status</td>
+	    		<td>$tutorEnquiryObject.enquiryStatus</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Name</td>
+	    		<td>$tutorEnquiryObject.name</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contact Number</td>
+	    		<td>$tutorEnquiryObject.contactNumber</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Email Id</td>
+	    		<td>$tutorEnquiryObject.emailId</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Student Grade</td>
+	    		<td>$tutorEnquiryObject.studentGrade</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subjects</td>
+	    		<td>$tutorEnquiryObject.subjects</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Preferred Time To Call</td>
+	    		<td>$tutorEnquiryObject.preferredTimeToCall</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Location</td>
+	    		<td>$tutorEnquiryObject.location</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Reference</td>
+	    		<td>$tutorEnquiryObject.reference</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Address Details</td>
+	    		<td>$tutorEnquiryObject.addressDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Additional Details</td>
+	    		<td>$tutorEnquiryObject.additionalDetails</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Subscribed Customer</td>
+	    		<td>$tutorEnquiryObject.subscribedCustomer</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Contacted</td>
+	    		<td>$tutorEnquiryObject.isContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Contacted</td>
+	    		<td>$tutorEnquiryObject.whoContacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Date</td>
+	    		<td>$tutorEnquiryObject.contactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Contacted Remarks</td>
+	    		<td>$tutorEnquiryObject.contactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Authentication Verified</td>
+	    		<td>$tutorEnquiryObject.isAuthenticationVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Verified</td>
+	    		<td>$tutorEnquiryObject.whoVerified</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Date</td>
+	    		<td>$tutorEnquiryObject.verificationDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Verification Remarks</td>
+	    		<td>$tutorEnquiryObject.verificationRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is To Be Recontacted</td>
+	    		<td>$tutorEnquiryObject.isToBeRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Suggested For Re-contact</td>
+	    		<td>$tutorEnquiryObject.whoSuggestedForRecontact</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Date</td>
+	    		<td>$tutorEnquiryObject.suggestionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Suggestion Remarks</td>
+	    		<td>$tutorEnquiryObject.suggestionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Recontacted</td>
+	    		<td>$tutorEnquiryObject.whoRecontacted</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Date</td>
+	    		<td>$tutorEnquiryObject.recontactedDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Recontacted Remarks</td>
+	    		<td>$tutorEnquiryObject.recontactedRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Selected</td>
+	    		<td>$tutorEnquiryObject.isSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Selected</td>
+	    		<td>$tutorEnquiryObject.whoSelected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Date</td>
+	    		<td>$tutorEnquiryObject.selectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Selection Remarks</td>
+	    		<td>$tutorEnquiryObject.selectionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Is Rejected</td>
+	    		<td>$tutorEnquiryObject.isRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Who Rejected</td>
+	    		<td>$tutorEnquiryObject.whoRejected</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Date</td>
+	    		<td>$tutorEnquiryObject.rejectionDate</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Rejection Remarks</td>
+	    		<td>$tutorEnquiryObject.rejectionRemarks</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Record Last Updated</td>
+	    		<td>$tutorEnquiryObject.recordLastUpdated</td>
+	    	</tr>
+		</table>
+
+</body>
+</html>

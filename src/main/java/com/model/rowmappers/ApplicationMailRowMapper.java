@@ -16,6 +16,7 @@ public class ApplicationMailRowMapper implements RowMapper<ApplicationMail> {
 		final ApplicationMail mailObject = new ApplicationMail();
 		mailObject.setMailId(ExceptionUtils.exceptionHandlerForRowMapper(row, "MAIL_ID", Long.class));
 		mailObject.setEntryDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENTRY_DATE", Timestamp.class));
+		mailObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "ENTRY_DATE_MILLIS", Long.class));
 		mailObject.setFromAddress(ExceptionUtils.exceptionHandlerForRowMapper(row, "FROM_ADDRESS", String.class));
 		mailObject.setToAddress(ExceptionUtils.exceptionHandlerForRowMapper(row, "TO_ADDRESS", String.class));
 		mailObject.setCcAddress(ExceptionUtils.exceptionHandlerForRowMapper(row, "CC_ADDRESS", String.class));
@@ -23,9 +24,11 @@ public class ApplicationMailRowMapper implements RowMapper<ApplicationMail> {
 		mailObject.setSubjectContent(ExceptionUtils.exceptionHandlerForRowMapper(row, "SUBJECT_CONTENT", String.class));
 		mailObject.setMessageContent(ExceptionUtils.exceptionHandlerForRowMapper(row, "MESSAGE_CONTENT", String.class));
 		mailObject.setSendDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "SEND_DATE", Timestamp.class));
+		mailObject.setSendDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "SEND_DATE_MILLIS", Long.class));
 		mailObject.setMailType(ExceptionUtils.exceptionHandlerForRowMapper(row, "MAIL_TYPE", String.class));
 		mailObject.setMailSent(ExceptionUtils.exceptionHandlerForRowMapper(row, "MAIL_SENT", String.class));
 		mailObject.setErrorDate(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_DATE", Timestamp.class));
+		mailObject.setErrorDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_DATE_MILLIS", Long.class));
 		mailObject.setErrorOccuredWhileSending(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_OCCURED_WHILE_SENDING", String.class));
 		mailObject.setErrorTrace(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_TRACE", String.class));
 		return mailObject;

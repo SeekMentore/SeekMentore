@@ -8,8 +8,13 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import com.constants.ApplicationConstants;
+import com.constants.BeanConstants;
 import com.model.User;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.context.AppContext;
 
 public class ApplicationUtils implements ApplicationConstants {
 	
@@ -37,6 +42,12 @@ public class ApplicationUtils implements ApplicationConstants {
 		return newuserobj;
 	}
 	
+	public static User returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(final User user) {
+		final User newuserobj = user.getACopy();
+		newuserobj.setEncyptedPassword(null);
+		return newuserobj;
+	}
+	
 	public static String returnBlankIfStringNull(final String obj) {
 		if (obj == null)
 			return EMPTY_STRING;
@@ -56,25 +67,75 @@ public class ApplicationUtils implements ApplicationConstants {
 	
 	public static Map<String, Object> computeFileSizeInIterativeManner(final Long bytes) {
 		final Map<String, Object> sizeResponse = new HashMap<String, Object>();
-		Double size = (double) bytes;
-		String sizeExt = "Bytes";
-		if (size > 0) {
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "KB";
-			}
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "MB";
-			}
-			if (size > 1024) {
-				size = (double) (size/1024);
-				sizeExt = "GB";
+		sizeResponse.put("size", 0);
+		sizeResponse.put("sizeExt", "Bytes");
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = (double) bytes;
+				String sizeExt = "Bytes";
+				if (size > 0) {
+					if (size > 1024) {
+						size = computeFileSizeInKB(bytes);
+						sizeExt = "KB";
+					}
+					if (size > 1024) {
+						size = computeFileSizeInMB(bytes);
+						sizeExt = "MB";
+					}
+					if (size > 1024) {
+						size = computeFileSizeInGB(bytes);
+						sizeExt = "GB";
+					}
+				}
+				sizeResponse.put("size", size);
+				sizeResponse.put("sizeExt", sizeExt);
 			}
 		}
-		sizeResponse.put("size", size);
-		sizeResponse.put("sizeExt", sizeExt);
 		return sizeResponse;
+	}
+	
+	public static Double computeFileSizeInKB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = (double) bytes;
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
+	}
+	
+	public static Double computeFileSizeInMB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = computeFileSizeInKB(bytes);
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
+	}
+	
+	public static Double computeFileSizeInGB(final Long bytes) {
+		if (ValidationUtils.checkObjectAvailability(bytes)) {
+			if (bytes > 0) {
+				Double size = computeFileSizeInMB(bytes);
+				size = (double) (size/1024);
+				return size;
+			}
+		}
+		return 0D;
+	}
+	
+	public static String getStringFromCharacterArray(final Character[] array) {
+		String value = null;
+		if (null != array && array.length > 0) {
+			value = EMPTY_STRING;
+			for (Character character : array) {
+				value += Character.toString((char)character);
+			}
+		}
+		return value;
 	}
 	
 	/**
@@ -87,4 +148,29 @@ public class ApplicationUtils implements ApplicationConstants {
     public static byte[] generateBase64DecodedData(final byte[] bytes) {
     	return Base64.getDecoder().decode(bytes);
     }
+    
+    public static String getDBInformation() {
+    	switch(getBasicDataSource().getUrl()) {
+	    	case "jdbc:mysql://localhost:3306/SEEK_MENTORE" : return "Local Database";    
+	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-dev-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Dev Database";  
+	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-prod-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Prod Database"; 
+    	}
+    	return "Unknown Database";
+    }
+    
+    public static String getLinkedFileSystem() throws Exception {
+    	switch(SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getAwsParams().getS3ClientParams().getBucketNameEncypted())) {
+	    	case "seekmentore-dev" : return "Dev File System";    
+	    	case "seekmentore-prod" : return "Prod File System";  
+    	}
+    	return "Unknown File System";
+    }
+    
+    private static BasicDataSource getBasicDataSource() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
+	}
+    
+    private static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
 }

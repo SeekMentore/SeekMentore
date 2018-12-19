@@ -126,6 +126,28 @@ public class MailUtils implements MailConstants {
 		getMailService().insertIntoMailQueue(mailObject);
     }
 	
+	@SuppressWarnings("unchecked")
+	public static void sendMultipleMimeMessageEmail (
+			final List<Map<String, Object>> mailParamList
+	) throws Exception {
+		final List<ApplicationMail> mailList = new ArrayList<ApplicationMail>();
+		for (final Map<String, Object> mailParam : mailParamList) {
+			final ApplicationMail mailObject = new ApplicationMail (
+					"MIME_EMAIL",
+					new Timestamp(new Date().getTime()),
+					null,
+					(String)mailParam.get(MAIL_PARAM_TO),
+					(String)mailParam.get(MAIL_PARAM_CC),
+					(String)mailParam.get(MAIL_PARAM_BCC),
+					(String)mailParam.get(MAIL_PARAM_SUBJECT),
+					(String)mailParam.get(MAIL_PARAM_MESSAGE),
+					(List<MailAttachment>)mailParam.get(MAIL_PARAM_ATTACHMENTS)
+					);
+			mailList.add(mailObject);
+		}
+		getMailService().insertListIntoMailQueue(mailList);
+    }
+	
 	public static void sendErrorMessageEmail (
 			final String htmlMessage,
 			final List<MailAttachment> attachments
@@ -209,7 +231,11 @@ public class MailUtils implements MailConstants {
 					// If Server is not local send out email with appended subject
 				} 
 			} else {
+				mailParams.put(PARAM_TO_ADDRESS_SEMICOLON_SEPARATED, getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTestingGroupMailList());
+				mailParams.put(PARAM_CC_ADDRESS_SEMICOLON_SEPARATED, null);
+				mailParams.put(PARAM_BCC_ADDRESS_SEMICOLON_SEPARATED, null);
 				mailParams.put(PARAM_SUBJECT, getJNDIandControlConfigurationLoadService().getServerName() + WHITESPACE + COLON + WHITESPACE + mailParams.get(PARAM_SUBJECT));
+				mailParams.put(PARAM_MESSAGE, newContent);
 				// Send this email appended subject
 				sendEmail = true;
 			}
