@@ -14,13 +14,11 @@
 	  <img src="images/company-logo-complete.png" />
   </div>
   <div class="user-info noscreen">
-	  <div id="user-name">Welcome - </div>
-	  <div id="logout-link"><a href="javascript:void(0);" onclick="logout()">Logout</a></div>
+	  <div id="user-name"></div>
+	  <div id="logout-link"></div>
   </div>
 </div>
 <div class="banner-separator"></div>
-<form method="POST" id="signout_form" class="noscreen">
-</form>
 <!-- The Modal -->
 <div id="notification-popup-modal" class="modal noscreen">
   <!-- Modal content -->
@@ -46,7 +44,14 @@
 	callWebservice('/rest/commons/getServerInfo', null, showServerInfo);
 	
 	function showServerInfo(response) {
-		showNotificationModal(encodeObjectAsJSON(response), true);
+		var serverInformation = 'Server Name - ' + response.serverName + '<BR/>';
+		serverInformation += 'Database Name - ' + response.dbName + '<BR/>'
+		serverInformation += 'Linked File System - ' + response.fileSystemLinked + '<BR/>'
+		serverInformation += 'Support Group Email Id - ' + response.supportEmail + '<BR/>'
+		serverInformation += 'Email Sending Active - ' + response.isEmailSendingActive + '<BR/>'
+		serverInformation += 'Diverted Email Id - ' + response.divertedEmailId + '<BR/>'
+		serverInformation += 'Deployed Version - ' + response.deployedVersion + '<BR/>'
+		showNotificationModal('Server Information', serverInformation, true);
 	}
 </script>
 </body>

@@ -154,13 +154,7 @@
 	<pageList id="unsecured">
 		<page id="indexDirect" url="/"></page>
 		<page id="index" url="/index.html"></page>
-		<page id="loginRestUnsecured" url="/rest/login">
-			<webservice id="validateCredential" url="/validateCredential"></webservice>
-			<webservice id="resetPassword" url="/resetPassword"></webservice>
-			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
-			<webservice id="logout" url="/logout"></webservice>
-		</page>
-		<page id="publicaccessRestUnsecured" url="/rest/publicaccess">
+		<page id="publicaccess" url="/rest/publicaccess">
 			<webservice id="becomeTutor" url="/becomeTutor"></webservice>
 			<webservice id="findTutor" url="/findTutor"></webservice>
 			<webservice id="submitQuery" url="/submitQuery"></webservice>
@@ -169,8 +163,14 @@
 			<webservice id="getDropdownListDataFindTutor" url="/getDropdownListDataFindTutor"></webservice>
 			<webservice id="getDropdownListDataSubscribeWithUs" url="/getDropdownListDataSubscribeWithUs"></webservice>
 		</page>
+		<page id="loginRestUnsecured" url="/rest/login">
+			<webservice id="validateCredential" url="/validateCredential"></webservice>
+			<webservice id="resetPassword" url="/resetPassword"></webservice>
+			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
+			<webservice id="logout" url="/logout"></webservice>
+		</page>
 		<page id="commonsRestUnsecured" url="/rest/commons">
-			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+			<webservice id="getServerInfo" url="/getServerInfo"></webservice>
 			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
 		</page>
 	</pageList>

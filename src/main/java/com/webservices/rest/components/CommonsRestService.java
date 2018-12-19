@@ -39,6 +39,7 @@ import com.service.components.CommonsService;
 import com.utils.ApplicationUtils;
 import com.utils.JSONUtils;
 import com.utils.MailUtils;
+import com.utils.SecurityUtil;
 import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
@@ -46,20 +47,6 @@ import com.webservices.rest.AbstractRestWebservice;
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_COMMONS) 
 public class CommonsRestService extends AbstractRestWebservice implements RestMethodConstants, CommonsConstants {
-	
-	@Path(REST_METHOD_NAME_TO_GET_USER)
-	@POST
-	public String getUser (
-			@Context final HttpServletRequest request
-	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TO_GET_USER;
-		doSecurity(request);
-		if (this.securityPassed) {
-			final User user = ApplicationUtils.returnUserObjWithoutSensitiveInformationFromSessionUserObjectBeforeSendingOnUI(getActiveUser(request));
-			return JSONUtils.convertObjToJSONString(user, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_SERVER_INFO)
 	@POST
@@ -69,7 +56,17 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		this.methodName = REST_METHOD_NAME_TO_GET_SERVER_INFO;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getJNDIandControlConfigurationLoadService().getServerName(), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
+			restResponse.put("serverName", getJNDIandControlConfigurationLoadService().getServerName());
+			restResponse.put("dbName", ApplicationUtils.getDBInformation());
+			restResponse.put("fileSystemLinked", ApplicationUtils.getLinkedFileSystem());
+			restResponse.put("supportEmail", SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getEncryptedUsername()));
+			restResponse.put("isEmailSendingActive", getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().isSendOutActualEmails());
+			restResponse.put("divertedEmailId", getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getMailingDuringDevelopmentAndTestingFeatures().getDivertedRecipeintEmailId());
+			restResponse.put("deployedVersion", "1");
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
 		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
@@ -267,7 +264,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	public JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
-	 
+	
 	public MenuService getMenuService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_MENU_SERVICE, MenuService.class);
 	}
@@ -278,7 +275,6 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_TO_GET_USER : 
 			case REST_METHOD_NAME_TO_GET_SERVER_INFO :
 			case REST_METHOD_NAME_TO_GET_ERROR_DETAILS : 
 			case REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO : {

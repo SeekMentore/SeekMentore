@@ -97,7 +97,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_CHANGE_PASSWORD = "/changePassword";
 	String REST_METHOD_NAME_TO_LOGOUT = "/logout";
 	// Commons REST methods
-	String REST_METHOD_NAME_TO_GET_USER = "/getUser";
 	String REST_METHOD_NAME_TO_GET_SERVER_INFO = "/getServerInfo";
 	String REST_METHOD_NAME_TO_GET_ERROR_DETAILS = "/getErrorDetails";
 	String REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO = "/getLoginBasicInfo";

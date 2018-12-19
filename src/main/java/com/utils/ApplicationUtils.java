@@ -8,8 +8,13 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import com.constants.ApplicationConstants;
+import com.constants.BeanConstants;
 import com.model.User;
+import com.service.JNDIandControlConfigurationLoadService;
+import com.utils.context.AppContext;
 
 public class ApplicationUtils implements ApplicationConstants {
 	
@@ -143,4 +148,29 @@ public class ApplicationUtils implements ApplicationConstants {
     public static byte[] generateBase64DecodedData(final byte[] bytes) {
     	return Base64.getDecoder().decode(bytes);
     }
+    
+    public static String getDBInformation() {
+    	switch(getBasicDataSource().getUrl()) {
+	    	case "jdbc:mysql://localhost:3306/SEEK_MENTORE" : return "Local Database";    
+	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-dev-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Dev Database";  
+	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-prod-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Prod Database"; 
+    	}
+    	return "Unknown Database";
+    }
+    
+    public static String getLinkedFileSystem() throws Exception {
+    	switch(SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getAwsParams().getS3ClientParams().getBucketNameEncypted())) {
+	    	case "seekmentore-dev" : return "Dev File System";    
+	    	case "seekmentore-prod" : return "Prod File System";  
+    	}
+    	return "Unknown File System";
+    }
+    
+    private static BasicDataSource getBasicDataSource() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
+	}
+    
+    private static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
 }

@@ -30,13 +30,13 @@ import com.utils.ValidationUtils;
 public class ApplicationDao implements ApplicationConstants {
 	
 	@Autowired
-	private HibernateTemplate hibernateTemplate;
+	private transient HibernateTemplate hibernateTemplate;
 	
 	@Autowired
 	private transient NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	@Autowired
-	private QueryMapperService queryMapperService;
+	private transient QueryMapperService queryMapperService;
 	
 	/**
 	 * HibernateTemplate DAO calls
