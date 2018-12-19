@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.constants.BeanConstants;
 import com.constants.FilterConstants;
+import com.constants.LoginConstants;
 import com.constants.PageConstants;
 import com.model.ErrorPacket;
 import com.model.User;
@@ -61,7 +62,7 @@ public class PostAuthenticationFilter extends AbstractWebservice implements Filt
 				} else {
 					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "No access to this page.");
 					commonsService.feedErrorRecord(errorPacket);
-					WebServiceUtils.redirectToPage("/error.html", httpRequest, httpResponse);
+					WebServiceUtils.writeError(404, pageURL + " - Your roles do not permit to view the contents of thiws URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 				}
 			} else {
 				chain.doFilter(request, response);

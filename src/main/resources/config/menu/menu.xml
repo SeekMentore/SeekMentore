@@ -23,7 +23,6 @@
 		    <webservice id="changePassword" url="/changePassword"></webservice>
 		</page>
 		<page id="commonsRest" url="/rest/commons" pageAccessType="common">
-			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
 			<webservice id="getLoginBasicInfo" url="/getLoginBasicInfo"></webservice>
 			<webservice id="getEmailTemplates" url="/getEmailTemplates"></webservice>
 			<webservice id="loadEmailTemplate" url="/loadEmailTemplate"></webservice>
@@ -172,6 +171,7 @@
 		</page>
 		<page id="commonsRestUnsecured" url="/rest/commons">
 			<webservice id=" getServerInfo" url="/getServerInfo"></webservice>
+			<webservice id="getErrorDetails" url="/getErrorDetails"></webservice>
 		</page>
 		<page id="error" url="/error.html"></page>
 	</pageList>

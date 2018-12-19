@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
+import com.constants.LoginConstants;
 import com.constants.MessageConstants;
 import com.model.ErrorPacket;
 import com.service.components.CommonsService;
@@ -55,7 +56,7 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     }
 	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
 	     getCommonsService().feedErrorRecord(errorPacket);
-	     WebServiceUtils.redirectToPage("/error.html", request, response);
+	     WebServiceUtils.writeError(500, requestUri + " - Server error occurred while accessing the URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, response);
 	}
 	
 	public CommonsService getCommonsService() {
