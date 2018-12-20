@@ -79,10 +79,10 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportBecomeTutorList(grid, gridComponent));
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportBecomeTutorList(this.grid, gridComponent));
 		}
     }
 	
