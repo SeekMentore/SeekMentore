@@ -25,14 +25,17 @@ import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
 import com.model.components.commons.SelectLookup;
 import com.model.mail.ApplicationMail;
+import com.model.mail.EmailTemplate;
 import com.model.mail.MailAttachment;
 import com.model.rowmappers.ApplicationMailRowMapper;
+import com.model.rowmappers.EmailTemplateRowMapper;
 import com.model.rowmappers.EmployeeRowMapper;
 import com.model.rowmappers.MailAttachmentRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.SelectLookupRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.rowmappers.UserRowMapper;
+import com.service.QueryMapperService;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
@@ -45,6 +48,9 @@ public class CommonsService implements CommonsConstants {
 	
 	@Autowired
 	private transient ApplicationLookupDataService applicationLookupDataService;
+	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -67,13 +73,6 @@ public class CommonsService implements CommonsConstants {
 			}
 		}
 		return mailAttachments;
-	}
-	
-	@Transactional
-	public SelectLookup getSelectLookupEntry(final String selectLookupTable, final String value) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("value", value);
-		return applicationDao.find("SELECT LABEL FROM SELECT_LOOKUP_TABLE where VALUE = :value".replaceAll("SELECT_LOOKUP_TABLE", selectLookupTable), paramsMap, new SelectLookupRowMapper());
 	}
 	
 	@Transactional
@@ -167,7 +166,7 @@ public class CommonsService implements CommonsConstants {
 					multiLineString.append(delimiter);
 				}
 			} else {
-				multiLineString.append(getSelectLookupEntry(selectLookupTable, value).getLabel());
+				multiLineString.append(getSelectLookupItem(selectLookupTable, value).getLabel());
 			}
 		}
 		return multiLineString.toString();
@@ -187,6 +186,18 @@ public class CommonsService implements CommonsConstants {
 	/****************************************************************************************************************************/
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
 		return applicationLookupDataService.getSelectLookupList(selectLookUpTable);
+	}
+	
+	public SelectLookup getSelectLookupItem(final String selectLookUpTable, final String value) {
+		return applicationLookupDataService.getSelectLookupItem(selectLookUpTable, value);
+	}
+	
+	public EmailTemplate getEmailTemplateFromLookupValue(final String value) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("emailTemplateLookupValue", value);
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("mail", "selectEmailTemplate"));
+		query.append(queryMapperService.getQuerySQL("mail", "emailTemplateLookupValueFilter"));
+		return applicationDao.find(query.toString(), params, new EmailTemplateRowMapper());
 	}
 	
 	@Transactional

@@ -36,6 +36,8 @@ import com.constants.components.SelectLookupConstants;
 import com.model.User;
 import com.model.bouipath.UIMenu;
 import com.model.bouipath.UISubMenu;
+import com.model.components.commons.SelectLookup;
+import com.model.mail.EmailTemplate;
 import com.model.mail.MailAttachment;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.MenuService;
@@ -88,7 +90,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getErrorDetails (
-			@FormParam("errorCode") final String errorCode,
+			@FormParam(PARAM_ERROR_CODE) final String errorCode,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -204,33 +206,28 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String loadEmailTemplate (
-			@FormParam("templateId") final String templateId,
+			@FormParam(PARAM_TEMPLATE_ID) final String templateId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		if("01".equals(templateId)) {
-			restresponse.put("to", "rejectionlist@seekmentore.com");
-			restresponse.put("cc", "rejectionadmin@seekmentore.com");
-			restresponse.put("bcc", "founder@seekmentore.com");
-			restresponse.put("subject", "This is a Rejection Email");
-			restresponse.put("body", "Rejection email body<br/>This is second line.<br/><b>this line is in bold letters</b>");
-		} else if("02".equals(templateId)) {
-			restresponse.put("to", "selectionlist@seekmentore.com");
-			restresponse.put("cc", "selectionadmin@seekmentore.com");
-			restresponse.put("bcc", "founder@seekmentore.com");
-			restresponse.put("subject", "This is a Selection Email");
-			restresponse.put("body", "Selection email body<br/>This is second line.<br/><b>this line is in bold letters</b>");
-		} else {
-			restresponse.put("to", "");
-			restresponse.put("cc", "");
-			restresponse.put("bcc", "");
-			restresponse.put("subject", "");
-			restresponse.put("body", "");
+		this.methodName = REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE;
+		this.activeUser = getActiveUser(request);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
+			restResponse.put(EMAIL_TEMPLATE, EmailTemplate.getBlankEmailTemplate());
+			final SelectLookup emailTemplateSelectLookup = getCommonsService().getSelectLookupItem(SelectLookupConstants.SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP, templateId);
+			if (ValidationUtils.checkObjectAvailability(emailTemplateSelectLookup)) {
+				final EmailTemplate emailTemplate = getCommonsService().getEmailTemplateFromLookupValue(templateId);
+				if (ValidationUtils.checkObjectAvailability(emailTemplate)) {
+					restResponse.put(EMAIL_TEMPLATE, emailTemplate);
+				}
+			}
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		restresponse.put("success", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_SEND_EMAIL)
@@ -324,7 +321,8 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 				break;
 			}
 			case REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO : 
-			case REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES : {
+			case REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES : 
+			case REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE : {
 				handleActiveUserSecurity();
 				break;
 			}

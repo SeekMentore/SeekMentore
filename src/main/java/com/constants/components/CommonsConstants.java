@@ -36,4 +36,7 @@ public interface CommonsConstants extends ApplicationConstants {
 	String[] ACCEPTABLE_FILE_EXTENSIONS_ARRAY = Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, ACCEPTABLE_FILE_EXTENSIONS).split(COMMA);
 	
 	String EMAIL_TEMPLATES = "emailTemplates";
+	String EMAIL_TEMPLATE = "emailTemplate";
+	String PARAM_TEMPLATE_ID = "templateId";
+	String PARAM_ERROR_CODE = "errorCode";
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryNamespace>
+	<namespace name="mail" mapperFilePath="query/components/mail.xml"/>
 	<namespace name="aws" mapperFilePath="query/components/aws.xml"/>
 	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
 	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>

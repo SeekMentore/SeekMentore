@@ -37,6 +37,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	
 	@PostConstruct
 	public void init() {
+		refreshAllSelectLookups();
+	}
+	
+	public void refreshAllSelectLookups() {
 		final String baseQuery = "SELECT LT.* FROM SELECT_LOOKUP_TABLE_NAME LT";
 		final String existingFilterQueryString = "WHERE LT.HIDDEN IS NULL";
 		final String existingSorterQueryString = "ORDER BY LT.ORDER_OF_CATEGORY, LT.ORDER_IN_CATEGORY";
@@ -72,6 +76,32 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return this.preferredTeachingTypeLookupData;
 			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return this.docuemtTypeLookupData;
 			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return this.emailTemplateLookupData;
+		}
+		return null;
+	}
+	
+	public SelectLookup getSelectLookupItem(final String selectLookUpTable, final String value) {
+		switch(selectLookUpTable) {
+			case SELECT_LOOKUP_TABLE_YES_NO_LOOKUP : return getSelectLookupItem(this.yesNoLookupData, value);
+			case SELECT_LOOKUP_TABLE_GENDER_LOOKUP : return getSelectLookupItem(this.genderLookupData, value);
+			case SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP : return getSelectLookupItem(this.qualificationLookupData, value);
+			case SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP : return getSelectLookupItem(this.professionLookupData, value);
+			case SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP : return getSelectLookupItem(this.transportModeLookupData, value);
+			case SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP : return getSelectLookupItem(this.locationsLookupData, value);
+			case SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP : return getSelectLookupItem(this.preferredTimeLookupData, value);
+			case SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP : return getSelectLookupItem(this.studentGradeLookupData, value);
+			case SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP : return getSelectLookupItem(this.subjectsLookupData, value);
+			case SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP : return getSelectLookupItem(this.referenceLookupData, value);
+			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return getSelectLookupItem(this.preferredTeachingTypeLookupData, value);
+			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return getSelectLookupItem(this.docuemtTypeLookupData, value);
+			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return getSelectLookupItem(this.emailTemplateLookupData, value);
+		}
+		return null;
+	}
+	
+	private SelectLookup getSelectLookupItem(final List<SelectLookup> selectLookupList, final String value) {
+		if (selectLookupList.contains(new SelectLookup(value))) {
+			return selectLookupList.get(selectLookupList.indexOf(new SelectLookup(value)));
 		}
 		return null;
 	}

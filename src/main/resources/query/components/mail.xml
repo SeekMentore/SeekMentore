@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="mail">
+	<query type="select" id="selectEmailTemplate">
+		SELECT
+			ET.*,			
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = ET.ADDED_BY), ET.ADDED_BY) AS ADDED_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = ET.LAST_UPDATED_BY), ET.LAST_UPDATED_BY) AS LAST_UPDATED_BY_NAME
+		FROM EMAIL_TEMPLATE ET
+	</query>
+	<query type="filter" id="emailTemplateLookupValueFilter">
+		WHERE ET.EMAIL_TEMPLATE_LOOKUP_VALUE = :emailTemplateLookupValue
+	</query>
+</queryMapper>
