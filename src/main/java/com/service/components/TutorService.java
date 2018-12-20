@@ -26,7 +26,6 @@ import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
 import com.model.User;
-import com.model.WorkbookReport;
 import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
@@ -37,6 +36,7 @@ import com.model.rowmappers.BankDetailRowMapper;
 import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
+import com.model.workbook.WorkbookReport;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
@@ -379,7 +379,7 @@ public class TutorService implements TutorConstants {
 
 	public byte[] downloadAdminReportRegisteredTutors() throws DataAccessException, InstantiationException, IllegalAccessException, IOException {
 		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
-		workbookReport.createSheet("REGISTERED_TUTORS", registeredTutorsList(WHITESPACE+SEMICOLON+WHITESPACE), RegisteredTutor.class);
+		//workbookReport.createSheet("REGISTERED_TUTORS", registeredTutorsList(WHITESPACE+SEMICOLON+WHITESPACE), RegisteredTutor.class);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 

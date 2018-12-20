@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.ApplicationWorkbookObject;
+import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
@@ -447,6 +448,78 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoVerifiedName() {
+		return whoVerifiedName;
+	}
+
+	public void setWhoVerifiedName(String whoVerifiedName) {
+		this.whoVerifiedName = whoVerifiedName;
+	}
+
+	public String getWhoSuggestedForRecontactName() {
+		return whoSuggestedForRecontactName;
+	}
+
+	public void setWhoSuggestedForRecontactName(String whoSuggestedForRecontactName) {
+		this.whoSuggestedForRecontactName = whoSuggestedForRecontactName;
+	}
+
+	public String getWhoRecontactedName() {
+		return whoRecontactedName;
+	}
+
+	public void setWhoRecontactedName(String whoRecontactedName) {
+		this.whoRecontactedName = whoRecontactedName;
+	}
+
+	public String getWhoSelectedName() {
+		return whoSelectedName;
+	}
+
+	public void setWhoSelectedName(String whoSelectedName) {
+		this.whoSelectedName = whoSelectedName;
+	}
+
+	public String getWhoRejectedName() {
+		return whoRejectedName;
+	}
+
+	public void setWhoRejectedName(String whoRejectedName) {
+		this.whoRejectedName = whoRejectedName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+	
 	@Override
 	public String toString() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
@@ -538,9 +611,9 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		switch (reportSwitch) {
 			case "Admin_Report" : {
 				return new Object[] {
-						new Date(this.applicationDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
 						this.applicationStatus,
-						this.dateOfBirth,
+						DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth),
 						this.contactNumber,
 						this.emailId,
 						this.firstName,
@@ -559,31 +632,31 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.additionalDetails,
 						this.isContacted,
 						this.whoContactedName,
-						new Date(this.contactedDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.contactedDateMillis),
 						this.contactedRemarks,
 						this.isAuthenticationVerified,
 						this.whoVerifiedName,
-						new Date(this.verificationDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.verificationDateMillis),
 						this.verificationRemarks,
 						this.isToBeRecontacted,
 						this.whoSuggestedForRecontactName,
-						new Date(this.suggestionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.suggestionDateMillis),
 						this.suggestionRemarks,
 						this.whoRecontactedName,
-						new Date(this.recontactedDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recontactedDateMillis),
 						this.recontactedRemarks,
 						this.isSelected,
 						this.whoSelectedName,
-						new Date(this.selectionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.selectionDateMillis),
 						this.selectionRemarks,
 						this.isRejected,
 						this.whoRejectedName,
-						new Date(this.rejectionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.rejectionDateMillis),
 						this.rejectionRemarks,
 						this.rejectionCount,
 						this.reApplied,
-						new Date(this.previousApplicationDateMillis),
-						new Date(this.recordLastUpdatedMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.previousApplicationDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 				};
 			}
@@ -654,77 +727,5 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			case "addressDetails" : return "ADDRESS_DETAILS";
 		}
 		return EMPTY_STRING;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public String getWhoContactedName() {
-		return whoContactedName;
-	}
-
-	public void setWhoContactedName(String whoContactedName) {
-		this.whoContactedName = whoContactedName;
-	}
-
-	public String getWhoVerifiedName() {
-		return whoVerifiedName;
-	}
-
-	public void setWhoVerifiedName(String whoVerifiedName) {
-		this.whoVerifiedName = whoVerifiedName;
-	}
-
-	public String getWhoSuggestedForRecontactName() {
-		return whoSuggestedForRecontactName;
-	}
-
-	public void setWhoSuggestedForRecontactName(String whoSuggestedForRecontactName) {
-		this.whoSuggestedForRecontactName = whoSuggestedForRecontactName;
-	}
-
-	public String getWhoRecontactedName() {
-		return whoRecontactedName;
-	}
-
-	public void setWhoRecontactedName(String whoRecontactedName) {
-		this.whoRecontactedName = whoRecontactedName;
-	}
-
-	public String getWhoSelectedName() {
-		return whoSelectedName;
-	}
-
-	public void setWhoSelectedName(String whoSelectedName) {
-		this.whoSelectedName = whoSelectedName;
-	}
-
-	public String getWhoRejectedName() {
-		return whoRejectedName;
-	}
-
-	public void setWhoRejectedName(String whoRejectedName) {
-		this.whoRejectedName = whoRejectedName;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
-	}
-
-	public String getAddressDetails() {
-		return addressDetails;
-	}
-
-	public void setAddressDetails(String addressDetails) {
-		this.addressDetails = addressDetails;
 	}
 }

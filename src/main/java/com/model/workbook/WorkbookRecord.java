@@ -1,6 +1,11 @@
-package commons.model.Workbook;
+package com.model.workbook;
 
-public class WorkbookRecord {
+import java.io.Serializable;
+
+public class WorkbookRecord implements Serializable {
+
+	private static final long serialVersionUID = -8681265564543881119L;
+	
 	private Object[] record;
 	private Boolean isMismatch = false;
 	private Boolean isExtra = false;

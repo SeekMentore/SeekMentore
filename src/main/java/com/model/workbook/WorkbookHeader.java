@@ -1,10 +1,15 @@
-package commons.model.Workbook;
+package com.model.workbook;
 
-public class WorkbookHeader {
+import java.io.Serializable;
+
+public class WorkbookHeader implements Serializable {
+
+	private static final long serialVersionUID = 7382214405588651014L;
+	
 	private Object[] header;
 	private Integer howManyCellsPerColumn;
 	
-	public WorkbookHeader(final Object[] header, Integer howManyCellsPerColumn) {
+	public WorkbookHeader(final Object[] header, final Integer howManyCellsPerColumn) {
 		this.header = header;
 		this.howManyCellsPerColumn = howManyCellsPerColumn;
 	}
@@ -18,15 +23,7 @@ public class WorkbookHeader {
 		return header;
 	}
 
-	public void setHeader(Object[] header) {
-		this.header = header;
-	}
-
 	public Integer getHowManyCellsPerColumn() {
 		return howManyCellsPerColumn;
-	}
-
-	public void setHowManyCellsPerColumn(Integer howManyCellsPerColumn) {
-		this.howManyCellsPerColumn = howManyCellsPerColumn;
 	}
 }
