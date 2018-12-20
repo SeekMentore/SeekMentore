@@ -191,7 +191,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, becomeTutorApplication.getFirstName() + WHITESPACE + becomeTutorApplication.getLastName());
-		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication.toString());
+		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication.getFormattedApplicationForPrinting());
 		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
 				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList(), 
@@ -214,7 +214,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, findTutorApplication.getName());
-		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication.toString());
+		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication.getFormattedApplicationForPrinting());
 		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
 				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
@@ -237,7 +237,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, subscribeWithUsApplication.getFirstName() + WHITESPACE + subscribeWithUsApplication.getLastName());
-		attributes.put(SUBSCRIBE_WITH_US_APPLICATION_VM_OBJECT, subscribeWithUsApplication.toString());
+		attributes.put(SUBSCRIBE_WITH_US_APPLICATION_VM_OBJECT, subscribeWithUsApplication.getFormattedApplicationForPrinting());
 		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
 				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
@@ -259,7 +259,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	private void sendNotificationAndConfirmationEmailsForQueryEnquiry(final SubmitQuery submitQueryApplication) throws Exception {
 		// Send Registration notification message to concerned team
 		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication.toString());
+		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication.getFormattedApplicationForPrinting());
 		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		MailUtils.sendMimeMessageEmail( 
 				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList(), 

@@ -1,10 +1,12 @@
 package com.model.components.publicaccess;
 
 import java.io.Serializable;
-import java.util.Date;
 
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.ApplicationWorkbookObject;
+import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
@@ -365,178 +367,6 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 
-	@Override
-	public String toString() {
-		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
-		findTutorApplication.append(PrintFormatterUtils.startATable());
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_ID, enquiryId));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, enquiryStatus));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, name));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, contactNumber));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, studentGrade));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		findTutorApplication.append(PrintFormatterUtils.endATable());
-		return findTutorApplication.toString();
-	}
-
-	@Override
-	public Object[] getReportHeaders(String reportSwitch) {
-		switch (reportSwitch) {
-		case "Admin_Report" : {
-			return new Object[] {
-					COLUMN_NAME_ENQUIRY_DATE,
-					COLUMN_NAME_ENQUIRY_STATUS,
-					COLUMN_NAME_NAME,
-					COLUMN_NAME_CONTACT_NUMBER,
-					COLUMN_NAME_EMAIL_ID,
-					COLUMN_NAME_STUDENT_GRADE,
-					COLUMN_NAME_SUBJECTS,
-					COLUMN_NAME_PREFERRED_TIME_TO_CALL,
-					COLUMN_NAME_LOCATION,
-					COLUMN_NAME_REFERENCE,
-					COLUMN_NAME_ADDRESS_DETAILS,
-					COLUMN_NAME_ADDITIONAL_DETAILS,
-					COLUMN_NAME_IS_CONTACTED,
-					COLUMN_NAME_WHO_CONTACTED,
-					COLUMN_NAME_CONTACTED_DATE,
-					COLUMN_NAME_CONTACTED_REMARKS,
-					COLUMN_NAME_IS_AUTHENTICATION_VERIFIED,
-					COLUMN_NAME_WHO_VERIFIED,
-					COLUMN_NAME_VERIFICATION_DATE,
-					COLUMN_NAME_VERIFICATION_REMARKS,
-					COLUMN_NAME_IS_TO_BE_RECONTACTED,
-					COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT,
-					COLUMN_NAME_SUGGESTION_DATE,
-					COLUMN_NAME_SUGGESTION_REMARKS,
-					COLUMN_NAME_WHO_RECONTACTED,
-					COLUMN_NAME_RECONTACTED_DATE,
-					COLUMN_NAME_RECONTACTED_REMARKS,
-					COLUMN_NAME_IS_SELECTED,
-					COLUMN_NAME_WHO_SELECTED,
-					COLUMN_NAME_SELECTION_DATE,
-					COLUMN_NAME_SELECTION_REMARKS,
-					COLUMN_NAME_IS_REJECTED,
-					COLUMN_NAME_WHO_REJECTED,
-					COLUMN_NAME_REJECTION_DATE,
-					COLUMN_NAME_REJECTION_REMARKS,
-					COLUMN_NAME_RECORD_LAST_UPDATED,
-					"UPDATED_BY"
-				};
-		}
-	}
-	return new Object[] {};
-	}
-
-	@Override
-	public Object[] getReportRecords(String reportSwitch) {
-		switch (reportSwitch) {
-			case "Admin_Report" : {
-				return new Object[] {
-						new Date(this.enquiryDateMillis),
-						this.enquiryStatus,
-						this.name,
-						this.contactNumber,
-						this.emailId,
-						this.studentGrade,
-						this.subjects,
-						this.preferredTimeToCall,
-						this.location,
-						this.reference,
-						this.addressDetails,
-						this.additionalDetails,
-						this.isContacted,
-						this.whoContactedName,
-						new Date(this.contactedDateMillis),
-						this.contactedRemarks,
-						this.isAuthenticationVerified,
-						this.whoVerifiedName,
-						new Date(this.verificationDateMillis),
-						this.verificationRemarks,
-						this.isToBeRecontacted,
-						this.whoSuggestedForRecontactName,
-						new Date(this.suggestionDateMillis),
-						this.suggestionRemarks,
-						this.whoRecontactedName,
-						new Date(this.recontactedDateMillis),
-						this.recontactedRemarks,
-						this.isSelected,
-						this.whoSelectedName,
-						new Date(this.selectionDateMillis),
-						this.selectionRemarks,
-						this.isRejected,
-						this.whoRejectedName,
-						new Date(this.rejectionDateMillis),
-						this.rejectionRemarks,
-						new Date(this.recordLastUpdatedMillis),
-						this.updatedByName
-				};
-			}
-		}
-		return new Object[] {};
-	}
-	
-	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "enquiryId" : return "ENQUIRY_ID";
-			case "enquiryDateMillis" : return "ENQUIRY_DATE_MILLIS";
-			case "enquiryStatus" : return "ENQUIRY_STATUS";
-			case "name" : return "NAME";
-			case "contactNumber" : return "CONTACT_NUMBER";
-			case "emailId" : return "EMAIL_ID";
-			case "studentGrade" : return "STUDENT_GRADE";
-			case "subjects" : return "SUBJECTS";
-			case "preferredTimeToCall" : return "PREFERRED_TIME_TO_CALL";
-			case "additionalDetails" : return "ADDITIONAL_DETAILS";
-			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
-			case "isContacted" : return "IS_CONTACTED";
-			case "whoContacted" : return "WHO_CONTACTED";			
-			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
-			case "contactedRemarks" : return "CONTACTED_REMARKS";
-			case "isAuthenticationVerified" : return "IS_AUTHENTICATION_VERIFIED";
-			case "whoVerified" : return "WHO_VERIFIED";
-			case "verificationDateMillis" : return "VERIFICATION_DATE_MILLIS";
-			case "verificationRemarks" : return "VERIFICATION_REMARKS";
-			case "isToBeRecontacted" : return "IS_TO_BE_RECONTACTED";
-			case "whoSuggestedForRecontact" : return "WHO_SUGGESTED_FOR_RECONTACT";
-			case "suggestionDateMillis" : return "SUGGESTION_DATE_MILLIS";
-			case "suggestionRemarks" : return "SUGGESTION_REMARKS";
-			case "whoRecontacted" : return "WHO_RECONTACTED";
-			case "recontactedDateMillis" : return "RECONTACTED_DATE_MILLIS";
-			case "recontactedRemarks" : return "RECONTACTED_REMARKS";
-			case "isSelected" : return "IS_SELECTED";
-			case "whoSelected" : return "WHO_SELECTED";
-			case "selectionDateMillis" : return "SELECTION_DATE_MILLIS";
-			case "selectionRemarks" : return "SELECTION_REMARKS";
-			case "isRejected" : return "IS_REJECTED";
-			case "whoRejected" : return "WHO_REJECTED";
-			case "rejectionDateMillis" : return "REJECTION_DATE_MILLIS";			
-			case "rejectionRemarks" : return "REJECTION_REMARKS";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "reference" : return "REFERENCE";
-			case "location" : return "LOCATION";
-			case "addressDetails" : return "ADDRESS_DETAILS";
-			case "updatedBy" : return "UPDATED_BY";
-			case "whoContactedName" : return "WHO_CONTACTED_NAME";
-			case "whoVerifiedName" : return "WHO_VERIFIED_NAME";
-			case "whoSuggestedForRecontactName" : return "WHO_SUGGESTED_FOR_RECONTACT_NAME";
-			case "whoRecontactedName" : return "WHO_RECONTACTED_NAME";
-			case "whoSelectedName" : return "WHO_SELECTED_NAME";
-			case "whoRejectedName" : return "WHO_REJECTED_NAME";
-			case "updatedByName" : return "UPDATED_BY_NAME";
-		}
-		return EMPTY_STRING;
-	}
-
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
@@ -599,5 +429,181 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 
 	public void setUpdatedByName(String updatedByName) {
 		this.updatedByName = updatedByName;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		switch (reportSwitch) {
+		case "Admin_Report" : {
+			return new Object[] {
+					COLUMN_NAME_ENQUIRY_ID,
+					COLUMN_NAME_ENQUIRY_DATE,
+					COLUMN_NAME_ENQUIRY_STATUS,
+					COLUMN_NAME_NAME,
+					COLUMN_NAME_CONTACT_NUMBER,
+					COLUMN_NAME_EMAIL_ID,
+					COLUMN_NAME_SUBSCRIBED_CUSTOMER,
+					COLUMN_NAME_STUDENT_GRADE,
+					COLUMN_NAME_SUBJECTS,
+					COLUMN_NAME_PREFERRED_TIME_TO_CALL,
+					COLUMN_NAME_LOCATION,
+					COLUMN_NAME_REFERENCE,
+					COLUMN_NAME_ADDRESS_DETAILS,
+					COLUMN_NAME_ADDITIONAL_DETAILS,
+					COLUMN_NAME_IS_CONTACTED,
+					COLUMN_NAME_WHO_CONTACTED,
+					COLUMN_NAME_CONTACTED_DATE,
+					COLUMN_NAME_CONTACTED_REMARKS,
+					COLUMN_NAME_IS_AUTHENTICATION_VERIFIED,
+					COLUMN_NAME_WHO_VERIFIED,
+					COLUMN_NAME_VERIFICATION_DATE,
+					COLUMN_NAME_VERIFICATION_REMARKS,
+					COLUMN_NAME_IS_TO_BE_RECONTACTED,
+					COLUMN_NAME_WHO_SUGGESTED_FOR_RECONTACT,
+					COLUMN_NAME_SUGGESTION_DATE,
+					COLUMN_NAME_SUGGESTION_REMARKS,
+					COLUMN_NAME_WHO_RECONTACTED,
+					COLUMN_NAME_RECONTACTED_DATE,
+					COLUMN_NAME_RECONTACTED_REMARKS,
+					COLUMN_NAME_IS_SELECTED,
+					COLUMN_NAME_WHO_SELECTED,
+					COLUMN_NAME_SELECTION_DATE,
+					COLUMN_NAME_SELECTION_REMARKS,
+					COLUMN_NAME_IS_REJECTED,
+					COLUMN_NAME_WHO_REJECTED,
+					COLUMN_NAME_REJECTION_DATE,
+					COLUMN_NAME_REJECTION_REMARKS,
+					COLUMN_NAME_RECORD_LAST_UPDATED,
+					"UPDATED_BY"
+				};
+		}
+	}
+	return new Object[] {};
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		switch (reportSwitch) {
+			case "Admin_Report" : {
+				return new Object[] {
+						this.enquiryId,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.enquiryDateMillis),
+						this.enquiryStatus,
+						this.name,
+						this.contactNumber,
+						this.emailId,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrade),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.subjects),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, this.preferredTimeToCall, null, null),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference),
+						this.addressDetails,
+						this.additionalDetails,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isContacted),
+						this.whoContactedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.contactedDateMillis),
+						this.contactedRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isAuthenticationVerified),
+						this.whoVerifiedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.verificationDateMillis),
+						this.verificationRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isToBeRecontacted),
+						this.whoSuggestedForRecontactName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.suggestionDateMillis),
+						this.suggestionRemarks,
+						this.whoRecontactedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recontactedDateMillis),
+						this.recontactedRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isSelected),
+						this.whoSelectedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.selectionDateMillis),
+						this.selectionRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isRejected),
+						this.whoRejectedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.rejectionDateMillis),
+						this.rejectionRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName
+				};
+			}
+		}
+		return new Object[] {};
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquiryDateMillis" : return "ENQUIRY_DATE_MILLIS";
+			case "enquiryStatus" : return "ENQUIRY_STATUS";
+			case "name" : return "NAME";
+			case "contactNumber" : return "CONTACT_NUMBER";
+			case "emailId" : return "EMAIL_ID";
+			case "studentGrade" : return "STUDENT_GRADE";
+			case "subjects" : return "SUBJECTS";
+			case "preferredTimeToCall" : return "PREFERRED_TIME_TO_CALL";
+			case "additionalDetails" : return "ADDITIONAL_DETAILS";
+			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";			
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "contactedRemarks" : return "CONTACTED_REMARKS";
+			case "isAuthenticationVerified" : return "IS_AUTHENTICATION_VERIFIED";
+			case "whoVerified" : return "WHO_VERIFIED";
+			case "verificationDateMillis" : return "VERIFICATION_DATE_MILLIS";
+			case "verificationRemarks" : return "VERIFICATION_REMARKS";
+			case "isToBeRecontacted" : return "IS_TO_BE_RECONTACTED";
+			case "whoSuggestedForRecontact" : return "WHO_SUGGESTED_FOR_RECONTACT";
+			case "suggestionDateMillis" : return "SUGGESTION_DATE_MILLIS";
+			case "suggestionRemarks" : return "SUGGESTION_REMARKS";
+			case "whoRecontacted" : return "WHO_RECONTACTED";
+			case "recontactedDateMillis" : return "RECONTACTED_DATE_MILLIS";
+			case "recontactedRemarks" : return "RECONTACTED_REMARKS";
+			case "isSelected" : return "IS_SELECTED";
+			case "whoSelected" : return "WHO_SELECTED";
+			case "selectionDateMillis" : return "SELECTION_DATE_MILLIS";
+			case "selectionRemarks" : return "SELECTION_REMARKS";
+			case "isRejected" : return "IS_REJECTED";
+			case "whoRejected" : return "WHO_REJECTED";
+			case "rejectionDateMillis" : return "REJECTION_DATE_MILLIS";			
+			case "rejectionRemarks" : return "REJECTION_REMARKS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "reference" : return "REFERENCE";
+			case "location" : return "LOCATION";
+			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoVerifiedName" : return "WHO_VERIFIED_NAME";
+			case "whoSuggestedForRecontactName" : return "WHO_SUGGESTED_FOR_RECONTACT_NAME";
+			case "whoRecontactedName" : return "WHO_RECONTACTED_NAME";
+			case "whoSelectedName" : return "WHO_SELECTED_NAME";
+			case "whoRejectedName" : return "WHO_REJECTED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
+		}
+		return EMPTY_STRING;
+	}
+
+	@Override
+	public String getFormattedApplicationForPrinting() {
+		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
+		findTutorApplication.append(PrintFormatterUtils.startATable());
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_ID, this.enquiryId));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, this.enquiryStatus));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, this.name));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrade)));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.subjects)));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, this.preferredTimeToCall, null, null)));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location)));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference)));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, this.addressDetails));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
+		findTutorApplication.append(PrintFormatterUtils.endATable());
+		return findTutorApplication.toString();
 	}
 }

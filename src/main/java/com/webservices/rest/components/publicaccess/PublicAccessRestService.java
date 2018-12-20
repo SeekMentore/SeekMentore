@@ -294,7 +294,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.application.toString());
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.application.getFormattedApplicationForPrinting());
 			getCommonsService().feedErrorRecord(errorPacket);
 			// Append contact information if Failure occurred
 			ApplicationUtils.appendMessageInMapAttribute(

@@ -342,6 +342,6 @@ import com.utils.VelocityUtils;
 			gridComponent = new GridComponent(FindTutor.class);
 		}
 		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
-		return adminService.getEnquiryList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 	}
 }

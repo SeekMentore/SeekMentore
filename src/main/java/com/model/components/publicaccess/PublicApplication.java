@@ -60,4 +60,6 @@ public abstract class PublicApplication extends GridComponentObject implements S
 		}
 		return EMPTY_STRING;
 	}
+	
+	public abstract String getFormattedApplicationForPrinting();
 }

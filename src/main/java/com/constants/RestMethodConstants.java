@@ -173,6 +173,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UN_BLACKLIST_BECOME_TUTOR_LIST = "/unBlacklistBecomeTutorList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_BECOME_TUTOR = "/takeActionOnBecomeTutor";
 	String REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD = "/updateBecomeTutorRecord";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST = "/downloadAdminReportFindTutorList";
 	String REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST = "/nonContactedEnquiriesList";
 	String REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST = "/nonVerifiedEnquiriesList";
 	String REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST = "/verifiedEnquiriesList";
@@ -184,6 +185,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST = "/unBlacklistEnquiryRequestList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR = "/takeActionOnFindTutor";
 	String REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD = "/updateFindTutorRecord";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST = "/downloadAdminReportSubscribeWithUsList";
 	String REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST = "/nonContactedSubscriptionsList";
 	String REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST = "/nonVerifiedSubscriptionsList";
 	String REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST = "/verifiedSubscriptionsList";

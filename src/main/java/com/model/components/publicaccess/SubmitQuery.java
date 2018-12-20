@@ -2,7 +2,9 @@ package com.model.components.publicaccess;
 
 import java.io.Serializable;
 
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
+import com.utils.ApplicationUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
@@ -152,26 +154,36 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 
-	@Override
-	public String toString() {
-		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
-		submitQueryApplication.append(PrintFormatterUtils.startATable());
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_ID, queryId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, queryStatus));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, queryDetails));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REGISTERED_TUTOR, registeredTutor));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		submitQueryApplication.append(PrintFormatterUtils.endATable());
-		return submitQueryApplication.toString();
-	}
-
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+	
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoNotAnsweredName() {
+		return whoNotAnsweredName;
+	}
+
+	public void setWhoNotAnsweredName(String whoNotAnsweredName) {
+		this.whoNotAnsweredName = whoNotAnsweredName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 	
 	@Override
@@ -202,27 +214,17 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		return EMPTY_STRING;
 	}
 
-	public String getWhoContactedName() {
-		return whoContactedName;
-	}
-
-	public void setWhoContactedName(String whoContactedName) {
-		this.whoContactedName = whoContactedName;
-	}
-
-	public String getWhoNotAnsweredName() {
-		return whoNotAnsweredName;
-	}
-
-	public void setWhoNotAnsweredName(String whoNotAnsweredName) {
-		this.whoNotAnsweredName = whoNotAnsweredName;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
+	@Override
+	public String getFormattedApplicationForPrinting() {
+		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
+		submitQueryApplication.append(PrintFormatterUtils.startATable());
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_ID, this.queryId));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, this.queryStatus));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, this.queryDetails));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REGISTERED_TUTOR, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.registeredTutor)));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
+		submitQueryApplication.append(PrintFormatterUtils.endATable());
+		return submitQueryApplication.toString();
 	}
 }

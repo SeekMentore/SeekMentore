@@ -112,7 +112,8 @@
 			<webservice id="blacklistBecomeTutorList" url="/blacklistBecomeTutorList"></webservice>	
 			<webservice id="unBlacklistBecomeTutorList" url="/unBlacklistBecomeTutorList"></webservice>	
 			<webservice id="takeActionOnBecomeTutor" url="/takeActionOnBecomeTutor"></webservice>	
-			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>			
+			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>
+			<webservice id="downloadAdminReportFindTutorList" url="/downloadAdminReportFindTutorList"></webservice>	
 			<webservice id="nonContactedEnquiriesList" url="/nonContactedEnquiriesList"></webservice>
 			<webservice id="nonVerifiedEnquiriesList" url="/nonVerifiedEnquiriesList"></webservice>
 			<webservice id="verifiedEnquiriesList" url="/verifiedEnquiriesList"></webservice>
@@ -124,7 +125,8 @@
 			<webservice id="blacklistEnquiryRequestList" url="/blacklistEnquiryRequestList"></webservice>	
 			<webservice id="unBlacklistEnquiryRequestList" url="/unBlacklistEnquiryRequestList"></webservice>
 			<webservice id="takeActionOnFindTutor" url="/takeActionOnFindTutor"></webservice>
-			<webservice id="updateFindTutorRecord" url="/updateFindTutorRecord"></webservice>	
+			<webservice id="updateFindTutorRecord" url="/updateFindTutorRecord"></webservice>
+			<webservice id="downloadAdminReportSubscribeWithUsList" url="/downloadAdminReportSubscribeWithUsList"></webservice>
 			<webservice id="nonContactedSubscriptionsList" url="/nonContactedSubscriptionsList"></webservice>
 			<webservice id="nonVerifiedSubscriptionsList" url="/nonVerifiedSubscriptionsList"></webservice>
 			<webservice id="verifiedSubscriptionsList" url="/verifiedSubscriptionsList"></webservice>

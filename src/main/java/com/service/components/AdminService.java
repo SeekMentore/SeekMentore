@@ -582,7 +582,7 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport("Become_Tutor_Report");
 		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, "Admin_Report");
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
@@ -817,7 +817,7 @@ public class AdminService implements AdminConstants {
 		}
 	}
 	
-	public List<FindTutor> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<FindTutor> getFindTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "F.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_CONTACTED), F.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -861,6 +861,12 @@ public class AdminService implements AdminConstants {
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new FindTutorRowMapper());
+	}
+	
+	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Find_Tutor_Report");
+		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, "Admin_Report");
+		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	@Transactional
@@ -1028,7 +1034,7 @@ public class AdminService implements AdminConstants {
 		}
 	}
 	
-	public List<SubscribeWithUs> getSubscriptionList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubscribeWithUs> getSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "S.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_CONTACTED), S.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -1072,6 +1078,12 @@ public class AdminService implements AdminConstants {
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubscribeWithUsRowMapper());
+	}
+	
+	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport("Subscribe_With_Us_Report");
+		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, "Admin_Report");
+		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	@Transactional

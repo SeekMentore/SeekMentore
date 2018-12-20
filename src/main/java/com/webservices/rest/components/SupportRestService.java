@@ -13,7 +13,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -65,7 +64,6 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 	private Complaint complaintObject;
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST)
-	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminReportBecomeTutorList (
@@ -425,6 +423,27 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminReportFindTutorList (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
+		}
+    }
+	
 	@Path(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -442,7 +461,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -470,7 +489,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -498,7 +517,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -526,7 +545,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -554,7 +573,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -582,7 +601,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -610,7 +629,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getEnquiryList(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -736,6 +755,27 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminReportSubscribeWithUsList (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent));
+		}
+    }
+	
 	@Path(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -753,7 +793,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -781,7 +821,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -809,7 +849,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -837,7 +877,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -865,7 +905,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -893,7 +933,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -921,7 +961,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscriptionList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
+			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1449,7 +1489,9 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 				handleTakeAction();
 				break;
 			}
-			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST : {
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST : {
 				handleGridDownload();
 				break;
 			}

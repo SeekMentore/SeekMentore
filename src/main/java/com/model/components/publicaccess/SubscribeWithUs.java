@@ -1,10 +1,12 @@
 package com.model.components.publicaccess;
 
 import java.io.Serializable;
-import java.util.Date;
 
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.ApplicationWorkbookObject;
+import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
@@ -366,26 +368,76 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
 	}
 
-	@Override
-	public String toString() {
-		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
-		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, tentativeSubscriptionId));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, applicationStatus));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, firstName));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, lastName));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, contactNumber));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, emailId));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, studentGrade));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, subjects));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, preferredTimeToCall));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, location));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, reference));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, addressDetails));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, additionalDetails));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, subscribedCustomer));
-		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
-		return subscribeWithUsApplication.toString();
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Long getVerificationDateMillis() {
+		return verificationDateMillis;
+	}
+
+	public void setVerificationDateMillis(Long verificationDateMillis) {
+		this.verificationDateMillis = verificationDateMillis;
+	}
+	
+	public String getWhoContactedName() {
+		return whoContactedName;
+	}
+
+	public void setWhoContactedName(String whoContactedName) {
+		this.whoContactedName = whoContactedName;
+	}
+
+	public String getWhoVerifiedName() {
+		return whoVerifiedName;
+	}
+
+	public void setWhoVerifiedName(String whoVerifiedName) {
+		this.whoVerifiedName = whoVerifiedName;
+	}
+
+	public String getWhoSuggestedForRecontactName() {
+		return whoSuggestedForRecontactName;
+	}
+
+	public void setWhoSuggestedForRecontactName(String whoSuggestedForRecontactName) {
+		this.whoSuggestedForRecontactName = whoSuggestedForRecontactName;
+	}
+
+	public String getWhoRecontactedName() {
+		return whoRecontactedName;
+	}
+
+	public void setWhoRecontactedName(String whoRecontactedName) {
+		this.whoRecontactedName = whoRecontactedName;
+	}
+
+	public String getWhoSelectedName() {
+		return whoSelectedName;
+	}
+
+	public void setWhoSelectedName(String whoSelectedName) {
+		this.whoSelectedName = whoSelectedName;
+	}
+
+	public String getWhoRejectedName() {
+		return whoRejectedName;
+	}
+
+	public void setWhoRejectedName(String whoRejectedName) {
+		this.whoRejectedName = whoRejectedName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
 	}
 	
 	@Override
@@ -393,12 +445,14 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		switch (reportSwitch) {
 		case "Admin_Report" : {
 			return new Object[] {
+					COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID,
 					COLUMN_NAME_APPLICATION_DATE,
 					COLUMN_NAME_APPLICATION_STATUS,
 					COLUMN_NAME_FIRST_NAME,
 					COLUMN_NAME_LAST_NAME,
 					COLUMN_NAME_CONTACT_NUMBER,
 					COLUMN_NAME_EMAIL_ID,
+					COLUMN_NAME_SUBSCRIBED_CUSTOMER,
 					COLUMN_NAME_STUDENT_GRADE,
 					COLUMN_NAME_SUBJECTS,
 					COLUMN_NAME_PREFERRED_TIME_TO_CALL,
@@ -442,64 +496,50 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		switch (reportSwitch) {
 			case "Admin_Report" : {
 				return new Object[] {
-						new Date(this.applicationDateMillis),
+						this.tentativeSubscriptionId,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
 						this.applicationStatus,
 						this.firstName,
 						this.lastName,
 						this.contactNumber,
 						this.emailId,
-						this.studentGrade,
-						this.subjects,
-						this.preferredTimeToCall,
-						this.location,
-						this.reference,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrade, null, null),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.subjects, null, null),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, this.preferredTimeToCall, null, null),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference),
 						this.addressDetails,
 						this.additionalDetails,
-						this.isContacted,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isContacted),
 						this.whoContactedName,
-						new Date(this.contactedDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.contactedDateMillis),
 						this.contactedRemarks,
-						this.isAuthenticationVerified,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isAuthenticationVerified),
 						this.whoVerifiedName,
-						new Date(this.verificationDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.verificationDateMillis),
 						this.verificationRemarks,
-						this.isToBeRecontacted,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isToBeRecontacted),
 						this.whoSuggestedForRecontactName,
-						new Date(this.suggestionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.suggestionDateMillis),
 						this.suggestionRemarks,
 						this.whoRecontactedName,
-						new Date(this.recontactedDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recontactedDateMillis),
 						this.recontactedRemarks,
-						this.isSelected,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isSelected),
 						this.whoSelectedName,
-						new Date(this.selectionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.selectionDateMillis),
 						this.selectionRemarks,
-						this.isRejected,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isRejected),
 						this.whoRejectedName,
-						new Date(this.rejectionDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.rejectionDateMillis),
 						this.rejectionRemarks,
-						new Date(this.recordLastUpdatedMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 				};
 			}
 		}
 		return new Object[] {};
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public Long getVerificationDateMillis() {
-		return verificationDateMillis;
-	}
-
-	public void setVerificationDateMillis(Long verificationDateMillis) {
-		this.verificationDateMillis = verificationDateMillis;
 	}
 	
 	@Override
@@ -557,60 +597,26 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		}
 		return EMPTY_STRING;
 	}
-	
-	public String getWhoContactedName() {
-		return whoContactedName;
-	}
 
-	public void setWhoContactedName(String whoContactedName) {
-		this.whoContactedName = whoContactedName;
-	}
-
-	public String getWhoVerifiedName() {
-		return whoVerifiedName;
-	}
-
-	public void setWhoVerifiedName(String whoVerifiedName) {
-		this.whoVerifiedName = whoVerifiedName;
-	}
-
-	public String getWhoSuggestedForRecontactName() {
-		return whoSuggestedForRecontactName;
-	}
-
-	public void setWhoSuggestedForRecontactName(String whoSuggestedForRecontactName) {
-		this.whoSuggestedForRecontactName = whoSuggestedForRecontactName;
-	}
-
-	public String getWhoRecontactedName() {
-		return whoRecontactedName;
-	}
-
-	public void setWhoRecontactedName(String whoRecontactedName) {
-		this.whoRecontactedName = whoRecontactedName;
-	}
-
-	public String getWhoSelectedName() {
-		return whoSelectedName;
-	}
-
-	public void setWhoSelectedName(String whoSelectedName) {
-		this.whoSelectedName = whoSelectedName;
-	}
-
-	public String getWhoRejectedName() {
-		return whoRejectedName;
-	}
-
-	public void setWhoRejectedName(String whoRejectedName) {
-		this.whoRejectedName = whoRejectedName;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
+	@Override
+	public String getFormattedApplicationForPrinting() {
+		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
+		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, this.tentativeSubscriptionId));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, this.firstName));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, this.lastName));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_STUDENT_GRADE, ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrade, null, null)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBJECTS, ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.subjects, null, null)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, this.preferredTimeToCall, null, null)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, this.addressDetails));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
+		return subscribeWithUsApplication.toString();
 	}
 }

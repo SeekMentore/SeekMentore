@@ -3,6 +3,7 @@ package com.model.components.commons;
 import java.io.Serializable;
 
 import com.constants.components.SelectLookupConstants;
+import com.utils.ValidationUtils;
 
 public class SelectLookup implements Serializable, SelectLookupConstants {
 	
@@ -67,8 +68,12 @@ public class SelectLookup implements Serializable, SelectLookupConstants {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof SelectLookup && obj != null && this.value.equals(((SelectLookup)obj).getValue());
+	public boolean equals(Object object) {
+		return ValidationUtils.checkObjectAvailability(object) 
+				&& object instanceof SelectLookup 
+				&& ValidationUtils.checkStringAvailability(this.value) 
+				&& ValidationUtils.checkStringAvailability(((SelectLookup)object).getValue()) 
+				&& this.value.equals(((SelectLookup)object).getValue());
 	}
 	
 	@Override

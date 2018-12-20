@@ -14,6 +14,7 @@ import com.dao.ApplicationDao;
 import com.model.components.commons.SelectLookup;
 import com.model.rowmappers.SelectLookupRowMapper;
 import com.utils.QueryUtils;
+import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_APPLICATION_LOOKUP_DATA_SERVICE)
 public class ApplicationLookupDataService implements SelectLookupConstants {
@@ -100,8 +101,44 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	}
 	
 	private SelectLookup getSelectLookupItem(final List<SelectLookup> selectLookupList, final String value) {
-		if (selectLookupList.contains(new SelectLookup(value))) {
-			return selectLookupList.get(selectLookupList.indexOf(new SelectLookup(value)));
+		if (ValidationUtils.checkStringAvailability(value)) {
+			if (selectLookupList.contains(new SelectLookup(value))) {
+				return selectLookupList.get(selectLookupList.indexOf(new SelectLookup(value)));
+			}
+		}
+		return null;
+	}
+	
+	public List<SelectLookup> getSelectLookupItemList(final String selectLookUpTable, final String multivalue, final String delimiter) {
+		switch(selectLookUpTable) {
+			case SELECT_LOOKUP_TABLE_YES_NO_LOOKUP : return getSelectLookupItemList(this.yesNoLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_GENDER_LOOKUP : return getSelectLookupItemList(this.genderLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP : return getSelectLookupItemList(this.qualificationLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP : return getSelectLookupItemList(this.professionLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP : return getSelectLookupItemList(this.transportModeLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP : return getSelectLookupItemList(this.locationsLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP : return getSelectLookupItemList(this.preferredTimeLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP : return getSelectLookupItemList(this.studentGradeLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP : return getSelectLookupItemList(this.subjectsLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP : return getSelectLookupItemList(this.referenceLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return getSelectLookupItemList(this.preferredTeachingTypeLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return getSelectLookupItemList(this.docuemtTypeLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return getSelectLookupItemList(this.emailTemplateLookupData, multivalue, delimiter);
+		}
+		return null;
+	}
+	
+	private List<SelectLookup> getSelectLookupItemList(final List<SelectLookup> selectLookupList, final String multivalue, final String delimiter) {
+		final List<SelectLookup> selectLookupItemList = new LinkedList<SelectLookup>();
+		if (ValidationUtils.checkStringAvailability(multivalue) && ValidationUtils.checkObjectAvailability(delimiter)) {
+			for (final String value : multivalue.split(delimiter)) {
+				if (selectLookupList.contains(new SelectLookup(value.trim()))) {
+					selectLookupItemList.add(selectLookupList.get(selectLookupList.indexOf(new SelectLookup(value.trim()))));
+				}
+			}
+		}
+		if (ValidationUtils.checkNonEmptyList(selectLookupItemList)) {
+			return selectLookupItemList;
 		}
 		return null;
 	}

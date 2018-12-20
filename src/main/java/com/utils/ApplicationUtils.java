@@ -3,6 +3,8 @@ package com.utils;
 import java.io.File;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -13,7 +15,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
 import com.model.User;
+import com.model.components.commons.SelectLookup;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.components.ApplicationLookupDataService;
 import com.utils.context.AppContext;
 
 public class ApplicationUtils implements ApplicationConstants {
@@ -166,11 +170,49 @@ public class ApplicationUtils implements ApplicationConstants {
     	return "Unknown File System";
     }
     
+    public static SelectLookup getSelectLookupItem(final String selectLookUpTable, final String value) {
+    	return getApplicationLookupDataService().getSelectLookupItem(selectLookUpTable, value);
+    }
+    
+    public static String getSelectLookupItemLabel(final String selectLookUpTable, final String value) {
+    	final SelectLookup selectLookupItem = getSelectLookupItem(selectLookUpTable, value);
+    	if (ValidationUtils.checkObjectAvailability(selectLookupItem)) {
+    		return selectLookupItem.getLabel();
+    	}
+    	return null;
+    }
+    
+    public static List<SelectLookup> getSelectLookupItemList(final String selectLookUpTable, final String multivalue, String delimiter) {
+    	if (!ValidationUtils.checkStringAvailability(delimiter)) {
+    		delimiter = SEMICOLON;
+    	}
+    	return getApplicationLookupDataService().getSelectLookupItemList(selectLookUpTable, multivalue, delimiter);
+    }
+    
+    public static String getSelectLookupItemListConcatenatedLabelString(final String selectLookUpTable, final String multivalue, final String delimiter, String labelSeparator) {
+    	final List<String> concatenatedLabelStringList = new LinkedList<String>();
+    	final List<SelectLookup> selectLookupItemList = getSelectLookupItemList(selectLookUpTable, multivalue, delimiter);
+    	for (final SelectLookup selectLookupItem : selectLookupItemList) {
+    		concatenatedLabelStringList.add(selectLookupItem.getLabel());
+    	}
+    	if (ValidationUtils.checkNonEmptyList(concatenatedLabelStringList)) {
+    		if (!ValidationUtils.checkStringAvailability(delimiter)) {
+    			labelSeparator = SEMICOLON + WHITESPACE;
+        	}
+    		return String.join(labelSeparator, concatenatedLabelStringList);
+    	}
+    	return null;
+    }
+    
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
 	}
     
     private static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
+	}
+    
+    private static ApplicationLookupDataService getApplicationLookupDataService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_APPLICATION_LOOKUP_DATA_SERVICE, ApplicationLookupDataService.class);
 	}
 }
