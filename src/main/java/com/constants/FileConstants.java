@@ -9,10 +9,14 @@ public interface FileConstants extends ApplicationConstants {
 	String EXTENSION_PDF = "pdf";
 	String EXTENSION_PNG = "png";
 	String EXTENSION_TEXT = "txt";
+	String EXTENSION_XLS = "xls";
 	String EXTENSION_XLSX = "xlsx";
+	String EXTENSION_DOC = "doc";
+	String EXTENSION_DOCX = "docx";
+	String EXTENSION_PPT = "ppt";
+	String EXTENSION_PPTX = "pptx";
 	String EXTENSION_JPG = "jpg";
 	String EXTENSION_JPEG = "jpeg";
-	String EXTENSION_ARRAY_JPG_JPEG = "jpg,jpeg";
 	
 	String EXCEPTION_MESSAGE_MISMATCHED_NUMBER_OF_FILE_BYTES_AND_FILE_NAMES = "Mismatched number of File bytes and File names.";
 }

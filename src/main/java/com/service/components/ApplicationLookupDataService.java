@@ -29,6 +29,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	private List<SelectLookup> subjectsLookupData;
 	private List<SelectLookup> referenceLookupData;
 	private List<SelectLookup> preferredTeachingTypeLookupData;
+	private List<SelectLookup> docuemtTypeLookupData;
+	private List<SelectLookup> emailTemplateLookupData;
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -51,6 +53,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 		this.subjectsLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.referenceLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.preferredTeachingTypeLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.docuemtTypeLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.emailTemplateLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 	}
 	
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
@@ -66,6 +70,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP : return this.subjectsLookupData;
 			case SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP : return this.referenceLookupData;
 			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return this.preferredTeachingTypeLookupData;
+			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return this.docuemtTypeLookupData;
+			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return this.emailTemplateLookupData;
 		}
 		return null;
 	}

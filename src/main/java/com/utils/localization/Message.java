@@ -14,8 +14,18 @@ public class Message implements MessageConstants {
         return resource.getString(key);
     }    
     
-    public static String getMessage(String key, Object[] parameters){
+    public static String getMessage(String key, Object[] parameters) {
         resource = ResourceBundle.getBundle(MESG_PROPERTY_FILE_NAME);        
         return MessageFormat.format(resource.getString(key), parameters);
     }    
+    
+    public static String getMessageFromFile(String filename, String key) {
+        resource = ResourceBundle.getBundle(filename);        
+        return resource.getString(key);
+    }    
+    
+    public static String getMessageFromFile(String filename, String key, Object[] parameters) {
+        resource = ResourceBundle.getBundle(filename);        
+        return MessageFormat.format(resource.getString(key), parameters);
+    }
 }

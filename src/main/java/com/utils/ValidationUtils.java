@@ -38,13 +38,13 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validatePlainNotNullAndEmptyTextString(final Object text) {
+	public static Boolean validatePlainNotNullAndEmptyTextString(final Object text) {
 		if (null != text && !EMPTY_STRING.equals(text.toString()))
 			return true;
 		return false;
 	}
 	
-	public static boolean validateNameString(final String name, boolean spaceAllowed) {
+	public static Boolean validateNameString(final String name, Boolean spaceAllowed) {
 		if (validatePlainNotNullAndEmptyTextString(name)) {
 		    return Pattern.compile(REGEX_FOR_NAME_WITH_SPACES, Pattern.CASE_INSENSITIVE).matcher(name).find() 
 	    		? 
@@ -59,14 +59,14 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validateDate(final Date date) {
+	public static Boolean validateDate(final Date date) {
 		if (null != date) {
 			return true;
 		}
 		return false;
 	}
 	
-	public static boolean validatePhoneNumber(final String contactNumber, final int length) {
+	public static Boolean validatePhoneNumber(final String contactNumber, final int length) {
 		if (validatePlainNotNullAndEmptyTextString(contactNumber)) {
 			return Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(contactNumber).find()
 					? (contactNumber.length() == length)
@@ -75,22 +75,22 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validateNumber (
+	public static Boolean validateNumber (
 			final Integer number, 
-			final boolean hasMaxCount,
+			final Boolean hasMaxCount,
 			final int maxCount,
-			final boolean hasMinCount,
+			final Boolean hasMinCount,
 			final int minCount
 	) {
 		if (null == number)
 			return false;
-		final boolean patternMatched = Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(String.valueOf(number)).find();
-		final boolean isUnderMaxCountLimit = hasMaxCount ? number <= maxCount : true;
-		final boolean isUnderMinCountLimit = hasMinCount ? number >= minCount : true;
+		final Boolean patternMatched = Pattern.compile(REGEX_FOR_NUMBERS, Pattern.CASE_INSENSITIVE).matcher(String.valueOf(number)).find();
+		final Boolean isUnderMaxCountLimit = hasMaxCount ? number <= maxCount : true;
+		final Boolean isUnderMinCountLimit = hasMinCount ? number >= minCount : true;
 		return patternMatched && isUnderMaxCountLimit && isUnderMinCountLimit;
 	}
 	
-	public static boolean validateAgainstSelectLookupValues (
+	public static Boolean validateAgainstSelectLookupValues (
 			final String delimitedValues,
 			final String delimiter,
 			final String selectLookUpTable
@@ -107,7 +107,7 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validateEmailAddress(final String email) {
+	public static Boolean validateEmailAddress(final String email) {
 		if (validatePlainNotNullAndEmptyTextString(email)) {
 			try {
 				new InternetAddress(email).validate();
@@ -117,18 +117,22 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
-	public static boolean validateFileExtension(final String[] extensions, final String filename) {
+	public static Boolean validateFileExtension(final String[] extensions, final String filename) {
 		if (validatePlainNotNullAndEmptyTextString(filename)) {
 			final String fileExtension = filename.substring(filename.lastIndexOf(DOT) + 1);
-			if (filename.indexOf(DOT) == filename.lastIndexOf(DOT)) {
+			if (checkStringAvailability(fileExtension)) {
 				for (final String extension : extensions) {
-					if (extension.equalsIgnoreCase(fileExtension)) {
+					if (extension.trim().equalsIgnoreCase(fileExtension.trim())) {
 						return true;
 					}
 				}
 			}
 		}
 		return false;
+	}
+	
+	public static Boolean validateFileSizeInMB(final byte[] fileBytes, final Double maxSizeInMB) {
+		return ApplicationUtils.computeFileSizeInMB((long)fileBytes.length) <= maxSizeInMB;
 	}
 	
 	public static CommonsService getCommonsService() {

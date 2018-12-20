@@ -354,7 +354,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.securityPassed = true;
 		Integer counter = 0;
 		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(this.photoFileName)) {
-			if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_ARRAY_JPG_JPEG.split(COMMA), this.photoFileName)) {
+			if (!ValidationUtils.validateFileExtension(FileConstants.EXTENSION_JPEG.split(COMMA), this.photoFileName)) {
 				ApplicationUtils.appendMessageInMapAttribute(
 						this.securityFailureResponse, 
 						VALIDATION_MESSAGE_INVALID_FILENAME_PHOTOGRAPH,

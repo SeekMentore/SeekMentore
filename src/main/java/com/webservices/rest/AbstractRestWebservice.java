@@ -12,13 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.constants.ValidationConstants;
 import com.constants.components.AdminConstants;
+import com.constants.components.CommonsConstants;
 import com.constants.components.ResponseMapConstants;
+import com.model.User;
 import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
 import com.utils.ExceptionUtils;
 import com.utils.JSONUtils;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
+import com.utils.localization.Message;
 
 public abstract class AbstractRestWebservice extends AbstractWebservice implements ResponseMapConstants {
 	
@@ -27,6 +30,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected Map<String, Object> securityFailureResponse;
 	protected String methodName;
 	protected boolean securityPassed = false;
+	protected User activeUser;
 	protected List<String> changedAttributes = new ArrayList<String>();
 	protected Long parentId;
 	protected String allIdsList;
@@ -103,6 +107,17 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 			LoggerUtils.logOnConsole("JSON Object 'property' is NULL >> " + propertyName);
 		}
 		return null;
+	}
+	
+	protected void handleActiveUserSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.activeUser)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_ACTIVE_USER_ABSENT),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 	
 	protected void handleParentId() throws Exception {
