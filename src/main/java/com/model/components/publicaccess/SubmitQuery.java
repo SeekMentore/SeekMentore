@@ -2,13 +2,16 @@ package com.model.components.publicaccess;
 
 import java.io.Serializable;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.SubmitQueryConstants;
+import com.model.ApplicationWorkbookObject;
 import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-public class SubmitQuery extends PublicApplication implements Serializable, SubmitQueryConstants {
+public class SubmitQuery extends PublicApplication implements Serializable, SubmitQueryConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
@@ -226,5 +229,59 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
 		submitQueryApplication.append(PrintFormatterUtils.endATable());
 		return submitQueryApplication.toString();
+	}
+
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		switch (reportSwitch) {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
+				return new Object[] {
+						COLUMN_NAME_QUERY_ID,
+						COLUMN_NAME_QUERY_REQUESTED_DATE,
+						COLUMN_NAME_QUERY_STATUS,
+						COLUMN_NAME_EMAIL_ID,
+						COLUMN_NAME_QUERY_DETAILS,
+						COLUMN_NAME_REGISTERED_TUTOR,
+						COLUMN_NAME_SUBSCRIBED_CUSTOMER,
+						COLUMN_NAME_QUERY_RESPONSE,
+						COLUMN_NAME_NOT_ANSWERED,
+						COLUMN_NAME_NOT_ANSWERED_REASON,
+						COLUMN_NAME_WHO_NOT_ANSWERED,
+						COLUMN_NAME_IS_CONTACTED,
+						COLUMN_NAME_WHO_CONTACTED,
+						COLUMN_NAME_CONTACTED_DATE,
+						COLUMN_NAME_RECORD_LAST_UPDATED,
+						"UPDATED_BY"
+					};
+			}
+		}
+		return new Object[] {};
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		switch (reportSwitch) {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
+				return new Object[] {
+						this.queryId,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.queryRequestedDateMillis),
+						this.queryStatus,
+						this.emailId,
+						this.queryDetails,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.registeredTutor),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer),
+						this.queryResponse,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.notAnswered),
+						this.notAnsweredReason,
+						this.whoNotAnsweredName,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isContacted),
+						this.whoContactedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.contactedDateMillis),
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName
+				};
+			}
+		}
+		return new Object[] {};
 	}
 }

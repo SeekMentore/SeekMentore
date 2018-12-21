@@ -16,6 +16,8 @@ public interface AdminConstants extends ResponseMapConstants {
 	String BUTTON_ACTION_RESPOND = "respond";
 	String BUTTON_ACTION_PUT_ON_HOLD = "hold";
 	
+	String EXTRA_PARAM_SELECTED_GRID = "grid";
+	
 	String VALIDATION_MESSAGE_INVALID_GRID_REFERENCE_ACCESS = "Invalid Grid Reference Access.";
 	String VALIDATION_MESSAGE_INVALID_BUTTON_ACTION = "Invalid Button Action.";
 	String VALIDATION_MESSAGE_INVALID_UNIQUE_ID = "Invalid Unique {Tutor Id / Enquiry Id / Subscription Id} Id.";
@@ -50,4 +52,7 @@ public interface AdminConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_UNKONWN_PROPERTY = "Unknown change attribute found in the JSON request";
 	String VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED = "Please change some properties to update.";
 	String ACTION_SUCCESSFUL = "Action successful";
+	
+	String SUPPORT_TEAM_REPORT = "SUPPORT_TEAM_REPORT";
+	String ADMIN_REPORT = "ADMIN_REPORT";
 }

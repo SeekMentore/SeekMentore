@@ -4,14 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.ValidationUtils;
 
 public class RegisteredTutor extends GridComponentObject implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
+	
 	private Long tutorId;
 	private String name;
 	private String contactNumber;
@@ -216,11 +220,46 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.documents = documents;
 	}
 
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
+	}
+
+	public String getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(String addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+	
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case "ADMIN_REPORT" : {
 				return new Object[] {
+						"TUTOR_ID",
+						"BECOME_TUTOR_ID",
+						"USER_ID",
 						"NAME",
 						"CONTACT_NUMBER",
 						"EMAIL_ID",
@@ -235,8 +274,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						"COMFORTABLE_LOCATIONS",
 						"ADDITIONAL_DETAILS",
 						"RECORD_LAST_UPDATED",
-						"UPDATED_BY",
-						"USER_ID"
+						"UPDATED_BY"
 					};
 			}
 		}
@@ -246,38 +284,32 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case "ADMIN_REPORT" : {
 				return new Object[] {
+						this.tutorId,
+						this.tentativeTutorId,
+						this.userId,
 						this.name,
 						this.contactNumber,
 						this.emailId,
-						this.dateOfBirth,
-						this.gender,
-						this.qualification,
-						this.primaryProfession,
-						this.transportMode,
+						DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP, this.gender),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP, this.qualification),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP, this.primaryProfession),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP, this.transportMode),
 						this.teachingExp,
-						this.interestedStudentGrades,
-						this.interestedSubjects,
-						this.comfortableLocations,
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.interestedStudentGrades, null, null),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.interestedSubjects, null, null),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.comfortableLocations, null, null),
 						this.additionalDetails,
-						new Date(this.recordLastUpdatedMillis),
-						this.updatedByName,
-						this.userId
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName
 					};
 			}
 		}
 		return new Object[] {};
 	}
-
-	public Long getRecordLastUpdatedMillis() {
-		return recordLastUpdatedMillis;
-	}
-
-	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
-		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
-	}
-
+	
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -307,29 +339,5 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "addressDetails" : return "ADDRESS_DETAILS";
 		}
 		return EMPTY_STRING;
-	}
-
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
-	}
-
-	public String getAddressDetails() {
-		return addressDetails;
-	}
-
-	public void setAddressDetails(String addressDetails) {
-		this.addressDetails = addressDetails;
 	}
 }

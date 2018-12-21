@@ -57,7 +57,7 @@ public class AdminService implements AdminConstants {
 	 * Tutor Registration Admin
 	 */
 	public byte[] downloadAdminReportTutorRegistrations() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
 //		workbookReport.createSheet("NON_CONTACTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
 //		workbookReport.createSheet("NON_VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
 //		workbookReport.createSheet("VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
@@ -218,7 +218,7 @@ public class AdminService implements AdminConstants {
 	 * Tutor Enquiry Admin
 	 */
 	public byte[] downloadAdminReportTutorEnquiry() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
 //		workbookReport.createSheet("NON_CONTACTED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
 //		workbookReport.createSheet("NON_VERIFIED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
 //		workbookReport.createSheet("VERIFIED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
@@ -369,7 +369,7 @@ public class AdminService implements AdminConstants {
 	 * Subscrition Admin
 	 */
 	public byte[] downloadAdminReportSubscriptions() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
 //		workbookReport.createSheet("NON_CONTACTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
 //		workbookReport.createSheet("NON_VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
 //		workbookReport.createSheet("VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
@@ -582,39 +582,39 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Become_Tutor_Report");
-		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, "Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	private String getBecomeTutorReportSheetName(final String grid) {
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
-				return "NON_CONTACTED_BECOME_TUTORS_LIST";
+				return "NON_CONTACTED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
-				return "NON_VERIFIED_BECOME_TUTORS_LIST";
+				return "NON_VERIFIED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
-				return "VERIFIED_BECOME_TUTORS_LIST";
+				return "VERIFIED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
-				return "VERIFICATION_FAILED_BECOME_TUTORS_LIST";
+				return "VERIFICATION_FAILED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
-				return "TO_BE_RECONTACTED_BECOME_TUTORS_LIST";
+				return "TO_BE_RECONTACTED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
-				return "SELECTED_BECOME_TUTORS_LIST";
+				return "SELECTED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
-				return "REJECTED_BECOME_TUTORS_LIST";
+				return "REJECTED";
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
-				return "REGISTERED_BECOME_TUTORS_LIST";
+				return "REGISTERED";
 			}
 		}
-		return "COMPLETE_BECOME_TUTORS_LIST";
+		return "COMPLETE";
 	}
 	
 	@Transactional
@@ -864,9 +864,36 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Find_Tutor_Report");
-		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, "Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet(getFindTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	private String getFindTutorReportSheetName(final String grid) {
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
+				return "NON_CONTACTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
+				return "NON_VERIFIED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
+				return "VERIFIED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
+				return "VERIFICATION_FAILED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
+				return "TO_BE_RECONTACTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
+				return "SELECTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
+				return "REJECTED";
+			}
+		}
+		return "COMPLETE";
 	}
 	
 	@Transactional
@@ -1081,9 +1108,36 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Subscribe_With_Us_Report");
-		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, "Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet(getSubscribeWithUsReportSheetName(grid), getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	private String getSubscribeWithUsReportSheetName(final String grid) {
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+				return "NON_CONTACTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
+				return "NON_VERIFIED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
+				return "VERIFIED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
+				return "VERIFICATION_FAILED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
+				return "TO_BE_RECONTACTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
+				return "SELECTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+				return "REJECTED";
+			}
+		}
+		return "COMPLETE";
 	}
 	
 	@Transactional
@@ -1256,7 +1310,7 @@ public class AdminService implements AdminConstants {
 		}
 	}
 	
-	public List<SubmitQuery> getQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubmitQuery> getSubmitQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = "SELECT "
 				+ "Q.*, "
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_CONTACTED), Q.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
@@ -1280,6 +1334,27 @@ public class AdminService implements AdminConstants {
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubmitQueryRowMapper());
+	}
+	
+	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet(getSubmitQueryReportSheetName(grid), getSubmitQueryList(grid, gridComponent), SubmitQuery.class, SUPPORT_TEAM_REPORT);
+		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	private String getSubmitQueryReportSheetName(final String grid) {
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : {
+				return "NON_CONTACTED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
+				return "NOT_ANSWERED";
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST : {
+				return "ANSWERED";
+			}
+		}
+		return "COMPLETE";
 	}
 	
 	@Transactional

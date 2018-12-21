@@ -34,7 +34,6 @@ import com.constants.components.publicaccess.PublicAccessConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.components.Complaint;
 import com.model.components.SubscribedCustomer;
-import com.model.components.TutorDocument;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubmitQuery;
@@ -76,11 +75,11 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), AdminConstants.EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportBecomeTutorList(this.grid, gridComponent));
+			FileUtils.writeFileToResponse(response, "Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportBecomeTutorList(this.grid, gridComponent));
 		}
     }
 	
@@ -436,11 +435,11 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), AdminConstants.EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
+			FileUtils.writeFileToResponse(response, "Enquiry_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
 		}
     }
 	
@@ -768,11 +767,11 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "grid", String.class);
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), AdminConstants.EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Admin_Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent));
+			FileUtils.writeFileToResponse(response, "Subscription_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent));
 		}
     }
 	
@@ -1087,6 +1086,27 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminReportSubmitQueryList (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
+		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), AdminConstants.EXTRA_PARAM_SELECTED_GRID, String.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Query_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubmitQueryList(this.grid, gridComponent));
+		}
+    }
+	
 	@Path(REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1104,7 +1124,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST, gridComponent);
+			final List<SubmitQuery> queryList = getAdminService().getSubmitQueryList(REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1132,7 +1152,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST, gridComponent);
+			final List<SubmitQuery> queryList = getAdminService().getSubmitQueryList(REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1160,7 +1180,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubmitQuery> queryList = getAdminService().getQueryList(REST_METHOD_NAME_ANSWERED_QUERY_LIST, gridComponent);
+			final List<SubmitQuery> queryList = getAdminService().getSubmitQueryList(REST_METHOD_NAME_ANSWERED_QUERY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, queryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(queryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1491,7 +1511,8 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			}
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST : 
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST : 
-			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST : {
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST : {
 				handleGridDownload();
 				break;
 			}

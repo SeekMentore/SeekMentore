@@ -13,15 +13,9 @@ public class WorkbookReport implements Serializable {
 	private static final long serialVersionUID = -9215359627401277574L;
 	
 	private List<WorkbookSheet> sheets;
-	private String name;
 	
 	public WorkbookReport() {
 		this.sheets = new LinkedList<WorkbookSheet>();
-	}
-	
-	public WorkbookReport(final String name) {
-		this.sheets = new LinkedList<WorkbookSheet>();
-		this.name = name;
 	}
 	
 	@SuppressWarnings("hiding")
@@ -110,9 +104,5 @@ public class WorkbookReport implements Serializable {
 	
 	public List<WorkbookSheet> getSheets() {
 		return sheets;
-	}
-
-	public String getName() {
-		return name;
 	}
 }

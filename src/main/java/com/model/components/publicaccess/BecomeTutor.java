@@ -3,6 +3,7 @@ package com.model.components.publicaccess;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
 import com.model.ApplicationWorkbookObject;
@@ -525,7 +526,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Override
 	public Object[] getReportHeaders(final String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
 						COLUMN_NAME_TENTATIVE_TUTOR_ID,
 						COLUMN_NAME_APPLICATION_DATE,
@@ -584,7 +585,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
 						this.tentativeTutorId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),

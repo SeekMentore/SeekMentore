@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.model.ApplicationWorkbookObject;
+import com.utils.ValidationUtils;
 
 public class WorkbookSheet implements Serializable {
 	
@@ -34,8 +35,9 @@ public class WorkbookSheet implements Serializable {
 		this.objectReportSwitch = objectReportSwitch;
 		this.rowPadding = rowPadding;
 		this.columnPadding = columnPadding;
-		computeWorkbookHeaderFromObjectTypeRecords();
+		computeWorkbookHeaderFromRecordObjectType();
 		computeWorkbookRecordsFromObjectTypeRecords();
+		this.objectTypeRecords = null; // GC the object after Header & Record are computed
 	}
 	
 	<T extends ApplicationWorkbookObject> WorkbookSheet (
@@ -54,8 +56,9 @@ public class WorkbookSheet implements Serializable {
 		this.rowPadding = rowPadding;
 		this.columnPadding = columnPadding;
 		this.columnWidth = columnWidth;
-		computeWorkbookHeaderFromObjectTypeRecords();
+		computeWorkbookHeaderFromRecordObjectType();
 		computeWorkbookRecordsFromObjectTypeRecords();
+		this.objectTypeRecords = null; // GC the object after Header & Record are computed
 	}
 	
 	<T extends ApplicationWorkbookObject> WorkbookSheet (
@@ -69,8 +72,9 @@ public class WorkbookSheet implements Serializable {
 		this.objectTypeRecords = objectTypeRecords;
 		this.recordObjectType = recordObjectType;
 		this.objectReportSwitch = objectReportSwitch;
-		computeWorkbookHeaderFromObjectTypeRecords();
+		computeWorkbookHeaderFromRecordObjectType();
 		computeWorkbookRecordsFromObjectTypeRecords();
+		this.objectTypeRecords = null; // GC the object after Header & Record are computed
 	}
 	
 	<T extends ApplicationWorkbookObject> WorkbookSheet (
@@ -86,8 +90,9 @@ public class WorkbookSheet implements Serializable {
 		this.recordObjectType = recordObjectType;
 		this.objectReportSwitch = objectReportSwitch;
 		this.columnWidth = columnWidth;
-		computeWorkbookHeaderFromObjectTypeRecords();
+		computeWorkbookHeaderFromRecordObjectType();
 		computeWorkbookRecordsFromObjectTypeRecords();
+		this.objectTypeRecords = null; // GC the object after Header & Record are computed
 	}
 	
 	public WorkbookSheet (
@@ -182,13 +187,17 @@ public class WorkbookSheet implements Serializable {
 		return columnWidth;
 	}
 
-	private void computeWorkbookHeaderFromObjectTypeRecords() throws InstantiationException, IllegalAccessException {
-		this.headers = new LinkedList<WorkbookHeader>();
+	private void computeWorkbookHeaderFromRecordObjectType() throws InstantiationException, IllegalAccessException {
+		if (!ValidationUtils.checkNonEmptyList(this.headers)) {
+			this.headers = new LinkedList<WorkbookHeader>();
+		}
 		this.headers.add(new WorkbookHeader(this.getRecordObjectType().newInstance().getReportHeaders(this.getObjectReportSwitch())));
 	}
 	
 	private void computeWorkbookRecordsFromObjectTypeRecords() {
-		this.records = new LinkedList<WorkbookRecord>();
+		if (!ValidationUtils.checkNonEmptyList(this.records)) {
+			this.records = new LinkedList<WorkbookRecord>();
+		}
 		for(final ApplicationWorkbookObject workbookObject : this.getObjectTypeRecords()) {
 			this.records.add(new WorkbookRecord(workbookObject.getReportRecords(this.getObjectReportSwitch())));
 		}

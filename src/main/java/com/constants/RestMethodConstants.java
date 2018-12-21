@@ -108,6 +108,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TASK_LIST = "/taskList";
 	String REST_METHOD_NAME_WORKFLOW_LIST = "/workflowList";
 	// Admin REST methods
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST = "/downloadAdminReportRegisteredTutorList";
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
 	String REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS = "/blacklistRegisteredTutors";
 	String REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS = "/unBlacklistRegisteredTutors";
@@ -200,6 +201,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST = "/nonContactedQueryList";
 	String REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST = "/nonAnsweredQueryList";
 	String REST_METHOD_NAME_ANSWERED_QUERY_LIST = "/answeredQueryList";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST = "/downloadAdminReportSubmitQueryList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY = "/takeActionOnSubmitQuery";
 	String REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD = "/updateSubmitQueryRecord";
 	String REST_METHOD_CUSTOMER_COMPLAINT_LIST = "/customerComplaintList";

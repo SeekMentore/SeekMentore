@@ -34,6 +34,7 @@
 			<webservice id="workflowList" url="/workflowList"></webservice>
 		</page>
 		<page id="adminRest" url="/rest/admin" pageAccessType="admin">
+			<webservice id="downloadAdminReportRegisteredTutorList" url="/downloadAdminReportRegisteredTutorList"></webservice>
 			<webservice id="registeredTutorsList" url="/registeredTutorsList"></webservice>
 			<webservice id="registeredTutorCheckDataAccess" url="/registeredTutorCheckDataAccess"></webservice>
 			<webservice id="blacklistRegisteredTutors" url="/blacklistRegisteredTutors"></webservice>
@@ -139,6 +140,7 @@
 			<webservice id="unBlacklistSubscriptionRequestList" url="/unBlacklistSubscriptionRequestList"></webservice>	
 			<webservice id="takeActionOnSubscription" url="/takeActionOnSubscription"></webservice>
 			<webservice id="updateSubscriptionRecord" url="/updateSubscriptionRecord"></webservice>
+			<webservice id="downloadAdminReportSubmitQueryList" url="/downloadAdminReportSubmitQueryList"></webservice>
 			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
 			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>
 			<webservice id="answeredQueryList" url="/answeredQueryList"></webservice>

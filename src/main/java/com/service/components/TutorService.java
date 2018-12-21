@@ -378,7 +378,7 @@ public class TutorService implements TutorConstants {
 	}
 
 	public byte[] downloadAdminReportRegisteredTutors() throws DataAccessException, InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport("Admin_Report");
+		final WorkbookReport workbookReport = new WorkbookReport();
 		//workbookReport.createSheet("REGISTERED_TUTORS", registeredTutorsList(WHITESPACE+SEMICOLON+WHITESPACE), RegisteredTutor.class);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
@@ -402,6 +402,12 @@ public class TutorService implements TutorConstants {
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.UPDATED_BY), R.UPDATED_BY) AS UPDATED_BY_NAME "
 				+ "FROM REGISTERED_TUTOR R";
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new RegisteredTutorRowMapper());
+	}
+	
+	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet("REGISTERED_TUTORS", getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT);
+		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {

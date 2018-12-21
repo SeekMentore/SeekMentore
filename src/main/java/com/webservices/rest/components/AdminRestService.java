@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -30,6 +31,7 @@ import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
+import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -43,6 +45,26 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	
 	private String allIdsList;
 	private String comments;
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminReportRegisteredTutorList (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Registered_Tutors_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutorList(gridComponent));
+		}
+    }
 	
 	@Path(REST_METHOD_NAME_REGISTERED_TUTORS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -258,6 +280,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST :
 			case REST_METHOD_NAME_REGISTERED_TUTORS_LIST :
 			case REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST : {
 				this.securityPassed = true;

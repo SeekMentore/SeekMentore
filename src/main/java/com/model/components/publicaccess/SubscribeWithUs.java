@@ -2,6 +2,7 @@ package com.model.components.publicaccess;
 
 import java.io.Serializable;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.ApplicationWorkbookObject;
@@ -443,7 +444,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-		case "Admin_Report" : {
+		case AdminConstants.SUPPORT_TEAM_REPORT : {
 			return new Object[] {
 					COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID,
 					COLUMN_NAME_APPLICATION_DATE,
@@ -494,7 +495,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
 						this.tentativeSubscriptionId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),

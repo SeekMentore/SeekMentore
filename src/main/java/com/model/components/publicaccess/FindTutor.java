@@ -2,6 +2,7 @@ package com.model.components.publicaccess;
 
 import java.io.Serializable;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.ApplicationWorkbookObject;
@@ -434,7 +435,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-		case "Admin_Report" : {
+		case AdminConstants.SUPPORT_TEAM_REPORT : {
 			return new Object[] {
 					COLUMN_NAME_ENQUIRY_ID,
 					COLUMN_NAME_ENQUIRY_DATE,
@@ -484,7 +485,7 @@ public class FindTutor extends PublicApplication implements Serializable, FindTu
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
 						this.enquiryId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.enquiryDateMillis),
