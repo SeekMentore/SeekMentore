@@ -192,14 +192,16 @@ public class ApplicationUtils implements ApplicationConstants {
     public static String getSelectLookupItemListConcatenatedLabelString(final String selectLookUpTable, final String multivalue, final String delimiter, String labelSeparator) {
     	final List<String> concatenatedLabelStringList = new LinkedList<String>();
     	final List<SelectLookup> selectLookupItemList = getSelectLookupItemList(selectLookUpTable, multivalue, delimiter);
-    	for (final SelectLookup selectLookupItem : selectLookupItemList) {
-    		concatenatedLabelStringList.add(selectLookupItem.getLabel());
-    	}
-    	if (ValidationUtils.checkNonEmptyList(concatenatedLabelStringList)) {
-    		if (!ValidationUtils.checkStringAvailability(delimiter)) {
-    			labelSeparator = SEMICOLON + WHITESPACE;
-        	}
-    		return String.join(labelSeparator, concatenatedLabelStringList);
+    	if (ValidationUtils.checkNonEmptyList(selectLookupItemList)) {
+    		for (final SelectLookup selectLookupItem : selectLookupItemList) {
+    			concatenatedLabelStringList.add(selectLookupItem.getLabel());
+    		}
+    		if (ValidationUtils.checkNonEmptyList(concatenatedLabelStringList)) {
+    			if (!ValidationUtils.checkStringAvailability(labelSeparator)) {
+    				labelSeparator = SEMICOLON + WHITESPACE;
+    			}
+    			return String.join(labelSeparator, concatenatedLabelStringList);
+    		}
     	}
     	return null;
     }
