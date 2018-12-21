@@ -162,6 +162,26 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBED_CUSTOMER_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminReportSubscribedCustomerList (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBED_CUSTOMER_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribedCustomer.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Subscribed_Customers_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getCustomerService().downloadAdminReportSubscribedCustomerList(gridComponent));
+		}
+    }
+	
 	@Path(REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -282,6 +302,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		switch(this.methodName) {
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST :
 			case REST_METHOD_NAME_REGISTERED_TUTORS_LIST :
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBED_CUSTOMER_LIST :
 			case REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST : {
 				this.securityPassed = true;
 				break;

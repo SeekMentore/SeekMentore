@@ -39,6 +39,7 @@
 			<webservice id="registeredTutorCheckDataAccess" url="/registeredTutorCheckDataAccess"></webservice>
 			<webservice id="blacklistRegisteredTutors" url="/blacklistRegisteredTutors"></webservice>
 			<webservice id="unBlacklistRegisteredTutors" url="/unBlacklistRegisteredTutors"></webservice>
+			<webservice id="downloadAdminReportSubscribedCustomerList" url="/downloadAdminReportSubscribedCustomerList"></webservice>
 			<webservice id="subscribedCustomersList" url="/subscribedCustomersList"></webservice>
 			<webservice id="subscribedCustomerCheckDataAccess" url="/subscribedCustomerCheckDataAccess"></webservice>
 			<webservice id="blacklistSubscribedCustomers" url="/blacklistSubscribedCustomers"></webservice>

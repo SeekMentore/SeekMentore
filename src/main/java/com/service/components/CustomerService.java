@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
@@ -26,11 +28,13 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.model.workbook.WorkbookReport;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
+import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE)
 	public class CustomerService implements CustomerConstants {
@@ -204,6 +208,12 @@ import com.utils.VelocityUtils;
 				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
 				+ "FROM SUBSCRIBED_CUSTOMER C";
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
+	}
+	
+	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT);
+		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {

@@ -112,6 +112,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_REGISTERED_TUTORS_LIST = "/registeredTutorsList";
 	String REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS = "/blacklistRegisteredTutors";
 	String REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS = "/unBlacklistRegisteredTutors";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBED_CUSTOMER_LIST = "/downloadAdminReportSubscribedCustomerList";
 	String REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST = "/subscribedCustomersList";
 	String REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/blacklistSubscribedCustomers";
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";

@@ -1,11 +1,14 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.Date;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
+import com.constants.components.SelectLookupConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.ValidationUtils;
 
 public class SubscribedCustomer extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
@@ -152,11 +155,30 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		this.updatedBy = updatedBy;
 	}
 	
+	public Long getRecordLastUpdatedMillis() {
+		return recordLastUpdatedMillis;
+	}
+
+	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
+		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
+	}
+	
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
+						"CUSTOMER_ID",
+						"FIND_TUTOR_ID",
+						"USER_ID",
 						"NAME",
 						"CONTACT_NUMBER",
 						"EMAIL_ID",
@@ -166,8 +188,7 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 						"ADDRESS_DETAILS",
 						"ADDITIONAL_DETAILS",
 						"RECORD_LAST_UPDATED",
-						"UPDATED_BY",
-						"USER_ID"
+						"UPDATED_BY"
 					};
 			}
 		}
@@ -177,33 +198,27 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "Admin_Report" : {
+			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
+						this.customerId,
+						this.findTutorId,
+						this.userId,
 						this.name,
 						this.contactNumber,
 						this.emailId,
-						this.studentGrades,
-						this.interestedSubjects,
-						this.location,
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrades, null, null),
+						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.interestedSubjects, null, null),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location),
 						this.addressDetails,
 						this.additionalDetails,
-						new Date(this.recordLastUpdatedMillis),
-						this.updatedByName,
-						this.userId
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName
 					};
 			}
 		}
 		return new Object[] {};
 	}
-
-	public Long getRecordLastUpdatedMillis() {
-		return recordLastUpdatedMillis;
-	}
-
-	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
-		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
-	}
-
+	
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -226,13 +241,5 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
 	}
 }

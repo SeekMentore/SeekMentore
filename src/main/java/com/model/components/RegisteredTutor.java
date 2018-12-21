@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
@@ -255,7 +256,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-			case "ADMIN_REPORT" : {
+			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
 						"TUTOR_ID",
 						"BECOME_TUTOR_ID",
@@ -284,7 +285,7 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "ADMIN_REPORT" : {
+			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
 						this.tutorId,
 						this.tentativeTutorId,
