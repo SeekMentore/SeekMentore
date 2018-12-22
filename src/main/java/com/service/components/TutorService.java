@@ -397,10 +397,7 @@ public class TutorService implements TutorConstants {
 	
 	/***********************************************************************************************************************************/
 	public List<RegisteredTutor> getRegisteredTutorList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "R.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.UPDATED_BY), R.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM REGISTERED_TUTOR R";
+		final String baseQuery = queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor");
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
@@ -413,13 +410,15 @@ public class TutorService implements TutorConstants {
 	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
-		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new RegisteredTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
+								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorEmailFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
 	public RegisteredTutor getRegisteredTutorInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
-		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new RegisteredTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
+								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorContactNumberFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
 	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
@@ -445,92 +444,77 @@ public class TutorService implements TutorConstants {
 	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		final String baseQuery = "SELECT "
-				+ "B.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_ACTED), B.WHO_ACTED) AS WHO_ACTED_NAME "
-				+ "FROM BANK_DETAIL B";
-		
-		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, "WHERE TUTOR_ID = :tutorId", "ORDER BY BANK_NAME", gridComponent), paramsMap, new BankDetailRowMapper());
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail"), 
+																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorIdFilter"), 
+																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailExistingSorter"), gridComponent), paramsMap, new BankDetailRowMapper());
 	}
 	
 	@Transactional
-	public void blacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE REGISTERED_TUTOR SET "
-				+ "IS_BLACKLISTED = 'Y', "
-				+ "BLACKLISTED_REMARKS = :comments, "
-				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TUTOR_ID = :tutorId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void blacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<RegisteredTutor> paramObjectList = new LinkedList<RegisteredTutor>();
 		for (final String tutorId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tutorId", tutorId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final RegisteredTutor registeredTutor = new RegisteredTutor();
+			registeredTutor.setIsBlacklisted(YES);
+			registeredTutor.setBlacklistedRemarks(comments);
+			registeredTutor.setBlacklistedDateMillis(currentTimestamp.getTime());
+			registeredTutor.setWhoBlacklisted(activeUser.getUserId());
+			registeredTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			registeredTutor.setUpdatedBy(activeUser.getUserId());
+			registeredTutor.setTutorId(Long.valueOf(tutorId));
+			paramObjectList.add(registeredTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorBlacklist", paramObjectList);
 	}
 	
 	@Transactional
-	public void unBlacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE REGISTERED_TUTOR SET "
-				+ "IS_BLACKLISTED = 'N', "
-				+ "UN_BLACKLISTED_REMARKS = :comments, "
-				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TUTOR_ID = :tutorId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void unBlacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<RegisteredTutor> paramObjectList = new LinkedList<RegisteredTutor>();
 		for (final String tutorId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tutorId", tutorId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final RegisteredTutor registeredTutor = new RegisteredTutor();
+			registeredTutor.setIsBlacklisted(NO);
+			registeredTutor.setUnblacklistedRemarks(comments);
+			registeredTutor.setUnblacklistedDateMillis(currentTimestamp.getTime());
+			registeredTutor.setWhoUnBlacklisted(activeUser.getUserId());
+			registeredTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			registeredTutor.setUpdatedBy(activeUser.getUserId());
+			registeredTutor.setTutorId(Long.valueOf(tutorId));
+			paramObjectList.add(registeredTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorUnBlacklist", paramObjectList);
 	}
 	
 	@Transactional
-	public void aprroveTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE TUTOR_DOCUMENT SET "
-				+ "IS_APPROVED = 'Y', "
-				+ "WHO_ACTED = :userId, "
-				+ "REMARKS = :comments, "
-				+ "ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) "
-				+ "WHERE DOCUMENT_ID = :documentId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void aprroveTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<TutorDocument> paramObjectList = new LinkedList<TutorDocument>();
 		for (final String documentId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("comments", comments);
-			paramsMap.put("documentId", documentId);
-			paramsList.add(paramsMap);
+			final TutorDocument tutorDocument = new TutorDocument();
+			tutorDocument.setIsApproved(YES);
+			tutorDocument.setWhoActed(activeUser.getUserId());
+			tutorDocument.setRemarks(comments);
+			tutorDocument.setActionDateMillis(currentTimestamp.getTime());
+			tutorDocument.setDocumentId(Long.valueOf(documentId));
+			paramObjectList.add(tutorDocument);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
 	}
 	
 	@Transactional
 	public void rejectTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		final String baseQuery = "UPDATE TUTOR_DOCUMENT SET "
-				+ "IS_APPROVED = 'N', "
-				+ "WHO_ACTED = :userId, "
-				+ "REMARKS = :comments, "
-				+ "ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) "
-				+ "WHERE DOCUMENT_ID = :documentId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		final Date currentTimestamp = new Date();
+		final List<TutorDocument> paramObjectList = new LinkedList<TutorDocument>();
 		for (final String documentId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("comments", comments);
-			paramsMap.put("documentId", documentId);
-			paramsList.add(paramsMap);
+			final TutorDocument tutorDocument = new TutorDocument();
+			tutorDocument.setIsApproved(NO);
+			tutorDocument.setWhoActed(activeUser.getUserId());
+			tutorDocument.setRemarks(comments);
+			tutorDocument.setActionDateMillis(currentTimestamp.getTime());
+			tutorDocument.setDocumentId(Long.valueOf(documentId));
+			paramObjectList.add(tutorDocument);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
 		sendTutorDocumentListRejectionEmails(idList, tutorId, comments, activeUser);
 	}
 	
@@ -557,64 +541,54 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void aprroveBankAccountList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE BANK_DETAIL SET "
-				+ "IS_APPROVED = 'Y', "
-				+ "WHO_ACTED = :userId, "
-				+ "REMARKS = :comments, "
-				+ "ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) "
-				+ "WHERE BANK_ACCOUNT_ID = :bankAccountId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void aprroveBankAccountList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<BankDetail> paramObjectList = new LinkedList<BankDetail>();
 		for (final String bankAccountId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("comments", comments);
-			paramsMap.put("bankAccountId", bankAccountId);
-			paramsList.add(paramsMap);
+			final BankDetail bankDetail = new BankDetail();
+			bankDetail.setIsApproved(YES);
+			bankDetail.setWhoActed(activeUser.getUserId());
+			bankDetail.setRemarks(comments);
+			bankDetail.setActionDateMillis(currentTimestamp.getTime());
+			bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+			paramObjectList.add(bankDetail);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateTakeActionBankDetail", paramObjectList);
 	}
 	
 	@Transactional
-	public void makeDefaultBankAccount(final Long bankAccountId, final Long tutorId, final String comments, final User activeUser) {
+	public void makeDefaultBankAccount(final Long bankAccountId, final Long tutorId, final String comments, final User activeUser) throws Exception {
 		resetPreviousDefaultBankAccount(tutorId);
-		final String baseQuery = "UPDATE BANK_DETAIL SET "
-				+ "IS_DEFAULT = 'Y', "
-				+ "WHO_ACTED = :userId, "
-				+ "REMARKS = :comments, "
-				+ "ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) "
-				+ "WHERE BANK_ACCOUNT_ID = :bankAccountId";
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", activeUser.getUserId());
-		paramsMap.put("comments", comments);
-		paramsMap.put("bankAccountId", bankAccountId);
-		applicationDao.executeUpdate(baseQuery, paramsMap);
+		final Date currentTimestamp = new Date();
+		final BankDetail bankDetail = new BankDetail();
+		bankDetail.setIsDefault(YES);;
+		bankDetail.setWhoActed(activeUser.getUserId());
+		bankDetail.setRemarks(comments);
+		bankDetail.setActionDateMillis(currentTimestamp.getTime());
+		bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+		applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateMakeDefaultBankDetail", bankDetail);
 	}
 	
 	private void resetPreviousDefaultBankAccount(final Long tutorId) {
-		final String baseQuery = "UPDATE BANK_DETAIL SET IS_DEFAULT = 'N' WHERE TUTOR_ID = :tutorId AND IS_DEFAULT = 'Y'";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
-		applicationDao.executeUpdate(baseQuery, paramsMap);
+		applicationDao.executeUpdate(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "resetPreviousDefaultBankAccount"), paramsMap);
 	}
 	
 	@Transactional
 	public void rejectBankAccountList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		final String baseQuery = "UPDATE BANK_DETAIL SET "
-				+ "IS_APPROVED = 'N', "
-				+ "WHO_ACTED = :userId, "
-				+ "REMARKS = :comments, "
-				+ "ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) "
-				+ "WHERE BANK_ACCOUNT_ID = :bankAccountId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		final Date currentTimestamp = new Date();
+		final List<BankDetail> paramObjectList = new LinkedList<BankDetail>();
 		for (final String bankAccountId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("comments", comments);
-			paramsMap.put("bankAccountId", bankAccountId);
-			paramsList.add(paramsMap);
+			final BankDetail bankDetail = new BankDetail();
+			bankDetail.setIsApproved(NO);
+			bankDetail.setWhoActed(activeUser.getUserId());
+			bankDetail.setRemarks(comments);
+			bankDetail.setActionDateMillis(currentTimestamp.getTime());
+			bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+			paramObjectList.add(bankDetail);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateTakeActionBankDetail", paramObjectList);
 		sendBankAccountListRejectionEmails(idList, tutorId, comments, activeUser);
 	}
 	
@@ -623,35 +597,10 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void feedRegisteredTutorList(final List<RegisteredTutor> registeredTutorList) throws Exception {
-		final String baseQueryInsertRegisteredTutor = "INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ADDRESS_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :addressDetails, :encryptedPassword, (UNIX_TIMESTAMP(SYSDATE()) * 1000), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)";
-		final String baseQueryUpdateBecomeTutor = "UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
-		for (final RegisteredTutor registeredTutorObj : registeredTutorList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("name", registeredTutorObj.getName());
-			paramsMap.put("contactNumber", registeredTutorObj.getContactNumber());
-			paramsMap.put("emailId", registeredTutorObj.getEmailId());
-			paramsMap.put("tentativeTutorId", registeredTutorObj.getTentativeTutorId());
-			paramsMap.put("dateOfBirth", registeredTutorObj.getDateOfBirth());
-			paramsMap.put("gender", registeredTutorObj.getGender());
-			paramsMap.put("qualification", registeredTutorObj.getQualification());
-			paramsMap.put("primaryProfession", registeredTutorObj.getPrimaryProfession());
-			paramsMap.put("transportMode", registeredTutorObj.getTransportMode());
-			paramsMap.put("teachingExp", registeredTutorObj.getTeachingExp());
-			paramsMap.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
-			paramsMap.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
-			paramsMap.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
-			paramsMap.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
-			paramsMap.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
-			paramsMap.put("addressDetails", registeredTutorObj.getAddressDetails());
-			paramsMap.put("encryptedPassword", registeredTutorObj.getEncryptedPassword());
-			paramsMap.put("userId", registeredTutorObj.getUserId());
-			paramsList.add(paramsMap);
-			sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
-		}
-		applicationDao.executeBatchUpdate(baseQueryInsertRegisteredTutor, paramsList);
-		applicationDao.executeBatchUpdate(baseQueryUpdateBecomeTutor, paramsList);
+	public void feedRegisteredTutorList(final List<RegisteredTutor> registeredTutorList, final List<BecomeTutor> becomeTutorObjList) throws Exception {
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredtutor", registeredTutorList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateMigratedBecomeTutor", becomeTutorObjList);
+		sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
 	}
 	
 	public void sendProfileGenerationEmailToRegisteredTutorList(final List<RegisteredTutor> registeredTutorList) throws Exception {
@@ -678,7 +627,7 @@ public class TutorService implements TutorConstants {
 		} else {
 			gridComponent = new GridComponent(BecomeTutor.class);
 		}
-		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("public-application", "becomeTutorNonMigratedFilter"));
 		return adminService.getBecomeTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
 	}
 	

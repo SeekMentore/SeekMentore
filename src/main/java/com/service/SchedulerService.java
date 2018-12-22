@@ -127,6 +127,7 @@ public class SchedulerService implements SchedulerConstants {
 		if (null != key) {
 			try {
 				LoggerUtils.logOnConsole("executeTutorRegisterJob");
+				final Date currentTimestamp = new Date();
 				final List<BecomeTutor> tutorObjList = tutorService.getBecomeTutorListForApplicationStatusSelected(true, 20);
 				if (ValidationUtils.checkNonEmptyList(tutorObjList)) {
 					final List<RegisteredTutor> registeredTutorList = new ArrayList<RegisteredTutor>();
@@ -152,9 +153,13 @@ public class SchedulerService implements SchedulerConstants {
 						registeredTutorObj.setAddressDetails(tutorObj.getAddressDetails());
 						registeredTutorObj.setEncryptedPassword(encryptedTemporaryPassword);
 						registeredTutorObj.setUserId(tutorObj.getEmailId());
+						registeredTutorObj.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+						registeredTutorObj.setUpdatedBy("SYSTEM_SCHEDULER");
 						registeredTutorList.add(registeredTutorObj);
+						tutorObj.setIsDataMigrated(YES);
+						tutorObj.setWhenMigratedMillis(currentTimestamp.getTime());
 					}
-					tutorService.feedRegisteredTutorList(registeredTutorList);
+					tutorService.feedRegisteredTutorList(registeredTutorList, tutorObjList);
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);

@@ -38,4 +38,12 @@
 	<query type="filter" id="tutorDocumentMultiDocumentTypeFilter">
 		WHERE TUTOR_ID = :tutorId AND DOCUMENT_TYPE IN 
 	</query>
+	<query type="update" id="updateTakeActionTutorDocument" paramClass="com.model.components.TutorDocument">
+		UPDATE TUTOR_DOCUMENT SET
+			IS_APPROVED = :isApproved,
+			WHO_ACTED = :whoActed,
+			REMARKS = :remarks,
+			ACTION_DATE_MILLIS = :actionDateMillis
+		WHERE DOCUMENT_ID = :documentId
+	</query>
 </queryMapper>

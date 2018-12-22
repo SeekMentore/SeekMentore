@@ -154,18 +154,26 @@ public class ApplicationUtils implements ApplicationConstants {
     }
     
     public static String getDBInformation() {
-    	switch(getBasicDataSource().getUrl()) {
-	    	case "jdbc:mysql://localhost:3306/SEEK_MENTORE" : return "Local Database";    
-	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-dev-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Dev Database";  
-	    	case "jdbc:mysql://seekmentore-india-mumbai-instances-prod-rds.c6n0ykmmjbpp.ap-south-1.rds.amazonaws.com:3306/SEEK_MENTORE" : return "Prod Database"; 
+    	final String dbURL = getBasicDataSource().getUrl();
+    	if (dbURL.indexOf("localhost") != -1) {
+    		return "Local Database";
+    	}
+    	if (dbURL.indexOf("dev-rds") != -1) {
+    		return "Dev Database";
+    	}
+    	if (dbURL.indexOf("prod-rds") != -1) {
+    		return "Prod Database";
     	}
     	return "Unknown Database";
     }
     
     public static String getLinkedFileSystem() throws Exception {
-    	switch(SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getAwsParams().getS3ClientParams().getBucketNameEncypted())) {
-	    	case "seekmentore-dev" : return "Dev File System";    
-	    	case "seekmentore-prod" : return "Prod File System";  
+    	final String bucketName = SecurityUtil.decrypt(getJNDIandControlConfigurationLoadService().getControlConfiguration().getAwsParams().getS3ClientParams().getBucketNameEncypted());
+    	if (bucketName.indexOf("dev") != -1) {
+    		return "Dev File System";
+    	}
+    	if (bucketName.indexOf("prod") != -1) {
+    		return "Prod File System";
     	}
     	return "Unknown File System";
     }

@@ -516,6 +516,4 @@ IS_FOLDER VARCHAR(2) NOT NULL,
 USER_ID VARCHAR(100) NOT NULL,
 USER_TYPE VARCHAR(100) NOT NULL,
 PRIMARY KEY (S3_DELETE_ID));
--- done (Office System)
--- done (Home System)
--- done (dev)
+-- Only to be executed in PROD

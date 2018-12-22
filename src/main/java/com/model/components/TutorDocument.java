@@ -29,6 +29,22 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 		this.content = content;
 	}
 	
+	public TutorDocument getACopy() {
+		final TutorDocument newInstance = new TutorDocument();
+		newInstance.documentId = this.documentId;
+		newInstance.tutorId = this.tutorId;
+		newInstance.documentType = this.documentType;
+		newInstance.fsKey = this.fsKey;
+		newInstance.filename = this.filename;
+		newInstance.isApproved = this.isApproved;
+		newInstance.whoActed = this.whoActed;
+		newInstance.whoActedName = this.whoActedName;
+		newInstance.remarks = this.remarks;
+		newInstance.actionDateMillis = this.actionDateMillis;
+		newInstance.content = this.content;
+		return newInstance;
+	}
+	
 	public Long getDocumentId() {
 		return documentId;
 	}

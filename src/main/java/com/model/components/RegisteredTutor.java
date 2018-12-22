@@ -1,6 +1,7 @@
 package com.model.components;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,33 +40,55 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	private String updatedByName;
 	private String preferredTeachingType;
 	private String addressDetails;
+	private String isBlacklisted;
+	private String blacklistedRemarks;
+	private Long blacklistedDateMillis;
+	private String whoBlacklisted;
+	private String whoBlacklistedName;
+	private String unblacklistedRemarks;
+	private Long unblacklistedDateMillis;
+	private String whoUnBlacklisted;
+	private String whoUnBlacklistedName;
 	private List<TutorDocument> documents;
 	
 	public RegisteredTutor() {}
 	
 	public RegisteredTutor getACopy() {
 		final RegisteredTutor newInstance = new RegisteredTutor();
-		newInstance.tutorId = tutorId;
-		newInstance.name = name;
-		newInstance.contactNumber = contactNumber;
-		newInstance.emailId = emailId;
-		newInstance.tentativeTutorId = tentativeTutorId;
-		newInstance.dateOfBirth = dateOfBirth;
-		newInstance.gender = gender;
-		newInstance.qualification = qualification;
+		newInstance.tutorId = this.tutorId;
+		newInstance.name = this.name;
+		newInstance.contactNumber = this.contactNumber;
+		newInstance.emailId = this.emailId;
+		newInstance.tentativeTutorId = this.tentativeTutorId;
+		newInstance.dateOfBirth = this.dateOfBirth;
+		newInstance.gender = this.gender;
+		newInstance.qualification = this.qualification;
 		newInstance.primaryProfession = primaryProfession;
-		newInstance.transportMode = transportMode;
-		newInstance.teachingExp = teachingExp;
-		newInstance.interestedStudentGrades = interestedStudentGrades;
-		newInstance.interestedSubjects = interestedSubjects;
-		newInstance.comfortableLocations = comfortableLocations;
-		newInstance.additionalDetails = additionalDetails;
-		newInstance.encryptedPassword = encryptedPassword;
-		newInstance.userId = userId;
-		newInstance.recordLastUpdatedMillis = recordLastUpdatedMillis;
-		newInstance.updatedBy = updatedBy;
-		newInstance.preferredTeachingType = preferredTeachingType;
-		newInstance.addressDetails = addressDetails;
+		newInstance.transportMode = this.transportMode;
+		newInstance.teachingExp = this.teachingExp;
+		newInstance.interestedStudentGrades = this.interestedStudentGrades;
+		newInstance.interestedSubjects = this.interestedSubjects;
+		newInstance.comfortableLocations = this.comfortableLocations;
+		newInstance.additionalDetails = this.additionalDetails;
+		newInstance.encryptedPassword = this.encryptedPassword;
+		newInstance.userId = this.userId;
+		newInstance.recordLastUpdatedMillis = this.recordLastUpdatedMillis;
+		newInstance.updatedBy = this.updatedBy;
+		newInstance.preferredTeachingType = this.preferredTeachingType;
+		newInstance.addressDetails = this.addressDetails;
+		newInstance.isBlacklisted = this.isBlacklisted;
+		newInstance.blacklistedRemarks = this.blacklistedRemarks;
+		newInstance.blacklistedDateMillis = this.blacklistedDateMillis;
+		newInstance.whoBlacklisted = this.whoBlacklisted;
+		newInstance.whoBlacklistedName = this.whoBlacklistedName;
+		newInstance.unblacklistedRemarks = this.unblacklistedRemarks;
+		newInstance.unblacklistedDateMillis = this.unblacklistedDateMillis;
+		newInstance.whoUnBlacklisted = this.whoUnBlacklisted;
+		newInstance.whoUnBlacklistedName = this.whoUnBlacklistedName;
+		newInstance.documents = new ArrayList<TutorDocument>();
+		for (final TutorDocument tutorDocument : this.documents) {
+			newInstance.documents.add(tutorDocument.getACopy());
+		}
 		return newInstance;
 	}
 
@@ -253,6 +276,78 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.addressDetails = addressDetails;
 	}
 	
+	public String getIsBlacklisted() {
+		return isBlacklisted;
+	}
+
+	public void setIsBlacklisted(String isBlacklisted) {
+		this.isBlacklisted = isBlacklisted;
+	}
+
+	public String getBlacklistedRemarks() {
+		return blacklistedRemarks;
+	}
+
+	public void setBlacklistedRemarks(String blacklistedRemarks) {
+		this.blacklistedRemarks = blacklistedRemarks;
+	}
+
+	public Long getBlacklistedDateMillis() {
+		return blacklistedDateMillis;
+	}
+
+	public void setBlacklistedDateMillis(Long blacklistedDateMillis) {
+		this.blacklistedDateMillis = blacklistedDateMillis;
+	}
+
+	public String getWhoBlacklisted() {
+		return whoBlacklisted;
+	}
+
+	public void setWhoBlacklisted(String whoBlacklisted) {
+		this.whoBlacklisted = whoBlacklisted;
+	}
+
+	public String getWhoBlacklistedName() {
+		return whoBlacklistedName;
+	}
+
+	public void setWhoBlacklistedName(String whoBlacklistedName) {
+		this.whoBlacklistedName = whoBlacklistedName;
+	}
+	
+	public String getUnblacklistedRemarks() {
+		return unblacklistedRemarks;
+	}
+
+	public void setUnblacklistedRemarks(String unblacklistedRemarks) {
+		this.unblacklistedRemarks = unblacklistedRemarks;
+	}
+
+	public Long getUnblacklistedDateMillis() {
+		return unblacklistedDateMillis;
+	}
+
+	public void setUnblacklistedDateMillis(Long unblacklistedDateMillis) {
+		this.unblacklistedDateMillis = unblacklistedDateMillis;
+	}
+
+	public String getWhoUnBlacklisted() {
+		return whoUnBlacklisted;
+	}
+
+	public void setWhoUnBlacklisted(String whoUnBlacklisted) {
+		this.whoUnBlacklisted = whoUnBlacklisted;
+	}
+
+	public String getWhoUnBlacklistedName() {
+		return whoUnBlacklistedName;
+	}
+
+	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
+		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
@@ -274,6 +369,10 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						"INTERESTED_SUBJECTS",
 						"COMFORTABLE_LOCATIONS",
 						"ADDITIONAL_DETAILS",
+						"IS_BLACKLISTED",
+						"BLACKLISTED_REMARKS",
+						"BLACKLISTED_DATE_MILLIS",
+						"WHO_BLACKLISTED",
 						"RECORD_LAST_UPDATED",
 						"UPDATED_BY"
 					};
@@ -303,6 +402,10 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.interestedSubjects, null, null),
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.comfortableLocations, null, null),
 						this.additionalDetails,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isBlacklisted),
+						this.blacklistedRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.blacklistedDateMillis),
+						this.whoBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 					};
@@ -338,6 +441,15 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
 			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "isBlacklisted" : return "IS_BLACKLISTED";
+			case "blacklistedRemarks" : return "BLACKLISTED_REMARKS";
+			case "blacklistedDateMillis" : return "BLACKLISTED_DATE_MILLIS";
+			case "whoBlacklisted" : return "WHO_BLACKLISTED";
+			case "whoBlacklistedName" : return "WHO_BLACKLISTED_NAME";
+			case "unblacklistedRemarks" : return "UN_BLACKLISTED_REMARKS";
+			case "unblacklistedDateMillis" : return "UN_BLACKLISTED_DATE_MILLIS";
+			case "whoUnBlacklisted" : return "WHO_UN_BLACKLISTED";
+			case "whoUnBlacklistedName" : return "WHO_UN_BLACKLISTED_NAME";
 		}
 		return EMPTY_STRING;
 	}

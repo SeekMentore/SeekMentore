@@ -36,4 +36,13 @@
 			(QUERY_REQUESTED_DATE_MILLIS, QUERY_STATUS, EMAIL_ID, QUERY_DETAILS, REGISTERED_TUTOR, SUBSCRIBED_CUSTOMER, IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES(:queryRequestedDateMillis, :queryStatus, :emailId, :queryDetails, :registeredTutor, :subscribedCustomer, :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
+	<query type="update" id="updateMigratedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET 
+			IS_DATA_MIGRATED = :isDataMigrated, 
+			WHEN_MIGRATED_MILLIS = :whenMigratedMillis 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="filter" id="becomeTutorNonMigratedFilter">
+		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
+	</query>
 </queryMapper>

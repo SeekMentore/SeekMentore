@@ -38,6 +38,15 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 		registeredTutor.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("updatedBy"), String.class));
 		registeredTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("updatedByName"), String.class));
 		registeredTutor.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("addressDetails"), String.class));
+		registeredTutor.setBlacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("blacklistedDateMillis"), Long.class));
+		registeredTutor.setIsBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("isBlacklisted"), String.class));
+		registeredTutor.setBlacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("blacklistedRemarks"), String.class));
+		registeredTutor.setWhoBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("whoBlacklisted"), String.class));
+		registeredTutor.setWhoBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("whoBlacklistedName"), String.class));
+		registeredTutor.setUnblacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("unblacklistedDateMillis"), Long.class));
+		registeredTutor.setUnblacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("unblacklistedRemarks"), String.class));
+		registeredTutor.setWhoUnBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("whoUnBlacklisted"), String.class));
+		registeredTutor.setWhoUnBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("whoUnBlacklistedName"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(registeredTutor, row, rowNum);
 		return registeredTutor;
 	}
