@@ -34,6 +34,7 @@ import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.model.workbook.WorkbookReport;
+import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
 import com.utils.PDFUtils;
@@ -49,6 +50,9 @@ public class AdminService implements AdminConstants {
 	
 	@Autowired
 	private transient CommonsService commonsService;
+	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -520,17 +524,8 @@ public class AdminService implements AdminConstants {
 	
 	/**************************************************************************************************/
 	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "B.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_CONTACTED), B.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_VERIFIED), B.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_SUGGESTED_FOR_RECONTACT), B.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_RECONTACTED), B.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_SELECTED), B.WHO_SELECTED) AS WHO_SELECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_REJECTED), B.WHO_REJECTED) AS WHO_REJECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.UPDATED_BY), B.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM BECOME_TUTOR B";
-		String existingFilterQueryString = "";
+		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectBecomeTutor");
+		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
