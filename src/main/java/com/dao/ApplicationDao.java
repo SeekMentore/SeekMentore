@@ -98,7 +98,7 @@ public class ApplicationDao implements ApplicationConstants {
 		executeUpdate(query, params);
     }
 	
-	public void executeUpdate(final String query, final Map<String, Object> params) {
+	public void executeUpdate(String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		namedParameterJdbcTemplate.update(query, parameters);
@@ -137,7 +137,7 @@ public class ApplicationDao implements ApplicationConstants {
 		return insertAndReturnGeneratedKey(query, params);
 	}
 	
-	public Long insertAndReturnGeneratedKey(final String query, final Map<String, Object> params) {
+	public Long insertAndReturnGeneratedKey(String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final KeyHolder keyHolder = new GeneratedKeyHolder();
 		final SqlParameterSource parameters = getSqlParameterSource(params);
@@ -178,7 +178,7 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT single record
 	 */
-	public <T extends Object> T find(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public <T extends Object> T find(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws DataAccessException, InstantiationException, IllegalAccessException {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		final List<T> list = namedParameterJdbcTemplate.query(query, parameters, rowmapper);
@@ -211,7 +211,7 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
-	public Map<String, Object> find(final String query, final Map<String, Object> params) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Map<String, Object> find(String query, final Map<String, Object> params) throws DataAccessException, InstantiationException, IllegalAccessException {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());
@@ -248,7 +248,7 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT multiple records
 	 */
-	public < T extends Object > List<T> findAll(final String query, final Map<String, Object> params, final RowMapper<T> rowmapper) {
+	public < T extends Object > List<T> findAll(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		return namedParameterJdbcTemplate.query(query, parameters, rowmapper);
@@ -259,7 +259,7 @@ public class ApplicationDao implements ApplicationConstants {
 		return namedParameterJdbcTemplate.query(query, rowmapper);
     }
 	
-	public List<Map<String, Object>> findAll(final String query, final Map<String, Object> params) {
+	public List<Map<String, Object>> findAll(String query, final Map<String, Object> params) {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
 		return namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());

@@ -3,6 +3,7 @@ package com.service.components;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -526,42 +527,55 @@ public class AdminService implements AdminConstants {
 	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectBecomeTutor");
 		String existingFilterQueryString = EMPTY_STRING;
-		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		boolean withoutParams = false;
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'FRESH'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "FRESH");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorMultiApplicationStatusFilter");
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {"CONTACTED_VERIFICATION_PENDING", "RECONTACTED_VERIFICATION_PENDING"}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "VERIFICATION_SUCCESSFUL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_FAILED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "VERIFICATION_FAILED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "SUGGESTED_TO_BE_RECONTACTED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SELECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "SELECTED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'REJECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", "REJECTED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
-				existingFilterQueryString = "WHERE IS_DATA_MIGRATED = 'Y'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorMigratedFilter");
+				withoutParams = true;
 				break;
 			}
 		}
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new BecomeTutorRowMapper());
+		if (withoutParams) {
+			return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new BecomeTutorRowMapper());
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new BecomeTutorRowMapper());
 	}
 	
 	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {

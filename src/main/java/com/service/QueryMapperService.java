@@ -162,6 +162,31 @@ public class QueryMapperService implements QueryMapperConstants {
 		return paramsMap;
 	}
 	
+	@SuppressWarnings("unused")
+	private String getIteratedListQuery(final String querySQL, final Map<String, Object> paramsMap) {
+		String query = querySQL;
+		int counterForMaxIteratedList = 0; 
+		while (query.indexOf("#ITERATE-LIST") != -1) {
+			final String queryPart = query.substring(query.indexOf("#ITERATE-LIST") + "#ITERATE-LIST".length() + 2);
+			final String attributeName = queryPart.substring(0, getAttributeNameCompletionIndex(queryPart));
+			final String toBeRemovedString = "#ITERATE-LIST :" + attributeName;
+			final List<?> attributeValue = (List<?>) paramsMap.get(attributeName);
+			final List<String> paramHolderCollection = new LinkedList<String>();
+			int counter = 0;
+			for (final Object object : attributeValue) {
+				paramHolderCollection.add(":"+attributeName+"IteratedListIndex"+counter);
+				paramsMap.put(attributeName+"IteratedListIndex"+counter, object);
+				counter++;
+			}
+			final String replacedParamHolderString = ValidationUtils.checkNonEmptyList(paramHolderCollection) ? String.join(COMMA, paramHolderCollection) : EMPTY_STRING;
+			query = query.replaceAll(toBeRemovedString, replacedParamHolderString);
+			if (counterForMaxIteratedList > 500)// this is to avoid infinite loop
+				break;
+			counterForMaxIteratedList++;
+		}
+		return query;
+	}
+	
 	private Object getValueForAttributeNameFromParamObject(final Class<?> paramClass, final String attributeName, final Object paramObject) 
 			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		return paramClass.getMethod(getterMethodNameForAttribute(attributeName)).invoke(paramObject);

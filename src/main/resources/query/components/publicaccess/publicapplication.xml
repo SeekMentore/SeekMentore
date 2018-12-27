@@ -60,10 +60,13 @@
 	<query type="filter" id="becomeTutorApplicationStatusFilter">
 		WHERE APPLICATION_STATUS = :applicationStatus
 	</query>
+	<query type="filter" id="becomeTutorMultiApplicationStatusFilter">
+		WHERE APPLICATION_STATUS IN (:applicationStatusList)
+	</query>
 	<query type="filter" id="becomeTutorMigratedFilter">
 		WHERE IS_DATA_MIGRATED = 'Y'
 	</query>
-	<query type="filter" id="becomeTutorMigratedFilter">
+	<query type="sorter" id="becomeTutorExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
 	</query>
 </queryMapper>
