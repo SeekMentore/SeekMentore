@@ -16,12 +16,6 @@
 		VALUES(:enquiryDateMillis, :enquiryStatus, :name, :emailId, :contactNumber, :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
 			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
-	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
-		UPDATE FIND_TUTOR SET 
-			IS_DATA_MIGRATED = 'Y', 
-			WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) 
-		WHERE ENQUIRY_ID = :enquiryId
-	</query>
 	<query type="insert" id="insertSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		INSERT INTO SUBSCRIBE_WITH_US
 			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, EMAIL_ID, CONTACT_NUMBER, 
@@ -36,15 +30,6 @@
 			(QUERY_REQUESTED_DATE_MILLIS, QUERY_STATUS, EMAIL_ID, QUERY_DETAILS, REGISTERED_TUTOR, SUBSCRIBED_CUSTOMER, IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES(:queryRequestedDateMillis, :queryStatus, :emailId, :queryDetails, :registeredTutor, :subscribedCustomer, :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
-	<query type="update" id="updateMigratedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
-		UPDATE BECOME_TUTOR SET 
-			IS_DATA_MIGRATED = :isDataMigrated, 
-			WHEN_MIGRATED_MILLIS = :whenMigratedMillis 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
-	</query>
-	<query type="filter" id="becomeTutorNonMigratedFilter">
-		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
-	</query>
 	<query type="select" id="selectBecomeTutor">
 		SELECT
 			B.*,
@@ -54,6 +39,8 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_RECONTACTED), B.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_SELECTED), B.WHO_SELECTED) AS WHO_SELECTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_REJECTED), B.WHO_REJECTED) AS WHO_REJECTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_BLACKLISTED), B.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_UN_BLACKLISTED), B.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.UPDATED_BY), B.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM BECOME_TUTOR B
 	</query>
@@ -66,7 +53,263 @@
 	<query type="filter" id="becomeTutorMigratedFilter">
 		WHERE IS_DATA_MIGRATED = 'Y'
 	</query>
+	<query type="filter" id="becomeTutorNonMigratedFilter">
+		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
+	</query>
+	<query type="filter" id="becomeTutorEmailFilter">
+		WHERE EMAIL_ID = :emailId
+	</query>
+	<query type="filter" id="becomeTutorContactNumberFilter">
+		WHERE CONTACT_NUMBER = :contactNumber
+	</query>
 	<query type="sorter" id="becomeTutorExistingSorter">
+		ORDER BY APPLICATION_DATE_MILLIS DESC
+	</query>
+	<query type="update" id="updateMigratedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET 
+			IS_DATA_MIGRATED = :isDataMigrated, 
+			WHEN_MIGRATED_MILLIS = :whenMigratedMillis 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateBlacklistBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			IS_BLACKLISTED = :isBlacklisted,
+			BLACKLISTED_REMARKS = :blacklistedRemarks,
+			BLACKLISTED_DATE_MILLIS = :blacklistedDateMillis,
+			WHO_BLACKLISTED = :whoBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateUnBlacklistBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			IS_BLACKLISTED = :isBlacklisted,
+			UN_BLACKLISTED_REMARKS = :unblacklistedRemarks,
+			UN_BLACKLISTED_DATE_MILLIS = :unblacklistedDateMillis,
+			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateContactedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted 
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
+			CONTACTED_REMARKS = :contactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateRecontactBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted,
+			WHO_SUGGESTED_FOR_RECONTACT = :whoSuggestedForRecontact,
+			SUGGESTION_DATE_MILLIS = :suggestionDateMillis,
+			SUGGESTION_REMARKS = :suggestionRemarks,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateRecontactedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted, 
+			WHO_RECONTACTED = :whoRecontacted, 
+			RECONTACTED_DATE_MILLIS = :recontactedDateMillis, 
+			RECONTACTED_REMARKS = :recontactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateRejectBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_REJECTED = :isRejected,
+			WHO_REJECTED = :whoRejected, 
+			REJECTION_DATE_MILLIS = :rejectionDateMillis, 
+			REJECTION_REMARKS = :rejectionRemarks, 
+			REJECTION_COUNT = (REJECTION_COUNT + 1), 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateVerifyFailverifyReverifyBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus,  
+			IS_AUTHENTICATION_VERIFIED = :isAuthenticationVerified, 
+			WHO_VERIFIED = :whoVerified, 
+			VERIFICATION_DATE_MILLIS = :verificationDateMillis, 
+			VERIFICATION_REMARKS = :verificationRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="updateSelectedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
+		UPDATE BECOME_TUTOR SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_SELECTED = :isSelected, 
+			WHO_SELECTED = :whoSelected, 
+			SELECTION_DATE_MILLIS = :selectionDateMillis, 
+			SELECTION_REMARKS = :selectionRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="select" id="selectFindTutor">
+		SELECT
+			F.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_CONTACTED), F.WHO_CONTACTED) AS WHO_CONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_VERIFIED), F.WHO_VERIFIED) AS WHO_VERIFIED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SUGGESTED_FOR_RECONTACT), F.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_RECONTACTED), F.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SELECTED), F.WHO_SELECTED) AS WHO_SELECTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_REJECTED), F.WHO_REJECTED) AS WHO_REJECTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_BLACKLISTED), B.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_UN_BLACKLISTED), B.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.UPDATED_BY), F.UPDATED_BY) AS UPDATED_BY_NAME
+		FROM FIND_TUTOR F
+	</query>
+	<query type="filter" id="findTutorEnquiryStatusFilter">
+		WHERE ENQUIRY_STATUS = :enquiryStatus
+	</query>
+	<query type="filter" id="findTutorMultiEnquiryStatusFilter">
+		WHERE ENQUIRY_STATUS IN (:enquiryStatusList)
+	</query>
+	<query type="sorter" id="findTutorExistingSorter">
+		ORDER BY ENQUIRY_DATE_MILLIS DESC
+	</query>
+	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET 
+			IS_DATA_MIGRATED = 'Y', 
+			WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateBlacklistFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			IS_BLACKLISTED = :isBlacklisted,
+			BLACKLISTED_REMARKS = :blacklistedRemarks,
+			BLACKLISTED_DATE_MILLIS = :blacklistedDateMillis,
+			WHO_BLACKLISTED = :whoBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateUnBlacklistFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			IS_BLACKLISTED = :isBlacklisted,
+			UN_BLACKLISTED_REMARKS = :unblacklistedRemarks,
+			UN_BLACKLISTED_DATE_MILLIS = :unblacklistedDateMillis,
+			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateContactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_CONTACTED = :isContacted 
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
+			CONTACTED_REMARKS = :contactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateRecontactFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted,
+			WHO_SUGGESTED_FOR_RECONTACT = :whoSuggestedForRecontact,
+			SUGGESTION_DATE_MILLIS = :suggestionDateMillis,
+			SUGGESTION_REMARKS = :suggestionRemarks,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateRecontactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted, 
+			WHO_RECONTACTED = :whoRecontacted, 
+			RECONTACTED_DATE_MILLIS = :recontactedDateMillis, 
+			RECONTACTED_REMARKS = :recontactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateRejectFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_REJECTED = :isRejected,
+			WHO_REJECTED = :whoRejected, 
+			REJECTION_DATE_MILLIS = :rejectionDateMillis, 
+			REJECTION_REMARKS = :rejectionRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateVerifyFailverifyReverifyFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_AUTHENTICATION_VERIFIED = :isAuthenticationVerified, 
+			WHO_VERIFIED = :whoVerified, 
+			VERIFICATION_DATE_MILLIS = :verificationDateMillis, 
+			VERIFICATION_REMARKS = :verificationRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="update" id="updateSelectedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
+		UPDATE FIND_TUTOR SET
+			ENQUIRY_STATUS = :enquiryStatus, 
+			IS_SELECTED = :isSelected, 
+			WHO_SELECTED = :whoSelected, 
+			SELECTION_DATE_MILLIS = :selectionDateMillis, 
+			SELECTION_REMARKS = :selectionRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="select" id="selectSubscribeWithUs">
+		SELECT
+			S.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_CONTACTED), S.WHO_CONTACTED) AS WHO_CONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_VERIFIED), S.WHO_VERIFIED) AS WHO_VERIFIED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SUGGESTED_FOR_RECONTACT), S.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_RECONTACTED), S.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SELECTED), S.WHO_SELECTED) AS WHO_SELECTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_REJECTED), S.WHO_REJECTED) AS WHO_REJECTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_BLACKLISTED), B.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_UN_BLACKLISTED), B.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.UPDATED_BY), S.UPDATED_BY) AS UPDATED_BY_NAME
+		FROM SUBSCRIBE_WITH_US S
+	</query>
+	<query type="filter" id="subscribeWithUsApplicationStatusFilter">
+		WHERE APPLICATION_STATUS = :applicationStatus
+	</query>
+	<query type="filter" id="subscribeWithUsMultiApplicationStatusFilter">
+		WHERE APPLICATION_STATUS IN (:applicationStatusList)
+	</query>
+	<query type="sorter" id="subscribeWithUsExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
 	</query>
 </queryMapper>

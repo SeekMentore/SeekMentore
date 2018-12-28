@@ -369,10 +369,13 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						"INTERESTED_SUBJECTS",
 						"COMFORTABLE_LOCATIONS",
 						"ADDITIONAL_DETAILS",
+						"ADDRESS_DETAILS",
 						"IS_BLACKLISTED",
 						"BLACKLISTED_REMARKS",
 						"BLACKLISTED_DATE_MILLIS",
 						"WHO_BLACKLISTED",
+						"UN_BLACKLISTED_DATE_MILLIS",
+						"WHO_UN_BLACKLISTED_NAME",
 						"RECORD_LAST_UPDATED",
 						"UPDATED_BY"
 					};
@@ -402,10 +405,13 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.interestedSubjects, null, null),
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.comfortableLocations, null, null),
 						this.additionalDetails,
+						this.addressDetails,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isBlacklisted),
 						this.blacklistedRemarks,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.blacklistedDateMillis),
 						this.whoBlacklistedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.unblacklistedDateMillis),
+						this.whoUnBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 					};

@@ -12,8 +12,8 @@ import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-public class BecomeTutor extends PublicApplication implements Serializable, BecomeTutorConstants, ApplicationWorkbookObject {
-
+public class BecomeTutor extends PublicApplication implements Serializable, Cloneable, BecomeTutorConstants, ApplicationWorkbookObject {
+	
 	private static final long serialVersionUID = 7314098186505190523L;
 
 	private Long tentativeTutorId;
@@ -72,6 +72,15 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 	private String whoSelectedName;
 	private String whoRejectedName;
 	private String updatedByName;
+	private String isBlacklisted;
+	private String blacklistedRemarks;
+	private Long blacklistedDateMillis;
+	private String whoBlacklisted;
+	private String whoBlacklistedName;
+	private String unblacklistedRemarks;
+	private Long unblacklistedDateMillis;
+	private String whoUnBlacklisted;
+	private String whoUnBlacklistedName;
 	
 	public BecomeTutor() {}
 	
@@ -523,6 +532,78 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		this.addressDetails = addressDetails;
 	}
 	
+	public String getIsBlacklisted() {
+		return isBlacklisted;
+	}
+
+	public void setIsBlacklisted(String isBlacklisted) {
+		this.isBlacklisted = isBlacklisted;
+	}
+
+	public String getBlacklistedRemarks() {
+		return blacklistedRemarks;
+	}
+
+	public void setBlacklistedRemarks(String blacklistedRemarks) {
+		this.blacklistedRemarks = blacklistedRemarks;
+	}
+
+	public Long getBlacklistedDateMillis() {
+		return blacklistedDateMillis;
+	}
+
+	public void setBlacklistedDateMillis(Long blacklistedDateMillis) {
+		this.blacklistedDateMillis = blacklistedDateMillis;
+	}
+
+	public String getWhoBlacklisted() {
+		return whoBlacklisted;
+	}
+
+	public void setWhoBlacklisted(String whoBlacklisted) {
+		this.whoBlacklisted = whoBlacklisted;
+	}
+
+	public String getWhoBlacklistedName() {
+		return whoBlacklistedName;
+	}
+
+	public void setWhoBlacklistedName(String whoBlacklistedName) {
+		this.whoBlacklistedName = whoBlacklistedName;
+	}
+
+	public String getUnblacklistedRemarks() {
+		return unblacklistedRemarks;
+	}
+
+	public void setUnblacklistedRemarks(String unblacklistedRemarks) {
+		this.unblacklistedRemarks = unblacklistedRemarks;
+	}
+
+	public Long getUnblacklistedDateMillis() {
+		return unblacklistedDateMillis;
+	}
+
+	public void setUnblacklistedDateMillis(Long unblacklistedDateMillis) {
+		this.unblacklistedDateMillis = unblacklistedDateMillis;
+	}
+
+	public String getWhoUnBlacklisted() {
+		return whoUnBlacklisted;
+	}
+
+	public void setWhoUnBlacklisted(String whoUnBlacklisted) {
+		this.whoUnBlacklisted = whoUnBlacklisted;
+	}
+
+	public String getWhoUnBlacklistedName() {
+		return whoUnBlacklistedName;
+	}
+
+	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
+		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+
 	@Override
 	public Object[] getReportHeaders(final String reportSwitch) {
 		switch (reportSwitch) {
@@ -548,6 +629,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_REFERENCE,
 						COLUMN_NAME_PREFERRED_TEACHING_TYPE,
 						COLUMN_NAME_ADDITIONAL_DETAILS,
+						"ADDRESS_DETAILS",
 						COLUMN_NAME_IS_CONTACTED,
 						COLUMN_NAME_WHO_CONTACTED,
 						COLUMN_NAME_CONTACTED_DATE,
@@ -574,6 +656,12 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						COLUMN_NAME_REJECTION_COUNT,
 						COLUMN_NAME_RE_APPLIED,
 						COLUMN_NAME_PREVIOUS_APPLICATION_DATE,
+						"IS_BLACKLISTED",
+						"BLACKLISTED_REMARKS",
+						"BLACKLISTED_DATE_MILLIS",
+						"WHO_BLACKLISTED",
+						"UN_BLACKLISTED_DATE_MILLIS",
+						"WHO_UN_BLACKLISTED_NAME",
 						COLUMN_NAME_RECORD_LAST_UPDATED,
 						"UPDATED_BY"
 					};
@@ -607,6 +695,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference),
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, this.preferredTeachingType, null, null),
 						this.additionalDetails,
+						this.addressDetails,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isContacted),
 						this.whoContactedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.contactedDateMillis),
@@ -633,6 +722,12 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 						this.rejectionCount,
 						this.reApplied,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.previousApplicationDateMillis),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isBlacklisted),
+						this.blacklistedRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.blacklistedDateMillis),
+						this.whoBlacklistedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.unblacklistedDateMillis),
+						this.whoUnBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 				};
@@ -702,6 +797,15 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 			case "whoRejectedName" : return "WHO_REJECTED_NAME";
 			case "updatedByName" : return "UPDATED_BY_NAME";
 			case "addressDetails" : return "ADDRESS_DETAILS";
+			case "isBlacklisted" : return "IS_BLACKLISTED";
+			case "blacklistedRemarks" : return "BLACKLISTED_REMARKS";
+			case "blacklistedDateMillis" : return "BLACKLISTED_DATE_MILLIS";
+			case "whoBlacklisted" : return "WHO_BLACKLISTED";
+			case "whoBlacklistedName" : return "WHO_BLACKLISTED_NAME";
+			case "unblacklistedRemarks" : return "UN_BLACKLISTED_REMARKS";
+			case "unblacklistedDateMillis" : return "UN_BLACKLISTED_DATE_MILLIS";
+			case "whoUnBlacklisted" : return "WHO_UN_BLACKLISTED";
+			case "whoUnBlacklistedName" : return "WHO_UN_BLACKLISTED_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -732,5 +836,10 @@ public class BecomeTutor extends PublicApplication implements Serializable, Beco
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, this.addressDetails));
 		becomeTutorApplication.append(PrintFormatterUtils.endATable());
 		return becomeTutorApplication.toString();
+	}
+	
+	@Override
+	public BecomeTutor clone() throws CloneNotSupportedException {  
+		return (BecomeTutor)super.clone();
 	}
 }

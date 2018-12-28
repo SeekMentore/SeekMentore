@@ -73,6 +73,15 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 		becomeTutor.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoRejectedName"), String.class));
 		becomeTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("updatedByName"), String.class));
 		becomeTutor.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("addressDetails"), String.class));
+		becomeTutor.setBlacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("blacklistedDateMillis"), Long.class));
+		becomeTutor.setIsBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("isBlacklisted"), String.class));
+		becomeTutor.setBlacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("blacklistedRemarks"), String.class));
+		becomeTutor.setWhoBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoBlacklisted"), String.class));
+		becomeTutor.setWhoBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoBlacklistedName"), String.class));
+		becomeTutor.setUnblacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("unblacklistedDateMillis"), Long.class));
+		becomeTutor.setUnblacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("unblacklistedRemarks"), String.class));
+		becomeTutor.setWhoUnBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoUnBlacklisted"), String.class));
+		becomeTutor.setWhoUnBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("whoUnBlacklistedName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(becomeTutor, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(becomeTutor, row, rowNum);
 		return becomeTutor;

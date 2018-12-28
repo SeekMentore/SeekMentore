@@ -11,7 +11,7 @@ import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-public class SubscribeWithUs extends PublicApplication implements Serializable, SubscribeWithUsConstants, ApplicationWorkbookObject {
+public class SubscribeWithUs extends PublicApplication implements Serializable, Cloneable, SubscribeWithUsConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
@@ -62,6 +62,15 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	private String whoSelectedName;
 	private String whoRejectedName;
 	private String updatedByName;
+	private String isBlacklisted;
+	private String blacklistedRemarks;
+	private Long blacklistedDateMillis;
+	private String whoBlacklisted;
+	private String whoBlacklistedName;
+	private String unblacklistedRemarks;
+	private Long unblacklistedDateMillis;
+	private String whoUnBlacklisted;
+	private String whoUnBlacklistedName;
 	
 	public SubscribeWithUs() {}
 	
@@ -441,6 +450,78 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.updatedByName = updatedByName;
 	}
 	
+	public String getIsBlacklisted() {
+		return isBlacklisted;
+	}
+
+	public void setIsBlacklisted(String isBlacklisted) {
+		this.isBlacklisted = isBlacklisted;
+	}
+
+	public String getBlacklistedRemarks() {
+		return blacklistedRemarks;
+	}
+
+	public void setBlacklistedRemarks(String blacklistedRemarks) {
+		this.blacklistedRemarks = blacklistedRemarks;
+	}
+
+	public Long getBlacklistedDateMillis() {
+		return blacklistedDateMillis;
+	}
+
+	public void setBlacklistedDateMillis(Long blacklistedDateMillis) {
+		this.blacklistedDateMillis = blacklistedDateMillis;
+	}
+
+	public String getWhoBlacklisted() {
+		return whoBlacklisted;
+	}
+
+	public void setWhoBlacklisted(String whoBlacklisted) {
+		this.whoBlacklisted = whoBlacklisted;
+	}
+
+	public String getWhoBlacklistedName() {
+		return whoBlacklistedName;
+	}
+
+	public void setWhoBlacklistedName(String whoBlacklistedName) {
+		this.whoBlacklistedName = whoBlacklistedName;
+	}
+
+	public String getUnblacklistedRemarks() {
+		return unblacklistedRemarks;
+	}
+
+	public void setUnblacklistedRemarks(String unblacklistedRemarks) {
+		this.unblacklistedRemarks = unblacklistedRemarks;
+	}
+
+	public Long getUnblacklistedDateMillis() {
+		return unblacklistedDateMillis;
+	}
+
+	public void setUnblacklistedDateMillis(Long unblacklistedDateMillis) {
+		this.unblacklistedDateMillis = unblacklistedDateMillis;
+	}
+
+	public String getWhoUnBlacklisted() {
+		return whoUnBlacklisted;
+	}
+
+	public void setWhoUnBlacklisted(String whoUnBlacklisted) {
+		this.whoUnBlacklisted = whoUnBlacklisted;
+	}
+
+	public String getWhoUnBlacklistedName() {
+		return whoUnBlacklistedName;
+	}
+
+	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
+		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
@@ -484,6 +565,12 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 					COLUMN_NAME_WHO_REJECTED,
 					COLUMN_NAME_REJECTION_DATE,
 					COLUMN_NAME_REJECTION_REMARKS,
+					"IS_BLACKLISTED",
+					"BLACKLISTED_REMARKS",
+					"BLACKLISTED_DATE_MILLIS",
+					"WHO_BLACKLISTED",
+					"UN_BLACKLISTED_DATE_MILLIS",
+					"WHO_UN_BLACKLISTED_NAME",
 					COLUMN_NAME_RECORD_LAST_UPDATED,
 					"UPDATED_BY"
 				};
@@ -535,6 +622,12 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 						this.whoRejectedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.rejectionDateMillis),
 						this.rejectionRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isBlacklisted),
+						this.blacklistedRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.blacklistedDateMillis),
+						this.whoBlacklistedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.unblacklistedDateMillis),
+						this.whoUnBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 				};
@@ -595,6 +688,15 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 			case "whoSelectedName" : return "WHO_SELECTED_NAME";
 			case "whoRejectedName" : return "WHO_REJECTED_NAME";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "isBlacklisted" : return "IS_BLACKLISTED";
+			case "blacklistedRemarks" : return "BLACKLISTED_REMARKS";
+			case "blacklistedDateMillis" : return "BLACKLISTED_DATE_MILLIS";
+			case "whoBlacklisted" : return "WHO_BLACKLISTED";
+			case "whoBlacklistedName" : return "WHO_BLACKLISTED_NAME";
+			case "unblacklistedRemarks" : return "UN_BLACKLISTED_REMARKS";
+			case "unblacklistedDateMillis" : return "UN_BLACKLISTED_DATE_MILLIS";
+			case "whoUnBlacklisted" : return "WHO_UN_BLACKLISTED";
+			case "whoUnBlacklistedName" : return "WHO_UN_BLACKLISTED_NAME";
 		}
 		return EMPTY_STRING;
 	}
@@ -619,5 +721,10 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();
+	}
+	
+	@Override
+	public SubscribeWithUs clone() throws CloneNotSupportedException {  
+		return (SubscribeWithUs)super.clone();
 	}
 }

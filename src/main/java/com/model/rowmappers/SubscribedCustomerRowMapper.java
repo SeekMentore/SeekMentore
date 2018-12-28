@@ -30,6 +30,15 @@ public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer
 		subscribedCustomer.setEncryptedPassword(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("encryptedPassword"), String.class));
 		subscribedCustomer.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedBy"), String.class));
 		subscribedCustomer.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("updatedByName"), String.class));
+		subscribedCustomer.setBlacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("blacklistedDateMillis"), Long.class));
+		subscribedCustomer.setIsBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("isBlacklisted"), String.class));
+		subscribedCustomer.setBlacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("blacklistedRemarks"), String.class));
+		subscribedCustomer.setWhoBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("whoBlacklisted"), String.class));
+		subscribedCustomer.setWhoBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("whoBlacklistedName"), String.class));
+		subscribedCustomer.setUnblacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("unblacklistedDateMillis"), Long.class));
+		subscribedCustomer.setUnblacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("unblacklistedRemarks"), String.class));
+		subscribedCustomer.setWhoUnBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("whoUnBlacklisted"), String.class));
+		subscribedCustomer.setWhoUnBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("whoUnBlacklistedName"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribedCustomer, row, rowNum);
 		return subscribedCustomer;
 	}

@@ -63,6 +63,15 @@ public class SubscribeWithUsRowMapper implements RowMapper<SubscribeWithUs>, Sub
 		subscribeWithUs.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoSelectedName"), String.class));
 		subscribeWithUs.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoRejectedName"), String.class));
 		subscribeWithUs.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("updatedByName"), String.class));
+		subscribeWithUs.setBlacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("blacklistedDateMillis"), Long.class));
+		subscribeWithUs.setIsBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("isBlacklisted"), String.class));
+		subscribeWithUs.setBlacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("blacklistedRemarks"), String.class));
+		subscribeWithUs.setWhoBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoBlacklisted"), String.class));
+		subscribeWithUs.setWhoBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoBlacklistedName"), String.class));
+		subscribeWithUs.setUnblacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("unblacklistedDateMillis"), Long.class));
+		subscribeWithUs.setUnblacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("unblacklistedRemarks"), String.class));
+		subscribeWithUs.setWhoUnBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoUnBlacklisted"), String.class));
+		subscribeWithUs.setWhoUnBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("whoUnBlacklistedName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(subscribeWithUs, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribeWithUs, row, rowNum);
 		return subscribeWithUs;

@@ -29,6 +29,15 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private String isBlacklisted;
+	private String blacklistedRemarks;
+	private Long blacklistedDateMillis;
+	private String whoBlacklisted;
+	private String whoBlacklistedName;
+	private String unblacklistedRemarks;
+	private Long unblacklistedDateMillis;
+	private String whoUnBlacklisted;
+	private String whoUnBlacklistedName;
 	
 	public SubscribedCustomer() {}
 	
@@ -48,6 +57,15 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		newInstance.userId = userId;
 		newInstance.recordLastUpdatedMillis = recordLastUpdatedMillis;
 		newInstance.updatedBy = updatedBy;
+		newInstance.isBlacklisted = this.isBlacklisted;
+		newInstance.blacklistedRemarks = this.blacklistedRemarks;
+		newInstance.blacklistedDateMillis = this.blacklistedDateMillis;
+		newInstance.whoBlacklisted = this.whoBlacklisted;
+		newInstance.whoBlacklistedName = this.whoBlacklistedName;
+		newInstance.unblacklistedRemarks = this.unblacklistedRemarks;
+		newInstance.unblacklistedDateMillis = this.unblacklistedDateMillis;
+		newInstance.whoUnBlacklisted = this.whoUnBlacklisted;
+		newInstance.whoUnBlacklistedName = this.whoUnBlacklistedName;
 		return newInstance;
 	}
 
@@ -171,6 +189,78 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 		this.updatedByName = updatedByName;
 	}
 	
+	public String getIsBlacklisted() {
+		return isBlacklisted;
+	}
+
+	public void setIsBlacklisted(String isBlacklisted) {
+		this.isBlacklisted = isBlacklisted;
+	}
+
+	public String getBlacklistedRemarks() {
+		return blacklistedRemarks;
+	}
+
+	public void setBlacklistedRemarks(String blacklistedRemarks) {
+		this.blacklistedRemarks = blacklistedRemarks;
+	}
+
+	public Long getBlacklistedDateMillis() {
+		return blacklistedDateMillis;
+	}
+
+	public void setBlacklistedDateMillis(Long blacklistedDateMillis) {
+		this.blacklistedDateMillis = blacklistedDateMillis;
+	}
+
+	public String getWhoBlacklisted() {
+		return whoBlacklisted;
+	}
+
+	public void setWhoBlacklisted(String whoBlacklisted) {
+		this.whoBlacklisted = whoBlacklisted;
+	}
+
+	public String getWhoBlacklistedName() {
+		return whoBlacklistedName;
+	}
+
+	public void setWhoBlacklistedName(String whoBlacklistedName) {
+		this.whoBlacklistedName = whoBlacklistedName;
+	}
+
+	public String getUnblacklistedRemarks() {
+		return unblacklistedRemarks;
+	}
+
+	public void setUnblacklistedRemarks(String unblacklistedRemarks) {
+		this.unblacklistedRemarks = unblacklistedRemarks;
+	}
+
+	public Long getUnblacklistedDateMillis() {
+		return unblacklistedDateMillis;
+	}
+
+	public void setUnblacklistedDateMillis(Long unblacklistedDateMillis) {
+		this.unblacklistedDateMillis = unblacklistedDateMillis;
+	}
+
+	public String getWhoUnBlacklisted() {
+		return whoUnBlacklisted;
+	}
+
+	public void setWhoUnBlacklisted(String whoUnBlacklisted) {
+		this.whoUnBlacklisted = whoUnBlacklisted;
+	}
+
+	public String getWhoUnBlacklistedName() {
+		return whoUnBlacklistedName;
+	}
+
+	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
+		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
@@ -185,8 +275,14 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 						"STUDENT_GRADES",
 						"SUBJECTS",
 						"LOCATIONS",
-						"ADDRESS_DETAILS",
 						"ADDITIONAL_DETAILS",
+						"ADDRESS_DETAILS",
+						"IS_BLACKLISTED",
+						"BLACKLISTED_REMARKS",
+						"BLACKLISTED_DATE_MILLIS",
+						"WHO_BLACKLISTED",
+						"UN_BLACKLISTED_DATE_MILLIS",
+						"WHO_UN_BLACKLISTED_NAME",
 						"RECORD_LAST_UPDATED",
 						"UPDATED_BY"
 					};
@@ -209,8 +305,14 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, this.studentGrades, null, null),
 						ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, this.interestedSubjects, null, null),
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location),
-						this.addressDetails,
 						this.additionalDetails,
+						this.addressDetails,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isBlacklisted),
+						this.blacklistedRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.blacklistedDateMillis),
+						this.whoBlacklistedName,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.unblacklistedDateMillis),
+						this.whoUnBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName
 					};
@@ -239,6 +341,15 @@ public class SubscribedCustomer extends GridComponentObject implements Serializa
 			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "isBlacklisted" : return "IS_BLACKLISTED";
+			case "blacklistedRemarks" : return "BLACKLISTED_REMARKS";
+			case "blacklistedDateMillis" : return "BLACKLISTED_DATE_MILLIS";
+			case "whoBlacklisted" : return "WHO_BLACKLISTED";
+			case "whoBlacklistedName" : return "WHO_BLACKLISTED_NAME";
+			case "unblacklistedRemarks" : return "UN_BLACKLISTED_REMARKS";
+			case "unblacklistedDateMillis" : return "UN_BLACKLISTED_DATE_MILLIS";
+			case "whoUnBlacklisted" : return "WHO_UN_BLACKLISTED";
+			case "whoUnBlacklistedName" : return "WHO_UN_BLACKLISTED_NAME";
 		}
 		return EMPTY_STRING;
 	}

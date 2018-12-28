@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -581,13 +582,15 @@ public class AdminService implements AdminConstants {
 	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
-		return applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE EMAIL_ID = :emailId", paramsMap, new BecomeTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
+									+ queryMapperService.getQuerySQL("public-application", "becomeTutorEmailFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
 	public BecomeTutor getBecomeTutorApplicationInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
-		return applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new BecomeTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
+								+ queryMapperService.getQuerySQL("public-application", "becomeTutorContactNumberFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
 	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -627,91 +630,129 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void blacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE BECOME_TUTOR SET "
-				+ "IS_BLACKLISTED = 'Y', "
-				+ "BLACKLISTED_REMARKS = :comments, "
-				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void blacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
 		for (final String tentativeTutorId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tentativeTutorId", tentativeTutorId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final BecomeTutor becomeTutor = new BecomeTutor();
+			becomeTutor.setIsBlacklisted(YES);
+			becomeTutor.setBlacklistedRemarks(comments);
+			becomeTutor.setBlacklistedDateMillis(currentTimestamp.getTime());
+			becomeTutor.setWhoBlacklisted(activeUser.getUserId());
+			becomeTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			becomeTutor.setUpdatedBy(activeUser.getUserId());
+			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			paramObjectList.add(becomeTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistBecomeTutor", paramObjectList);
 	}
 	
 	@Transactional
-	public void unBlacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE BECOME_TUTOR SET "
-				+ "IS_BLACKLISTED = 'N', "
-				+ "UN_BLACKLISTED_REMARKS = :comments, "
-				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void unBlacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
 		for (final String tentativeTutorId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tentativeTutorId", tentativeTutorId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final BecomeTutor becomeTutor = new BecomeTutor();
+			becomeTutor.setIsBlacklisted(NO);
+			becomeTutor.setUnblacklistedRemarks(comments);
+			becomeTutor.setUnblacklistedDateMillis(currentTimestamp.getTime());
+			becomeTutor.setWhoUnBlacklisted(activeUser.getUserId());
+			becomeTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			becomeTutor.setUpdatedBy(activeUser.getUserId());
+			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			paramObjectList.add(becomeTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistBecomeTutor", paramObjectList);
 	}
 	
 	@Transactional
-	public void takeActionOnBecomeTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
+	public void takeActionOnBecomeTutor(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		String queryId = EMPTY_STRING;
+		final BecomeTutor becomeTutorActionObject = new BecomeTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("CONTACTED_VERIFICATION_PENDING");
+				becomeTutorActionObject.setIsContacted(YES);
+				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
+				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setContactedRemarks(comments);
+				queryId = "updateContactedBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("SUGGESTED_TO_BE_RECONTACTED");
+				becomeTutorActionObject.setIsContacted(YES);
+				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
+				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setContactedRemarks(comments);
+				becomeTutorActionObject.setIsToBeRecontacted(YES);
+				becomeTutorActionObject.setWhoSuggestedForRecontact(activeUser.getUserId());
+				becomeTutorActionObject.setSuggestionDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setSuggestionRemarks(comments);
+				queryId = "updateRecontactBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("REJECTED");
+				becomeTutorActionObject.setIsContacted(YES);
+				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
+				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setContactedRemarks(comments);
+				becomeTutorActionObject.setIsRejected(YES);
+				becomeTutorActionObject.setWhoRejected(activeUser.getUserId());
+				becomeTutorActionObject.setRejectionDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setRejectionRemarks(comments);
+				queryId = "updateRejectBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("VERIFICATION_SUCCESSFUL");
+				becomeTutorActionObject.setIsAuthenticationVerified(YES);
+				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
+				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifyBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("VERIFICATION_FAILED");
+				becomeTutorActionObject.setIsAuthenticationVerified(NO);
+				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
+				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifyBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("SELECTED");
+				becomeTutorActionObject.setIsSelected(YES);
+				becomeTutorActionObject.setWhoSelected(activeUser.getUserId());
+				becomeTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setSelectionRemarks(comments);
+				queryId = "updateSelectedBecomeTutor";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
+				becomeTutorActionObject.setApplicationStatus("RECONTACTED_VERIFICATION_PENDING");
+				becomeTutorActionObject.setIsToBeRecontacted(NO);
+				becomeTutorActionObject.setWhoRecontacted(activeUser.getUserId());
+				becomeTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
+				becomeTutorActionObject.setRecontactedRemarks(comments);
+				queryId = "updateRecontactedBecomeTutor";
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		becomeTutorActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		becomeTutorActionObject.setUpdatedBy(activeUser.getUserId());
+		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
 		for (final String tentativeTutorId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("tentativeTutorId", tentativeTutorId);
-			paramsList.add(paramsMap);
+			final BecomeTutor becomeTutor = becomeTutorActionObject.clone();
+			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			paramObjectList.add(becomeTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
 	}
 	
 	@Transactional
@@ -827,49 +868,48 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<FindTutor> getFindTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "F.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_CONTACTED), F.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_VERIFIED), F.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SUGGESTED_FOR_RECONTACT), F.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_RECONTACTED), F.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SELECTED), F.WHO_SELECTED) AS WHO_SELECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_REJECTED), F.WHO_REJECTED) AS WHO_REJECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.UPDATED_BY), F.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM FIND_TUTOR F";
-		String existingFilterQueryString = "";
-		final String existingSorterQueryString = "ORDER BY ENQUIRY_DATE_MILLIS DESC";
+		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectFindTutor");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorExistingSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'FRESH'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "FRESH");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorMultiEnquiryStatusFilter");
+				paramsMap.put("enquiryStatusList", Arrays.asList(new String[] {"CONTACTED_VERIFICATION_PENDING", "RECONTACTED_VERIFICATION_PENDING"}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "VERIFICATION_SUCCESSFUL");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'VERIFICATION_FAILED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "VERIFICATION_FAILED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "SUGGESTED_TO_BE_RECONTACTED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'SELECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "SELECTED");
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = "WHERE ENQUIRY_STATUS = 'REJECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
+				paramsMap.put("enquiryStatus", "REJECTED");
 				break;
 			}
 		}
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new FindTutorRowMapper());
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new FindTutorRowMapper());
 	}
 	
 	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -906,91 +946,129 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void blacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE FIND_TUTOR SET "
-				+ "IS_BLACKLISTED = 'Y', "
-				+ "BLACKLISTED_REMARKS = :comments, "
-				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE ENQUIRY_ID = :enquiryId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void blacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
 		for (final String enquiryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("enquiryId", enquiryId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final FindTutor findTutor = new FindTutor();
+			findTutor.setIsBlacklisted(YES);
+			findTutor.setBlacklistedRemarks(comments);
+			findTutor.setBlacklistedDateMillis(currentTimestamp.getTime());
+			findTutor.setWhoBlacklisted(activeUser.getUserId());
+			findTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			findTutor.setUpdatedBy(activeUser.getUserId());
+			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			paramObjectList.add(findTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistFindTutor", paramObjectList);
 	}
 	
 	@Transactional
-	public void unBlacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE FIND_TUTOR SET "
-				+ "IS_BLACKLISTED = 'N', "
-				+ "UN_BLACKLISTED_REMARKS = :comments, "
-				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE ENQUIRY_ID = :enquiryId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void unBlacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
 		for (final String enquiryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("enquiryId", enquiryId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final FindTutor findTutor = new FindTutor();
+			findTutor.setIsBlacklisted(NO);
+			findTutor.setUnblacklistedRemarks(comments);
+			findTutor.setUnblacklistedDateMillis(currentTimestamp.getTime());
+			findTutor.setWhoUnBlacklisted(activeUser.getUserId());
+			findTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			findTutor.setUpdatedBy(activeUser.getUserId());
+			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			paramObjectList.add(findTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistFindTutor", paramObjectList);
 	}
 	
 	@Transactional
-	public void takeActionOnFindTutor(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
+	public void takeActionOnFindTutor(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		String queryId = EMPTY_STRING;
+		final FindTutor findTutorActionObject = new FindTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("ENQUIRY_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("CONTACTED_VERIFICATION_PENDING");
+				findTutorActionObject.setIsContacted(YES);
+				findTutorActionObject.setWhoContacted(activeUser.getUserId());
+				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setContactedRemarks(comments);
+				queryId = "updateContactedFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("SUGGESTED_TO_BE_RECONTACTED");
+				findTutorActionObject.setIsContacted(YES);
+				findTutorActionObject.setWhoContacted(activeUser.getUserId());
+				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setContactedRemarks(comments);
+				findTutorActionObject.setIsToBeRecontacted(YES);
+				findTutorActionObject.setWhoSuggestedForRecontact(activeUser.getUserId());
+				findTutorActionObject.setSuggestionDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setSuggestionRemarks(comments);
+				queryId = "updateRecontactFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("ENQUIRY_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("REJECTED");
+				findTutorActionObject.setIsContacted(YES);
+				findTutorActionObject.setWhoContacted(activeUser.getUserId());
+				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setContactedRemarks(comments);
+				findTutorActionObject.setIsRejected(YES);
+				findTutorActionObject.setWhoRejected(activeUser.getUserId());
+				findTutorActionObject.setRejectionDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setRejectionRemarks(comments);
+				queryId = "updateRejectFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("VERIFICATION_SUCCESSFUL");
+				findTutorActionObject.setIsAuthenticationVerified(YES);
+				findTutorActionObject.setWhoVerified(activeUser.getUserId());
+				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifyFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("VERIFICATION_FAILED");
+				findTutorActionObject.setIsAuthenticationVerified(NO);
+				findTutorActionObject.setWhoVerified(activeUser.getUserId());
+				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifyFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("ENQUIRY_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("SELECTED");
+				findTutorActionObject.setIsSelected(YES);
+				findTutorActionObject.setWhoSelected(activeUser.getUserId());
+				findTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setSelectionRemarks(comments);
+				queryId = "updateSelectedFindTutor";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("ENQUIRY_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE ENQUIRY_ID = :enquiryId");
+				findTutorActionObject.setEnquiryStatus("RECONTACTED_VERIFICATION_PENDING");
+				findTutorActionObject.setIsToBeRecontacted(NO);
+				findTutorActionObject.setWhoRecontacted(activeUser.getUserId());
+				findTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
+				findTutorActionObject.setRecontactedRemarks(comments);
+				queryId = "updateRecontactedFindTutor";
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		findTutorActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		findTutorActionObject.setUpdatedBy(activeUser.getUserId());
+		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
 		for (final String enquiryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("enquiryId", enquiryId);
-			paramsList.add(paramsMap);
+			final FindTutor findTutor = findTutorActionObject.clone();
+			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			paramObjectList.add(findTutor);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
 	}
 	
 	@Transactional
@@ -1071,18 +1149,10 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<SubscribeWithUs> getSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "S.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_CONTACTED), S.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_VERIFIED), S.WHO_VERIFIED) AS WHO_VERIFIED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SUGGESTED_FOR_RECONTACT), S.WHO_SUGGESTED_FOR_RECONTACT) AS WHO_SUGGESTED_FOR_RECONTACT_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_RECONTACTED), S.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SELECTED), S.WHO_SELECTED) AS WHO_SELECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_REJECTED), S.WHO_REJECTED) AS WHO_REJECTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.UPDATED_BY), S.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM SUBSCRIBE_WITH_US S";
-		String existingFilterQueryString = "";
-		final String existingSorterQueryString = "ORDER BY APPLICATION_DATE_MILLIS DESC";
+		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectSubscribeWithUs");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsExistingSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'FRESH'";

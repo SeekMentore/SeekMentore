@@ -62,6 +62,15 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		findTutor.setWhoSelectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoSelectedName"), String.class));
 		findTutor.setWhoRejectedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoRejectedName"), String.class));
 		findTutor.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("updatedByName"), String.class));
+		findTutor.setBlacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("blacklistedDateMillis"), Long.class));
+		findTutor.setIsBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("isBlacklisted"), String.class));
+		findTutor.setBlacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("blacklistedRemarks"), String.class));
+		findTutor.setWhoBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoBlacklisted"), String.class));
+		findTutor.setWhoBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoBlacklistedName"), String.class));
+		findTutor.setUnblacklistedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("unblacklistedDateMillis"), Long.class));
+		findTutor.setUnblacklistedRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("unblacklistedRemarks"), String.class));
+		findTutor.setWhoUnBlacklisted(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoUnBlacklisted"), String.class));
+		findTutor.setWhoUnBlacklistedName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("whoUnBlacklistedName"), String.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(findTutor, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(findTutor, row, rowNum);
 		return findTutor;
