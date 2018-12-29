@@ -1,12 +1,11 @@
 package com.constants.components;
 
-public interface DemoTrackerConstants extends ResponseMapConstants {
+public interface DemoConstants extends ResponseMapConstants {
 	
-	String DEMO_STATUS_FAILED = "FAILED";
-	String DEMO_STATUS_SUCCESS = "SUCCESS";
-	String DEMO_STATUS_SCHEDULED = "SCHEDULED";
-	String DEMO_STATUS_RESCHEDULED = "RESCHEDULED";
-	String DEMO_STATUS_CANCELED = "CANCELED";
+	String DEMO_STATUS_SCHEDULED = "01";
+	String DEMO_STATUS_SUCCESS = "02";
+	String DEMO_STATUS_FAILED = "03";
+	String DEMO_STATUS_CANCELED = "04";
 	
 	String VALIDATION_MESSAGE_INVALID_DEMO_TRACKER_ID = "Invalid Demo Tracker Id.";
 	String VALIDATION_MESSAGE_INVALID_TAKE_ACTION_REMARKS_ID = "Please enter remarks for Failed / Canceled Demo.";

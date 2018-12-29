@@ -36,6 +36,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	private List<SelectLookup> queryStatusLookupData;
 	private List<SelectLookup> complaintStatusLookupData;
 	private List<SelectLookup> userLookupData;
+	private List<SelectLookup> enquiryMatchStatusLookupData;
+	private List<SelectLookup> tutorMappingStatusLookupData;
+	private List<SelectLookup> demoStatusLookupData;
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -68,6 +71,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 		this.queryStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.complaintStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.userLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_USER_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.enquiryMatchStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.tutorMappingStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.demoStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 	}
 	
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
@@ -89,6 +95,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return this.queryStatusLookupData;
 			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return this.complaintStatusLookupData;
 			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return this.userLookupData;
+			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return this.enquiryMatchStatusLookupData;
+			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return this.tutorMappingStatusLookupData;
+			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return this.demoStatusLookupData;
 		}
 		return null;
 	}
@@ -112,6 +121,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return getSelectLookupItem(this.queryStatusLookupData, value);
 			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return getSelectLookupItem(this.complaintStatusLookupData, value);
 			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return getSelectLookupItem(this.userLookupData, value);
+			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return getSelectLookupItem(this.enquiryMatchStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return getSelectLookupItem(this.tutorMappingStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return getSelectLookupItem(this.demoStatusLookupData, value);
 		}
 		return null;
 	}
@@ -144,6 +156,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return getSelectLookupItemList(this.queryStatusLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return getSelectLookupItemList(this.complaintStatusLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return getSelectLookupItemList(this.userLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return getSelectLookupItemList(this.enquiryMatchStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return getSelectLookupItemList(this.tutorMappingStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return getSelectLookupItemList(this.demoStatusLookupData, multivalue, delimiter);
 		}
 		return null;
 	}

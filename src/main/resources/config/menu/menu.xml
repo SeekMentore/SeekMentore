@@ -91,7 +91,6 @@
 			<webservice id="currentCustomerScheduledDemoList" url="/currentCustomerScheduledDemoList"></webservice>
 			<webservice id="scheduleDemo" url="/scheduleDemo"></webservice>
 			<webservice id="scheduledDemoList" url="/scheduledDemoList"></webservice>
-			<webservice id="reScheduledDemoList" url="/reScheduledDemoList"></webservice>
 			<webservice id="successfulDemoList" url="/successfulDemoList"></webservice>
 			<webservice id="failedDemoList" url="/failedDemoList"></webservice>
 			<webservice id="canceledDemoList" url="/canceledDemoList"></webservice>

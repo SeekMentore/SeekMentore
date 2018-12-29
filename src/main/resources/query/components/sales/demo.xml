@@ -41,22 +41,22 @@
 	<query type="sorter" id="demoExistingSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
-	<query type="insert" id="insertDemo" paramClass="com.model.components.DemoTracker">
+	<query type="insert" id="insertDemo" paramClass="com.model.components.Demo">
 		INSERT INTO DEMO_TRACKER
 			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
 		VALUES
 			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis)
 	</query>
-	<query type="insert" id="insertReScheduledDemo" paramClass="com.model.components.DemoTracker">
+	<query type="insert" id="insertReScheduledDemo" paramClass="com.model.components.Demo">
 		INSERT INTO DEMO_TRACKER
 			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT) 
 		VALUES
 			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount)
 	</query>
-	<query type="update" id="updateDemo" paramClass="com.model.components.DemoTracker">
+	<query type="update" id="updateDemo" paramClass="com.model.components.Demo">
 		UPDATE DEMO_TRACKER SET
 	</query>
-	<query type="update" id="updateDemoStatus" paramClass="com.model.components.DemoTracker">
+	<query type="update" id="updateDemoStatus" paramClass="com.model.components.Demo">
 		DEMO_STATUS = :demoStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_FINALIZING_REMARKS = :remarks WHERE DEMO_TRACKER_ID = :demoTrackerId
 	</query>
 </queryMapper>

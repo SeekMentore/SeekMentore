@@ -6,7 +6,7 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class DemoTracker extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
+public class Demo extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
@@ -56,7 +56,7 @@ public class DemoTracker extends GridComponentObject implements Serializable, Ap
 	private Integer reScheduleCount;
 	private Long entryDateMillis;
 	
-	public DemoTracker() {}
+	public Demo() {}
 	
 	public Long getDemoTrackerId() {
 		return demoTrackerId;

@@ -29,7 +29,7 @@ import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
-import com.model.components.DemoTracker;
+import com.model.components.Demo;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorMapper;
@@ -57,7 +57,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long tutorId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
-	private DemoTracker demoTrackerObject;
+	private Demo demoObject;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -625,12 +625,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
 		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST, gridComponent);
+			final List<Demo> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllScheduledDemoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllScheduledDemoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -654,12 +654,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
 		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<DemoTracker> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST, gridComponent);
+			final List<Demo> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllScheduledDemoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllScheduledDemoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -713,36 +713,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SCHEDULED_DEMO_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
-		}
-	}
-	
-	@Path(REST_METHOD_NAME_RESCHEDULED_DEMO_LIST)
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String reScheduledDemoList (
-			@FormParam(GRID_COMPONENT_START) final String start,
-			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
-			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
-			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
-			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		this.methodName = REST_METHOD_NAME_RESCHEDULED_DEMO_LIST;
-		doSecurity(request);
-		if (this.securityPassed) {
-			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_RESCHEDULED_DEMO_LIST, gridComponent);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
+			final List<Demo> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SCHEDULED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -769,8 +741,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST, gridComponent);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
+			final List<Demo> demoList = getDemoService().getDemoList(REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -797,8 +769,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_FAILED_DEMO_LIST, gridComponent);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
+			final List<Demo> demoList = getDemoService().getDemoList(REST_METHOD_NAME_FAILED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -825,8 +797,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, DemoTracker.class);
-			final List<DemoTracker> demoList = getDemoService().getDemoList(REST_METHOD_NAME_CANCELED_DEMO_LIST, gridComponent);
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
+			final List<Demo> demoList = getDemoService().getDemoList(REST_METHOD_NAME_CANCELED_DEMO_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -894,8 +866,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.demoTrackerObject.setDemoTrackerId(Long.parseLong(parentId));
-			getDemoService().reScheduleDemo(this.demoTrackerObject, getActiveUser(request));
+			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
+			getDemoService().reScheduleDemo(this.demoObject, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Re-Scheduled Demo Successfully");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -921,8 +893,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.demoTrackerObject.setDemoTrackerId(Long.parseLong(parentId));
-			getDemoService().updateDemoRecord(this.demoTrackerObject, this.changedAttributes, getActiveUser(request));
+			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
+			getDemoService().updateDemoRecord(this.demoObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -970,7 +942,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_SCHEDULED_DEMO_LIST : 
-			case REST_METHOD_NAME_RESCHEDULED_DEMO_LIST : 
 			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
 			case REST_METHOD_NAME_FAILED_DEMO_LIST : 
 			case REST_METHOD_NAME_CANCELED_DEMO_LIST : {
@@ -1412,43 +1383,43 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	private void createDemoReSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
-			this.demoTrackerObject = new DemoTracker();
+			this.demoObject = new Demo();
 			final Long demoDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoDateMillis", Long.class);
 			final Long demoTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoTimeMillis", Long.class);
 			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
 			if (ValidationUtils.checkObjectAvailability(demoDateMillis) && ValidationUtils.checkObjectAvailability(demoTimeMillis) && ValidationUtils.checkObjectAvailability(localTimezoneOffsetInMilliseconds)) {
-				this.demoTrackerObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis + localTimezoneOffsetInMilliseconds);
+				this.demoObject.setDemoDateAndTimeMillis(demoDateMillis + demoTimeMillis + localTimezoneOffsetInMilliseconds);
 			}
-			this.demoTrackerObject.setTutorMapperId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorMapperId", Long.class));
-			this.demoTrackerObject.setReschedulingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reschedulingRemarks", String.class));
-			this.demoTrackerObject.setReScheduleCount(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reScheduleCount", Integer.class));
+			this.demoObject.setTutorMapperId(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorMapperId", Long.class));
+			this.demoObject.setReschedulingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reschedulingRemarks", String.class));
+			this.demoObject.setReScheduleCount(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "reScheduleCount", Integer.class));
 		}
 	}
 	
 	private void handleReScheduleDemoSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getDemoDateAndTimeMillis())) {
+		if (!ValidationUtils.checkObjectAvailability(this.demoObject.getDemoDateAndTimeMillis())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					"Please select a valid 'New Demo Date' & 'New Demo Time'",
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getTutorMapperId())) {
+		if (!ValidationUtils.checkObjectAvailability(this.demoObject.getTutorMapperId())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					"Request does not contains a 'TutorMapperId' hence cannot perform action",
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getReschedulingRemarks())) {
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getReschedulingRemarks())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					"Please provide 'Rescheduling Remarks'",
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
-		if (!ValidationUtils.checkObjectAvailability(this.demoTrackerObject.getReScheduleCount())) {
+		if (!ValidationUtils.checkObjectAvailability(this.demoObject.getReScheduleCount())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					"Request does not contains a 'ReScheduleCount' hence cannot perform action",
@@ -1459,23 +1430,23 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	private void createDemoObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
-			this.demoTrackerObject = new DemoTracker();
-			this.demoTrackerObject.setDemoOccurred(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoOccurred", String.class));
-			this.demoTrackerObject.setClientSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientSatisfiedFromTutor", String.class));
-			this.demoTrackerObject.setClientRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientRemarks", String.class));
-			this.demoTrackerObject.setTutorSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorSatisfiedWithClient", String.class));
-			this.demoTrackerObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
-			this.demoTrackerObject.setAdminSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedFromTutor", String.class));
-			this.demoTrackerObject.setAdminSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedWithClient", String.class));
-			this.demoTrackerObject.setIsDemoSuccess(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isDemoSuccess", String.class));
-			this.demoTrackerObject.setNeedPriceNegotiationWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithClient", String.class));
-			this.demoTrackerObject.setNegotiatedOverrideRateWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithClient", Integer.class));
-			this.demoTrackerObject.setClientNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientNegotiationRemarks", String.class));
-			this.demoTrackerObject.setNeedPriceNegotiationWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithTutor", String.class));
-			this.demoTrackerObject.setNegotiatedOverrideRateWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithTutor", Integer.class));
-			this.demoTrackerObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
-			this.demoTrackerObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
-			this.demoTrackerObject.setAdminFinalizingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminFinalizingRemarks", String.class));
+			this.demoObject = new Demo();
+			this.demoObject.setDemoOccurred(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "demoOccurred", String.class));
+			this.demoObject.setClientSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientSatisfiedFromTutor", String.class));
+			this.demoObject.setClientRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientRemarks", String.class));
+			this.demoObject.setTutorSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorSatisfiedWithClient", String.class));
+			this.demoObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
+			this.demoObject.setAdminSatisfiedFromTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedFromTutor", String.class));
+			this.demoObject.setAdminSatisfiedWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminSatisfiedWithClient", String.class));
+			this.demoObject.setIsDemoSuccess(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isDemoSuccess", String.class));
+			this.demoObject.setNeedPriceNegotiationWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithClient", String.class));
+			this.demoObject.setNegotiatedOverrideRateWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithClient", Integer.class));
+			this.demoObject.setClientNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientNegotiationRemarks", String.class));
+			this.demoObject.setNeedPriceNegotiationWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "needPriceNegotiationWithTutor", String.class));
+			this.demoObject.setNegotiatedOverrideRateWithTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedOverrideRateWithTutor", Integer.class));
+			this.demoObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
+			this.demoObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+			this.demoObject.setAdminFinalizingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminFinalizingRemarks", String.class));
 		}
 	}
 	
@@ -1485,7 +1456,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			for (final String attributeName : this.changedAttributes) {
 				switch(attributeName) {
 					case "demoOccurred" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getDemoOccurred(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getDemoOccurred(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Demo Occurred'",
@@ -1495,15 +1466,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "clientSatisfiedFromTutor" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getClientSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getClientSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Client Satisfied From Tutor'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientRemarks())) {
+							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Client Remarks'",
@@ -1518,15 +1489,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "tutorSatisfiedWithClient" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getTutorSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getTutorSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Tutor Satisfied With Client'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorRemarks())) {
+							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Tutor Remarks'",
@@ -1541,15 +1512,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "adminSatisfiedFromTutor" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getAdminSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getAdminSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Admin Satisfied From Tutor'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Admin Remarks'",
@@ -1561,15 +1532,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "adminSatisfiedWithClient" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getAdminSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getAdminSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Admin Satisfied With Client'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (NO.equals((this.demoTrackerObject.getClientSatisfiedFromTutor()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Admin Remarks'",
@@ -1581,7 +1552,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "isDemoSuccess" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getIsDemoSuccess(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getIsDemoSuccess(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Is Admin Satisfied With Client'",
@@ -1591,15 +1562,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "needPriceNegotiationWithClient" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getNeedPriceNegotiationWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getNeedPriceNegotiationWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Need Price Negotiation With Client'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (YES.equals((this.demoTrackerObject.getNeedPriceNegotiationWithClient()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientNegotiationRemarks())) {
+							if (YES.equals((this.demoObject.getNeedPriceNegotiationWithClient()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientNegotiationRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Client Negotiation Remarks'",
@@ -1611,14 +1582,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "negotiatedOverrideRateWithClient" : {
-						if (!ValidationUtils.validateNumber(this.demoTrackerObject.getNegotiatedOverrideRateWithClient(), false, 0, false, 0)) {
+						if (!ValidationUtils.validateNumber(this.demoObject.getNegotiatedOverrideRateWithClient(), false, 0, false, 0)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please enter a valid 'Negotiated Override Rate With Client'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getClientNegotiationRemarks())) {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientNegotiationRemarks())) {
 								ApplicationUtils.appendMessageInMapAttribute(
 										this.securityFailureResponse, 
 										"Please provide 'Client Negotiation Remarks'",
@@ -1632,15 +1603,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "needPriceNegotiationWithTutor" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoTrackerObject.getNeedPriceNegotiationWithTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getNeedPriceNegotiationWithTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select a valid 'Need Price Negotiation With Tutor'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (YES.equals((this.demoTrackerObject.getNeedPriceNegotiationWithClient()))) {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorNegotiationRemarks())) {
+							if (YES.equals((this.demoObject.getNeedPriceNegotiationWithClient()))) {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorNegotiationRemarks())) {
 									ApplicationUtils.appendMessageInMapAttribute(
 											this.securityFailureResponse, 
 											"Please provide 'Tutor Negotiation Remarks'",
@@ -1652,14 +1623,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "negotiatedOverrideRateWithTutor" : {
-						if (!ValidationUtils.validateNumber(this.demoTrackerObject.getNegotiatedOverrideRateWithTutor(), false, 0, false, 0)) {
+						if (!ValidationUtils.validateNumber(this.demoObject.getNegotiatedOverrideRateWithTutor(), false, 0, false, 0)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please enter a valid 'Negotiated Override Rate With Tutor'",
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						} else {
-							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getTutorNegotiationRemarks())) {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorNegotiationRemarks())) {
 								ApplicationUtils.appendMessageInMapAttribute(
 										this.securityFailureResponse, 
 										"Please provide 'Tutor Negotiation Remarks'",
@@ -1673,7 +1644,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "adminRemarks" : {
-						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminRemarks())) {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please provide 'Admin Remarks'",
@@ -1683,7 +1654,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					case "adminFinalizingRemarks" : {
-						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoTrackerObject.getAdminFinalizingRemarks())) {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminFinalizingRemarks())) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please provide 'Admin Finalizing Remarks'",
