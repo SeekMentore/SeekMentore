@@ -22,6 +22,7 @@ import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
+import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.Complaint;
@@ -45,7 +46,7 @@ import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_ADMIN_SERVICE)
-public class AdminService implements AdminConstants {
+public class AdminService implements AdminConstants, PublicAccessConstants {
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -534,37 +535,37 @@ public class AdminService implements AdminConstants {
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "FRESH");
+				paramsMap.put("applicationStatus", STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorMultiApplicationStatusFilter");
-				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {"CONTACTED_VERIFICATION_PENDING", "RECONTACTED_VERIFICATION_PENDING"}));
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "VERIFICATION_SUCCESSFUL");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "VERIFICATION_FAILED");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "SUGGESTED_TO_BE_RECONTACTED");
+				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "SELECTED");
+				paramsMap.put("applicationStatus", STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", "REJECTED");
+				paramsMap.put("applicationStatus", STATUS_REJECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
@@ -672,7 +673,7 @@ public class AdminService implements AdminConstants {
 		final BecomeTutor becomeTutorActionObject = new BecomeTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				becomeTutorActionObject.setApplicationStatus("CONTACTED_VERIFICATION_PENDING");
+				becomeTutorActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -681,7 +682,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				becomeTutorActionObject.setApplicationStatus("SUGGESTED_TO_BE_RECONTACTED");
+				becomeTutorActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -694,7 +695,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				becomeTutorActionObject.setApplicationStatus("REJECTED");
+				becomeTutorActionObject.setApplicationStatus(STATUS_REJECTED);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -708,7 +709,7 @@ public class AdminService implements AdminConstants {
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				becomeTutorActionObject.setApplicationStatus("VERIFICATION_SUCCESSFUL");
+				becomeTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
 				becomeTutorActionObject.setIsAuthenticationVerified(YES);
 				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
 				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -717,7 +718,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				becomeTutorActionObject.setApplicationStatus("VERIFICATION_FAILED");
+				becomeTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
 				becomeTutorActionObject.setIsAuthenticationVerified(NO);
 				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
 				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -726,7 +727,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				becomeTutorActionObject.setApplicationStatus("SELECTED");
+				becomeTutorActionObject.setApplicationStatus(STATUS_SELECTED);
 				becomeTutorActionObject.setIsSelected(YES);
 				becomeTutorActionObject.setWhoSelected(activeUser.getUserId());
 				becomeTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -735,7 +736,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				becomeTutorActionObject.setApplicationStatus("RECONTACTED_VERIFICATION_PENDING");
+				becomeTutorActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
 				becomeTutorActionObject.setIsToBeRecontacted(NO);
 				becomeTutorActionObject.setWhoRecontacted(activeUser.getUserId());
 				becomeTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -875,37 +876,37 @@ public class AdminService implements AdminConstants {
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "FRESH");
+				paramsMap.put("enquiryStatus", STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorMultiEnquiryStatusFilter");
-				paramsMap.put("enquiryStatusList", Arrays.asList(new String[] {"CONTACTED_VERIFICATION_PENDING", "RECONTACTED_VERIFICATION_PENDING"}));
+				paramsMap.put("enquiryStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "VERIFICATION_SUCCESSFUL");
+				paramsMap.put("enquiryStatus", STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "VERIFICATION_FAILED");
+				paramsMap.put("enquiryStatus", STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "SUGGESTED_TO_BE_RECONTACTED");
+				paramsMap.put("enquiryStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "SELECTED");
+				paramsMap.put("enquiryStatus", STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", "REJECTED");
+				paramsMap.put("enquiryStatus", STATUS_REJECTED);
 				break;
 			}
 		}
@@ -988,7 +989,7 @@ public class AdminService implements AdminConstants {
 		final FindTutor findTutorActionObject = new FindTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				findTutorActionObject.setEnquiryStatus("CONTACTED_VERIFICATION_PENDING");
+				findTutorActionObject.setEnquiryStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -997,7 +998,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				findTutorActionObject.setEnquiryStatus("SUGGESTED_TO_BE_RECONTACTED");
+				findTutorActionObject.setEnquiryStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -1010,7 +1011,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				findTutorActionObject.setEnquiryStatus("REJECTED");
+				findTutorActionObject.setEnquiryStatus(STATUS_REJECTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -1024,7 +1025,7 @@ public class AdminService implements AdminConstants {
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				findTutorActionObject.setEnquiryStatus("VERIFICATION_SUCCESSFUL");
+				findTutorActionObject.setEnquiryStatus(STATUS_VERIFICATION_SUCCESSFUL);
 				findTutorActionObject.setIsAuthenticationVerified(YES);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -1033,7 +1034,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				findTutorActionObject.setEnquiryStatus("VERIFICATION_FAILED");
+				findTutorActionObject.setEnquiryStatus(STATUS_VERIFICATION_FAILED);
 				findTutorActionObject.setIsAuthenticationVerified(NO);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -1042,7 +1043,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				findTutorActionObject.setEnquiryStatus("SELECTED");
+				findTutorActionObject.setEnquiryStatus(STATUS_SELECTED);
 				findTutorActionObject.setIsSelected(YES);
 				findTutorActionObject.setWhoSelected(activeUser.getUserId());
 				findTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -1051,7 +1052,7 @@ public class AdminService implements AdminConstants {
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				findTutorActionObject.setEnquiryStatus("RECONTACTED_VERIFICATION_PENDING");
+				findTutorActionObject.setEnquiryStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsToBeRecontacted(NO);
 				findTutorActionObject.setWhoRecontacted(activeUser.getUserId());
 				findTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -1155,35 +1156,42 @@ public class AdminService implements AdminConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'FRESH'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS IN ('CONTACTED_VERIFICATION_PENDING', 'RECONTACTED_VERIFICATION_PENDING')";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsMultiApplicationStatusFilter");
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'VERIFICATION_FAILED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'SELECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
-				existingFilterQueryString = "WHERE APPLICATION_STATUS = 'REJECTED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_REJECTED);
 				break;
 			}
 		}
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubscribeWithUsRowMapper());
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscribeWithUsRowMapper());
 	}
 	
 	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -1220,91 +1228,129 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void blacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET "
-				+ "IS_BLACKLISTED = 'Y', "
-				+ "BLACKLISTED_REMARKS = :comments, "
-				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void blacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
 		for (final String tentativeSubscriptionId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
+			subscribeWithUs.setIsBlacklisted(YES);
+			subscribeWithUs.setBlacklistedRemarks(comments);
+			subscribeWithUs.setBlacklistedDateMillis(currentTimestamp.getTime());
+			subscribeWithUs.setWhoBlacklisted(activeUser.getUserId());
+			subscribeWithUs.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			subscribeWithUs.setUpdatedBy(activeUser.getUserId());
+			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			paramObjectList.add(subscribeWithUs);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistSubscribeWithUs", paramObjectList);
 	}
 	
 	@Transactional
-	public void unBlacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET "
-				+ "IS_BLACKLISTED = 'N', "
-				+ "UN_BLACKLISTED_REMARKS = :comments, "
-				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void unBlacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
 		for (final String tentativeSubscriptionId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
+			subscribeWithUs.setIsBlacklisted(NO);
+			subscribeWithUs.setUnblacklistedRemarks(comments);
+			subscribeWithUs.setUnblacklistedDateMillis(currentTimestamp.getTime());
+			subscribeWithUs.setWhoUnBlacklisted(activeUser.getUserId());
+			subscribeWithUs.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			subscribeWithUs.setUpdatedBy(activeUser.getUserId());
+			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			paramObjectList.add(subscribeWithUs);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistSubscribeWithUs", paramObjectList);
 	}
 	
 	@Transactional
-	public void takeActionOnSubscription(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
+	public void takeActionOnSubscription(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		String queryId = EMPTY_STRING;
+		final SubscribeWithUs subscribeWithUsActionObject = new SubscribeWithUs();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
+				subscribeWithUsActionObject.setIsContacted(YES);
+				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
+				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setContactedRemarks(comments);
+				queryId = "updateContactedSubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				subscribeWithUsActionObject.setIsContacted(YES);
+				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
+				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setContactedRemarks(comments);
+				subscribeWithUsActionObject.setIsToBeRecontacted(YES);
+				subscribeWithUsActionObject.setWhoSuggestedForRecontact(activeUser.getUserId());
+				subscribeWithUsActionObject.setSuggestionDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setSuggestionRemarks(comments);
+				queryId = "updateRecontactSubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_REJECTED);
+				subscribeWithUsActionObject.setIsContacted(YES);
+				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
+				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setContactedRemarks(comments);
+				subscribeWithUsActionObject.setIsRejected(YES);
+				subscribeWithUsActionObject.setWhoRejected(activeUser.getUserId());
+				subscribeWithUsActionObject.setRejectionDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setRejectionRemarks(comments);
+				queryId = "updateRejectSubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
+				subscribeWithUsActionObject.setIsAuthenticationVerified(YES);
+				subscribeWithUsActionObject.setWhoVerified(activeUser.getUserId());
+				subscribeWithUsActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifySubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
+				subscribeWithUsActionObject.setIsAuthenticationVerified(NO);
+				subscribeWithUsActionObject.setWhoVerified(activeUser.getUserId());
+				subscribeWithUsActionObject.setVerificationDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setVerificationRemarks(comments);
+				queryId = "updateVerifyFailverifyReverifySubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_SELECTED);
+				subscribeWithUsActionObject.setIsSelected(YES);
+				subscribeWithUsActionObject.setWhoSelected(activeUser.getUserId());
+				subscribeWithUsActionObject.setSelectionDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setSelectionRemarks(comments);
+				queryId = "updateSelectedSubscribeWithUs";
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
+				subscribeWithUsActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
+				subscribeWithUsActionObject.setIsToBeRecontacted(NO);
+				subscribeWithUsActionObject.setWhoRecontacted(activeUser.getUserId());
+				subscribeWithUsActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
+				subscribeWithUsActionObject.setRecontactedRemarks(comments);
+				queryId = "updateRecontactedSubscribeWithUs";
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		subscribeWithUsActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		subscribeWithUsActionObject.setUpdatedBy(activeUser.getUserId());
+		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
 		for (final String tentativeSubscriptionId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-			paramsList.add(paramsMap);
+			final SubscribeWithUs subscribeWithUs = subscribeWithUsActionObject.clone();
+			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			paramObjectList.add(subscribeWithUs);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
 	}
 	
 	@Transactional
@@ -1390,29 +1436,28 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<SubmitQuery> getSubmitQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "Q.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_CONTACTED), Q.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_NOT_ANSWERED), Q.WHO_NOT_ANSWERED) AS WHO_NOT_ANSWERED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.UPDATED_BY), Q.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM SUBMIT_QUERY Q";
-		String existingFilterQueryString = "";
-		final String existingSorterQueryString = "ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC";
+		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectSubmitQuery");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryExistingSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE QUERY_STATUS = 'FRESH'";
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE QUERY_STATUS = 'PUT_ON_HOLD'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
+				paramsMap.put("queryStatus", STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST : {
-				existingFilterQueryString = "WHERE QUERY_STATUS = 'RESPONDED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
+				paramsMap.put("queryStatus", STATUS_RESPONDED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
+				paramsMap.put("queryStatus", STATUS_PUT_ON_HOLD);
 				break;
 			}
 		}
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubmitQueryRowMapper());
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubmitQueryRowMapper());
 	}
 	
 	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -1437,28 +1482,38 @@ public class AdminService implements AdminConstants {
 	}
 	
 	@Transactional
-	public void takeActionOnSubmitQuery(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder("UPDATE SUBMIT_QUERY SET ");
+	public void takeActionOnSubmitQuery(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		String querySQLId = EMPTY_STRING;
+		final SubmitQuery submitQueryActionObject = new SubmitQuery();
 		switch(button) {
 			case BUTTON_ACTION_RESPOND : {
-				query.append("QUERY_STATUS = 'RESPONDED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), QUERY_RESPONSE = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				submitQueryActionObject.setQueryStatus(STATUS_RESPONDED);
+				submitQueryActionObject.setIsContacted(YES);
+				submitQueryActionObject.setWhoContacted(activeUser.getUserId());
+				submitQueryActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				submitQueryActionObject.setQueryResponse(comments);
+				querySQLId = "updateRespondSubmitQuery";
 				break;
 			}
 			case BUTTON_ACTION_PUT_ON_HOLD : {
-				query.append("QUERY_STATUS = 'PUT_ON_HOLD', NOT_ANSWERED = 'Y', WHO_NOT_ANSWERED = :userId, NOT_ANSWERED_REASON = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				submitQueryActionObject.setQueryStatus(STATUS_PUT_ON_HOLD);
+				submitQueryActionObject.setNotAnswered(YES);
+				submitQueryActionObject.setWhoNotAnswered(activeUser.getUserId());
+				submitQueryActionObject.setNotAnsweredReason(comments);
+				querySQLId = "updateHoldSubmitQuery";
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		submitQueryActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		submitQueryActionObject.setUpdatedBy(activeUser.getUserId());
+		final List<SubmitQuery> paramObjectList = new LinkedList<SubmitQuery>();
 		for (final String queryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("queryId", queryId);
-			paramsList.add(paramsMap);
+			final SubmitQuery submitQuery = submitQueryActionObject.clone();
+			submitQuery.setQueryId(Long.valueOf(queryId));
+			paramObjectList.add(submitQuery);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("public-application", querySQLId, paramObjectList);
 	}
 	
 	@Transactional
@@ -1467,58 +1522,76 @@ public class AdminService implements AdminConstants {
 	}
 	
 	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "C.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_CONTACTED), C.WHO_CONTACTED) AS WHO_CONTACTED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_NOT_RESOLVED), C.WHO_NOT_RESOLVED) AS WHO_NOT_RESOLVED_NAME, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM COMPLAINT C";
-		String existingFilterQueryString = "";
-		final String existingSorterQueryString = "ORDER BY COMPLAINT_FILED_DATE_MILLIS DESC";
+		final String baseQuery = queryMapperService.getQuerySQL("complaint", "selectComplaint");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("complaint", "complaintExistingSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_CUSTOMER_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'C'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
+				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintUser", USER_CUSTOMER);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_TUTOR_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'T'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
+				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintUser", USER_TUTOR);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_EMPLOYEE_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'FRESH' AND COMPLAINT_USER = 'E'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
+				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintUser", USER_EMPLOYEE);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_RESOLVED_COMPLAINT_LIST : {
-				existingFilterQueryString = "WHERE COMPLAINT_STATUS = 'RESOLVED'";
+				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
+				paramsMap.put("complaintStatus", STATUS_RESOLVED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
+				paramsMap.put("complaintStatus", STATUS_PUT_ON_HOLD);
 				break;
 			}
 		}
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new ComplaintRowMapper());
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new ComplaintRowMapper());
 	}
 	
 	@Transactional
-	public void takeActionOnComplaint(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder("UPDATE COMPLAINT SET ");
+	public void takeActionOnComplaint(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		String queryId = EMPTY_STRING;
+		final Complaint complaintActionObject = new Complaint();
 		switch(button) {
 			case BUTTON_ACTION_RESPOND : {
-				query.append("COMPLAINT_STATUS = 'RESPONDED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), QUERY_RESPONSE = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				complaintActionObject.setComplaintStatus(STATUS_RESPONDED);
+				complaintActionObject.setIsContacted(YES);
+				complaintActionObject.setWhoContacted(activeUser.getUserId());
+				complaintActionObject.setContactedDateMillis(currentTimestamp.getTime());
+				complaintActionObject.setComplaintResponse(comments);
+				queryId = "updateRespondComplaint";
 				break;
 			}
 			case BUTTON_ACTION_PUT_ON_HOLD : {
-				query.append("COMPLAINT_STATUS = 'PUT_ON_HOLD', NOT_ANSWERED = 'Y', WHO_NOT_ANSWERED = :userId, NOT_ANSWERED_REASON = :remarks, RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), UPDATED_BY = :userId WHERE QUERY_ID = :queryId");
+				complaintActionObject.setComplaintStatus(STATUS_PUT_ON_HOLD);
+				complaintActionObject.setNotResolved(YES);
+				complaintActionObject.setWhoNotResolved(activeUser.getUserId());
+				complaintActionObject.setNotResolvedReason(comments);
+				queryId = "updateHoldComplaint";
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
-		for (final String queryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("queryId", queryId);
-			paramsList.add(paramsMap);
+		complaintActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		complaintActionObject.setUpdatedBy(activeUser.getUserId());
+		final List<Complaint> paramObjectList = new LinkedList<Complaint>();
+		for (final String complaintId : idList) {
+			final Complaint complaint = complaintActionObject.clone();
+			complaint.setComplaintId(Long.valueOf(complaintId));
+			paramObjectList.add(complaint);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("complaint", queryId, paramObjectList);
 	}
 	
 	@Transactional

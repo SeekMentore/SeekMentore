@@ -24,6 +24,7 @@ public class Filter implements Serializable {
 	private Long beforeDateMillis;
 	private Long onDateMillis;
 	private Long afterDateMillis;
+	private Long localTimezoneOffsetInMilliseconds;
 	private List<String> listValue;
 	private Boolean clubbedFilterMapping;
 	private List<String> clubbedFilterProperties;
@@ -180,32 +181,6 @@ public class Filter implements Serializable {
 		this.textCaseSensitiveSearch = textCaseSensitiveSearch;
 	}
 	
-	@Override
-	public String toString() {
-		String output = this.id + " " + this.type + " " + this.mapping + " " + this.columnId;
-		switch (type) {
-			case "string" : {
-				output += " " + this.stringValue + " " + this.textCaseSensitiveSearch;
-				break;
-			}
-			case "date" : {
-				output += " " + this.beforeDateMillis + " " + this.beforeDate + " " + this.onDateMillis + " " + this.onDate + " " + this.afterDateMillis + " " + this.afterDate;
-				break;
-			}
-			case "number" : {
-				output += " " + this.lessThan + " " + this.equalTo + " " + this.greaterThan;
-				break;
-			}
-			case "list" : {
-				for (String value : this.listValue) {
-					output += " " + value;
-				}
-				break;
-			}
-		}
-		return  output;
-	}
-
 	public Boolean getMultiList() {
 		return multiList;
 	}
@@ -228,5 +203,13 @@ public class Filter implements Serializable {
 
 	public void setClubbedFilterProperties(List<String> clubbedFilterProperties) {
 		this.clubbedFilterProperties = clubbedFilterProperties;
+	}
+
+	public Long getLocalTimezoneOffsetInMilliseconds() {
+		return localTimezoneOffsetInMilliseconds;
+	}
+
+	public void setLocalTimezoneOffsetInMilliseconds(Long localTimezoneOffsetInMilliseconds) {
+		this.localTimezoneOffsetInMilliseconds = localTimezoneOffsetInMilliseconds;
 	}
 }

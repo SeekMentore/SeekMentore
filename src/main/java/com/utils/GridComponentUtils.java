@@ -67,17 +67,22 @@ public class GridComponentUtils implements GridComponentConstants {
 						final Long beforeDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_BEFORE_DATE_MILLIS, Long.class);
 						final Long onDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_ON_DATE_MILLIS, Long.class);
 						final Long afterDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_AFTER_DATE_MILLIS, Long.class);
-						filter.setBeforeDateMillis(beforeDateMillis);
+						Long localTimezoneOffsetInMilliseconds = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LOCAL_TIMEZONE_OFFSET_IN_MILLISECONDS, Long.class);
+						if (!ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
+							localTimezoneOffsetInMilliseconds = 0L;
+						}
+						filter.setLocalTimezoneOffsetInMilliseconds(localTimezoneOffsetInMilliseconds);
 						if (ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
-							filter.setBeforeDate(new Date(beforeDateMillis));
+							filter.setBeforeDateMillis(beforeDateMillis + localTimezoneOffsetInMilliseconds);
+							filter.setBeforeDate(new Date(beforeDateMillis + localTimezoneOffsetInMilliseconds));
 						}
-						filter.setOnDateMillis(onDateMillis);
 						if (ValidationUtils.checkObjectAvailability(onDateMillis)) {
-							filter.setOnDate(new Date(onDateMillis));
+							filter.setOnDateMillis(onDateMillis + localTimezoneOffsetInMilliseconds);
+							filter.setOnDate(new Date(onDateMillis + localTimezoneOffsetInMilliseconds));
 						}
-						filter.setAfterDateMillis(afterDateMillis);
 						if (ValidationUtils.checkObjectAvailability(afterDateMillis)) {
-							filter.setAfterDate(new Date(afterDateMillis));
+							filter.setAfterDateMillis(afterDateMillis + localTimezoneOffsetInMilliseconds);
+							filter.setAfterDate(new Date(afterDateMillis + localTimezoneOffsetInMilliseconds));
 						}
 						break;
 					}

@@ -32,6 +32,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	private List<SelectLookup> preferredTeachingTypeLookupData;
 	private List<SelectLookup> docuemtTypeLookupData;
 	private List<SelectLookup> emailTemplateLookupData;
+	private List<SelectLookup> publicApplicationStatusLookupData;
+	private List<SelectLookup> queryStatusLookupData;
+	private List<SelectLookup> complaintStatusLookupData;
+	private List<SelectLookup> userLookupData;
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -60,6 +64,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 		this.preferredTeachingTypeLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.docuemtTypeLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.emailTemplateLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.publicApplicationStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.queryStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.complaintStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.userLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_USER_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 	}
 	
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
@@ -77,6 +85,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return this.preferredTeachingTypeLookupData;
 			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return this.docuemtTypeLookupData;
 			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return this.emailTemplateLookupData;
+			case SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP : return this.publicApplicationStatusLookupData;
+			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return this.queryStatusLookupData;
+			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return this.complaintStatusLookupData;
+			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return this.userLookupData;
 		}
 		return null;
 	}
@@ -96,6 +108,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return getSelectLookupItem(this.preferredTeachingTypeLookupData, value);
 			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return getSelectLookupItem(this.docuemtTypeLookupData, value);
 			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return getSelectLookupItem(this.emailTemplateLookupData, value);
+			case SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP : return getSelectLookupItem(this.publicApplicationStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return getSelectLookupItem(this.queryStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return getSelectLookupItem(this.complaintStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return getSelectLookupItem(this.userLookupData, value);
 		}
 		return null;
 	}
@@ -124,6 +140,10 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP : return getSelectLookupItemList(this.preferredTeachingTypeLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP : return getSelectLookupItemList(this.docuemtTypeLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP : return getSelectLookupItemList(this.emailTemplateLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP : return getSelectLookupItemList(this.publicApplicationStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP : return getSelectLookupItemList(this.queryStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_COMPLAINT_STATUS_LOOKUP : return getSelectLookupItemList(this.complaintStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_USER_LOOKUP : return getSelectLookupItemList(this.userLookupData, multivalue, delimiter);
 		}
 		return null;
 	}

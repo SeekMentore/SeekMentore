@@ -55,4 +55,10 @@ public interface AdminConstants extends ResponseMapConstants {
 	
 	String SUPPORT_TEAM_REPORT = "SUPPORT_TEAM_REPORT";
 	String ADMIN_REPORT = "ADMIN_REPORT";
+	
+	String USER_CUSTOMER = "03";
+	String USER_TUTOR = "02";
+	String USER_EMPLOYEE = "01";
+	
+	String STATUS_RESOLVED = "02";
 }

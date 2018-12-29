@@ -1370,6 +1370,34 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
+	@Path(REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String holdComplaintList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path("/complaintCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1487,7 +1515,8 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 			case REST_METHOD_CUSTOMER_COMPLAINT_LIST :
 			case REST_METHOD_TUTOR_COMPLAINT_LIST : 
 			case REST_METHOD_EMPLOYEE_COMPLAINT_LIST : 
-			case REST_METHOD_RESOLVED_COMPLAINT_LIST :{
+			case REST_METHOD_RESOLVED_COMPLAINT_LIST :
+			case REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST : {
 				this.securityPassed = true;
 				break;
 			}

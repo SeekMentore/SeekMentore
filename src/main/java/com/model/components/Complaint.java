@@ -2,10 +2,11 @@ package com.model.components;
 
 import java.io.Serializable;
 
+import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class Complaint extends GridComponentObject implements Serializable {
+public class Complaint extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -7058576359707327688L;
 	
@@ -160,35 +161,6 @@ public class Complaint extends GridComponentObject implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 	
-	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "complaintId" : return "COMPLAINT_ID";
-			case "name" : return "NAME";
-			case "complaintFiledDateMillis" : return "COMPLAINT_FILED_DATE_MILLIS";
-			case "complaintStatus" : return "COMPLAINT_STATUS";
-			case "userId" : return "USER_ID";
-			case "complaintDetails" : return "COMPLAINT_DETAILS";
-			case "complaintUser" : return "COMPLAINT_USER";
-			case "complaintResponse" : return "COMPLAINT_RESPONSE";
-			case "isContacted" : return "IS_CONTACTED";
-			case "whoContacted" : return "WHO_CONTACTED";
-			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
-			case "resolved" : return "RESOLVED";
-			case "notResolved" : return "NOT_RESOLVED";
-			case "notResolvedReason" : return "NOT_RESOLVED_REASON";
-			case "whoNotResolved" : return "WHO_NOT_RESOLVED";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "updatedBy" : return "UPDATED_BY";
-			case "whoContactedName" : return "WHO_CONTACTED_NAME";
-			case "whoNotResolvedName" : return "WHO_NOT_RESOLVED_NAME";
-			case "updatedByName" : return "UPDATED_BY_NAME";
-		}
-		return EMPTY_STRING;
-	}
-
 	public String getResolved() {
 		return resolved;
 	}
@@ -219,5 +191,49 @@ public class Complaint extends GridComponentObject implements Serializable {
 
 	public void setUpdatedByName(String updatedByName) {
 		this.updatedByName = updatedByName;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "complaintId" : return "COMPLAINT_ID";
+			case "name" : return "NAME";
+			case "complaintFiledDateMillis" : return "COMPLAINT_FILED_DATE_MILLIS";
+			case "complaintStatus" : return "COMPLAINT_STATUS";
+			case "userId" : return "USER_ID";
+			case "complaintDetails" : return "COMPLAINT_DETAILS";
+			case "complaintUser" : return "COMPLAINT_USER";
+			case "complaintResponse" : return "COMPLAINT_RESPONSE";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "resolved" : return "RESOLVED";
+			case "notResolved" : return "NOT_RESOLVED";
+			case "notResolvedReason" : return "NOT_RESOLVED_REASON";
+			case "whoNotResolved" : return "WHO_NOT_RESOLVED";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoNotResolvedName" : return "WHO_NOT_RESOLVED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
+		}
+		return EMPTY_STRING;
+	}
+	
+	@Override
+	public Complaint clone() throws CloneNotSupportedException {  
+		return (Complaint)super.clone();
 	}
 }

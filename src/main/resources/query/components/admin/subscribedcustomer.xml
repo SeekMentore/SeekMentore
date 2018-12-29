@@ -9,13 +9,35 @@
 	<query type="select" id="selectSubscribedCustomer">
 		SELECT
 			C.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_BLACKLISTED), C.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_UN_BLACKLISTED), C.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME
-			FROM SUBSCRIBED_CUSTOMER C
+		FROM SUBSCRIBED_CUSTOMER C
 	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
 		WHERE EMAIL_ID = :emailId
 	</query>
 	<query type="filter" id="subscribedCustomerContactNumberFilter">
 		WHERE CONTACT_NUMBER = :contactNumber
+	</query>
+	<query type="update" id="updateBlacklistSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
+		UPDATE SUBSCRIBED_CUSTOMER SET
+			IS_BLACKLISTED = :isBlacklisted,
+			BLACKLISTED_REMARKS = :blacklistedRemarks,
+			BLACKLISTED_DATE_MILLIS = :blacklistedDateMillis,
+			WHO_BLACKLISTED = :whoBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE CUSTOMER_ID = :customerId
+	</query>
+	<query type="update" id="updateUnBlacklistSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
+		UPDATE SUBSCRIBED_CUSTOMER SET
+			IS_BLACKLISTED = :isBlacklisted,
+			UN_BLACKLISTED_REMARKS = :unblacklistedRemarks,
+			UN_BLACKLISTED_DATE_MILLIS = :unblacklistedDateMillis,
+			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE CUSTOMER_ID = :customerId
 	</query>
 </queryMapper>

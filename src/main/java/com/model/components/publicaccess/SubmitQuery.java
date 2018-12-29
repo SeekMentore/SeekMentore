@@ -11,7 +11,7 @@ import com.utils.DateUtils;
 import com.utils.PrintFormatterUtils;
 import com.utils.ValidationUtils;
 
-public class SubmitQuery extends PublicApplication implements Serializable, SubmitQueryConstants, ApplicationWorkbookObject {
+public class SubmitQuery extends PublicApplication implements Serializable, Cloneable, SubmitQueryConstants, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
@@ -283,5 +283,10 @@ public class SubmitQuery extends PublicApplication implements Serializable, Subm
 			}
 		}
 		return new Object[] {};
+	}
+	
+	@Override
+	public SubmitQuery clone() throws CloneNotSupportedException {  
+		return (SubmitQuery)super.clone();
 	}
 }

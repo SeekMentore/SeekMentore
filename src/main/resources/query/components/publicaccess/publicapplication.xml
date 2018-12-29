@@ -94,7 +94,7 @@
 	<query type="update" id="updateContactedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
 			APPLICATION_STATUS = :applicationStatus, 
-			IS_CONTACTED = :isContacted 
+			IS_CONTACTED = :isContacted, 
 			WHO_CONTACTED = :whoContacted, 
 			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
 			CONTACTED_REMARKS = :contactedRemarks, 
@@ -175,8 +175,8 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_RECONTACTED), F.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_SELECTED), F.WHO_SELECTED) AS WHO_SELECTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_REJECTED), F.WHO_REJECTED) AS WHO_REJECTED_NAME,
-			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_BLACKLISTED), B.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
-            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_UN_BLACKLISTED), B.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_BLACKLISTED), F.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.WHO_UN_BLACKLISTED), F.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.UPDATED_BY), F.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM FIND_TUTOR F
 	</query>
@@ -185,6 +185,9 @@
 	</query>
 	<query type="filter" id="findTutorMultiEnquiryStatusFilter">
 		WHERE ENQUIRY_STATUS IN (:enquiryStatusList)
+	</query>
+	<query type="filter" id="findTutorNonMigratedFilter">
+		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
 	</query>
 	<query type="sorter" id="findTutorExistingSorter">
 		ORDER BY ENQUIRY_DATE_MILLIS DESC
@@ -218,7 +221,7 @@
 	<query type="update" id="updateContactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
 			ENQUIRY_STATUS = :enquiryStatus, 
-			IS_CONTACTED = :isContacted 
+			IS_CONTACTED = :isContacted, 
 			WHO_CONTACTED = :whoContacted, 
 			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
 			CONTACTED_REMARKS = :contactedRemarks, 
@@ -298,8 +301,8 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_RECONTACTED), S.WHO_RECONTACTED) AS WHO_RECONTACTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_SELECTED), S.WHO_SELECTED) AS WHO_SELECTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_REJECTED), S.WHO_REJECTED) AS WHO_REJECTED_NAME,
-			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_BLACKLISTED), B.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
-            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_UN_BLACKLISTED), B.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_BLACKLISTED), S.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.WHO_UN_BLACKLISTED), S.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.UPDATED_BY), S.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM SUBSCRIBE_WITH_US S
 	</query>
@@ -311,5 +314,134 @@
 	</query>
 	<query type="sorter" id="subscribeWithUsExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
+	</query>
+	<query type="update" id="updateBlacklistSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			IS_BLACKLISTED = :isBlacklisted,
+			BLACKLISTED_REMARKS = :blacklistedRemarks,
+			BLACKLISTED_DATE_MILLIS = :blacklistedDateMillis,
+			WHO_BLACKLISTED = :whoBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateUnBlacklistSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			IS_BLACKLISTED = :isBlacklisted,
+			UN_BLACKLISTED_REMARKS = :unblacklistedRemarks,
+			UN_BLACKLISTED_DATE_MILLIS = :unblacklistedDateMillis,
+			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateContactedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted, 
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
+			CONTACTED_REMARKS = :contactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateRecontactSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted,
+			WHO_SUGGESTED_FOR_RECONTACT = :whoSuggestedForRecontact,
+			SUGGESTION_DATE_MILLIS = :suggestionDateMillis,
+			SUGGESTION_REMARKS = :suggestionRemarks,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateRecontactedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_TO_BE_RECONTACTED = :isToBeRecontacted, 
+			WHO_RECONTACTED = :whoRecontacted, 
+			RECONTACTED_DATE_MILLIS = :recontactedDateMillis, 
+			RECONTACTED_REMARKS = :recontactedRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateRejectSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_CONTACTED = :isContacted,
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis,
+			CONTACTED_REMARKS = :contactedRemarks, 
+			IS_REJECTED = :isRejected,
+			WHO_REJECTED = :whoRejected, 
+			REJECTION_DATE_MILLIS = :rejectionDateMillis, 
+			REJECTION_REMARKS = :rejectionRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateVerifyFailverifyReverifySubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_AUTHENTICATION_VERIFIED = :isAuthenticationVerified, 
+			WHO_VERIFIED = :whoVerified, 
+			VERIFICATION_DATE_MILLIS = :verificationDateMillis, 
+			VERIFICATION_REMARKS = :verificationRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="update" id="updateSelectedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
+		UPDATE SUBSCRIBE_WITH_US SET
+			APPLICATION_STATUS = :applicationStatus, 
+			IS_SELECTED = :isSelected, 
+			WHO_SELECTED = :whoSelected, 
+			SELECTION_DATE_MILLIS = :selectionDateMillis, 
+			SELECTION_REMARKS = :selectionRemarks, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy 
+		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+	</query>
+	<query type="select" id="selectSubmitQuery">
+		SELECT
+			Q.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_CONTACTED), Q.WHO_CONTACTED) AS WHO_CONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_NOT_ANSWERED), Q.WHO_NOT_ANSWERED) AS WHO_NOT_ANSWERED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.UPDATED_BY), Q.UPDATED_BY) AS UPDATED_BY_NAME
+		FROM SUBMIT_QUERY Q
+	</query>
+	<query type="filter" id="submitQueryQueryStatusFilter">
+		WHERE QUERY_STATUS = :queryStatus
+	</query>
+	<query type="sorter" id="submitQueryExistingSorter">
+		ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC
+	</query>
+	<query type="update" id="updateRespondSubmitQuery" paramClass="com.model.components.publicaccess.SubmitQuery">
+		UPDATE SUBMIT_QUERY SET
+			QUERY_STATUS = :queryStatus, 
+			IS_CONTACTED = :isContacted, 
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
+			QUERY_RESPONSE = :queryResponse, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy
+		 WHERE QUERY_ID = :queryId
+	</query>
+	<query type="update" id="updateHoldSubmitQuery" paramClass="com.model.components.publicaccess.SubmitQuery">
+		UPDATE SUBMIT_QUERY SET
+			QUERY_STATUS = :queryStatus, 
+			NOT_ANSWERED = :notAnswered, 
+			WHO_NOT_ANSWERED = :whoNotAnswered, 
+			NOT_ANSWERED_REASON = :notAnsweredReason,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy
+		 WHERE QUERY_ID = :queryId
 	</query>
 </queryMapper>

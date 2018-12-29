@@ -151,6 +151,7 @@
 			<webservice id="customerComplaintList" url="/customerComplaintList"></webservice>
 			<webservice id="tutorComplaintList" url="/tutorComplaintList"></webservice>
 			<webservice id="employeeComplaintList" url="/employeeComplaintList"></webservice>
+			<webservice id="holdComplaintList" url="/holdComplaintList"></webservice>
 			<webservice id="resolvedComplaintList" url="/resolvedComplaintList"></webservice>
 			<webservice id="complaintCheckDataAccess" url="/complaintCheckDataAccess"></webservice>	
 			<webservice id="updateComplaintRecord" url="/updateComplaintRecord"></webservice>

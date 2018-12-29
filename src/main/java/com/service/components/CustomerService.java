@@ -2,6 +2,7 @@ package com.service.components;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.model.rowmappers.FindTutorRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.workbook.WorkbookReport;
 import com.service.JNDIandControlConfigurationLoadService;
+import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.ValidationUtils;
@@ -50,6 +52,9 @@ import com.utils.WorkbookUtils;
 	
 	@Autowired
 	private transient AdminService adminService;
+	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() {}
@@ -203,10 +208,7 @@ import com.utils.WorkbookUtils;
 	
 	/************************************************************************************************************/
 	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = "SELECT "
-				+ "C.*, "
-				+ "IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME "
-				+ "FROM SUBSCRIBED_CUSTOMER C";
+		final String baseQuery = queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer");
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 	
@@ -219,55 +221,53 @@ import com.utils.WorkbookUtils;
 	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
-		return applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE EMAIL_ID = :emailId", paramsMap, new SubscribedCustomerRowMapper());
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+		query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailFilter"));
+		return applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
-		return applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CONTACT_NUMBER = :contactNumber", paramsMap, new SubscribedCustomerRowMapper());
+		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+		query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberFilter"));
+		return applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
 	}
 	
 	@Transactional
-	public void blacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET "
-				+ "IS_BLACKLISTED = 'Y', "
-				+ "BLACKLISTED_REMARKS = :comments, "
-				+ "BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE CUSTOMER_ID = :customerId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void blacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<SubscribedCustomer> paramObjectList = new LinkedList<SubscribedCustomer>();
 		for (final String customerId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("customerId", customerId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
+			subscribedCustomer.setIsBlacklisted(YES);
+			subscribedCustomer.setBlacklistedRemarks(comments);
+			subscribedCustomer.setBlacklistedDateMillis(currentTimestamp.getTime());
+			subscribedCustomer.setWhoBlacklisted(activeUser.getUserId());
+			subscribedCustomer.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			subscribedCustomer.setUpdatedBy(activeUser.getUserId());
+			subscribedCustomer.setCustomerId(Long.valueOf(customerId));
+			paramObjectList.add(subscribedCustomer);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateBlacklistSubscribedCustomer", paramObjectList);
 	}
 	
 	@Transactional
-	public void unBlacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) {
-		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET "
-				+ "IS_BLACKLISTED = 'N', "
-				+ "UN_BLACKLISTED_REMARKS = :comments, "
-				+ "UN_BLACKLISTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "WHO_UN_BLACKLISTED = :userId, "
-				+ "RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), "
-				+ "UPDATED_BY = :userId "
-				+ "WHERE CUSTOMER_ID = :customerId";
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+	public void unBlacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		final List<SubscribedCustomer> paramObjectList = new LinkedList<SubscribedCustomer>();
 		for (final String customerId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("customerId", customerId);
-			paramsMap.put("comments", comments);
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsList.add(paramsMap);
+			final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
+			subscribedCustomer.setIsBlacklisted(NO);
+			subscribedCustomer.setUnblacklistedRemarks(comments);
+			subscribedCustomer.setUnblacklistedDateMillis(currentTimestamp.getTime());
+			subscribedCustomer.setWhoUnBlacklisted(activeUser.getUserId());
+			subscribedCustomer.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			subscribedCustomer.setUpdatedBy(activeUser.getUserId());
+			subscribedCustomer.setCustomerId(Long.valueOf(customerId));
+			paramObjectList.add(subscribedCustomer);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateUnBlacklistSubscribedCustomer", paramObjectList);
 	}
 	
 	private void sendEmailAboutEmailAndUserIdChange(final Long customerId, final String newEmailId) {
@@ -351,7 +351,7 @@ import com.utils.WorkbookUtils;
 		} else {
 			gridComponent = new GridComponent(FindTutor.class);
 		}
-		gridComponent.setAdditionalFilterQueryString("WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED <> 'Y')");
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("public-application", "findTutorNonMigratedFilter"));
 		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 	}
 }

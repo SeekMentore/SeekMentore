@@ -117,7 +117,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
 		becomeTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		becomeTutorApplication.setApplicationDateMillis(currentTimestamp.getTime());
-		becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
+		becomeTutorApplication.setApplicationStatus(STATUS_FRESH);
 		becomeTutorApplication.setIsContacted(NO);
 		becomeTutorApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -137,7 +137,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		findTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		findTutorApplication.setEnquiryDateMillis(currentTimestamp.getTime());
-		findTutorApplication.setEnquiryStatus(APPLICATION_STATUS_FRESH);
+		findTutorApplication.setEnquiryStatus(STATUS_FRESH);
 		findTutorApplication.setIsContacted(NO);
 		findTutorApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -157,7 +157,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationDateMillis(currentTimestamp.getTime());
-		subscribeWithUsApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
+		subscribeWithUsApplication.setApplicationStatus(STATUS_FRESH);
 		subscribeWithUsApplication.setIsContacted(NO);
 		subscribeWithUsApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -182,7 +182,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		submitQueryApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		submitQueryApplication.setQueryRequestedDateMillis(currentTimestamp.getTime());
-		submitQueryApplication.setQueryStatus(APPLICATION_STATUS_FRESH);
+		submitQueryApplication.setQueryStatus(STATUS_FRESH);
 		submitQueryApplication.setIsContacted(NO);
 		submitQueryApplication.setUpdatedBy(FRESH_ENTRY);
 	}

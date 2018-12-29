@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="complaint">
+	<query type="select" id="selectComplaint">
+		SELECT
+			C.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_CONTACTED), C.WHO_CONTACTED) AS WHO_CONTACTED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_NOT_RESOLVED), C.WHO_NOT_RESOLVED) AS WHO_NOT_RESOLVED_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME
+		FROM COMPLAINT C
+	</query>
+	<query type="filter" id="complaintUserComplaintStatusFilter">
+		WHERE COMPLAINT_STATUS = :complaintStatus AND COMPLAINT_USER = :complaintUser
+	</query>
+	<query type="filter" id="complaintComplaintStatusFilter">
+		WHERE COMPLAINT_STATUS = :complaintStatus
+	</query>
+	<query type="sorter" id="complaintExistingSorter">
+		ORDER BY COMPLAINT_FILED_DATE_MILLIS DESC
+	</query>
+	<query type="update" id="updateRespondComplaint" paramClass="com.model.components.Complaint">
+		UPDATE COMPLAINT SET
+			COMPLAINT_STATUS = :complaintStatus, 
+			IS_CONTACTED = :isContacted, 
+			WHO_CONTACTED = :whoContacted, 
+			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
+			COMPLAINT_RESPONSE = :complaintResponse, 
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy
+		 WHERE COMPLAINT_ID = :complaintId
+	</query>
+	<query type="update" id="updateHoldComplaint" paramClass="com.model.components.Complaint">
+		UPDATE COMPLAINT SET
+			COMPLAINT_STATUS = :complaintStatus, 
+			NOT_RESOLVED = :notResolved, 
+			WHO_NOT_RESOLVED = :whoNotResolved, 
+			NOT_RESOLVED_REASON = :notResolvedReason,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
+			UPDATED_BY = :updatedBy
+		 WHERE COMPLAINT_ID = :complaintId
+	</query>
+</queryMapper>

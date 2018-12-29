@@ -10,6 +10,7 @@ public interface GridComponentConstants extends ResponseMapConstants {
 	String COLUMN_FILTER_VALUE_GREATER_THAN = "greaterThan";
 	String COLUMN_FILTER_VALUE_EQUAL_TO = "equalTo";
 	String COLUMN_FILTER_VALUE_LESS_THAN = "lessThan";
+	String COLUMN_FILTER_VALUE_LOCAL_TIMEZONE_OFFSET_IN_MILLISECONDS = "localTimezoneOffsetInMilliseconds";
 	String COLUMN_FILTER_VALUE_AFTER_DATE_MILLIS = "afterDateMillis";
 	String COLUMN_FILTER_VALUE_ON_DATE_MILLIS = "onDateMillis";
 	String COLUMN_FILTER_VALUE_BEFORE_DATE_MILLIS = "beforeDateMillis";
