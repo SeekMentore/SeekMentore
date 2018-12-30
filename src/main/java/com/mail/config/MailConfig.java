@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import com.constants.JNDIandControlConfigurationConstants;
 import com.constants.MailConstants;
 import com.model.control.MailConfiguration;
 import com.service.CipherService;
@@ -34,6 +35,11 @@ public class MailConfig implements MailConstants {
         mailSender.setUsername(SecurityUtil.decrypt(mailConfiguration.getEncryptedUsername(), cipherService, jndiAndControlConfigurationLoadService));
         mailSender.setPassword(SecurityUtil.decrypt(mailConfiguration.getEncryptedPassword(), cipherService, jndiAndControlConfigurationLoadService));
         mailProperties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(MAIL_PROPERTIES_FILE));
+        final Boolean isServerLocal = jndiAndControlConfigurationLoadService.getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL);
+        if (isServerLocal) {
+        	// Making mail.debug forcefully true on Local
+        	mailProperties.setProperty("mail.debug", "true");
+        }
         mailSender.setJavaMailProperties(mailProperties);
         return mailSender;
     }
