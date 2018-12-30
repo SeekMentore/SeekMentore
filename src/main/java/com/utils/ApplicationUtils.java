@@ -14,7 +14,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
-import com.model.User;
 import com.model.components.commons.SelectLookup;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.ApplicationLookupDataService;
@@ -36,20 +35,6 @@ public class ApplicationUtils implements ApplicationConstants {
 	
 	public static void appendMessageInMapAttribute(final Map<String, Object> response, final String message, final String attributeName) {
 		response.put(attributeName, (String)response.get(attributeName) + LINE_BREAK + message);
-	}
-	
-	public static User returnUserObjWithoutSensitiveInformationFromSessionUserObjectBeforeSendingOnUI(final User user) {
-		final User newuserobj = user.getACopy();
-		newuserobj.setEncyptedPassword(null);
-		newuserobj.setPageAccessTypes(null);
-		newuserobj.setUserType(null);
-		return newuserobj;
-	}
-	
-	public static User returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(final User user) {
-		final User newuserobj = user.getACopy();
-		newuserobj.setEncyptedPassword(null);
-		return newuserobj;
 	}
 	
 	public static String returnBlankIfStringNull(final String obj) {

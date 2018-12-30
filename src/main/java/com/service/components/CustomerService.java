@@ -123,12 +123,6 @@ import com.utils.WorkbookUtils;
 		return response;
 	}
 	
-	public void replacePlaceHolderAndIdsFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		subscriberCustomerObj.setStudentGrades(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, subscriberCustomerObj.getStudentGrades(), true, delimiter));
-		subscriberCustomerObj.setInterestedSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, subscriberCustomerObj.getInterestedSubjects(), true, delimiter));
-		subscriberCustomerObj.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscriberCustomerObj.getLocation(), true, delimiter));
-	}
-	
 	public void removeAllSensitiveInformationFromSubscribedCustomerObject(final SubscribedCustomer subscriberCustomerObj) {
 		subscriberCustomerObj.setCustomerId(null);
 		//subscriberCustomerObj.setEnquiryID(null);
@@ -164,7 +158,6 @@ import com.utils.WorkbookUtils;
 		for (final SubscribedCustomer subscribedCustomerObject : subscribedCustomerList) {
 			// Get all lookup data and user ids back to original label and values
 			removeUltraSensitiveInformationFromSubscribedCustomerObject(subscribedCustomerObject);
-			replacePlaceHolderAndIdsFromSubscribedCustomerObject(subscribedCustomerObject, delimiter);
 		}
 		return subscribedCustomerList;
 	}
@@ -179,7 +172,6 @@ import com.utils.WorkbookUtils;
 		final Map<String, Object> response = new HashMap<String, Object>();
 		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		replacePlaceHolderAndIdsFromSubscribedCustomerObject(subscribedCustomerObj, LINE_BREAK);
 		removeAllSensitiveInformationFromSubscribedCustomerObject(subscribedCustomerObj);
 		response.put("subscribedCustomerObj", subscribedCustomerObj);
 		return response;
@@ -208,8 +200,7 @@ import com.utils.WorkbookUtils;
 	
 	/************************************************************************************************************/
 	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer");
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new SubscribedCustomerRowMapper());
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"), null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 	
 	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -353,5 +344,15 @@ import com.utils.WorkbookUtils;
 		}
 		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("public-application", "findTutorNonMigratedFilter"));
 		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+	}
+	
+	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (null != userId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", userId.toLowerCase());
+			return applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer")
+										+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerUserIdFilter"), paramsMap, new SubscribedCustomerRowMapper());
+		}
+		return null;
 	}
 }

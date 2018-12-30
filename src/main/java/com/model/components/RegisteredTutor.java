@@ -1,7 +1,6 @@
 package com.model.components;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,19 +8,16 @@ import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
-import com.model.GridComponentObject;
+import com.model.User;
 import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
 import com.utils.ValidationUtils;
 
-public class RegisteredTutor extends GridComponentObject implements Serializable, RegisteredTutorConstants, ApplicationWorkbookObject {
+public class RegisteredTutor extends User implements Serializable, Cloneable, RegisteredTutorConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
 	private Long tutorId;
-	private String name;
-	private String contactNumber;
-	private String emailId;
 	private Long tentativeTutorId;
 	private Date dateOfBirth;
 	private String gender;
@@ -33,11 +29,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	private String interestedSubjects;
 	private String comfortableLocations;
 	private String additionalDetails;
-	private String encryptedPassword;
-	private String userId;
-	private Long recordLastUpdatedMillis;
-	private String updatedBy;
-	private String updatedByName;
 	private String preferredTeachingType;
 	private String addressDetails;
 	private String isBlacklisted;
@@ -53,69 +44,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 	
 	public RegisteredTutor() {}
 	
-	public RegisteredTutor getACopy() {
-		final RegisteredTutor newInstance = new RegisteredTutor();
-		newInstance.tutorId = this.tutorId;
-		newInstance.name = this.name;
-		newInstance.contactNumber = this.contactNumber;
-		newInstance.emailId = this.emailId;
-		newInstance.tentativeTutorId = this.tentativeTutorId;
-		newInstance.dateOfBirth = this.dateOfBirth;
-		newInstance.gender = this.gender;
-		newInstance.qualification = this.qualification;
-		newInstance.primaryProfession = primaryProfession;
-		newInstance.transportMode = this.transportMode;
-		newInstance.teachingExp = this.teachingExp;
-		newInstance.interestedStudentGrades = this.interestedStudentGrades;
-		newInstance.interestedSubjects = this.interestedSubjects;
-		newInstance.comfortableLocations = this.comfortableLocations;
-		newInstance.additionalDetails = this.additionalDetails;
-		newInstance.encryptedPassword = this.encryptedPassword;
-		newInstance.userId = this.userId;
-		newInstance.recordLastUpdatedMillis = this.recordLastUpdatedMillis;
-		newInstance.updatedBy = this.updatedBy;
-		newInstance.preferredTeachingType = this.preferredTeachingType;
-		newInstance.addressDetails = this.addressDetails;
-		newInstance.isBlacklisted = this.isBlacklisted;
-		newInstance.blacklistedRemarks = this.blacklistedRemarks;
-		newInstance.blacklistedDateMillis = this.blacklistedDateMillis;
-		newInstance.whoBlacklisted = this.whoBlacklisted;
-		newInstance.whoBlacklistedName = this.whoBlacklistedName;
-		newInstance.unblacklistedRemarks = this.unblacklistedRemarks;
-		newInstance.unblacklistedDateMillis = this.unblacklistedDateMillis;
-		newInstance.whoUnBlacklisted = this.whoUnBlacklisted;
-		newInstance.whoUnBlacklistedName = this.whoUnBlacklistedName;
-		newInstance.documents = new ArrayList<TutorDocument>();
-		for (final TutorDocument tutorDocument : this.documents) {
-			newInstance.documents.add(tutorDocument.getACopy());
-		}
-		return newInstance;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getContactNumber() {
-		return contactNumber;
-	}
-
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
-
-	public String getEmailId() {
-		return emailId;
-	}
-
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -180,22 +108,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.additionalDetails = additionalDetails;
 	}
 
-	public String getEncryptedPassword() {
-		return encryptedPassword;
-	}
-
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 	public Long getTutorId() {
 		return tutorId;
 	}
@@ -220,14 +132,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.teachingExp = teachingExp;
 	}
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
 	public String getPreferredTeachingType() {
 		return preferredTeachingType;
 	}
@@ -244,28 +148,12 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		this.documents = documents;
 	}
 
-	public Long getRecordLastUpdatedMillis() {
-		return recordLastUpdatedMillis;
-	}
-
-	public void setRecordLastUpdatedMillis(Long recordLastUpdatedMillis) {
-		this.recordLastUpdatedMillis = recordLastUpdatedMillis;
-	}
-
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
-	}
-
-	public String getUpdatedByName() {
-		return updatedByName;
-	}
-
-	public void setUpdatedByName(String updatedByName) {
-		this.updatedByName = updatedByName;
 	}
 
 	public String getAddressDetails() {
@@ -391,10 +279,10 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 				return new Object[] {
 						this.tutorId,
 						this.tentativeTutorId,
-						this.userId,
-						this.name,
-						this.contactNumber,
-						this.emailId,
+						this.getUserId(),
+						this.getName(),
+						this.getContactNumber(),
+						this.getEmailId(),
 						DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth),
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP, this.gender),
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP, this.qualification),
@@ -412,8 +300,8 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 						this.whoBlacklistedName,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.unblacklistedDateMillis),
 						this.whoUnBlacklistedName,
-						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
-						this.updatedByName
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.getRecordLastUpdatedMillis()),
+						this.getUpdatedByName()
 					};
 			}
 		}
@@ -426,9 +314,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "tutorId" : return "TUTOR_ID";
-			case "name" : return "NAME";
-			case "contactNumber" : return "CONTACT_NUMBER";
-			case "emailId" : return "EMAIL_ID";
 			case "tentativeTutorId" : return "TENTATIVE_TUTOR_ID";
 			case "dateOfBirth" : return "DATE_OF_BIRTH";
 			case "gender" : return "GENDER";
@@ -441,11 +326,6 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "comfortableLocations" : return "COMFORTABLE_LOCATIONS";
 			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
 			case "additionalDetails" : return "ADDITIONAL_DETAILS";
-			case "encryptedPassword" : return "ENCRYPTED_PASSWORD";
-			case "userId" : return "USER_ID";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "updatedBy" : return "UPDATED_BY";
-			case "updatedByName" : return "UPDATED_BY_NAME";
 			case "addressDetails" : return "ADDRESS_DETAILS";
 			case "isBlacklisted" : return "IS_BLACKLISTED";
 			case "blacklistedRemarks" : return "BLACKLISTED_REMARKS";
@@ -458,5 +338,10 @@ public class RegisteredTutor extends GridComponentObject implements Serializable
 			case "whoUnBlacklistedName" : return "WHO_UN_BLACKLISTED_NAME";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public RegisteredTutor clone() throws CloneNotSupportedException {  
+		return (RegisteredTutor)super.clone();
 	}
 }

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
-import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
@@ -52,9 +51,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
-	private transient CommonsService commonsService;
-	
-	@Autowired
 	private transient QueryMapperService queryMapperService;
 	
 	@PostConstruct
@@ -81,7 +77,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		paramsMap.put("tentativeTutorId", tentativeTutorId);
 		final BecomeTutor tutorRegisterObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap, new BecomeTutorRowMapper());
 		if (null != tutorRegisterObject) {
-			replacePlaceHolderAndIdsFromTutorRegistrationObject(tutorRegisterObject, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInTutorRegistrationObject(tutorRegisterObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("tutorRegisterObject", tutorRegisterObject);
@@ -127,37 +122,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 			}
 		}
 		final List<BecomeTutor> tutorRegisterList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
-		for (final BecomeTutor tutorRegisterObject : tutorRegisterList) {
-			// Get all lookup data and user ids back to original label and values
-			replacePlaceHolderAndIdsFromTutorRegistrationObject(tutorRegisterObject, delimiter);
-		}
 		return tutorRegisterList;
-	}
-	
-	private void replacePlaceHolderAndIdsFromTutorRegistrationObject(final BecomeTutor tutorRegisterObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		tutorRegisterObject.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,tutorRegisterObject.getGender(), false, delimiter));
-		tutorRegisterObject.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,tutorRegisterObject.getQualification(), false, delimiter));
-		tutorRegisterObject.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,tutorRegisterObject.getPrimaryProfession(), false, delimiter));
-		tutorRegisterObject.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,tutorRegisterObject.getTransportMode(), false, delimiter));
-		tutorRegisterObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, tutorRegisterObject.getStudentGrade(), true, delimiter));
-		tutorRegisterObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, tutorRegisterObject.getSubjects(), true, delimiter));
-		tutorRegisterObject.setLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, tutorRegisterObject.getLocations(), true, delimiter));
-		tutorRegisterObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, tutorRegisterObject.getPreferredTimeToCall(), true, delimiter));
-		tutorRegisterObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, tutorRegisterObject.getReference(), false, delimiter));
-		tutorRegisterObject.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, tutorRegisterObject.getPreferredTeachingType(), true, delimiter));
-		tutorRegisterObject.setWhoContacted(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoContacted()));
-		tutorRegisterObject.setWhoVerified(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoVerified()));
-		tutorRegisterObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoSuggestedForRecontact()));
-		tutorRegisterObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoRecontacted()));
-		tutorRegisterObject.setWhoSelected(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoSelected()));
-		tutorRegisterObject.setWhoRejected(commonsService.getNameOfUserFromUserId(tutorRegisterObject.getWhoRejected()));
-		tutorRegisterObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsContacted()));
-		tutorRegisterObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsAuthenticationVerified()));
-		tutorRegisterObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsToBeRecontacted()));
-		tutorRegisterObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsSelected()));
-		tutorRegisterObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsRejected()));
-		tutorRegisterObject.setReApplied(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getReApplied()));
-		tutorRegisterObject.setIsDataMigrated(ApplicationUtils.setYesOrNoFromYN(tutorRegisterObject.getIsDataMigrated()));
 	}
 	
 	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor tutorRegisterObject) {
@@ -241,7 +206,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		paramsMap.put("enquiryId", enquiryId);
 		final FindTutor tutorEnquiryObject = applicationDao.find("SELECT * FROM FIND_TUTOR WHERE ENQUIRY_ID = :enquiryId", paramsMap, new FindTutorRowMapper());
 		if (null != tutorEnquiryObject) {
-			replacePlaceHolderAndIdsFromTutorEnquiryObject(tutorEnquiryObject, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInTutorEnquiryObject(tutorEnquiryObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("tutorEnquiryObject", tutorEnquiryObject);
@@ -283,31 +247,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 			}
 		}
 		final List<FindTutor> tutorEnquiryList = applicationDao.findAllWithoutParams(query.toString(), new FindTutorRowMapper());
-		for (final FindTutor tutorEnquiryObject : tutorEnquiryList) {
-			// Get all lookup data and user ids back to original label and values
-			replacePlaceHolderAndIdsFromTutorEnquiryObject(tutorEnquiryObject, delimiter);
-		}
 		return tutorEnquiryList;
-	}
-	
-	private void replacePlaceHolderAndIdsFromTutorEnquiryObject(final FindTutor tutorEnquiryObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		tutorEnquiryObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, tutorEnquiryObject.getStudentGrade(), true, delimiter));
-		tutorEnquiryObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, tutorEnquiryObject.getSubjects(), true, delimiter));
-		tutorEnquiryObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, tutorEnquiryObject.getPreferredTimeToCall(), true, delimiter));
-		tutorEnquiryObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, tutorEnquiryObject.getLocation(), true, delimiter));
-		tutorEnquiryObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, tutorEnquiryObject.getReference(), false, delimiter));
-		tutorEnquiryObject.setWhoContacted(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoContacted()));
-		tutorEnquiryObject.setWhoVerified(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoVerified()));
-		tutorEnquiryObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoSuggestedForRecontact()));
-		tutorEnquiryObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoRecontacted()));
-		tutorEnquiryObject.setWhoSelected(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoSelected()));
-		tutorEnquiryObject.setWhoRejected(commonsService.getNameOfUserFromUserId(tutorEnquiryObject.getWhoRejected()));
-		tutorEnquiryObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getSubscribedCustomer()));
-		tutorEnquiryObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsContacted()));
-		tutorEnquiryObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsAuthenticationVerified()));
-		tutorEnquiryObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsToBeRecontacted()));
-		tutorEnquiryObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsSelected()));
-		tutorEnquiryObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(tutorEnquiryObject.getIsRejected()));
 	}
 	
 	private void replaceNullWithBlankRemarksInTutorEnquiryObject(final FindTutor tutorEnquiryObject) {
@@ -392,7 +332,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
 		final SubscribeWithUs subscribeWithUsObject = applicationDao.find("SELECT * FROM SUBSCRIBE_WITH_US WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId", paramsMap, new SubscribeWithUsRowMapper());
 		if (null != subscribeWithUsObject) {
-			replacePlaceHolderAndIdsFromSubscribeWithUsObject(subscribeWithUsObject, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInSubscribeWithUsObject(subscribeWithUsObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("subscribeWithUsObject", subscribeWithUsObject);
@@ -435,31 +374,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 			}
 		}
 		final List<SubscribeWithUs> subscribeWithUsList = applicationDao.findAllWithoutParams(query.toString(), new SubscribeWithUsRowMapper());
-		for (final SubscribeWithUs subscribeWithUsObject : subscribeWithUsList) {
-			// Get all lookup data and user ids back to original label and values
-			replacePlaceHolderAndIdsFromSubscribeWithUsObject(subscribeWithUsObject, delimiter);
-		}
 		return subscribeWithUsList;
-	}
-	
-	private void replacePlaceHolderAndIdsFromSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		subscribeWithUsObject.setStudentGrade(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, subscribeWithUsObject.getStudentGrade(), true, delimiter));
-		subscribeWithUsObject.setSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, subscribeWithUsObject.getSubjects(), true, delimiter));
-		subscribeWithUsObject.setPreferredTimeToCall(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, subscribeWithUsObject.getPreferredTimeToCall(), true, delimiter));
-		subscribeWithUsObject.setLocation(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, subscribeWithUsObject.getLocation(), true, delimiter));
-		subscribeWithUsObject.setReference(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, subscribeWithUsObject.getReference(), false, delimiter));
-		subscribeWithUsObject.setWhoContacted(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoContacted()));
-		subscribeWithUsObject.setWhoVerified(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoVerified()));
-		subscribeWithUsObject.setWhoSuggestedForRecontact(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoSuggestedForRecontact()));
-		subscribeWithUsObject.setWhoRecontacted(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoRecontacted()));
-		subscribeWithUsObject.setWhoSelected(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoSelected()));
-		subscribeWithUsObject.setWhoRejected(commonsService.getNameOfUserFromUserId(subscribeWithUsObject.getWhoRejected()));
-		subscribeWithUsObject.setSubscribedCustomer(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getSubscribedCustomer()));
-		subscribeWithUsObject.setIsContacted(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsContacted()));
-		subscribeWithUsObject.setIsAuthenticationVerified(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsAuthenticationVerified()));
-		subscribeWithUsObject.setIsToBeRecontacted(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsToBeRecontacted()));
-		subscribeWithUsObject.setIsSelected(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsSelected()));
-		subscribeWithUsObject.setIsRejected(ApplicationUtils.setYesOrNoFromYN(subscribeWithUsObject.getIsRejected()));
 	}
 	
 	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject) {

@@ -94,29 +94,6 @@ public class TutorService implements TutorConstants {
 		applicationDao.executeUpdate("UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap);
 	}
 	
-	@Transactional
-	public void feedRegisteredTutorRecords(final RegisteredTutor registeredTutorObj) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("name", registeredTutorObj.getName());
-		paramsMap.put("contactNumber", registeredTutorObj.getContactNumber());
-		paramsMap.put("emailId", registeredTutorObj.getEmailId());
-		paramsMap.put("tentativeTutorId", registeredTutorObj.getTentativeTutorId());
-		paramsMap.put("dateOfBirth", registeredTutorObj.getDateOfBirth());
-		paramsMap.put("gender", registeredTutorObj.getGender());
-		paramsMap.put("qualification", registeredTutorObj.getQualification());
-		paramsMap.put("primaryProfession", registeredTutorObj.getPrimaryProfession());
-		paramsMap.put("transportMode", registeredTutorObj.getTransportMode());
-		paramsMap.put("teachingExp", registeredTutorObj.getTeachingExp());
-		paramsMap.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
-		paramsMap.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
-		paramsMap.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
-		paramsMap.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
-		paramsMap.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
-		paramsMap.put("encryptedPassword", registeredTutorObj.getEncryptedPassword());
-		paramsMap.put("userId", registeredTutorObj.getUserId());
-		applicationDao.executeUpdate("INSERT INTO REGISTERED_TUTOR(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE) VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, :transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, :encryptedPassword, SYSDATE(), 'SYSTEM_SCHEDULER', :userId, :preferredTeachingType)", paramsMap);
-	}
-	
 	public void sendProfileGenerationEmailToTutor(final RegisteredTutor registeredTutorObj, final String temporaryPassword) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", registeredTutorObj.getName());
@@ -141,7 +118,6 @@ public class TutorService implements TutorConstants {
 			removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
 		}
 		response.put("tutorDocuments", tutorDocumentList);
-		replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, LINE_BREAK);
 		removeAllSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
 		response.put("tutorObj", registeredTutorObj);
 		return response;
@@ -255,17 +231,6 @@ public class TutorService implements TutorConstants {
 		return response;
 	}
 	
-	public void replacePlaceHolderAndIdsFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		registeredTutorObj.setGender(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_GENDER_LOOKUP,registeredTutorObj.getGender(), false, delimiter));
-		registeredTutorObj.setQualification(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP,registeredTutorObj.getQualification(), false, delimiter));
-		registeredTutorObj.setPrimaryProfession(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP,registeredTutorObj.getPrimaryProfession(), false, delimiter));
-		registeredTutorObj.setTransportMode(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP,registeredTutorObj.getTransportMode(), false, delimiter));
-		registeredTutorObj.setInterestedStudentGrades(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, registeredTutorObj.getInterestedStudentGrades(), true, delimiter));
-		registeredTutorObj.setInterestedSubjects(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, registeredTutorObj.getInterestedSubjects(), true, delimiter));
-		registeredTutorObj.setComfortableLocations(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, registeredTutorObj.getComfortableLocations(), true, delimiter));
-		registeredTutorObj.setPreferredTeachingType(commonsService.preapreLookupLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP, registeredTutorObj.getPreferredTeachingType(), true, delimiter));
-	}
-	
 	private void replaceNullWithBlankRemarksInRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
 		registeredTutorObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(registeredTutorObj.getAdditionalDetails()));
 	}
@@ -306,7 +271,6 @@ public class TutorService implements TutorConstants {
 			// Get all lookup data and user ids back to original label and values
 			registeredTutorObject.setDocuments(getTutorDocuments(registeredTutorObject.getTutorId()));
 			removeUltraSensitiveInformationFromRegisteredTutorObject(registeredTutorObject);
-			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObject, delimiter);
 		}
 		return registeredTutorList;
 	}
@@ -386,7 +350,6 @@ public class TutorService implements TutorConstants {
 	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final Long tutorId) throws JAXBException, URISyntaxException, Exception {
 		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
 		if (null != registeredTutorObj) {
-			replacePlaceHolderAndIdsFromRegisteredTutorObject(registeredTutorObj, WHITESPACE+SEMICOLON+WHITESPACE);
 			replaceNullWithBlankRemarksInRegisteredTutorObject(registeredTutorObj);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("registeredTutorObj", registeredTutorObj);
@@ -397,8 +360,7 @@ public class TutorService implements TutorConstants {
 	
 	/***********************************************************************************************************************************/
 	public List<RegisteredTutor> getRegisteredTutorList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final String baseQuery = queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor");
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, null, null, gridComponent), new RegisteredTutorRowMapper());
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor"), null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
 	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -798,5 +760,15 @@ public class TutorService implements TutorConstants {
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
 		}
+	}
+	
+	public RegisteredTutor getRegisteredTutorFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+		if (null != userId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("userId", userId.toLowerCase());
+			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
+									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorUserIdFilter"), paramsMap, new RegisteredTutorRowMapper());
+		}
+		return null;
 	}
 }

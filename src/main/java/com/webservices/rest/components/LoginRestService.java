@@ -47,6 +47,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	private String oldPassword;
 	private String newPassword;
 	private String retypeNewPassword;
+	private String encryptedUserPassword;
 	
 	@Path(REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -136,10 +137,11 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.newPassword = newPassword;
 		this.retypeNewPassword = retypeNewPassword;
 		this.user = getActiveUser(request);
+		this.encryptedUserPassword = getLoginService().getUserFromDbUsingUserIdSwitchByUserType(this.user.getUserId(), this.user.getUserType()).getEncryptedPassword();
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
-			getLoginService().changePassword(getActiveUser(request), newPassword, LoginUtils.getEmailIdOfUserInSession(request));
+			getLoginService().changePassword(getActiveUser(request), this.encryptedUserPassword, newPassword, LoginUtils.getEmailIdOfUserInSession(request));
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Successfully changed password");
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -245,7 +247,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		try {
 			final String decryptUserPasswordFromUI = SecurityUtil.decryptClientSide(this.oldPassword);
-			final String decryptUserPasswordFromSession = SecurityUtil.decrypt(this.user.getEncyptedPassword());
+			final String decryptUserPasswordFromSession = SecurityUtil.decrypt(this.encryptedUserPassword);
 			if (!decryptUserPasswordFromSession.equals(decryptUserPasswordFromUI)) {
 				ApplicationUtils.appendMessageInMapAttribute(
 						this.securityFailureResponse, 

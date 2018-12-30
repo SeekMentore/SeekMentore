@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="employee">
+	<query type="select" id="selectEmployee">
+		SELECT
+            EMP.*,
+            IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EMP.UPDATED_BY), EMP.UPDATED_BY) AS UPDATED_BY_NAME
+        FROM EMPLOYEE EMP
+	</query>
+	<query type="filter" id="employeeUserIdFilter">
+		WHERE LOWER(USER_ID) = LOWER(:userId)
+	</query>
+	<query type="update" id="updateEmployeePassword" paramClass="com.model.User">
+		UPDATE EMPLOYEE SET 
+			ENCRYPTED_PASSWORD = :encryptedPassword 
+		WHERE USER_ID = :userId
+	</query>
+</queryMapper>

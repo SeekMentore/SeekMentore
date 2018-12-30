@@ -18,27 +18,17 @@ import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.components.CommonsConstants;
 import com.dao.ApplicationDao;
-import com.model.Employee;
 import com.model.ErrorPacket;
-import com.model.User;
-import com.model.components.RegisteredTutor;
-import com.model.components.SubscribedCustomer;
 import com.model.components.commons.SelectLookup;
 import com.model.mail.ApplicationMail;
 import com.model.mail.EmailTemplate;
 import com.model.mail.MailAttachment;
 import com.model.rowmappers.ApplicationMailRowMapper;
 import com.model.rowmappers.EmailTemplateRowMapper;
-import com.model.rowmappers.EmployeeRowMapper;
 import com.model.rowmappers.MailAttachmentRowMapper;
-import com.model.rowmappers.RegisteredTutorRowMapper;
-import com.model.rowmappers.SelectLookupRowMapper;
-import com.model.rowmappers.SubscribedCustomerRowMapper;
-import com.model.rowmappers.UserRowMapper;
 import com.service.QueryMapperService;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;
-import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_COMMONS_SERVICE)
 public class CommonsService implements CommonsConstants {
@@ -55,7 +45,6 @@ public class CommonsService implements CommonsConstants {
 	@PostConstruct
 	public void init() {}
 	
-	@Transactional
 	public List<ApplicationMail> getPedingEmailList(final int numberOfRecords) {
 		return applicationDao.findAllWithoutParams("SELECT MAIL_ID, MAIL_TYPE, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT FROM MAIL_QUEUE WHERE MAIL_SENT = 'N' ORDER BY ENTRY_DATE", new ApplicationMailRowMapper());
 	}
@@ -75,115 +64,6 @@ public class CommonsService implements CommonsConstants {
 		return mailAttachments;
 	}
 	
-	@Transactional
-	public User getUserFromEmployeeDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("SELECT * FROM EMPLOYEE WHERE LOWER(USER_ID) = :userId", paramsMap, new UserRowMapper());
-		}
-		return null;
-	}
-	
-	@Transactional
-	public Employee getEmployeeFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("SELECT * FROM EMPLOYEE WHERE LOWER(USER_ID) = :userId", paramsMap, new EmployeeRowMapper());
-		}
-		return null;
-	}
-	
-	@Transactional
-	public User getUserFromTutorDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("Select R.*, 'Tutor' USER_TYPE from REGISTERED_TUTOR R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
-		}
-		return null;
-	}
-	
-	@Transactional
-	public RegisteredTutor getTutorFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("Select R.*, 'Tutor' USER_TYPE from REGISTERED_TUTOR R WHERE USER_ID = :userId", paramsMap, new RegisteredTutorRowMapper());
-		}
-		return null;
-	}
-	
-	@Transactional
-	public User getUserFromSubscribedCustomerDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("Select R.*, 'Customer' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new UserRowMapper());
-		}
-		return null;
-	}
-	
-	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (null != userId) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find("Select R.*, 'Customer' USER_TYPE from SUBSCRIBED_CUSTOMER R WHERE USER_ID = :userId", paramsMap, new SubscribedCustomerRowMapper());
-		}
-		return null;
-	}
-	
-	@Transactional
-	public List<SelectLookup> getSelectLookupEntryList(final String selectLookupTable, final Object[] paramlist) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		for (int i = 0; i< paramlist.length; i++) {
-			paramsMap.put(String.valueOf(i), paramlist[i]);
-		}
-		return applicationDao.findAll("SELECT * FROM SELECT_LOOKUP_TABLE where VALUE IN (QUESTION_MARK_PLACE_HOLDER)".replaceAll("SELECT_LOOKUP_TABLE", selectLookupTable).replaceAll("QUESTION_MARK_PLACE_HOLDER", generatePlaceHolderMarkAsPerParamNumber(paramlist)), paramsMap, new SelectLookupRowMapper());
-	}
-	
-	public String getNameOfUserFromUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
-		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(userId)) {
-			final User user = getUserFromEmployeeDbUsingUserId(userId);
-			if (null != user) {
-				return user.getName();
-			}
-		}
-		return EMPTY_STRING;
-	}
-	
-	public String preapreLookupLabelString(final String selectLookupTable, final String value, final boolean multiSelect, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final StringBuilder multiLineString = new StringBuilder(EMPTY_STRING);
-		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(value)) {
-			if (multiSelect) {
-				final List<SelectLookup> selectLookupList = getSelectLookupEntryList(selectLookupTable, value.split(SEMICOLON));
-				for(final SelectLookup selectLookup : selectLookupList) {
-					multiLineString.append(selectLookup.getLabel());
-					if (ValidationUtils.validatePlainNotNullAndEmptyTextString(selectLookup.getDescription())) {
-						multiLineString.append(WHITESPACE).append(selectLookup.getDescription());
-					}
-					multiLineString.append(delimiter);
-				}
-			} else {
-				multiLineString.append(getSelectLookupItem(selectLookupTable, value).getLabel());
-			}
-		}
-		return multiLineString.toString();
-	}
-	
-	private String generatePlaceHolderMarkAsPerParamNumber(final Object[] paramlist) {
-		final StringBuilder questionMarks = new StringBuilder(EMPTY_STRING);
-		for(int i = 0; i< paramlist.length; i++) {
-			if (i < paramlist.length - 1)
-				questionMarks.append(":"+i+",");
-			else 
-				questionMarks.append(":"+i);
-		}
-		return questionMarks.toString();
-	}
-	
-	/****************************************************************************************************************************/
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
 		return applicationLookupDataService.getSelectLookupList(selectLookUpTable);
 	}

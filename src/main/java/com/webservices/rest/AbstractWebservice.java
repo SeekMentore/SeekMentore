@@ -23,10 +23,6 @@ public abstract class AbstractWebservice {
 		return LoginUtils.getUserTypeFromSession(request);
 	}
 	
-	public <T extends Object> T getLoggedInUserTypeObject(final HttpServletRequest request, Class<T> type) throws Exception {
-		return LoginUtils.getUserTypeObjectFromSession(request, type);
-	}
-	
 	public String getActiveUserId(final HttpServletRequest request) throws Exception {
 		return getLoggedInUserId(request);
 	}
@@ -41,10 +37,6 @@ public abstract class AbstractWebservice {
 	
 	public String getActiveUserType(final HttpServletRequest request) {
 		return getLoggedInUserType(request);
-	}
-	
-	public <T extends Object> T getActiveUserTypeObject(final HttpServletRequest request, Class<T> type) throws Exception {
-		return getLoggedInUserTypeObject(request, type);
 	}
 	
 	public String getServerURL(final HttpServletRequest request) {

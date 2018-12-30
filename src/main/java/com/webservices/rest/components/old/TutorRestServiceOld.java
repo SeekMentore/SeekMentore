@@ -64,7 +64,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_LOAD_TUTOR_RECORD;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getTutorService().getTutorRecordWithDocuments(getActiveUserTypeObject(request, RegisteredTutor.class).getACopy()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getTutorService().getTutorRecordWithDocuments(((RegisteredTutor)getActiveUser(request)).clone()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -95,7 +95,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_DETAILS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			registeredTutorObj.setTutorId(getActiveUserTypeObject(request, RegisteredTutor.class).getTutorId());
+			registeredTutorObj.setTutorId(((RegisteredTutor)getActiveUser(request)).getTutorId());
 			return JSONUtils.convertObjToJSONString(getTutorService().updateDetails(registeredTutorObj), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -112,7 +112,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT;
-		this.tutorId = getActiveUserTypeObject(request, RegisteredTutor.class).getTutorId();
+		this.tutorId = ((RegisteredTutor)getActiveUser(request)).getTutorId();
 		this.documentType = documentType;
 		doSecurity(request);
 		if (this.securityPassed) {
@@ -136,7 +136,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPLOAD_DOCUMENTS;
-		this.tutorId = getActiveUserTypeObject(request, RegisteredTutor.class).getTutorId();
+		this.tutorId = ((RegisteredTutor)getActiveUser(request)).getTutorId();
 		this.photoFileName = (null != uploadedFileDetailFilePhoto) ? uploadedFileDetailFilePhoto.getFileName() : null; 
 		this.panCardFileName = (null != uploadedFileDetailFilePan) ? uploadedFileDetailFilePan.getFileName() : null; 
 		this.aadhaarCardFileName = (null != uploadedFileDetailFileAadhaarCard) ? uploadedFileDetailFileAadhaarCard.getFileName() : null; 

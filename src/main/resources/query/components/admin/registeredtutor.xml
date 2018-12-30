@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="admin-registeredtutor">
+	<query type="insert" id="insertRegisteredtutor" paramClass="com.model.components.RegisteredTutor">
+		INSERT INTO REGISTERED_TUTOR
+			(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, 
+			TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, 
+			ADDRESS_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE, USER_TYPE)
+		VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, 
+				:transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, 
+				:addressDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, :preferredTeachingType, 'Tutor')
+	</query>
     <query type="select" id="selectRegisteredtutor">
 		SELECT
             R.*,
@@ -7,6 +16,9 @@
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.WHO_BLACKLISTED), R.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.WHO_UN_BLACKLISTED), R.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME
         FROM REGISTERED_TUTOR R
+	</query>
+	<query type="filter" id="registeredtutorUserIdFilter">
+		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
     <query type="filter" id="registeredtutorEmailFilter">
 		WHERE EMAIL_ID = :emailId
@@ -34,13 +46,9 @@
 			UPDATED_BY = :updatedBy
 		WHERE TUTOR_ID = :tutorId
 	</query>
-	<query type="insert" id="insertRegisteredtutor" paramClass="com.model.components.RegisteredTutor">
-		INSERT INTO REGISTERED_TUTOR
-			(NAME, CONTACT_NUMBER, EMAIL_ID, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, 
-			TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, 
-			ADDRESS_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE)
-		VALUES(:name, :contactNumber, :emailId, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, 
-				:transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, 
-				:addressDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, :preferredTeachingType)
+	<query type="update" id="updateRegisteredtutorPassword" paramClass="com.model.User">
+		UPDATE REGISTERED_TUTOR SET 
+			ENCRYPTED_PASSWORD = :encryptedPassword 
+		WHERE USER_ID = :userId
 	</query>
 </queryMapper>

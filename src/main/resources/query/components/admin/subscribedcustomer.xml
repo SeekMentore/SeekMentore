@@ -2,9 +2,9 @@
 <queryMapper namespace="admin-subscribedcustomer">
 	<query type="insert" id="insertSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		INSERT INTO SUBSCRIBED_CUSTOMER
-			(NAME, CONTACT_NUMBER, EMAIL_ID, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID) 
+			(NAME, CONTACT_NUMBER, EMAIL_ID, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
 		VALUES
-			(:name, :contactNumber, :emailId, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId)
+			(:name, :contactNumber, :emailId, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
 	</query>
 	<query type="select" id="selectSubscribedCustomer">
 		SELECT
@@ -13,6 +13,9 @@
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_UN_BLACKLISTED), C.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM SUBSCRIBED_CUSTOMER C
+	</query>
+	<query type="filter" id="subscribedCustomerUserIdFilter">
+		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
 		WHERE EMAIL_ID = :emailId
@@ -39,5 +42,10 @@
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
 		WHERE CUSTOMER_ID = :customerId
+	</query>
+	<query type="update" id="updateSubscribedCustomerPassword" paramClass="com.model.User">
+		UPDATE SUBSCRIBED_CUSTOMER SET 
+			ENCRYPTED_PASSWORD = :encryptedPassword 
+		WHERE USER_ID = :userId
 	</query>
 </queryMapper>

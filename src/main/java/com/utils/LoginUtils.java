@@ -20,10 +20,9 @@ import com.model.Employee;
 import com.model.LogonTracker;
 import com.model.User;
 import com.model.UserAccessOptions;
-import com.model.components.RegisteredTutor;
-import com.model.components.SubscribedCustomer;
 import com.service.LoginService;
 import com.service.components.CommonsService;
+import com.service.components.EmployeeService;
 import com.utils.context.AppContext;
 
 public class LoginUtils implements LoginConstants {
@@ -42,7 +41,7 @@ public class LoginUtils implements LoginConstants {
 	}
 	
 	private static void createTokensForNewSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final User user) throws Exception {
-		final String userObjectJSONString = JSONUtils.convertObjToJSONString(ApplicationUtils.returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(user), USER_OBJECT);
+		final String userObjectJSONString = JSONUtils.convertObjToJSONString(UserUtils.returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(user), USER_OBJECT);
 		final String userAuthToken = new String(ApplicationUtils.generateBase64EncodedData(SecurityUtil.encrypt(userObjectJSONString).getBytes()));
 		final String userTypeToken = new String(ApplicationUtils.generateBase64EncodedData(SecurityUtil.encrypt(user.getUserType()).getBytes()));
 		final NewCookie userAuthCookie = new NewCookie(USER_AUTH_TOKEN, userAuthToken, "/", "." + HttpRequestUtil.getDomain(httpRequest), "", -1, false);
@@ -110,48 +109,58 @@ public class LoginUtils implements LoginConstants {
 		return userTypeToken;
 	}
 	
-	public static User getUserFromUserAuthToken(final String userAuthToken) throws Exception {
+	public static User getUserFromUserAuthToken(final String userType, final String userAuthToken) throws Exception {
 		User user = null;
 		final JsonObject tokenAsJSONObject = JSONUtils.getJSONObjectFromString(SecurityUtil.decrypt(new String(ApplicationUtils.generateBase64DecodedData(userAuthToken.getBytes()))));
 		final JsonObject userAsJSONObject = JSONUtils.getJSONObjectFromString(JSONUtils.getValueFromJSONObject(tokenAsJSONObject, USER_OBJECT, String.class));
 		if (null != userAsJSONObject) {
-			user = new User();
-			user.setName(JSONUtils.getValueFromJSONObject(userAsJSONObject, "name", String.class));
-			user.setUserId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "userId", String.class));
-			user.setUserType(JSONUtils.getValueFromJSONObject(userAsJSONObject, "userType", String.class));
-			final JsonArray pageAccessTypesJsonArray = JSONUtils.getValueFromJSONObject(userAsJSONObject, "pageAccessTypes", JsonArray.class);
-			final List<String> pageAccessTypes = new LinkedList<String>();
-			for (final Object pageAccessType : pageAccessTypesJsonArray) {
-				pageAccessTypes.add(pageAccessType.toString().replaceAll("\"", "").trim());
+			user = setupSpecificUserTypeValuesFromJsonObject(userType, userAsJSONObject);
+			if (ValidationUtils.checkObjectAvailability(user)) {
+				user.setName(JSONUtils.getValueFromJSONObject(userAsJSONObject, "name", String.class));
+				user.setEmailId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "emailId", String.class));
+				user.setContactNumber(JSONUtils.getValueFromJSONObject(userAsJSONObject, "contactNumber", String.class));
+				user.setUserId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "userId", String.class));
+				user.setUserType(JSONUtils.getValueFromJSONObject(userAsJSONObject, "userType", String.class));
+				user.setRecordLastUpdatedMillis(JSONUtils.getValueFromJSONObject(userAsJSONObject, "recordLastUpdatedMillis", Long.class));
+				user.setUpdatedBy(JSONUtils.getValueFromJSONObject(userAsJSONObject, "updatedBy", String.class));
+				final JsonArray pageAccessTypesJsonArray = JSONUtils.getValueFromJSONObject(userAsJSONObject, "pageAccessTypes", JsonArray.class);
+				final List<String> pageAccessTypes = new LinkedList<String>();
+				for (final Object pageAccessType : pageAccessTypesJsonArray) {
+					pageAccessTypes.add(pageAccessType.toString().replaceAll("\"", "").trim());
+				}
+				user.setPageAccessTypes(pageAccessTypes);
+				final JsonObject accessOptionsAsJSONObject = JSONUtils.getValueFromJSONObject(userAsJSONObject, "accessOptions", JsonObject.class);
+				final UserAccessOptions accessOptions = new UserAccessOptions();
+				accessOptions.setEmailformaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "emailformaccess", Boolean.class));
+				accessOptions.setImpersonationaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "impersonationaccess", Boolean.class));
+				user.setAccessOptions(accessOptions);
 			}
-			user.setPageAccessTypes(pageAccessTypes);
-			final JsonObject accessOptionsAsJSONObject = JSONUtils.getValueFromJSONObject(userAsJSONObject, "accessOptions", JsonObject.class);
-			final UserAccessOptions accessOptions = new UserAccessOptions();
-			accessOptions.setEmailformaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "emailformaccess", Boolean.class));
-			accessOptions.setImpersonationaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "impersonationaccess", Boolean.class));
-			user.setAccessOptions(accessOptions);
 		}
 		return user;
 	}
 	
-	public static String getUserTypeFromUserTypeToken(final String usertypeToken) throws Exception {
-		return SecurityUtil.decrypt(new String(ApplicationUtils.generateBase64DecodedData(usertypeToken.getBytes())));
-	}
-	
-	private static <T extends Object> T getUserTypeObject(final HttpServletRequest httpRequest, final Class<T> type) throws Exception {
-		final User user = getUserFromSession(httpRequest);
-		switch(user.getUserType()) {
+	private static User setupSpecificUserTypeValuesFromJsonObject(final String userType, final JsonObject userAsJSONObject) {
+		switch(userType) {
 			case USER_TYPE_EMPLOYEE : {
-				return type.cast(getCommonsService().getEmployeeFromDbUsingUserId(user.getUserId()));
+				final Employee employee = new Employee();
+				employee.setEmployeeId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "employeeId", Long.class));
+				employee.setEmailDomain(JSONUtils.getValueFromJSONObject(userAsJSONObject, "emailDomain", String.class));
+				return employee;
 			}
-			case USER_TYPE_TUTOR : {
-				return type.cast(getCommonsService().getTutorFromDbUsingUserId(user.getUserId()));
+			case USER_TYPE_TUTOR    : {
+				// TODO
+				return null;
 			}
 			case USER_TYPE_CUSTOMER : {
-				return type.cast(getCommonsService().getSubscribedCustomerFromDbUsingUserId(user.getUserId()));
+				// TODO
+				return null;
 			}
+			default	: return null;
 		}
-		return null;
+	}
+	
+	public static String getUserTypeFromUserTypeToken(final String usertypeToken) throws Exception {
+		return SecurityUtil.decrypt(new String(ApplicationUtils.generateBase64DecodedData(usertypeToken.getBytes())));
 	}
 	
 	public static boolean validateExistingSession(final HttpServletRequest httpRequest) {
@@ -172,7 +181,7 @@ public class LoginUtils implements LoginConstants {
 		}
 		if (null == user) {
 			try {
-				user = getUserFromUserAuthToken(getUserAuthToken(httpRequest));
+				user = getUserFromUserAuthToken(getUserTypeFromSession(httpRequest), getUserAuthToken(httpRequest));
 			} catch (Exception e) {
 				LoggerUtils.logError("No user found in Token;");
 			}
@@ -198,25 +207,10 @@ public class LoginUtils implements LoginConstants {
 		return usertype;
 	}
 	
-	public static <T extends Object> T getUserTypeObjectFromSession(final HttpServletRequest httpRequest, Class<T> type) throws Exception {
-		return getUserTypeObject(httpRequest, type);
-	}
-	
 	public static String getEmailIdOfUserInSession(final HttpServletRequest httpRequest) throws Exception {
-		final String userType = getUserTypeFromSession(httpRequest);
-		switch(userType) {
-			case USER_TYPE_EMPLOYEE : {
-				final Employee employee = Employee.class.cast(getUserTypeObject(httpRequest, Employee.class));
-				return employee.getUserId() + "@" + employee.getEmailDomain();
-			}
-			case USER_TYPE_TUTOR : {
-				final RegisteredTutor registeredTutor = RegisteredTutor.class.cast(getUserTypeObject(httpRequest, RegisteredTutor.class));
-				return registeredTutor.getEmailId();
-			}
-			case USER_TYPE_CUSTOMER : {
-				final SubscribedCustomer subscribedCustomer = SubscribedCustomer.class.cast(getUserTypeObject(httpRequest, SubscribedCustomer.class));
-				return subscribedCustomer.getEmailId();
-			}
+		final User user = getUserFromSession(httpRequest);
+		if (ValidationUtils.checkObjectAvailability(user)) {
+			return user.getEmailId();
 		}
 		throw new ApplicationException("No Email Id in Session");
 	}
@@ -252,5 +246,9 @@ public class LoginUtils implements LoginConstants {
 	
 	public static CommonsService getCommonsService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_COMMONS_SERVICE, CommonsService.class);
+	}
+	
+	public static EmployeeService getEmployeeService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_EMPLOYEE_SERVICE, EmployeeService.class);
 	}
 }

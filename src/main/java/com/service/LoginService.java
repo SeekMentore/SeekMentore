@@ -1,6 +1,5 @@
 package com.service;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +24,9 @@ import com.model.PasswordChangeTracker;
 import com.model.User;
 import com.model.UserAccessOptions;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
+import com.service.components.EmployeeService;
+import com.service.components.TutorService;
 import com.utils.MailUtils;
 import com.utils.SecurityUtil;
 import com.utils.VelocityUtils;
@@ -39,12 +41,21 @@ public class LoginService implements LoginConstants {
 	private transient CommonsService commonsService;
 	
 	@Autowired
+	private transient EmployeeService employeeService;
+	
+	@Autowired
+	private transient TutorService tutorService;
+	
+	@Autowired
+	private transient CustomerService customerService;
+	
+	@Autowired
 	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	public User validateCredential(final Credential credential) throws Exception {
 		User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
 		if (null != user) {
-			final String decryptUserPasswordFromDB = SecurityUtil.decrypt(user.getEncyptedPassword());
+			final String decryptUserPasswordFromDB = SecurityUtil.decrypt(user.getEncryptedPassword());
 			final String decryptUserPasswordFromUI = SecurityUtil.decryptClientSide(credential.getClientSideEncypytedPassword());
 			if (decryptUserPasswordFromDB.equals(decryptUserPasswordFromUI)) {
 				if (user.getUserType().equals(credential.getUserType())) {
@@ -90,11 +101,11 @@ public class LoginService implements LoginConstants {
 		applicationDao.executeUpdate("INSERT INTO PASSWORD_CHANGE_TRACKER(USER_ID, USER_TYPE, CHANGE_TIME, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) VALUES(:userId, :userType, :changeTime, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)", paramsMap);
 	}
 	
-	private User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
 		switch(userType) {
-			case USER_TYPE_EMPLOYEE : return commonsService.getUserFromEmployeeDbUsingUserId(userId);
-			case USER_TYPE_TUTOR    : return commonsService.getUserFromTutorDbUsingUserId(userId);
-			case USER_TYPE_CUSTOMER : return commonsService.getUserFromSubscribedCustomerDbUsingUserId(userId);
+			case USER_TYPE_EMPLOYEE : return employeeService.getEmployeeFromDbUsingUserId(userId);
+			case USER_TYPE_TUTOR    : return tutorService.getRegisteredTutorFromDbUsingUserId(userId);
+			case USER_TYPE_CUSTOMER : return customerService.getSubscribedCustomerFromDbUsingUserId(userId);
 			default	: return null;
 		}
 	}
@@ -145,11 +156,10 @@ public class LoginService implements LoginConstants {
 		user.setAccessOptions(accessOptions);
 	}
 
-	public void changePassword(final User user, final String newPassword, final String emailIdOfUserInSession) throws Exception {
+	public void changePassword(final User user, final String encryptedOldPassword, final String newPassword, final String emailIdOfUserInSession) throws Exception {
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
-		final String encryptedOldPassword = user.getEncyptedPassword();
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
-		user.setEncyptedPassword(encryptedNewPassword);
+		user.setEncryptedPassword(encryptedNewPassword);
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
 		passwordChangeTracker.setUserId(user.getUserId());
 		passwordChangeTracker.setUserType(user.getUserType());
@@ -175,21 +185,21 @@ public class LoginService implements LoginConstants {
 				null);
 	}
 	
-	private void changePasswordAsPerUserType(final String userType, final String loggedInUserId, final String encryptedNewPassword) throws IOException {
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("userId", loggedInUserId);
-		params.put("encryptedPassword", encryptedNewPassword);
+	private void changePasswordAsPerUserType(final String userType, final String loggedInUserId, final String encryptedNewPassword) throws Exception {
+		final User user = new User();
+		user.setUserId(loggedInUserId);
+		user.setEncryptedPassword(encryptedNewPassword);
 		switch(userType) {
 			case USER_TYPE_EMPLOYEE : {
-				applicationDao.executeUpdate("UPDATE EMPLOYEE SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				applicationDao.executeUpdateWithQueryMapper("employee", "updateEmployeePassword", user);
 				break;
 			}
 			case USER_TYPE_TUTOR : {
-				applicationDao.executeUpdate("UPDATE REGISTERED_TUTOR SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorPassword", user);
 				break;
 			}
 			case USER_TYPE_CUSTOMER : {
-				applicationDao.executeUpdate("UPDATE SUBSCRIBED_CUSTOMER SET ENCRYPTED_PASSWORD = :encryptedPassword WHERE USER_ID = :userId", params);
+				applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "updateSubscribedCustomerPassword", user);
 				break;
 			}
 			default	: {

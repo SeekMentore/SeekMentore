@@ -2,49 +2,23 @@ package com.model;
 
 import java.io.Serializable;
 
-public class Employee implements Serializable {
+import com.utils.ValidationUtils;
+
+public class Employee extends User implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
-	private String employeeId;
-	private String name;
-	private String userId;
+	private Long employeeId;
 	private String emailDomain;
-	private String encyptedPassword;
-	private String userType;
 	
-	public Employee getACopy() {
-		final Employee newInstance = new Employee();
-		newInstance.employeeId = employeeId;
-		newInstance.name = name;
-		newInstance.userId = userId;
-		newInstance.emailDomain = emailDomain;
-		newInstance.userType = userType;
-		return newInstance;
-	}
-
-	public String getEmployeeId() {
+	public Employee() {}
+	
+	public Long getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	public String getEmailDomain() {
@@ -54,21 +28,20 @@ public class Employee implements Serializable {
 	public void setEmailDomain(String emailDomain) {
 		this.emailDomain = emailDomain;
 	}
-
-	public String getUserType() {
-		return userType;
-	}
-
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
-
-	public String getEncyptedPassword() {
-		return encyptedPassword;
-	}
-
-	public void setEncyptedPassword(String encyptedPassword) {
-		this.encyptedPassword = encyptedPassword;
-	}
 	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "employeeId" : return "EMPLOYEE_ID";
+			case "emailDomain" : return "EMAIL_DOMAIN";
+		}
+		return EMPTY_STRING;
+	}
+
+	@Override
+	public Employee clone() throws CloneNotSupportedException {  
+		return (Employee)super.clone();
+	}
 }

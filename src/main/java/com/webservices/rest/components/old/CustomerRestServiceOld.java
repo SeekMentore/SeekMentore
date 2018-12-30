@@ -38,7 +38,7 @@ public class CustomerRestServiceOld extends AbstractRestWebservice implements Re
 		this.methodName = REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD;
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getCustomerService().getSubscribedCustomer(getActiveUserTypeObject(request, SubscribedCustomer.class).getACopy()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(getCustomerService().getSubscribedCustomer(((SubscribedCustomer)getActiveUser(request)).clone()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
@@ -69,7 +69,7 @@ public class CustomerRestServiceOld extends AbstractRestWebservice implements Re
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_SUBSCRIBED_CUSTOMER_DETAILS;
 		doSecurity(request);
 		if (this.securityPassed) {
-			subscribedCustomerObj.setCustomerId(getActiveUserTypeObject(request, SubscribedCustomer.class).getCustomerId());
+			subscribedCustomerObj.setCustomerId(((SubscribedCustomer)getActiveUser(request)).getCustomerId());
 			return JSONUtils.convertObjToJSONString(getCustomerService().updateDetails(subscribedCustomerObj), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
