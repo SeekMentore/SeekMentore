@@ -1,6 +1,5 @@
 package com.utils;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class MailUtils implements MailConstants {
 	) throws Exception {
 		final ApplicationMail mailObject = new ApplicationMail (
 				"SIMPLE_EMAIL",
-				new Timestamp(new Date().getTime()),
+				new Date().getTime(),
 				fromAddress,
 				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
@@ -71,7 +70,7 @@ public class MailUtils implements MailConstants {
 	) throws Exception {
 		final ApplicationMail mailObject = new ApplicationMail (
 				"MIME_EMAIL",
-				new Timestamp(new Date().getTime()),
+				new Date().getTime(),
 				fromAddress,
 				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
@@ -92,7 +91,7 @@ public class MailUtils implements MailConstants {
 	) throws Exception {
 		final ApplicationMail mailObject = new ApplicationMail (
 				"SIMPLE_EMAIL",
-				new Timestamp(new Date().getTime()),
+				new Date().getTime(),
 				null,
 				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
@@ -114,7 +113,7 @@ public class MailUtils implements MailConstants {
 	) throws Exception {
 		final ApplicationMail mailObject = new ApplicationMail (
 				"MIME_EMAIL",
-				new Timestamp(new Date().getTime()),
+				new Date().getTime(),
 				null,
 				toAddressSemicolonSeparated,
 				ccAddressSemicolonSeparated,
@@ -134,7 +133,7 @@ public class MailUtils implements MailConstants {
 		for (final Map<String, Object> mailParam : mailParamList) {
 			final ApplicationMail mailObject = new ApplicationMail (
 					"MIME_EMAIL",
-					new Timestamp(new Date().getTime()),
+					new Date().getTime(),
 					null,
 					(String)mailParam.get(MAIL_PARAM_TO),
 					(String)mailParam.get(MAIL_PARAM_CC),
@@ -154,7 +153,7 @@ public class MailUtils implements MailConstants {
 	) throws Exception {
 		final ApplicationMail mailObject = new ApplicationMail (
 													"MIME_EMAIL",
-													new Timestamp(new Date().getTime()),
+													new Date().getTime(),
 													null,
 													getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(),
 													null,

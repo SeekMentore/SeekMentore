@@ -1,7 +1,6 @@
 package com.service;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,6 +60,9 @@ public class SchedulerService implements SchedulerConstants {
 	private transient EnquiryService enquiryService;
 	
 	@Autowired
+	private transient MailService mailService;
+	
+	@Autowired
 	private transient QueryMapperService queryMapperService;
 	
 	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
@@ -68,52 +70,47 @@ public class SchedulerService implements SchedulerConstants {
 		if (null != key) {
 			try {
 				LoggerUtils.logOnConsole("executeEmailSenderJob");
-				final List<ApplicationMail> mailObjList = commonsService.getPedingEmailList(20);
-				for (final ApplicationMail mailObj : mailObjList) {
-					mailObj.setAttachments(commonsService.getAttachments(mailObj.getMailId()));
-					try {
-						int retriedCounter = 0;
-						do {
-							try {
-								MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
-										mailObj.getFromAddress(), 
-										mailObj.getToAddress(), 
-										mailObj.getCcAddress(), 
-										mailObj.getBccAddress(), 
-										mailObj.getSubjectContent(), 
-										mailObj.getMessageContent(), 
-										mailObj.getAttachments());
-								// break the loop if mail sending for successful
-								break;
-							} catch (Exception e) {
-								if (retriedCounter == 1) 
-									// throw exception to bigger catch block if the retry counter is hit twice
-									throw new Exception(e);
-							}
-							retriedCounter++;
-							// This condition is just a safety check
-						} while(retriedCounter < 2);
-					} catch (Exception e) {
-						final ErrorPacket errorPacket = new ErrorPacket("executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
-						commonsService.feedErrorRecord(errorPacket);
-						final Map<String, Object> paramsMap = new HashMap<String, Object>();
-						paramsMap.put("errorOccuredWhileSending", YES);
-						paramsMap.put("errorDate", new Date(errorPacket.getOccuredAtMillis()));
-						paramsMap.put("errorDateMillis", errorPacket.getOccuredAtMillis());
-						paramsMap.put("errorTrace", errorPacket.getErrorTrace());
-						paramsMap.put("mailId", mailObj.getMailId());
-						applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_DATE_MILLIS = :errorDateMillis, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
-						continue;
-						// If exception occurred do not update the record as sent
+				final List<ApplicationMail> applicationMailList = mailService.getPedingApplicationMailList(true, 20);
+				if (ValidationUtils.checkNonEmptyList(applicationMailList)) {
+					for (final ApplicationMail applicationMail : applicationMailList) {
+						applicationMail.setAttachments(mailService.getMailAttachmentList(applicationMail.getMailId()));
+						try {
+							int retriedCounter = 0;
+							do {
+								try {
+									MailUtils.sendingCustomisedFromAddressMimeMessageEmail(
+											applicationMail.getFromAddress(), 
+											applicationMail.getToAddress(), 
+											applicationMail.getCcAddress(), 
+											applicationMail.getBccAddress(), 
+											applicationMail.getSubjectContent(), 
+											applicationMail.getMessageContent(), 
+											applicationMail.getAttachments());
+									// break the loop if mail sending for successful
+									break;
+								} catch (Exception e) {
+									if (retriedCounter == 1) 
+										// throw exception to bigger catch block if the retry counter is hit twice
+										throw new Exception(e);
+								}
+								retriedCounter++;
+								// This condition is just a safety check
+							} while(retriedCounter < 2);
+						} catch (Exception e) {
+							final ErrorPacket errorPacket = new ErrorPacket("executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
+							commonsService.feedErrorRecord(errorPacket);
+							applicationMail.setErrorOccuredWhileSending(YES);
+							applicationMail.setErrorDateMillis(errorPacket.getOccuredAtMillis());
+							applicationMail.setErrorTrace(errorPacket.getErrorTrace());
+							applicationDao.executeUpdateWithQueryMapper("mail", "updateApplicationMailSendingError", applicationMail);
+							continue;
+							// If exception occurred do not update the record as sent
+						}
+						final Date currentTimestamp = new Date();
+						applicationMail.setMailSent(YES);
+						applicationMail.setSendDateMillis(currentTimestamp.getTime());
+						applicationDao.executeUpdateWithQueryMapper("mail", "updateApplicationMailSent", applicationMail);
 					}
-					final Map<String, Object> paramsMap = new HashMap<String, Object>();
-					final Long currentMillis = new Date().getTime();
-					final Timestamp sendTimestamp = new Timestamp(currentMillis); 
-					paramsMap.put("mailSent", YES);
-					paramsMap.put("sendDate", sendTimestamp);
-					paramsMap.put("sendDateMillis", currentMillis);
-					paramsMap.put("mailId", mailObj.getMailId());
-					applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET MAIL_SENT = :mailSent, SEND_DATE = :sendDate, SEND_DATE_MILLIS = :sendDateMillis WHERE MAIL_ID = :mailId", paramsMap);
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeEmailSenderJob", key);

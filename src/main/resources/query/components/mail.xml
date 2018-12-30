@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="mail">
+	<query type="insert" id="insertApplicationMail" paramClass="com.model.mail.ApplicationMail">
+		INSERT INTO MAIL_QUEUE
+			(MAIL_TYPE, ENTRY_DATE_MILLIS, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) 
+		VALUES
+			(:mailType, :entryDateMillis, :fromAddress, :toAddress, :ccAddress, :bccAddress, :subjectContent, :messageContent, :mailSent)
+	</query>
+	<query type="insert" id="insertMailAttachment" paramClass="com.model.mail.MailAttachment">
+		INSERT INTO MAIL_ATTACHMENTS
+			(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) 
+		VALUES
+			(:mailId, :content, :filename, :applicationType)
+	</query>
+	<query type="select" id="selectApplicationMail">
+		SELECT MQ.* FROM MAIL_QUEUE MQ
+	</query>
+	<query type="filter" id="applicationMailPendingEmailFilter">
+		WHERE MAIL_SENT = 'N'
+	</query>
+	<query type="sorter" id="applicationMailSorter">
+		ORDER BY ENTRY_DATE_MILLIS
+	</query>
+	<query type="update" id="updateApplicationMailSendingError" paramClass="com.model.mail.ApplicationMail">
+		UPDATE MAIL_QUEUE SET 
+			ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, 
+			ERROR_DATE_MILLIS = :errorDateMillis, 
+			ERROR_TRACE = :errorTrace 
+		WHERE MAIL_ID = :mailId
+	</query>
+	<query type="update" id="updateApplicationMailSent" paramClass="com.model.mail.ApplicationMail">
+		UPDATE MAIL_QUEUE SET 
+			MAIL_SENT = :mailSent, 
+			SEND_DATE_MILLIS = :sendDateMillis 
+		WHERE MAIL_ID = :mailId
+	</query>
+	<query type="select" id="selectMailAttachment">
+		SELECT MA.* FROM MAIL_ATTACHMENTS MA 
+	</query>
+	<query type="filter" id="mailAttachmentMailIdFilter">
+		WHERE MAIL_ID = :mailId
+	</query>
 	<query type="select" id="selectEmailTemplate">
 		SELECT
 			ET.*,			

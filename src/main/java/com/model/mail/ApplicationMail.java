@@ -1,16 +1,18 @@
 package com.model.mail;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
-public class ApplicationMail implements Serializable {
+import com.model.ApplicationWorkbookObject;
+import com.model.GridComponentObject;
+import com.utils.ValidationUtils;
+
+public class ApplicationMail extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
-	private long mailId;
+	private Long mailId;
 	private String mailType;
-	private Date entryDate;
 	private Long entryDateMillis;
 	private String fromAddress;
 	private String toAddress;
@@ -19,10 +21,8 @@ public class ApplicationMail implements Serializable {
 	private String subjectContent;
 	private String messageContent;
 	private String mailSent;
-	private Date sendDate;
 	private Long sendDateMillis;
 	private String errorOccuredWhileSending;
-	private Date errorDate;
 	private Long errorDateMillis;
 	private String errorTrace;
 	private List<MailAttachment> attachments;
@@ -31,7 +31,7 @@ public class ApplicationMail implements Serializable {
 	
 	public ApplicationMail(
 		String mailType,
-		Date entryDate,
+		Long entryDateMillis,
 		String fromAddress,
 		String toAddress,
 		String ccAddress,
@@ -41,8 +41,7 @@ public class ApplicationMail implements Serializable {
 		List<MailAttachment> attachments
 	) {
 		this.mailType = mailType;
-		this.entryDate = entryDate;
-		this.entryDateMillis = entryDate.getTime();
+		this.entryDateMillis = entryDateMillis;
 		this.fromAddress = fromAddress;
 		this.toAddress = toAddress;
 		this.ccAddress = ccAddress;
@@ -52,20 +51,12 @@ public class ApplicationMail implements Serializable {
 		this.attachments = attachments;
 	}
 
-	public long getMailId() {
+	public Long getMailId() {
 		return mailId;
 	}
 
-	public void setMailId(long mailId) {
+	public void setMailId(Long mailId) {
 		this.mailId = mailId;
-	}
-
-	public Date getEntryDate() {
-		return entryDate;
-	}
-
-	public void setEntryDate(Date entryDate) {
-		this.entryDate = entryDate;
 	}
 
 	public String getFromAddress() {
@@ -116,14 +107,6 @@ public class ApplicationMail implements Serializable {
 		this.messageContent = messageContent;
 	}
 
-	public Date getSendDate() {
-		return sendDate;
-	}
-
-	public void setSendDate(Date sendDate) {
-		this.sendDate = sendDate;
-	}
-
 	public List<MailAttachment> getAttachments() {
 		return attachments;
 	}
@@ -154,14 +137,6 @@ public class ApplicationMail implements Serializable {
 
 	public void setErrorOccuredWhileSending(String errorOccuredWhileSending) {
 		this.errorOccuredWhileSending = errorOccuredWhileSending;
-	}
-
-	public Date getErrorDate() {
-		return errorDate;
-	}
-
-	public void setErrorDate(Date errorDate) {
-		this.errorDate = errorDate;
 	}
 
 	public String getErrorTrace() {
@@ -196,4 +171,41 @@ public class ApplicationMail implements Serializable {
 		this.errorDateMillis = errorDateMillis;
 	}
 
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "mailId" : return "MAIL_ID";
+			case "mailType" : return "MAIL_TYPE";
+			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+			case "fromAddress" : return "FROM_ADDRESS";
+			case "toAddress" : return "TO_ADDRESS";
+			case "ccAddress" : return "CC_ADDRESS";
+			case "bccAddress" : return "BCC_ADDRESS";
+			case "subjectContent" : return "SUBJECT_CONTENT";
+			case "messageContent" : return "MESSAGE_CONTENT";
+			case "mailSent" : return "MAIL_SENT";
+			case "sendDateMillis" : return "SEND_DATE_MILLIS";
+			case "errorOccuredWhileSending" : return "ERROR_OCCURED_WHILE_SENDING";
+			case "errorDateMillis" : return "ERROR_DATE_MILLIS";
+			case "errorTrace" : return "ERROR_TRACE";
+		}
+		return EMPTY_STRING;
+	}
+
+	@Override
+	public ApplicationMail clone() throws CloneNotSupportedException {  
+		return (ApplicationMail)super.clone();
+	}
 }

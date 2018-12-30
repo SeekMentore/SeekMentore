@@ -1,12 +1,15 @@
 package com.service;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -17,8 +20,12 @@ import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.dao.ApplicationDao;
+import com.model.gridcomponent.GridComponent;
 import com.model.mail.ApplicationMail;
 import com.model.mail.MailAttachment;
+import com.model.rowmappers.ApplicationMailRowMapper;
+import com.model.rowmappers.MailAttachmentRowMapper;
+import com.utils.GridQueryUtils;
 import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_MAIl_SERVICE)
@@ -30,84 +37,8 @@ public class MailService implements MailConstants {
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
-	@Transactional
-	public void insertIntoMailQueue(final ApplicationMail mailObject) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("mailType", mailObject.getMailType());
-		paramsMap.put("entryDate", mailObject.getEntryDate());
-		paramsMap.put("entryDateMillis", mailObject.getEntryDate().getTime());
-		paramsMap.put("fromAddress", mailObject.getFromAddress());
-		paramsMap.put("toAddress", mailObject.getToAddress());
-		paramsMap.put("ccAddress", mailObject.getCcAddress());
-		paramsMap.put("bccAddress", mailObject.getBccAddress());
-		paramsMap.put("subjectContent", mailObject.getSubjectContent());
-		paramsMap.put("messageContent", mailObject.getMessageContent());
-		paramsMap.put("mailSent", NO);
-		final long mailId = applicationDao.insertAndReturnGeneratedKey("INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, ENTRY_DATE_MILLIS, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:entryDateMillis,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)", paramsMap);
-		if (null != mailObject.getAttachments() && !mailObject.getAttachments().isEmpty()) {
-			for(final MailAttachment attachment : mailObject.getAttachments()) {
-				final Map<String, Object> attachmentsPramsMap = new HashMap<String, Object>();
-				attachmentsPramsMap.put("mailId", mailId);
-				attachmentsPramsMap.put("content", attachment.getContent());
-				attachmentsPramsMap.put("filename", attachment.getFilename());
-				attachmentsPramsMap.put("applicationType", FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-				applicationDao.executeUpdate("INSERT INTO MAIL_ATTACHMENTS(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) VALUES(:mailId, :content, :filename, :applicationType)", attachmentsPramsMap);
-			}
-		}
-	}
-	
-	@Transactional
-	public void insertListIntoMailQueue(final List<ApplicationMail> mailList) {
-		final String baseQuery = "INSERT INTO MAIL_QUEUE(MAIL_TYPE, ENTRY_DATE, ENTRY_DATE_MILLIS, FROM_ADDRESS, TO_ADDRESS, CC_ADDRESS, BCC_ADDRESS, SUBJECT_CONTENT, MESSAGE_CONTENT, MAIL_SENT) VALUES(:mailType,:entryDate,:entryDateMillis,:fromAddress,:toAddress,:ccAddress,:bccAddress,:subjectContent,:messageContent,:mailSent)";
-		final List<ApplicationMail> mailListWithAttachments = new ArrayList<ApplicationMail>();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
-		for (final ApplicationMail mailObject : mailList) {
-			if (ValidationUtils.checkNonEmptyList(mailObject.getAttachments())) {
-				mailListWithAttachments.add(mailObject);
-			} else {
-				final Map<String, Object> paramsMap = new HashMap<String, Object>();
-				paramsMap.put("mailType", mailObject.getMailType());
-				paramsMap.put("entryDate", mailObject.getEntryDate());
-				paramsMap.put("entryDateMillis", mailObject.getEntryDate().getTime());
-				paramsMap.put("fromAddress", mailObject.getFromAddress());
-				paramsMap.put("toAddress", mailObject.getToAddress());
-				paramsMap.put("ccAddress", mailObject.getCcAddress());
-				paramsMap.put("bccAddress", mailObject.getBccAddress());
-				paramsMap.put("subjectContent", mailObject.getSubjectContent());
-				paramsMap.put("messageContent", mailObject.getMessageContent());
-				paramsMap.put("mailSent", NO);
-				paramsList.add(paramsMap);
-			}
-		}
-		if (ValidationUtils.checkNonEmptyList(paramsList)) {
-			applicationDao.executeBatchUpdate(baseQuery, paramsList);
-		}
-		if (ValidationUtils.checkNonEmptyList(mailListWithAttachments)) {
-			for (final ApplicationMail mailObject : mailList) {
-				final Map<String, Object> paramsMap = new HashMap<String, Object>();
-				paramsMap.put("mailType", mailObject.getMailType());
-				paramsMap.put("entryDate", mailObject.getEntryDate());
-				paramsMap.put("fromAddress", mailObject.getFromAddress());
-				paramsMap.put("toAddress", mailObject.getToAddress());
-				paramsMap.put("ccAddress", mailObject.getCcAddress());
-				paramsMap.put("bccAddress", mailObject.getBccAddress());
-				paramsMap.put("subjectContent", mailObject.getSubjectContent());
-				paramsMap.put("messageContent", mailObject.getMessageContent());
-				paramsMap.put("mailSent", NO);
-				final long mailId = applicationDao.insertAndReturnGeneratedKey(baseQuery, paramsMap);
-				if (null != mailObject.getAttachments() && !mailObject.getAttachments().isEmpty()) {
-					for(final MailAttachment attachment : mailObject.getAttachments()) {
-						final Map<String, Object> attachmentsPramsMap = new HashMap<String, Object>();
-						attachmentsPramsMap.put("mailId", mailId);
-						attachmentsPramsMap.put("content", attachment.getContent());
-						attachmentsPramsMap.put("filename", attachment.getFilename());
-						attachmentsPramsMap.put("applicationType", FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-						applicationDao.executeUpdate("INSERT INTO MAIL_ATTACHMENTS(MAIL_ID, CONTENT, FILENAME, APPLICATION_TYPE) VALUES(:mailId, :content, :filename, :applicationType)", attachmentsPramsMap);
-					}
-				}
-			}
-		}
-	}
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	public void sendEmail (final SimpleMailMessage mailMessage) {
 		mailSender.send(mailMessage);
@@ -116,4 +47,79 @@ public class MailService implements MailConstants {
 	public void sendEmail (final MimeMessagePreparator mimeMessagePreparator) {
         mailSender.send(mimeMessagePreparator);
     }
+	
+	@Transactional
+	public void insertIntoMailQueue(final ApplicationMail applicationMail) throws Exception {
+		applicationMail.setMailSent(NO);
+		final Long mailId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("mail", "insertApplicationMail", applicationMail);
+		if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
+			for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
+				mailAttachment.setMailId(mailId);
+				mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
+				applicationDao.executeUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachment);
+			}
+		}
+	}
+	
+	@Transactional
+	public void insertListIntoMailQueue(final List<ApplicationMail> mpplicationMailList) throws Exception {
+		final List<ApplicationMail> mailListWithAttachments = new LinkedList<ApplicationMail>();
+		final List<ApplicationMail> paramObjectList = new LinkedList<ApplicationMail>();
+		for (final ApplicationMail applicationMail : mpplicationMailList) {
+			applicationMail.setMailSent(NO);
+			if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
+				mailListWithAttachments.add(applicationMail);
+			} else {
+				paramObjectList.add(applicationMail);
+			}
+		}
+		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertApplicationMail", paramObjectList);
+		}
+		if (ValidationUtils.checkNonEmptyList(mailListWithAttachments)) {
+			for (final ApplicationMail applicationMail : mailListWithAttachments) {
+				final Long mailId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("mail", "insertApplicationMail", applicationMail);
+				if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
+					for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
+						mailAttachment.setMailId(mailId);
+						mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
+						applicationDao.executeUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachment);
+					}
+				}
+			}
+		}
+	}
+	
+	public List<ApplicationMail> getApplicationMailList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final String baseQuery = queryMapperService.getQuerySQL("mail", "selectApplicationMail");
+		final String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("mail", "applicationMailSorter");
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new ApplicationMailRowMapper());
+	}
+	
+	public List<ApplicationMail> getPedingApplicationMailList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, ApplicationMail.class);
+		} else {
+			gridComponent = new GridComponent(ApplicationMail.class);
+		}
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("mail", "applicationMailPendingEmailFilter"));
+		return getApplicationMailList(gridComponent);
+	}
+	
+	public List<MailAttachment> getMailAttachmentList(final Long mailId) throws IOException, MessagingException {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("mailId", mailId);
+		final List<MailAttachment> dbMailAttachmentList = applicationDao.findAll(queryMapperService.getQuerySQL("mail", "selectMailAttachment")
+																				+ queryMapperService.getQuerySQL("mail", "mailAttachmentMailIdFilter"), paramsMap, new MailAttachmentRowMapper());
+		final List<MailAttachment> mailAttachmentList = new LinkedList<MailAttachment>();
+		if (ValidationUtils.checkNonEmptyList(dbMailAttachmentList)) {
+			// Converting DB attachment list in JMailSender Attachment list
+			for (final MailAttachment mailAttachment : dbMailAttachmentList) {
+				mailAttachmentList.add(new MailAttachment(mailAttachment.getFilename(), mailAttachment.getContent(), mailAttachment.getApplicationType()));
+			}
+		}
+		return ValidationUtils.checkNonEmptyList(mailAttachmentList) ? mailAttachmentList : null;
+	}
 }
