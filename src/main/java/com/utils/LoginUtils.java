@@ -1,6 +1,5 @@
 package com.utils;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +27,11 @@ import com.utils.context.AppContext;
 public class LoginUtils implements LoginConstants {
 	
 	public static void createNewSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final User user) throws Exception {
+		final Date currentTimestamp = new Date();
 		final LogonTracker logonTracker = new LogonTracker();
 		logonTracker.setUserId(user.getUserId());
 		logonTracker.setUserType(user.getUserType());
-		logonTracker.setLoginTime(new Timestamp(new Date().getTime()));
-		logonTracker.setLoginTimeMillis(logonTracker.getLoginTime().getTime());
+		logonTracker.setLoginTimeMillis(currentTimestamp.getTime());
 		logonTracker.setLoginFrom(WebServiceUtils.getUserAgent(httpRequest));
 		logonTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
 		getLoginService().feedLogonTracker(logonTracker);

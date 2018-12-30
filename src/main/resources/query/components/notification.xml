@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="notification">
+	<query type="select" id="selectAlertReminder">
+		SELECT
+			A.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = A.INITIATED_BY), A.INITIATED_BY) AS INITIATED_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = A.ACTION_BY), A.ACTION_BY) AS ACTION_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = A.RECIPIENT_USER_ID), A.RECIPIENT_USER_ID) AS RECIPIENT_USER_NAME
+		FROM ALERT_REMINDER A
+	</query>
+	<query type="filter" id="alertReminderRecipientUserIdFilter">
+		WHERE RECIPIENT_USER_ID = :userId
+	</query>
+    <query type="sorter" id="alertReminderExistingSorter">
+		ORDER BY INITIATED_DATE_MILLIS ASC
+	</query>
+	<query type="select" id="selectTask">
+		SELECT
+			T.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.INITIATED_BY), T.INITIATED_BY) AS INITIATED_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.ACTION_BY), T.ACTION_BY) AS ACTION_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.RECIPIENT_USER_ID), T.RECIPIENT_USER_ID) AS RECIPIENT_USER_NAME
+		FROM TASK T
+	</query>
+	<query type="filter" id="taskRecipientUserIdFilter">
+		WHERE RECIPIENT_USER_ID = :userId
+	</query>
+    <query type="sorter" id="taskExistingSorter">
+		ORDER BY INITIATED_DATE_MILLIS ASC
+	</query>
+	<query type="select" id="selectWorkflow">
+		SELECT
+			W.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = W.INITIATED_BY), W.INITIATED_BY) AS INITIATED_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = W.ACTION_BY), W.ACTION_BY) AS ACTION_BY_NAME,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = W.RECIPIENT_USER_ID), W.RECIPIENT_USER_ID) AS RECIPIENT_USER_NAME
+		FROM WORKFLOW W
+	</query>
+	<query type="filter" id="workflowRecipientUserIdFilter">
+		WHERE RECIPIENT_USER_ID = :userId
+	</query>
+    <query type="sorter" id="workflowExistingSorter">
+		ORDER BY INITIATED_DATE_MILLIS ASC
+	</query>
+</queryMapper>

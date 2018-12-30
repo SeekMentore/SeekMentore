@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="error">
+	<query type="insert" id="insertErrorPacket" paramClass="com.model.ErrorPacket">
+		INSERT INTO APP_ERROR_REPORT
+			(OCCURED_AT_MILLIS, REQUEST_URI, ERROR_TRACE) 
+		VALUES
+			(:occuredAtMillis, :requestURI, :errorTrace)
+	</query>
+	<query type="select" id="selectErrorPacket">
+		SELECT 
+			AER.*
+		FROM APP_ERROR_REPORT AER
+	</query>
+</queryMapper>

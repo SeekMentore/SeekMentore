@@ -1,8 +1,5 @@
 package com.utils;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -80,7 +77,7 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
-		final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
+		final ErrorPacket errorPacket = new ErrorPacket("RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
 		try {
 			getCommonsService().feedErrorRecord(errorPacket);
 		} catch (Exception e) {}

@@ -1,8 +1,6 @@
 package com.view.http.filter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -58,7 +56,7 @@ public class PreAuthenticationFilter extends AbstractWebservice implements Filte
 				if (LoginUtils.validateExistingSession(httpRequest)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Not a valid user in session.");
+					final ErrorPacket errorPacket = new ErrorPacket(pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Not a valid user in session.");
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.writeError(404, pageURL + " - Is not a public URL, you should be logged in to view the contents", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 				}

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.utils.ValidationUtils;
 
-public class AWSS3DeleteReport extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
+public class AWSS3DeleteReport extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
@@ -118,5 +118,10 @@ public class AWSS3DeleteReport extends GridComponentObject implements Serializab
 			case "userType" : return "USER_TYPE";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public AWSS3DeleteReport clone() throws CloneNotSupportedException {  
+		return (AWSS3DeleteReport)super.clone();
 	}
 }

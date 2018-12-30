@@ -2,23 +2,23 @@ package com.model.rowmappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import com.model.ErrorPacket;
 import com.utils.ExceptionUtils;
+import com.utils.GridComponentUtils;
 
 public class ErrorPacketRowMapper implements RowMapper<ErrorPacket> {
 
 	@Override
 	public ErrorPacket mapRow(ResultSet row, int rowNum) throws SQLException {
 		final ErrorPacket errorPacket = new ErrorPacket();
-		errorPacket.setErrorId(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_ID", Long.class));
-		errorPacket.setOccuredAt(ExceptionUtils.exceptionHandlerForRowMapper(row, "OCCURED_AT", Timestamp.class));
-		errorPacket.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, "OCCURED_AT_MILLIS", Long.class));
-		errorPacket.setRequestURI(ExceptionUtils.exceptionHandlerForRowMapper(row, "REQUEST_URI", String.class));
-		errorPacket.setErrorTrace(ExceptionUtils.exceptionHandlerForRowMapper(row, "ERROR_TRACE", String.class));
+		errorPacket.setErrorId(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("errorId"), Long.class));
+		errorPacket.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("occuredAtMillis"), Long.class));
+		errorPacket.setRequestURI(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("requestURI"), String.class));
+		errorPacket.setErrorTrace(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("errorTrace"), String.class));
+		GridComponentUtils.mapGridPseudoColumnsForRecords(errorPacket, row, rowNum);
 		return errorPacket;
 	}
 

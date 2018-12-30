@@ -18,6 +18,7 @@ import com.constants.BeanConstants;
 import com.constants.SchedulerConstants;
 import com.constants.components.EnquiryConstants;
 import com.dao.ApplicationDao;
+import com.exception.ApplicationException;
 import com.model.ErrorPacket;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
@@ -93,12 +94,12 @@ public class SchedulerService implements SchedulerConstants {
 							// This condition is just a safety check
 						} while(retriedCounter < 2);
 					} catch (Exception e) {
-						final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), "executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
+						final ErrorPacket errorPacket = new ErrorPacket("executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
 						commonsService.feedErrorRecord(errorPacket);
 						final Map<String, Object> paramsMap = new HashMap<String, Object>();
 						paramsMap.put("errorOccuredWhileSending", YES);
-						paramsMap.put("errorDate", errorPacket.getOccuredAt());
-						paramsMap.put("errorDateMillis", errorPacket.getOccuredAt().getTime());
+						paramsMap.put("errorDate", new Date(errorPacket.getOccuredAtMillis()));
+						paramsMap.put("errorDateMillis", errorPacket.getOccuredAtMillis());
 						paramsMap.put("errorTrace", errorPacket.getErrorTrace());
 						paramsMap.put("mailId", mailObj.getMailId());
 						applicationDao.executeUpdate("UPDATE MAIL_QUEUE SET ERROR_OCCURED_WHILE_SENDING = :errorOccuredWhileSending, ERROR_DATE = :errorDate, ERROR_DATE_MILLIS = :errorDateMillis, ERROR_TRACE = :errorTrace WHERE MAIL_ID = :mailId", paramsMap);
@@ -116,7 +117,7 @@ public class SchedulerService implements SchedulerConstants {
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeEmailSenderJob", key);
-				throw e;
+				throw new ApplicationException(e);
 			}
 			lockService.releaseLock("executeEmailSenderJob", key);
 		}
@@ -163,7 +164,7 @@ public class SchedulerService implements SchedulerConstants {
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);
-				throw e;
+				throw new ApplicationException(e);
 			}
 			lockService.releaseLock("executeTutorRegisterJob", key);
 		}
@@ -254,7 +255,7 @@ public class SchedulerService implements SchedulerConstants {
 				}
 			} catch (Exception e) {
 				lockService.releaseLock("executeSubscribedCustomerJob", key);
-				throw e;
+				throw new ApplicationException(e);
 			}
 			lockService.releaseLock("executeSubscribedCustomerJob", key);
 		}

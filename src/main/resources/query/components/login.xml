@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="login">
+	<query type="insert" id="insertLogonTracker" paramClass="com.model.LogonTracker">
+		INSERT INTO LOGON_TRACKER
+			(USER_ID, USER_TYPE, LOGIN_TIME_MILLIS, LOGIN_FROM, MACHINE_IP) 
+		VALUES
+			(:userId, :userType, :loginTimeMillis, :loginFrom, :machineIp)
+	</query>
+	<query type="select" id="selectLogonTracker">
+		SELECT 
+			LT.*,
+			CASE
+			    WHEN USER_TYPE = 'Employee' THEN IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = LT.USER_ID), LT.USER_ID)
+			    WHEN USER_TYPE = 'Tutor' THEN IFNULL((SELECT NAME FROM REGISTERED_TUTOR R WHERE R.USER_ID = LT.USER_ID), LT.USER_ID)
+			    WHEN USER_TYPE = 'Customer' THEN IFNULL((SELECT NAME FROM SUBSCRIBED_CUSTOMER S WHERE S.USER_ID = LT.USER_ID), LT.USER_ID)
+			    ELSE LT.USER_ID
+			END AS USER_NAME
+		FROM LOGON_TRACKER LT
+	</query>
+	<query type="insert" id="insertPasswordChangeTracker" paramClass="com.model.PasswordChangeTracker">
+		INSERT INTO PASSWORD_CHANGE_TRACKER
+			(USER_ID, USER_TYPE, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) 
+		VALUES
+			(:userId, :userType, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)
+	</query>
+	<query type="select" id="selectPasswordChangeTracker">
+		SELECT 
+			PCT.*,
+			CASE
+			    WHEN USER_TYPE = 'Employee' THEN IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = PCT.USER_ID), PCT.USER_ID)
+			    WHEN USER_TYPE = 'Tutor' THEN IFNULL((SELECT NAME FROM REGISTERED_TUTOR R WHERE R.USER_ID = PCT.USER_ID), PCT.USER_ID)
+			    WHEN USER_TYPE = 'Customer' THEN IFNULL((SELECT NAME FROM SUBSCRIBED_CUSTOMER S WHERE S.USER_ID = PCT.USER_ID), PCT.USER_ID)
+			    ELSE PCT.USER_ID
+			END AS USER_NAME
+		FROM PASSWORD_CHANGE_TRACKER PCT
+	</query>
+</queryMapper>

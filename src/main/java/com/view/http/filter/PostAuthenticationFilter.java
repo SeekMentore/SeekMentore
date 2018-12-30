@@ -1,8 +1,6 @@
 package com.view.http.filter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -60,7 +58,7 @@ public class PostAuthenticationFilter extends AbstractWebservice implements Filt
 				if (null != user && menuService.hasAccessToURL(user.getUserId(), pageURL, user.getPageAccessTypes(), null)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "No access to this page.");
+					final ErrorPacket errorPacket = new ErrorPacket(pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "No access to this page.");
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.writeError(404, pageURL + " - Your roles do not permit to view the contents of thiws URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 				}

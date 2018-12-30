@@ -1,21 +1,20 @@
 package com.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import com.constants.UserConstants;
+import com.utils.ValidationUtils;
 
-public class PasswordChangeTracker implements Serializable, UserConstants {
+public class PasswordChangeTracker extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
 	private Long passwordChangeId;
-	private Date changeTime;
 	private Long changeTimeMillis;
 	private String userType;
 	private String userId;
 	private String encryptedPasswordOld;
 	private String encryptedPasswordNew;
+	private String userName;
 	
 	public PasswordChangeTracker() {}
 
@@ -43,14 +42,6 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 		this.passwordChangeId = passwordChangeId;
 	}
 
-	public Date getChangeTime() {
-		return changeTime;
-	}
-
-	public void setChangeTime(Date changeTime) {
-		this.changeTime = changeTime;
-	}
-
 	public String getEncryptedPasswordOld() {
 		return encryptedPasswordOld;
 	}
@@ -74,5 +65,43 @@ public class PasswordChangeTracker implements Serializable, UserConstants {
 	public void setChangeTimeMillis(Long changeTimeMillis) {
 		this.changeTimeMillis = changeTimeMillis;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "passwordChangeId" : return "PASSWORD_CHANGE_ID";
+			case "changeTimeMillis" : return "CHANGE_TIME_MILLIS";
+			case "userType" : return "USER_TYPE";
+			case "userId" : return "USER_ID";
+			case "encryptedPasswordOld" : return "ENCRYPTED_PASSWORD_OLD";
+			case "encryptedPasswordNew" : return "ENCRYPTED_PASSWORD_NEW";
+			case "userName" : return "USER_NAME";
+		}
+		return EMPTY_STRING;
+	}
+
+	@Override
+	public PasswordChangeTracker clone() throws CloneNotSupportedException {  
+		return (PasswordChangeTracker)super.clone();
+	}
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.utils.ValidationUtils;
 
-public class Employee extends User implements Serializable, Cloneable {
+public class Employee extends User implements Serializable, Cloneable, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
@@ -27,6 +27,16 @@ public class Employee extends User implements Serializable, Cloneable {
 
 	public void setEmailDomain(String emailDomain) {
 		this.emailDomain = emailDomain;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
 	}
 	
 	@Override

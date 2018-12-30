@@ -2,6 +2,9 @@
 <queryNamespace>
 	<namespace name="mail" mapperFilePath="query/components/mail.xml"/>
 	<namespace name="aws" mapperFilePath="query/components/aws.xml"/>
+	<namespace name="login" mapperFilePath="query/components/login.xml"/>
+	<namespace name="error" mapperFilePath="query/components/error.xml"/>
+	<namespace name="notification" mapperFilePath="query/components/notification.xml"/>
 	<namespace name="employee" mapperFilePath="query/components/employee.xml"/>
 	<namespace name="complaint" mapperFilePath="query/components/commons/complaint.xml"/>
 	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>

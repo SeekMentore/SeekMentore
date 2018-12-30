@@ -82,13 +82,8 @@ public class CommonsService implements CommonsConstants {
 	
 	@Transactional
 	public void feedErrorRecord(final ErrorPacket errorPacket) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("occurredAt", errorPacket.getOccuredAt());
-		paramsMap.put("occuredAtMillis", errorPacket.getOccuredAt().getTime());
-		paramsMap.put("requestURI", errorPacket.getRequestURI());
-		paramsMap.put("errorTrace", errorPacket.getErrorTrace());
-		applicationDao.executeUpdate("INSERT INTO APP_ERROR_REPORT(OCCURED_AT, OCCURED_AT_MILLIS, REQUEST_URI, ERROR_TRACE) VALUES(:occurredAt, :occuredAtMillis, :requestURI, :errorTrace)", paramsMap);
 		try {
+			applicationDao.executeUpdateWithQueryMapper("error", "insertErrorPacket", errorPacket);
 			MailUtils.sendErrorMessageEmail(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace(), null);
 		} catch (Exception e) {
 			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);

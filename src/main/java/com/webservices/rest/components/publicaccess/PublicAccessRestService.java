@@ -1,7 +1,5 @@
 package com.webservices.rest.components.publicaccess;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -292,7 +290,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket( 
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.application.getFormattedApplicationForPrinting());
 			getCommonsService().feedErrorRecord(errorPacket);

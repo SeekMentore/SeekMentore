@@ -1,8 +1,6 @@
 package com.webservices.rest.components.old;
 
 import java.io.InputStream;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -400,7 +398,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			}
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.photoFileName + LINE_BREAK + this.panCardFileName + LINE_BREAK + this.aadhaarCardFileName + LINE_BREAK + this.tutorId);
 			getCommonsService().feedErrorRecord(errorPacket);
@@ -445,7 +443,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			}
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.remarks + LINE_BREAK + this.documentType);
 			getCommonsService().feedErrorRecord(errorPacket);
@@ -469,7 +467,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.name);
 			getCommonsService().feedErrorRecord(errorPacket);
@@ -507,7 +505,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			}
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tutorId + LINE_BREAK + this.documentType);
 			getCommonsService().feedErrorRecord(errorPacket);

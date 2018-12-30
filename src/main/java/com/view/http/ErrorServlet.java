@@ -1,8 +1,6 @@
 package com.view.http;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +52,7 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     } else {
 	    	 errorText = ExceptionUtils.generateErrorLog(throwable);
 	     }
-	     final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
+	     final ErrorPacket errorPacket = new ErrorPacket(requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
 	     getCommonsService().feedErrorRecord(errorPacket);
 	     WebServiceUtils.writeError(500, requestUri + " - Server error occurred while accessing the URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, response);
 	}

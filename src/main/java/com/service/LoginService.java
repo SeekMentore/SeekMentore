@@ -1,6 +1,5 @@
 package com.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,13 +62,13 @@ public class LoginService implements LoginConstants {
 					setAccessOptions(user);
 				} else {
 					final String message = "Hacking alert !!! <BR/> Received Invalid User Type for : <BR/>" + credential.toString();
-					final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
+					final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
 					commonsService.feedErrorRecord(errorPacket);
 					user = null;
 				}
 			} else {
 				final String message = "Hacking alert !!! <BR/> Received Invalid Password for : <BR/>" + credential.toString();
-				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
+				final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
 				commonsService.feedErrorRecord(errorPacket);
 				user = null;
 			}
@@ -78,27 +77,13 @@ public class LoginService implements LoginConstants {
 	}
 	
 	@Transactional
-	public void feedLogonTracker(final LogonTracker logonTracker) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", logonTracker.getUserId());
-		paramsMap.put("userType", logonTracker.getUserType());
-		paramsMap.put("loginTime", logonTracker.getLoginTime());
-		paramsMap.put("loginTimeMillis", logonTracker.getLoginTimeMillis());
-		paramsMap.put("loginFrom", logonTracker.getLoginFrom());
-		paramsMap.put("machineIp", logonTracker.getMachineIp());
-		applicationDao.executeUpdate("INSERT INTO LOGON_TRACKER(USER_ID, USER_TYPE, LOGIN_TIME, LOGIN_TIME_MILLIS, LOGIN_FROM, MACHINE_IP) VALUES(:userId, :userType, :loginTime, :loginTimeMillis, :loginFrom, :machineIp)", paramsMap);
+	public void feedLogonTracker(final LogonTracker logonTracker) throws Exception {
+		applicationDao.executeUpdateWithQueryMapper("login", "insertLogonTracker", logonTracker);
 	}
 	
 	@Transactional
-	public void feedPasswordChangeTracker(final PasswordChangeTracker passwordChangeTracker) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", passwordChangeTracker.getUserId());
-		paramsMap.put("userType", passwordChangeTracker.getUserType());
-		paramsMap.put("changeTime", passwordChangeTracker.getChangeTime());
-		paramsMap.put("changeTimeMillis", passwordChangeTracker.getChangeTimeMillis());
-		paramsMap.put("encryptedPasswordOld", passwordChangeTracker.getEncryptedPasswordOld());
-		paramsMap.put("encryptedPasswordNew", passwordChangeTracker.getEncryptedPasswordNew());
-		applicationDao.executeUpdate("INSERT INTO PASSWORD_CHANGE_TRACKER(USER_ID, USER_TYPE, CHANGE_TIME, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) VALUES(:userId, :userType, :changeTime, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)", paramsMap);
+	public void feedPasswordChangeTracker(final PasswordChangeTracker passwordChangeTracker) throws Exception {
+		applicationDao.executeUpdateWithQueryMapper("login", "insertPasswordChangeTracker", passwordChangeTracker);
 	}
 	
 	public User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
@@ -157,14 +142,14 @@ public class LoginService implements LoginConstants {
 	}
 
 	public void changePassword(final User user, final String encryptedOldPassword, final String newPassword, final String emailIdOfUserInSession) throws Exception {
+		final Date currentTimestamp = new Date();
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
 		user.setEncryptedPassword(encryptedNewPassword);
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
 		passwordChangeTracker.setUserId(user.getUserId());
 		passwordChangeTracker.setUserType(user.getUserType());
-		passwordChangeTracker.setChangeTime(new Timestamp(new Date().getTime()));
-		passwordChangeTracker.setChangeTimeMillis(passwordChangeTracker.getChangeTime().getTime());
+		passwordChangeTracker.setChangeTimeMillis(currentTimestamp.getTime());
 		passwordChangeTracker.setEncryptedPasswordOld(encryptedOldPassword);
 		passwordChangeTracker.setEncryptedPasswordNew(encryptedNewPassword);
 		feedPasswordChangeTracker(passwordChangeTracker);

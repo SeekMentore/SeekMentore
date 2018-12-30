@@ -3,14 +3,13 @@ package com.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.constants.UserConstants;
+import com.utils.ValidationUtils;
 
-public class ErrorPacket implements Serializable, UserConstants {
+public class ErrorPacket extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
 	private Long errorId;
-	private Date occuredAt;
 	private Long occuredAtMillis;
 	private String requestURI;
 	private String errorTrace;
@@ -19,35 +18,24 @@ public class ErrorPacket implements Serializable, UserConstants {
 	}
 	
 	public ErrorPacket (
-			Date occuredAt,
-			String requestURI,
-			String errorTrace
-	) {
-		this.occuredAt = occuredAt;
-		this.occuredAtMillis = occuredAt.getTime();
-		this.requestURI = requestURI;
-		this.errorTrace = errorTrace;
-	}
-	
-	public ErrorPacket (
 			Long occuredAtMillis,
 			String requestURI,
 			String errorTrace
 	) {
 		this.occuredAtMillis = occuredAtMillis;
-		this.occuredAt = new Date(occuredAtMillis);
 		this.requestURI = requestURI;
 		this.errorTrace = errorTrace;
 	}
 	
-	public Date getOccuredAt() {
-		return occuredAt;
+	public ErrorPacket (
+			String requestURI,
+			String errorTrace
+	) {
+		this.occuredAtMillis = new Date().getTime();
+		this.requestURI = requestURI;
+		this.errorTrace = errorTrace;
 	}
-
-	public void setOccuredAt(Date occuredAt) {
-		this.occuredAt = occuredAt;
-	}
-
+	
 	public String getRequestURI() {
 		return requestURI;
 	}
@@ -78,5 +66,33 @@ public class ErrorPacket implements Serializable, UserConstants {
 
 	public void setOccuredAtMillis(Long occuredAtMillis) {
 		this.occuredAtMillis = occuredAtMillis;
+	}
+
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "errorId" : return "ERROR_ID";
+			case "occuredAtMillis" : return "OCCURED_AT_MILLIS";
+			case "requestURI" : return "REQUEST_URI";
+			case "errorTrace" : return "ERROR_TRACE";
+		}
+		return EMPTY_STRING;
+	}
+	
+	@Override
+	public ErrorPacket clone() throws CloneNotSupportedException {  
+		return (ErrorPacket)super.clone();
 	}
 }

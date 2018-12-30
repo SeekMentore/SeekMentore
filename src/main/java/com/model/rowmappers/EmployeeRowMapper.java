@@ -15,8 +15,8 @@ public class EmployeeRowMapper implements RowMapper<Employee> {
 	@Override
 	public Employee mapRow(ResultSet row, int rowNum) throws SQLException {
 		final Employee employee = new Employee();
-		employee.setEmployeeId(ExceptionUtils.exceptionHandlerForRowMapper(row, "EMPLOYEE_ID", Long.class));
-		employee.setEmailDomain(ExceptionUtils.exceptionHandlerForRowMapper(row, "EMAIL_DOMAIN", String.class));
+		employee.setEmployeeId(ExceptionUtils.exceptionHandlerForRowMapper(row, employee.resolveColumnNameForMapping("employeeId"), Long.class));
+		employee.setEmailDomain(ExceptionUtils.exceptionHandlerForRowMapper(row, employee.resolveColumnNameForMapping("emailDomain"), String.class));
 		UserUtils.mapUserPseudoColumnsForRecords(employee, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(employee, row, rowNum);
 		return employee;

@@ -1,8 +1,6 @@
 package com.view.http.filter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -57,7 +55,7 @@ public class PageAvailableFilter extends AbstractWebservice implements Filter, F
 			if (menuService.pageExists(pageURL)) {
 				chain.doFilter(request, response);
 			} else {
-				final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Page not found on Server.");
+				final ErrorPacket errorPacket = new ErrorPacket(pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Page not found on Server.");
 				commonsService.feedErrorRecord(errorPacket);
 				WebServiceUtils.writeError(404, pageURL + " - Is not available on server", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 			}

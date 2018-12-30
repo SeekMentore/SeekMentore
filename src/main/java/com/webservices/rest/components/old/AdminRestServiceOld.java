@@ -1,9 +1,7 @@
 package com.webservices.rest.components.old;
 
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -762,7 +760,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 			}
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket( 
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.gridName + LINE_BREAK + this.button + LINE_BREAK + this.uniqueId + LINE_BREAK + this.remarks);
 			getCommonsService().feedErrorRecord(errorPacket);
@@ -800,7 +798,7 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 			this.securityPassed = false;
 		}
 		if (!this.securityPassed) {
-			final ErrorPacket errorPacket = new ErrorPacket(new Timestamp(new Date().getTime()), 
+			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
 					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.recepientEmailId + LINE_BREAK + this.emailSalutationName + LINE_BREAK + this.emailSubject + LINE_BREAK + this.emailText);
 			getCommonsService().feedErrorRecord(errorPacket);
