@@ -15,7 +15,7 @@ public class Credential implements Serializable, UserConstants {
 	
 	public Credential() {}
 	
-	public Credential(String userId, String userType, String clientSideEncypytedPassword) {
+	public Credential(final String userId, final String userType, final String clientSideEncypytedPassword) {
 		this.userId = userId;
 		this.clientSideEncypytedPassword = clientSideEncypytedPassword;
 		this.userType = userType;
@@ -49,9 +49,9 @@ public class Credential implements Serializable, UserConstants {
 	public String toString() {
 		final StringBuilder credential = new StringBuilder(EMPTY_STRING);
 		credential.append(PrintFormatterUtils.startATable());
-		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("userId", userId));
-		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("userType", userType));
-		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("clientSideEncypytedPassword", clientSideEncypytedPassword));
+		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("userId", this.userId));
+		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("userType", this.userType));
+		credential.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns("clientSideEncypytedPassword", this.clientSideEncypytedPassword));
 		credential.append(PrintFormatterUtils.endATable());
 		return credential.toString();
 	}

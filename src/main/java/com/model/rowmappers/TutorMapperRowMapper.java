@@ -19,6 +19,8 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquirySubject"), String.class));
 		tutorMapperObject.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		tutorMapperObject.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryLocation"), String.class));
+		tutorMapperObject.setEnquiryAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryAddressDetails"), String.class));
+		tutorMapperObject.setEnquiryAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryAdditionalDetails"), String.class));
 		tutorMapperObject.setEnquiryPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryPreferredTeachingType"), String.class));
 		tutorMapperObject.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
 		tutorMapperObject.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));

@@ -14,6 +14,7 @@ public class UIMenu implements Serializable {
 	private List<UISubMenu> subMenuItems;
 	private String pageAccessType;
 	private Integer order;
+	private Boolean hidden;
 	private UISubMenu[] subMenuArray;
 	
 	public UIMenu() {}
@@ -126,5 +127,13 @@ public class UIMenu implements Serializable {
 
 	public void setSubMenuArray(UISubMenu[] subMenuArray) {
 		this.subMenuArray = subMenuArray;
+	}
+
+	public Boolean getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
 	}
 }

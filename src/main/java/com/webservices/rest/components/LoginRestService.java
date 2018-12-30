@@ -138,7 +138,11 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.user = getActiveUser(request);
 		doSecurity(request);
 		if (this.securityPassed) {
-			return JSONUtils.convertObjToJSONString(getLoginService().changePassword(getActiveUser(request), newPassword, LoginUtils.getEmailIdOfUserInSession(request)), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
+			getLoginService().changePassword(getActiveUser(request), newPassword, LoginUtils.getEmailIdOfUserInSession(request));
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Successfully changed password");
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
 		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}

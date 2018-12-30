@@ -44,6 +44,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
+	private String enquiryAddressDetails;
+	private String enquiryAdditionalDetails;
 	private String enquiryPreferredTeachingType;
 	private Integer enquiryQuotedClientRate ;
 	private Integer enquiryNegotiatedRateWithClient;
@@ -418,6 +420,22 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 		this.reScheduleCount = reScheduleCount;
 	}
 
+	public String getEnquiryAddressDetails() {
+		return enquiryAddressDetails;
+	}
+
+	public void setEnquiryAddressDetails(String enquiryAddressDetails) {
+		this.enquiryAddressDetails = enquiryAddressDetails;
+	}
+
+	public String getEnquiryAdditionalDetails() {
+		return enquiryAdditionalDetails;
+	}
+
+	public void setEnquiryAdditionalDetails(String enquiryAdditionalDetails) {
+		this.enquiryAdditionalDetails = enquiryAdditionalDetails;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -463,6 +481,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryAddressDetails" : return "ENQUIRY_ADDRESS_DETAILS";
+			case "enquiryAdditionalDetails" : return "ENQUIRY_ADDITIONAL_DETAILS";
 			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";

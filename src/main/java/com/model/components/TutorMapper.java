@@ -16,6 +16,8 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
+	private String enquiryAddressDetails;
+	private String enquiryAdditionalDetails;
 	private String enquiryPreferredTeachingType;
 	private Integer enquiryQuotedClientRate ;
 	private Integer enquiryNegotiatedRateWithClient;
@@ -392,6 +394,22 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.demoDateAndTimeMillis = demoDateAndTimeMillis;
 	}
 	
+	public String getEnquiryAddressDetails() {
+		return enquiryAddressDetails;
+	}
+
+	public void setEnquiryAddressDetails(String enquiryAddressDetails) {
+		this.enquiryAddressDetails = enquiryAddressDetails;
+	}
+
+	public String getEnquiryAdditionalDetails() {
+		return enquiryAdditionalDetails;
+	}
+
+	public void setEnquiryAdditionalDetails(String enquiryAdditionalDetails) {
+		this.enquiryAdditionalDetails = enquiryAdditionalDetails;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -412,13 +430,15 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryAddressDetails" : return "ENQUIRY_ADDRESS_DETAILS";
+			case "enquiryAdditionalDetails" : return "ENQUIRY_ADDITIONAL_DETAILS";
 			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
 			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
-			case "customerEmail" : return "CUSTOMER_NAME_EMAIL";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
 			case "tutorId" : return "TUTOR_ID";
 			case "tutorName" : return "TUTOR_NAME";

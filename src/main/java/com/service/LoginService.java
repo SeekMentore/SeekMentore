@@ -145,10 +145,7 @@ public class LoginService implements LoginConstants {
 		user.setAccessOptions(accessOptions);
 	}
 
-	public Map<String, Object> changePassword(final User user, final String newPassword, final String emailIdOfUserInSession) throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+	public void changePassword(final User user, final String newPassword, final String emailIdOfUserInSession) throws Exception {
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
 		final String encryptedOldPassword = user.getEncyptedPassword();
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
@@ -162,7 +159,6 @@ public class LoginService implements LoginConstants {
 		passwordChangeTracker.setEncryptedPasswordNew(encryptedNewPassword);
 		feedPasswordChangeTracker(passwordChangeTracker);
 		sendPasswordChangeEmailToUser(user, emailIdOfUserInSession);
-		return response;
 	}
 	
 	public void sendPasswordChangeEmailToUser(final User user, final String emailIdOfUserInSession) throws Exception {

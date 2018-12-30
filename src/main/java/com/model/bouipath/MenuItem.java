@@ -15,6 +15,7 @@ public class MenuItem implements Serializable {
 	private Boolean urlActive;
 	private String itemHeader;
 	private Integer order;
+	private Boolean hidden;
 	private String additionalAccessFunction;
 	private ArrayList<UIPage> uipage;
 
@@ -88,5 +89,14 @@ public class MenuItem implements Serializable {
 	@XmlAttribute
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+
+	public Boolean getHidden() {
+		return hidden;
+	}
+
+	@XmlAttribute
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
 	}
 }

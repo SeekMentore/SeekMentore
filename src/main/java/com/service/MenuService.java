@@ -82,12 +82,19 @@ public class MenuService implements MenuConstants {
 	}
 	
 	private void reorderBOUIMenuListAsPerOrderingInXML(final List<UIMenu> boUIMenuList) {
-		boUIMenuArray = new UIMenu[boUIMenuList.size()];
+		final UIMenu[] boUIMenuArrayIntermittent = new UIMenu[boUIMenuList.size()];
 		for (int index = 0; index < boUIMenuList.size(); index++) {
 			final UIMenu uiMenu = boUIMenuList.get(index);
 			uiMenu.computeSubMenuArrayAsPerOrderingInXML();
-			boUIMenuArray[uiMenu.getOrder() - 1] = uiMenu;
+			boUIMenuArrayIntermittent[uiMenu.getOrder() - 1] = uiMenu;
 		}
+		final List<UIMenu> boUIMenuListFinalized = new LinkedList<UIMenu>();
+		for (int index = 0; index < boUIMenuArrayIntermittent.length; index++) {
+			if (!boUIMenuArrayIntermittent[index].getHidden()) {
+				boUIMenuListFinalized.add(boUIMenuArrayIntermittent[index]);
+			}
+		}
+		boUIMenuArray = boUIMenuListFinalized.toArray(new UIMenu[0]);
 	}
 	
 	private void createMenuUrlToPageAccessTypeMap() {
@@ -159,6 +166,7 @@ public class MenuService implements MenuConstants {
 					uiMenu.setUrl(url);
 					boUIPathUrlToPageAccessTypeMap.put(url.toUpperCase(), new MenuAttributes(pageAccessType, menuitem.getAdditionalAccessFunction()));
 				}
+				uiMenu.setHidden((null != menuitem.getHidden() && menuitem.getHidden()));
 				createBOUIPathUrlToPageAccessTypeMapForUIPage(boUIMenuList, menuitem.getUipage(), menuitem.getPageAccessType(), parentURL + menuitem.getUrl(), uiMenu);
 				boUIMenuList.add(uiMenu);
 			}

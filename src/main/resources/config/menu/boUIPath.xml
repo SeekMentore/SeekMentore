@@ -17,8 +17,8 @@
         <uipage id="resetpassword" url="/resetpassword" urlActive="true"></uipage>
     </viewtype>
     <viewtype id="user" url="/user" pageAccessType="user">
-        <menuitem id="home" url="/home" urlActive="true" itemHeader="Home" order="1" faClass="">
-        </menuitem>
+    	<uipage id="changepassword" url="/changepassword" urlActive="true"></uipage>
+        <menuitem id="home" url="/home" urlActive="true" itemHeader="Home" order="1" faClass=""></menuitem>
         <usertype id="employee" url="/employee" pageAccessType="employee">
             <menuitem id="admin" url="/admin" pageAccessType="admin" itemHeader="Admin" order="2" faClass="">
                 <uipage id="registeredtutor" url="/registeredtutor" urlActive="true" itemHeader="Registered Tutor" order="1"></uipage>
@@ -38,7 +38,7 @@
                 <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscriptions Requested" order="4"></uipage>
                 <uipage id="complaints" url="/complaints" urlActive="true" itemHeader="User Complaints" order="5"></uipage>
             </menuitem>
-            <menuitem id="superadmin" url="/superadmin" pageAccessType="superadmin" itemHeader="System" order="5" faClass="">
+            <menuitem id="superadmin" url="/superadmin" pageAccessType="superadmin" itemHeader="System" order="5" hidden="true" faClass="">
                 <uipage id="controlpanel" url="/controlpanel" urlActive="true" itemHeader="Control Panel" order="1"></uipage>
             </menuitem>
         </usertype>

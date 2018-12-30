@@ -50,6 +50,8 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		demo.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquirySubject"), String.class));
 		demo.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		demo.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryLocation"), String.class));
+		demo.setEnquiryAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryAddressDetails"), String.class));
+		demo.setEnquiryAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryAdditionalDetails"), String.class));
 		demo.setEnquiryPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryPreferredTeachingType"), String.class));
 		demo.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
 		demo.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));
