@@ -56,21 +56,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 	@PostConstruct
 	public void init() {}
 	
-	/*
-	 * Tutor Registration Admin
-	 */
-	public byte[] downloadAdminReportTutorRegistrations() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport();
-//		workbookReport.createSheet("NON_CONTACTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("NON_VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("VERIFIED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("VERIFICATION_FAILED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("TO_BE_RECONTACTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("SELECTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("REJECTED_TUTOR_REGISTRATIONS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-//		workbookReport.createSheet("REGISTERED_TUTORS", displayTutorRegistrations(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS, WHITESPACE+SEMICOLON+WHITESPACE), BecomeTutor.class);
-		return WorkbookUtils.createWorkbook(workbookReport);
-	}
 	
 	public byte[] downloadAdminTutorRegistrationProfilePdf(final String tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -85,46 +70,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return null;
 	}	
 	
-	public List<BecomeTutor> displayTutorRegistrations(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final StringBuilder query = new StringBuilder("SELECT * FROM BECOME_TUTOR WHERE ");
-		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'N' AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_REGISTRATIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y' AND IS_DATA_MIGRATED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_FROM_TUTOR_REGISTRATIONS : {
-				query.append("IS_DATA_MIGRATED = 'Y'");
-				break;
-			}
-		}
-		final List<BecomeTutor> tutorRegisterList = applicationDao.findAllWithoutParams(query.toString(), new BecomeTutorRowMapper());
-		return tutorRegisterList;
-	}
-	
 	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor tutorRegisterObject) {
 		tutorRegisterObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getContactedRemarks()));
 		tutorRegisterObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getVerificationRemarks()));
@@ -132,73 +77,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		tutorRegisterObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRecontactedRemarks()));
 		tutorRegisterObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getSelectionRemarks()));
 		tutorRegisterObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRejectionRemarks()));
-	}
-	
-	public Map<String, Object> takeActionOnTutorRegistration (
-			final String gridName, 
-			final String button, 
-			final String tentativeTutorId,
-			final String remarks,
-			final User user
-	) {
-		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		final StringBuilder query = new StringBuilder("UPDATE BECOME_TUTOR SET ");
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", user.getUserId());
-		paramsMap.put("remarks", remarks);
-		paramsMap.put("tentativeTutorId", tentativeTutorId);
-		switch(button) {
-			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = :remarks, REJECTION_COUNT = (REJECTION_COUNT + 1), RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_VERIFY:
-			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId");
-				break;
-			}
-		}
-		applicationDao.executeUpdate(query.toString(), paramsMap);
-		return response;
-	}
-	/*
-	 * Tutor Registration Admin
-	 */
-	/*
-	 * Tutor Enquiry Admin
-	 */
-	public byte[] downloadAdminReportTutorEnquiry() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport();
-//		workbookReport.createSheet("NON_CONTACTED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("NON_VERIFIED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("VERIFIED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("VERIFICATION_FAILED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("TO_BE_RECONTACTED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("SELECTED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-//		workbookReport.createSheet("REJECTED_TUTOR_REGISTRATIONS", displayTutorEnquiries(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES, WHITESPACE+SEMICOLON+WHITESPACE), FindTutor.class);
-		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	public byte[] downloadAdminTutorEnquiryProfilePdf(final String enquiryId) throws JAXBException, URISyntaxException, Exception {
@@ -214,42 +92,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return null;
 	}
 	
-	public List<FindTutor> displayTutorEnquiries(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final StringBuilder query = new StringBuilder("SELECT * FROM FIND_TUTOR WHERE ");
-		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'N'");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_TUTOR_ENQUIRIES : {
-				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'");
-				break;
-			}
-		}
-		final List<FindTutor> tutorEnquiryList = applicationDao.findAllWithoutParams(query.toString(), new FindTutorRowMapper());
-		return tutorEnquiryList;
-	}
-	
 	private void replaceNullWithBlankRemarksInTutorEnquiryObject(final FindTutor tutorEnquiryObject) {
 		tutorEnquiryObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getContactedRemarks()));
 		tutorEnquiryObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getVerificationRemarks()));
@@ -257,74 +99,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		tutorEnquiryObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRecontactedRemarks()));
 		tutorEnquiryObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getSelectionRemarks()));
 		tutorEnquiryObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRejectionRemarks()));
-	}
-	
-	public Map<String, Object> takeActionOnTutorEnquiry (
-			final String gridName, 
-			final String button, 
-			final String enquiryId,
-			final String remarks,
-			final User user
-	) {
-		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		final StringBuilder query = new StringBuilder("UPDATE FIND_TUTOR SET ");
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", user.getUserId());
-		paramsMap.put("remarks", remarks);
-		paramsMap.put("enquiryId", enquiryId);
-		switch(button) {
-			case BUTTON_ACTION_CONTACTED : {
-				query.append("ENQUIRY_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACT : {
-				query.append("ENQUIRY_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_REJECT : {
-				query.append("ENQUIRY_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_VERIFY:
-			case BUTTON_ACTION_REVERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("ENQUIRY_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_SELECT : {
-				query.append("ENQUIRY_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACTED : {
-				query.append("ENQUIRY_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE ENQUIRY_ID = :enquiryId");
-				break;
-			}
-		}
-		applicationDao.executeUpdate(query.toString(), paramsMap);
-		return response;
-	}
-	/*
-	 * Tutor Enquiry Admin
-	 */
-	
-	/*
-	 * Subscrition Admin
-	 */
-	public byte[] downloadAdminReportSubscriptions() throws InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport();
-//		workbookReport.createSheet("NON_CONTACTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("NON_VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("VERIFIED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("VERIFICATION_FAILED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("TO_BE_RECONTACTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("SELECTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-//		workbookReport.createSheet("REJECTED_SUBSCRIPTIONS", displaySubscriptions(RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS, WHITESPACE+SEMICOLON+WHITESPACE), SubscribeWithUs.class);
-		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
 	public byte[] downloadAdminIndividualSubscriptionProfilePdf(final String tentativeSubscriptionId) throws JAXBException, URISyntaxException, Exception {
@@ -340,43 +114,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return null;
 	}
 	
-	
-	public List<SubscribeWithUs> displaySubscriptions(final String grid, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final StringBuilder query = new StringBuilder("SELECT * FROM SUBSCRIBE_WITH_US WHERE ");
-		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_CONTACTED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'N'");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_NON_VERIFIED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED IS NULL AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFIED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'Y' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_VERIFICATION_FAILED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_AUTHENTICATION_VERIFIED = 'N' AND (IS_TO_BE_RECONTACTED IS NULL OR IS_TO_BE_RECONTACTED = 'N') AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_TO_BE_RECONTACTED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_TO_BE_RECONTACTED = 'Y' AND IS_SELECTED IS NULL AND IS_REJECTED IS NULL");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_SELECTED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_SELECTED = 'Y'");
-				break;
-			}
-			case RestMethodConstants.REST_METHOD_NAME_DISPLAY_REJECTED_SUBSCRIPTIONS : {
-				query.append("IS_CONTACTED = 'Y' AND IS_REJECTED = 'Y'");
-				break;
-			}
-		}
-		final List<SubscribeWithUs> subscribeWithUsList = applicationDao.findAllWithoutParams(query.toString(), new SubscribeWithUsRowMapper());
-		return subscribeWithUsList;
-	}
-	
 	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject) {
 		subscribeWithUsObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getContactedRemarks()));
 		subscribeWithUsObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getVerificationRemarks()));
@@ -385,60 +122,6 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		subscribeWithUsObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getSelectionRemarks()));
 		subscribeWithUsObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRejectionRemarks()));
 	}
-	
-	public Map<String, Object> takeActionOnSubscriptions (
-			final String gridName, 
-			final String button, 
-			final String tentativeSubscriptionId,
-			final String remarks,
-			final User user
-	) {
-		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		final StringBuilder query = new StringBuilder("UPDATE SUBSCRIBE_WITH_US SET ");
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("userId", user.getUserId());
-		paramsMap.put("remarks", remarks);
-		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-		switch(button) {
-			case BUTTON_ACTION_CONTACTED : {
-				query.append("APPLICATION_STATUS = 'CONTACTED_VERIFICATION_PENDING', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACT : {
-				query.append("APPLICATION_STATUS = 'SUGGESTED_TO_BE_RECONTACTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_TO_BE_RECONTACTED = 'Y', WHO_SUGGESTED_FOR_RECONTACT = :userId, SUGGESTION_DATE = SYSDATE(), SUGGESTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_REJECT : {
-				query.append("APPLICATION_STATUS = 'REJECTED', IS_CONTACTED = 'Y', WHO_CONTACTED = :userId, CONTACTED_DATE = SYSDATE(), CONTACTED_REMARKS = :remarks, IS_REJECTED = 'Y', WHO_REJECTED = :userId, REJECTION_DATE = SYSDATE(), REJECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_VERIFY:
-			case BUTTON_ACTION_REVERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_SUCCESSFUL', IS_AUTHENTICATION_VERIFIED = 'Y', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_FAIL_VERIFY : {
-				query.append("APPLICATION_STATUS = 'VERIFICATION_FAILED', IS_AUTHENTICATION_VERIFIED = 'N', WHO_VERIFIED = :userId, VERIFICATION_DATE = SYSDATE(), VERIFICATION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_SELECT : {
-				query.append("APPLICATION_STATUS = 'SELECTED', IS_SELECTED = 'Y', WHO_SELECTED = :userId, SELECTION_DATE = SYSDATE(), SELECTION_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-			case BUTTON_ACTION_RECONTACTED : {
-				query.append("APPLICATION_STATUS = 'RECONTACTED_VERIFICATION_PENDING', IS_TO_BE_RECONTACTED = 'N', WHO_RECONTACTED = :userId, RECONTACTED_DATE = SYSDATE(), RECONTACTED_REMARKS = :remarks, RECORD_LAST_UPDATED = SYSDATE() WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId");
-				break;
-			}
-		}
-		applicationDao.executeUpdate(query.toString(), paramsMap);
-		return response;
-	}
-	/*
-	 * Subscrition Admin
-	 * 
-	 */
 	
 	/**************************************************************************************************/
 	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {

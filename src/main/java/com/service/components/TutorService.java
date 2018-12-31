@@ -33,7 +33,6 @@ import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.BankDetailRowMapper;
-import com.model.rowmappers.BecomeTutorRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.model.workbook.WorkbookReport;
@@ -82,32 +81,6 @@ public class TutorService implements TutorConstants {
 		}
 	}
 	
-	@Transactional
-	public List<BecomeTutor> getSelectedTutorRegistrations(final int numberOfRecords) {
-		return applicationDao.findAllWithoutParams("SELECT * FROM BECOME_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new BecomeTutorRowMapper());
-	}
-	
-	@Transactional
-	public void updateBecomeTutorForDataMigrated(final Long tentativeTutorId) {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tentativeTutorId", tentativeTutorId);
-		applicationDao.executeUpdate("UPDATE BECOME_TUTOR SET IS_DATA_MIGRATED = 'Y', WHEN_MIGRATED = SYSDATE() WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap);
-	}
-	
-	public void sendProfileGenerationEmailToTutor(final RegisteredTutor registeredTutorObj, final String temporaryPassword) throws Exception {
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("addressName", registeredTutorObj.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("userId", registeredTutorObj.getUserId());
-		attributes.put("temporaryPassword", temporaryPassword);
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				null,
-				"Your Seek Mentore tutor profile is created", 
-				VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
-	}
 	
 	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> response = new HashMap<String, Object>();
