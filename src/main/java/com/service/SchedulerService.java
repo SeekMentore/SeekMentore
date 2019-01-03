@@ -348,5 +348,4 @@ public class SchedulerService implements SchedulerConstants {
 			lockService.releaseLock("executeSubscriptionCreationJob", key);
 		}
 	}
-	
 }

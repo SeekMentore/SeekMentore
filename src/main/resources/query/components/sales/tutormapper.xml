@@ -25,7 +25,7 @@
 			INNER JOIN ENQUIRY EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID
 			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 	</query>
-	<query type="filter" id="tutorMapperExistingFilter">
+	<query type="filter" id="tutorMapperMappingStatusFilter">
 		WHERE TM.MAPPING_STATUS = :mappingStatus
 	</query>
 	<query type="filter" id="tutorMapperCurrentTutorMappingFilter">
@@ -37,7 +37,7 @@
 	<query type="filter" id="tutorMapperCurrentEnquiryAllMappedTutors">
 		WHERE TM.ENQUIRY_ID = :enquiryId
 	</query>
-	<query type="sorter" id="tutorMapperExistingSorter">
+	<query type="sorter" id="tutorMapperEntryDateSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
 	<query type="insert" id="insertTutorMapper" paramClass="com.model.components.TutorMapper">

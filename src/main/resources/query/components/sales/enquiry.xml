@@ -14,13 +14,16 @@
 		INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 		LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID
 	</query>
-	<query type="filter" id="enquiryExistingFilter">
+	<query type="filter" id="enquiryMatchStatusFilter">
 		WHERE EN.MATCH_STATUS = :matchStatus
 	</query>
 	<query type="filter" id="enquiryCurrentCustomerAdditionalFilter">
 		 AND EN.CUSTOMER_ID = :customerId
 	</query>
-	<query type="sorter" id="enquiryExistingSorter">
+	<query type="filter" id="enquiryMultipleMatchStatusFilter">
+		WHERE EN.MATCH_STATUS IN (:matchStatusList)
+	</query>
+	<query type="sorter" id="enquiryEntryDateSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
 	<query type="update" id="updateEnquiryMatchStatus" paramClass="com.model.components.Enquiry">

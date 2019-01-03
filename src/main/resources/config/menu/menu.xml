@@ -49,8 +49,8 @@
 			<webservice id="uploadedDocumentList" url="/uploadedDocumentList"></webservice>
 			<webservice id="downloadTutorDocument" url="/downloadTutorDocument"></webservice>
 			<webservice id="bankDetailList" url="/bankDetailList"></webservice>
-			<webservice id="currentPackageList" url="/currentPackageList"></webservice>
-			<webservice id="historyPackageList" url="/historyPackageList"></webservice>
+			<webservice id="currentSubscriptionPackageList" url="/currentSubscriptionPackageList"></webservice>
+			<webservice id="historySubscriptionPackageList" url="/historySubscriptionPackageList"></webservice>
 			<webservice id="approveTutorDocumentList" url="/approveTutorDocumentList"></webservice>
 			<webservice id="sendReminderTutorDocumentList" url="/sendReminderTutorDocumentList"></webservice>
 			<webservice id="rejectTutorDocumentList" url="/rejectTutorDocumentList"></webservice>
@@ -60,8 +60,8 @@
 			<webservice id="updateTutorRecord" url="/updateTutorRecord"></webservice>
 		</page>
 		<page id="subscribedCustomerRest" url="/rest/subscribedCustomer" pageAccessType="admin">
-			<webservice id="currentPackageList" url="/currentPackageList"></webservice>
-			<webservice id="historyPackageList" url="/historyPackageList"></webservice>
+			<webservice id="currentSubscriptionPackageList" url="/currentSubscriptionPackageList"></webservice>
+			<webservice id="historySubscriptionPackageList" url="/historySubscriptionPackageList"></webservice>
 			<webservice id="updateCustomerRecord" url="/updateCustomerRecord"></webservice>
 		</page>
 		<page id="salesRest" url="/rest/sales" pageAccessType="sales">
@@ -98,6 +98,9 @@
 			<webservice id="takeActionOnDemo" url="/takeActionOnDemo"></webservice>
 			<webservice id="reScheduleDemo" url="/reScheduleDemo"></webservice>
 			<webservice id="updateDemoRecord" url="/updateDemoRecord"></webservice>
+			<webservice id="currentSubscriptionPackageList" url="/currentSubscriptionPackageList"></webservice>
+			<webservice id="historySubscriptionPackageList" url="/historySubscriptionPackageList"></webservice>
+			<webservice id="subscriptionPackageCheckDataAccess" url="/subscriptionPackageCheckDataAccess"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

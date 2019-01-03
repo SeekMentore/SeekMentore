@@ -142,7 +142,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_CURRENT_PACKAGE_LIST)
+	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String currentPackageList (
@@ -154,13 +154,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_PACKAGE_LIST;
+		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_PACKAGE_LIST, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -171,7 +171,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_HISTORY_PACKAGE_LIST)
+	@Path(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String historyPackageList (
@@ -183,13 +183,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_HISTORY_PACKAGE_LIST;
+		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_PACKAGE_LIST, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -454,8 +454,8 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		switch(this.methodName) {
 			case REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST : 
 			case REST_METHOD_NAME_BANK_DETAIL_LIST :
-			case REST_METHOD_NAME_CURRENT_PACKAGE_LIST : 
-			case REST_METHOD_NAME_HISTORY_PACKAGE_LIST : {
+			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
+			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : {
 				handleSelectedTutorDataView();
 				break;
 			}

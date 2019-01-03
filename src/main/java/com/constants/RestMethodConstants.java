@@ -46,8 +46,8 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_APPROVE_BANK_ACCOUNT_LIST = "/approveBankAccountList";
 	String REST_METHOD_NAME_MAKE_DEFAULT_BANK_ACCOUNT = "/makeDefaultBankAccount";
 	String REST_METHOD_NAME_REJECT_BANK_ACCOUNT_LIST = "/rejectBankAccountList";
-	String REST_METHOD_NAME_CURRENT_PACKAGE_LIST = "/currentPackageList";
-	String REST_METHOD_NAME_HISTORY_PACKAGE_LIST = "/historyPackageList";
+	String REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST = "/currentSubscriptionPackageList";
+	String REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST = "/historySubscriptionPackageList";
 	String REST_METHOD_NAME_UPDATE_TUTOR_RECORD = "/updateTutorRecord";
 	// Admin - SubscribedCustomer REST Methods
 	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";

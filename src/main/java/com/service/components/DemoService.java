@@ -167,8 +167,8 @@ public class DemoService implements DemoConstants, SalesConstants {
 	public List<Demo> getDemoList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-demo", "selectDemo");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingFilter");
-		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoExistingSorter");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoEntryDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);

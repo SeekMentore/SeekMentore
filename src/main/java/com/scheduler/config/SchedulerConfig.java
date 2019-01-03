@@ -23,6 +23,7 @@ import com.constants.SchedulerConstants;
 import com.scheduler.jobs.EmailSenderJob;
 import com.scheduler.jobs.SubmitQueryResponderJob;
 import com.scheduler.jobs.SubscribedCustomerJob;
+import com.scheduler.jobs.SubscriptionCreationJob;
 import com.scheduler.jobs.TutorRegisterJob;
 import com.utils.context.AppContext;
 
@@ -65,6 +66,7 @@ public class SchedulerConfig implements SchedulerConstants {
     	triggerList.add(tutorRegisterJobTrigger().getObject());
     	triggerList.add(subscribedCustomerJobTrigger().getObject());
     	triggerList.add(submitQueryResponderJobTrigger().getObject());
+    	triggerList.add(subscriptionCreationJobTrigger().getObject());
         return triggerList.toArray(new Trigger[0]);
     }
     
@@ -175,6 +177,35 @@ public class SchedulerConfig implements SchedulerConstants {
     
     /**
      * Configuring Trigger & JobDetails for SubmitQueryResponder Job
+     **/
+    
+    /**
+     * Configuring Trigger & JobDetails for SubscriptionCreation Job
+     **/
+    
+    @Bean(name = "subscriptionCreationJobTrigger")
+    public CronTriggerFactoryBean subscriptionCreationJobTrigger() {
+    	final CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
+    	factoryBean.setJobDetail(subscriptionCreationJobDetails().getObject());
+    	factoryBean.setStartDelay(SubscriptionCreationJob.START_DELAY);
+    	factoryBean.setCronExpression(SubscriptionCreationJob.CRON_EXPRESSION);
+    	factoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY);
+    	return factoryBean;
+    }
+
+    @Bean(name = "subscriptionCreationJobDetails")
+    public JobDetailFactoryBean subscriptionCreationJobDetails() {
+        final JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+        jobDetailFactoryBean.setJobClass(SubscriptionCreationJob.class);
+        jobDetailFactoryBean.setDescription(SubscriptionCreationJob.DESCRIPTION);
+        jobDetailFactoryBean.setDurability(true);
+        jobDetailFactoryBean.setName(SubscriptionCreationJob.KEY);
+        return jobDetailFactoryBean;
+    }
+    
+    
+    /**
+     * Configuring Trigger & JobDetails for SubscriptionCreation Job
      **/
      
 }

@@ -1,6 +1,7 @@
 package com.service.components;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -97,8 +98,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryExistingFilter");
-		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryExistingSorter");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryMatchStatusFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEntryDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_PENDING_ENQUIRIES_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
@@ -229,11 +230,26 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		}
 	}
 	
+	public List<Enquiry> getCompletedAndAbortedEnquiryList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, Enquiry.class);
+		} else {
+			gridComponent = new GridComponent(Enquiry.class);
+		}
+		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
+		final String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryMultipleMatchStatusFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEntryDateSorter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("matchStatusList", Arrays.asList(new String[] {EnquiryConstants.MATCH_STATUS_COMPLETED, EnquiryConstants.MATCH_STATUS_ABORTED}));
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
+	}
+	
 	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-tutor-mapper", "selectTutorMapper");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingFilter");
-		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperExistingSorter");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperMappingStatusFilter");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperEntryDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : {
 				paramsMap.put("mappingStatus", MAPPING_STATUS_PENDING);

@@ -28,7 +28,7 @@ public class ApplicationAspects implements ApplicationAspectsConstants {
       
     @Around("executingComponentsServicePublicFunctions()") 
     public Object componentsServiceFunctionDebugLoggingAdvice(final ProceedingJoinPoint pjp) throws Throwable {  
-		LoggerUtils.logOnConsole("Executing < " + pjp.getSignature() + "> with arguments <" + getArgumentsAsStringArray(pjp.getArgs()) + ">");  
+		LoggerUtils.logOnConsole("Executing <" + pjp.getSignature() + "> with arguments <" + getArgumentsAsStringArray(pjp.getArgs()) + ">");  
         final Object obj = pjp.proceed();  
     	LoggerUtils.logOnConsole("Executed <" + pjp.getSignature() + ">");  
         return obj;    
@@ -62,7 +62,7 @@ public class ApplicationAspects implements ApplicationAspectsConstants {
     
     @Around("executingSchedulerServicePublicFunctions()") 
     public Object schedulerServiceFunctionDebugLoggingAdvice(final ProceedingJoinPoint pjp) throws Throwable {  
-		LoggerUtils.logOnConsole("Executing < " + pjp.getSignature() + "> with arguments <" + getArgumentsAsStringArray(pjp.getArgs()) + ">");  
+		LoggerUtils.logOnConsole("Executing <" + pjp.getSignature() + "> with arguments <" + getArgumentsAsStringArray(pjp.getArgs()) + ">");  
         final Object obj = pjp.proceed();  
     	LoggerUtils.logOnConsole("Executed <" + pjp.getSignature() + ">");  
         return obj;    

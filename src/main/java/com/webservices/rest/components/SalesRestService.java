@@ -32,6 +32,7 @@ import com.constants.components.TutorConstants;
 import com.model.components.Demo;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
+import com.model.components.SubscriptionPackage;
 import com.model.components.TutorMapper;
 import com.model.gridcomponent.GridComponent;
 import com.service.JNDIandControlConfigurationLoadService;
@@ -39,6 +40,7 @@ import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.DemoService;
 import com.service.components.EnquiryService;
+import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.GridComponentUtils;
@@ -903,6 +905,76 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String currentPackageList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageList(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String historyPackageList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageList(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path("/subscriptionPackageCheckDataAccess")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String subscriptionPackageCheckDataAccess (
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		Map<String, Object> restresponse = new HashMap<String, Object>();
+		restresponse.put("success", true);
+		restresponse.put("subscriptionPackageDataModificationAccess", true);
+		restresponse.put("message", "");
+		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -914,6 +986,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	public EnquiryService getEnquiryService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE, EnquiryService.class);
+	}
+	
+	public SubscriptionPackageService getSubscriptionPackageService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE, SubscriptionPackageService.class);
 	}
 	
 	public DemoService getDemoService() {
@@ -944,7 +1020,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_SCHEDULED_DEMO_LIST : 
 			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
 			case REST_METHOD_NAME_FAILED_DEMO_LIST : 
-			case REST_METHOD_NAME_CANCELED_DEMO_LIST : {
+			case REST_METHOD_NAME_CANCELED_DEMO_LIST : 
+			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
+			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : {
 				this.securityPassed = true;
 				break;
 			}

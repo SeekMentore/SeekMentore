@@ -25,13 +25,13 @@
 			TM.NEGOTIATED_RATE_WITH_TUTOR AS TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR,
 			TM.TUTOR_NEGOTIATION_REMARKS AS TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = D.WHO_ACTED), D.WHO_ACTED) AS WHO_ACTED_NAME 
-			FROM DEMO D
-			INNER JOIN TUTOR_MAPPER TM ON D.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID
-			INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
-			INNER JOIN ENQUIRY EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID 
-			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
+		FROM DEMO D
+		INNER JOIN TUTOR_MAPPER TM ON D.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID
+		INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
+		INNER JOIN ENQUIRY EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID 
+		INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 	</query>
-	<query type="filter" id="demoExistingFilter">
+	<query type="filter" id="demoDemoStatusFilter">
 		WHERE D.DEMO_STATUS = :demoStatus
 	</query>
 	<query type="filter" id="demoCurrentTutorAdditionalFilter">
@@ -43,7 +43,7 @@
 	<query type="filter" id="demoCurrentCustomerAdditionalFilter">
 		 AND C.CUSTOMER_ID = :customerId
 	</query>
-	<query type="sorter" id="demoExistingSorter">
+	<query type="sorter" id="demoEntryDateSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
 	<query type="insert" id="insertDemo" paramClass="com.model.components.Demo">
@@ -69,7 +69,7 @@
 	<query type="update" id="updateDemoSubscriptionCreated" paramClass="com.model.components.Demo">
 		UPDATE DEMO SET
 			IS_SUBSCRIPTION_CREATED = :isSubscriptionCreated, 
-			MAIL_SENT_MILLIS = :subscriptionCreatedMillis 
+			SUBSCRIPTION_CREATED_MILLIS = :subscriptionCreatedMillis 
 		 WHERE DEMO_TRACKER_ID = :demoTrackerId
 	</query>
 </queryMapper>
