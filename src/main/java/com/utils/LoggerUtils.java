@@ -35,10 +35,6 @@ public class LoggerUtils implements LoggerConstants {
 		}
 	}
 	
-	public static void logOnConsoleForcefully(final String message) {
-		//System.out.println(message);
-	}
-	
 	public static void logInfoSteps(final String message) {
 		if (isInfoEnabled)
 			LOGGER.info(message);
@@ -55,25 +51,29 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logError(final String message) {
+		logOnConsole(message);
 		if (isErrorEnabled)
 			LOGGER.error(message);
 	}
 	
 	public static void logError(final Throwable exception) {
-		logError(ExceptionUtils.generateErrorLog(exception));
+		final String errorMessage = ExceptionUtils.generateErrorLog(exception);
+		logError(errorMessage);
 		if (isTraceEnabled)
-			LOGGER.trace(exception.getMessage(), exception);
+			LOGGER.trace(errorMessage, exception);
 	}
 	
 	public static void logFatal(final String message) {
+		logOnConsole(message);
 		if (isFatalEnabled)
 			LOGGER.fatal(message);
 	}
 	
 	public static void logFatal(final Throwable exception) {
-		logFatal(ExceptionUtils.generateErrorLog(exception));
+		final String errorMessage = ExceptionUtils.generateErrorLog(exception);
+		logFatal(errorMessage);
 		if (isFatalEnabled)
-			LOGGER.fatal(exception.getMessage(), exception);
+			LOGGER.fatal(errorMessage, exception);
 	}
 	
 	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
@@ -81,10 +81,11 @@ public class LoggerUtils implements LoggerConstants {
 		try {
 			getCommonsService().feedErrorRecord(errorPacket);
 		} catch (Exception e) {}
+		logOnConsole(errorPacket.getErrorTrace());
 		if (isErrorEnabled)
 			LOGGER.error(errorPacket.getErrorTrace());
 		if (isTraceEnabled)
-			LOGGER.trace(exception.getMessage(), exception);
+			LOGGER.trace(errorPacket.getErrorTrace(), exception);
 	}
 	
 	public static CommonsService getCommonsService() {

@@ -55,6 +55,8 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private Long demoDateAndTimeMillis;
 	private String mappingStatus;
 	private Long entryDateMillis;
+	private String isEnquiryClosed;
+	private Long enquiryClosedMillis;
 	
 	public TutorMapper() {}
 	
@@ -410,6 +412,22 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.enquiryAdditionalDetails = enquiryAdditionalDetails;
 	}
 
+	public String getIsEnquiryClosed() {
+		return isEnquiryClosed;
+	}
+
+	public void setIsEnquiryClosed(String isEnquiryClosed) {
+		this.isEnquiryClosed = isEnquiryClosed;
+	}
+
+	public Long getEnquiryClosedMillis() {
+		return enquiryClosedMillis;
+	}
+
+	public void setEnquiryClosedMillis(Long enquiryClosedMillis) {
+		this.enquiryClosedMillis = enquiryClosedMillis;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -468,6 +486,8 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "isDemoScheduled" : return "IS_DEMO_SCHEDULED";
 			case "mappingStatus" : return "MAPPING_STATUS";
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+			case "isEnquiryClosed" : return "IS_ENQUIRY_CLOSED";
+			case "enquiryClosedMillis" : return "ENQUIRY_CLOSED_MILLIS";
 		}
 		return EMPTY_STRING;
 	}

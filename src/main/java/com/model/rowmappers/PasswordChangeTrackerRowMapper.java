@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.PasswordChangeTracker;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class PasswordChangeTrackerRowMapper implements RowMapper<PasswordChangeTracker> {
 
 	@Override
 	public PasswordChangeTracker mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
 		passwordChangeTracker.setPasswordChangeId(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("passwordChangeId"), Long.class));
 		passwordChangeTracker.setChangeTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("changeTimeMillis"), Long.class));

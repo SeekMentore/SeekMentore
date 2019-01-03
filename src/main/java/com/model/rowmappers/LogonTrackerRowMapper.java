@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.LogonTracker;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class LogonTrackerRowMapper implements RowMapper<LogonTracker> {
 
 	@Override
 	public LogonTracker mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final LogonTracker logonTracker = new LogonTracker();
 		logonTracker.setLogonId(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("logonId"), Long.class));
 		logonTracker.setLoginTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("loginTimeMillis"), Long.class));

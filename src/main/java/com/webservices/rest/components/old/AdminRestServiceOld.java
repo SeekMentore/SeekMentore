@@ -1,40 +1,27 @@
 package com.webservices.rest.components.old;
 
-import java.util.HashMap;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
-import com.model.ErrorPacket;
-import com.service.JNDIandControlConfigurationLoadService;
-import com.service.components.AdminService;
-import com.service.components.CommonsService;
-import com.utils.ApplicationUtils;
-import com.utils.FileUtils;
-import com.utils.ValidationUtils;
-import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_ADMIN+"old") 
 public class AdminRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, AdminConstants {
+
+	@Override
+	protected void doSecurity(HttpServletRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}/*
 	
 	private String gridName;
 	private String button;
@@ -272,4 +259,4 @@ public class AdminRestServiceOld extends AbstractRestWebservice implements RestM
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
-}
+*/}

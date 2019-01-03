@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.BankDetail;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class BankDetailRowMapper implements RowMapper<BankDetail> {
 
 	@Override
 	public BankDetail mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final BankDetail bankDetail = new BankDetail();
 		bankDetail.setBankAccountId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("bankAccountId"), Long.class));
 		bankDetail.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("tutorId"), Long.class));

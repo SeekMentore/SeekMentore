@@ -57,6 +57,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	private String reschedulingRemarks;
 	private Integer reScheduleCount;
 	private Long entryDateMillis;
+	private String isSubscriptionCreated;
+	private Long subscriptionCreatedMillis;
 	
 	public Demo() {}
 	
@@ -436,6 +438,22 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 		this.enquiryAdditionalDetails = enquiryAdditionalDetails;
 	}
 
+	public String getIsSubscriptionCreated() {
+		return isSubscriptionCreated;
+	}
+
+	public void setIsSubscriptionCreated(String isSubscriptionCreated) {
+		this.isSubscriptionCreated = isSubscriptionCreated;
+	}
+
+	public Long getSubscriptionCreatedMillis() {
+		return subscriptionCreatedMillis;
+	}
+
+	public void setSubscriptionCreatedMillis(Long subscriptionCreatedMillis) {
+		this.subscriptionCreatedMillis = subscriptionCreatedMillis;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -498,6 +516,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "isSubscriptionCreated" : return "IS_SUBSCRIPTION_CREATED";
+			case "subscriptionCreatedMillis" : return "SUBSCRIPTION_CREATED_MILLIS";
 		}
 		return EMPTY_STRING;
 	}

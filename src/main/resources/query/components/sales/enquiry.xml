@@ -10,7 +10,7 @@
 			T.EMAIL_ID AS TUTOR_EMAIL,
 			T.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EN.WHO_ACTED), EN.WHO_ACTED) AS WHO_ACTED_NAME
-		FROM ENQUIRIES EN
+		FROM ENQUIRY EN
 		INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 		LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID
 	</query>
@@ -23,14 +23,16 @@
 	<query type="sorter" id="enquiryExistingSorter">
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
-	<query type="update" id="updateEnquiry" paramClass="com.model.components.Enquiry">
-		UPDATE ENQUIRIES SET
-	</query>
 	<query type="update" id="updateEnquiryMatchStatus" paramClass="com.model.components.Enquiry">
-		MATCH_STATUS = :matchStatus, WHO_ACTED = :userId, LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_REMARKS = :remarks WHERE ENQUIRY_ID = :enquiryId
+		UPDATE ENQUIRY SET
+			MATCH_STATUS = :matchStatus, 
+			WHO_ACTED = :whoActed, 
+			LAST_ACTION_DATE_MILLIS = :lastActionDateMillis, 
+			ADMIN_REMARKS = :adminRemarks 
+		WHERE ENQUIRY_ID = :enquiryId
 	</query>
 	<query type="insert" id="insertEnquiry" paramClass="com.model.components.Enquiry">
-		INSERT INTO ENQUIRIES
+		INSERT INTO ENQUIRY
 			(CUSTOMER_ID, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
 		VALUES
 			(:customerId, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails, :entryDateMillis)

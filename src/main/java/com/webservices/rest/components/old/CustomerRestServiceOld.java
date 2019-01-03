@@ -1,33 +1,27 @@
 package com.webservices.rest.components.old;
 
-import java.util.HashMap;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.CustomerConstants;
-import com.model.components.SubscribedCustomer;
-import com.service.components.CommonsService;
-import com.service.components.CustomerService;
-import com.utils.JSONUtils;
-import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_CUSTOMER+"old") 
 public class CustomerRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
+
+	@Override
+	protected void doSecurity(HttpServletRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}/*
 	
 	@Path(REST_METHOD_NAME_LOAD_SUBSCRIBED_CUSTOMER_RECORD)
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -115,4 +109,4 @@ public class CustomerRestServiceOld extends AbstractRestWebservice implements Re
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 
-}
+*/}

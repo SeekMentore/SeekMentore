@@ -25,7 +25,7 @@
                 <uipage id="subscribedcustomer" url="/subscribedcustomer" urlActive="true" itemHeader="Subscribed Customer" order="2"></uipage>
             </menuitem>
             <menuitem id="sales" url="/sales" pageAccessType="sales" itemHeader="Sales" order="3" faClass="">
-                <uipage id="allenquiries" url="/allenquiries" urlActive="true" itemHeader="All Enquiries" order="1"></uipage>
+                <uipage id="allenquiries" url="/allenquiries" urlActive="true" itemHeader="Enquiries" order="1"></uipage>
                 <uipage id="maptutortoenquiry" url="/maptutortoenquiry" urlActive="true" itemHeader="Map Tutor to Enquiry" order="2"></uipage>
                 <uipage id="scheduledemo" url="/scheduledemo" urlActive="true" itemHeader="Schedule Demo" order="3"></uipage>
                 <uipage id="demotracker" url="/demotracker" urlActive="true" itemHeader="Demo Tracker" order="4"></uipage>

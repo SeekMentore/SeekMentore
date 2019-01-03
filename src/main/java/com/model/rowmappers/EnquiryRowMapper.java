@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.Enquiry;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class EnquiryRowMapper implements RowMapper<Enquiry> {
 
 	@Override
 	public Enquiry mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Enquiry enquiryObject = new Enquiry();
 		enquiryObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("enquiryId"), Long.class));
 		enquiryObject.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerId"), Long.class));

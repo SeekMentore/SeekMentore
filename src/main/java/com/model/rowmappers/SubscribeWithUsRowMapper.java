@@ -10,11 +10,13 @@ import com.model.components.publicaccess.SubscribeWithUs;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
 import com.utils.PublicApplicationUtils;
+import com.utils.RowMapperUtils;
 
 public class SubscribeWithUsRowMapper implements RowMapper<SubscribeWithUs>, SubscribeWithUsConstants {
 
 	@Override
 	public SubscribeWithUs mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
 		subscribeWithUs.setTentativeSubscriptionId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("tentativeSubscriptionId"), Long.class));
 		subscribeWithUs.setApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("applicationDateMillis"), Long.class));

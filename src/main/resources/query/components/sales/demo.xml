@@ -25,10 +25,10 @@
 			TM.NEGOTIATED_RATE_WITH_TUTOR AS TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR,
 			TM.TUTOR_NEGOTIATION_REMARKS AS TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = D.WHO_ACTED), D.WHO_ACTED) AS WHO_ACTED_NAME 
-			FROM DEMO_TRACKER D
+			FROM DEMO D
 			INNER JOIN TUTOR_MAPPER TM ON D.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID
 			INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
-			INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID 
+			INNER JOIN ENQUIRY EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID 
 			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 	</query>
 	<query type="filter" id="demoExistingFilter">
@@ -37,6 +37,9 @@
 	<query type="filter" id="demoCurrentTutorAdditionalFilter">
 		 AND TM.TUTOR_ID = :tutorId
 	</query>
+	<query type="filter" id="successfullDemoSubscriptionPendingFilter">
+		WHERE (IS_SUBSCRIPTION_CREATED IS NULL OR IS_SUBSCRIPTION_CREATED &lt;&gt; 'Y')
+	</query>
 	<query type="filter" id="demoCurrentCustomerAdditionalFilter">
 		 AND C.CUSTOMER_ID = :customerId
 	</query>
@@ -44,21 +47,29 @@
 		ORDER BY ENTRY_DATE_MILLIS
 	</query>
 	<query type="insert" id="insertDemo" paramClass="com.model.components.Demo">
-		INSERT INTO DEMO_TRACKER
+		INSERT INTO DEMO
 			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
 		VALUES
 			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis)
 	</query>
 	<query type="insert" id="insertReScheduledDemo" paramClass="com.model.components.Demo">
-		INSERT INTO DEMO_TRACKER
+		INSERT INTO DEMO
 			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT) 
 		VALUES
 			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount)
 	</query>
-	<query type="update" id="updateDemo" paramClass="com.model.components.Demo">
-		UPDATE DEMO_TRACKER SET
-	</query>
 	<query type="update" id="updateDemoStatus" paramClass="com.model.components.Demo">
-		DEMO_STATUS = :demoStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_FINALIZING_REMARKS = :remarks WHERE DEMO_TRACKER_ID = :demoTrackerId
+		UPDATE DEMO SET
+			DEMO_STATUS = :demoStatus, 
+			WHO_ACTED = :whoActed, 
+			ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis, 
+			ADMIN_FINALIZING_REMARKS = :adminFinalizingRemarks 
+		WHERE DEMO_TRACKER_ID = :demoTrackerId
+	</query>
+	<query type="update" id="updateDemoSubscriptionCreated" paramClass="com.model.components.Demo">
+		UPDATE DEMO SET
+			IS_SUBSCRIPTION_CREATED = :isSubscriptionCreated, 
+			MAIL_SENT_MILLIS = :subscriptionCreatedMillis 
+		 WHERE DEMO_TRACKER_ID = :demoTrackerId
 	</query>
 </queryMapper>

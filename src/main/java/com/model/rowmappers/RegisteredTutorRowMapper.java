@@ -10,12 +10,14 @@ import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.components.RegisteredTutor;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 import com.utils.UserUtils;
 
 public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, RegisteredTutorConstants {
 
 	@Override
 	public RegisteredTutor mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final RegisteredTutor registeredTutor = new RegisteredTutor();
 		registeredTutor.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("tutorId"), Long.class));
 		registeredTutor.setTentativeTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("tentativeTutorId"), Long.class));

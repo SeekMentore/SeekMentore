@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.mail.EmailTemplate;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class EmailTemplateRowMapper implements RowMapper<EmailTemplate> {
 
 	@Override
 	public EmailTemplate mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final EmailTemplate emailTemplate = new EmailTemplate();
 		emailTemplate.setEmailTemplateId(ExceptionUtils.exceptionHandlerForRowMapper(row, emailTemplate.resolveColumnNameForMapping("emailTemplateId"), Long.class));
 		emailTemplate.setEmailTemplateLookupValue(ExceptionUtils.exceptionHandlerForRowMapper(row, emailTemplate.resolveColumnNameForMapping("emailTemplateLookupValue"), String.class));

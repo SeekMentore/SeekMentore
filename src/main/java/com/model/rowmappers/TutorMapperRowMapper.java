@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.TutorMapper;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 
 	@Override
 	public TutorMapper mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final TutorMapper tutorMapperObject = new TutorMapper();
 		tutorMapperObject.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorMapperId"), Long.class));
 		tutorMapperObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryId"), Long.class));
@@ -57,6 +59,8 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setIsDemoScheduled(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isDemoScheduled"), String.class));
 		tutorMapperObject.setMappingStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("mappingStatus"), String.class));
 		tutorMapperObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("entryDateMillis"), Long.class));
+		tutorMapperObject.setIsEnquiryClosed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isEnquiryClosed"), String.class));
+		tutorMapperObject.setEnquiryClosedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryClosedMillis"), Long.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(tutorMapperObject, row, rowNum);
 		return tutorMapperObject;
 	}

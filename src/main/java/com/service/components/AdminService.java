@@ -1119,6 +1119,17 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		
 	}
 	
+	public List<SubmitQuery> getSubmitQueryListForQueryResponded(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, SubmitQuery.class);
+		} else {
+			gridComponent = new GridComponent(SubmitQuery.class);
+		}
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("public-application", "submitQueryRespondedNonEmailSentFilter"));
+		return getSubmitQueryList(RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST, gridComponent);
+	}
+	
 	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final String baseQuery = queryMapperService.getQuerySQL("complaint", "selectComplaint");
 		String existingFilterQueryString = EMPTY_STRING;

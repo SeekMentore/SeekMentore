@@ -22,7 +22,7 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TM.WHO_ACTED), TM.WHO_ACTED) AS WHO_ACTED_NAME
 			FROM TUTOR_MAPPER TM
 			INNER JOIN REGISTERED_TUTOR T ON TM.TUTOR_ID = T.TUTOR_ID
-			INNER JOIN ENQUIRIES EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID
+			INNER JOIN ENQUIRY EN ON TM.ENQUIRY_ID = EN.ENQUIRY_ID
 			INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
 	</query>
 	<query type="filter" id="tutorMapperExistingFilter">
@@ -49,11 +49,13 @@
 	<query type="delete" id="deleteTutorMapper" paramClass="com.model.components.TutorMapper">
 		DELETE FROM TUTOR_MAPPER WHERE TUTOR_MAPPER_ID = :tutorMapperId
 	</query>
-	<query type="update" id="updateTutorMapper" paramClass="com.model.components.TutorMapper">
-		UPDATE TUTOR_MAPPER SET
-	</query>
 	<query type="update" id="updateTutorMapperMappingStatus" paramClass="com.model.components.TutorMapper">
-		MAPPING_STATUS = :mappingStatus, WHO_ACTED = :userId, ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000), ADMIN_ACTION_REMARKS = :remarks WHERE TUTOR_MAPPER_ID = :tutorMapperId
+		UPDATE TUTOR_MAPPER SET
+			MAPPING_STATUS = :mappingStatus, 
+			WHO_ACTED = :whoActed, 
+			ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis, 
+			ADMIN_ACTION_REMARKS = :adminActionRemarks 
+		WHERE TUTOR_MAPPER_ID = :tutorMapperId
 	</query>
 	<query type="update" id="updateTutorMapperForDemoScheduled" paramClass="com.model.components.TutorMapper">
 		UPDATE TUTOR_MAPPER SET 
@@ -62,5 +64,18 @@
 			ADMIN_ACTION_DATE_MILLIS 	= :adminActionDateMillis, 
 			WHO_ACTED 					= :whoActed 
 		WHERE TUTOR_MAPPER_ID 			= :tutorMapperId
+	</query>
+	<query type="update" id="updateTutorMapperEnquiryClosedForEnquiryIdList">
+		UPDATE TUTOR_MAPPER SET
+			IS_ENQUIRY_CLOSED = :isEnquiryClosed, 
+			ENQUIRY_CLOSED_MILLIS = :enquiryClosedMillis
+		WHERE ENQUIRY_ID IN (:enquiryIdList)
+	</query>
+	<query type="update" id="updateTutorMapperEnquiryClosedForEnquiryMatchStatusList">
+		UPDATE TUTOR_MAPPER SET
+			IS_ENQUIRY_CLOSED = :isEnquiryClosed, 
+			ENQUIRY_CLOSED_MILLIS = :enquiryClosedMillis
+		WHERE ENQUIRY_ID IN (SELECT ENQUIRY_ID FROM ENQUIRY WHERE MATCH_STATUS IN (:matchStatusList))
+		AND (IS_ENQUIRY_CLOSED IS NULL OR IS_ENQUIRY_CLOSED &lt;&gt; 'Y')
 	</query>
 </queryMapper>

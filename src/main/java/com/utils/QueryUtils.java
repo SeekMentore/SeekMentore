@@ -21,13 +21,13 @@ public class QueryUtils implements GridComponentConstants {
 			String additionalFilterQueryString,
 			String additionalSorterQueryString
 	) {
-		LoggerUtils.logOnConsoleForcefully("baseQuery >> " + baseQuery);
-		LoggerUtils.logOnConsoleForcefully("baseQuery >> " + existingFilterQueryString);
-		LoggerUtils.logOnConsoleForcefully("baseQuery >> " + existingSorterQueryString);
-		LoggerUtils.logOnConsoleForcefully("baseQuery >> " + additionalFilterQueryString);
-		LoggerUtils.logOnConsoleForcefully("baseQuery >> " + additionalSorterQueryString);
+		LoggerUtils.logOnConsole("baseQuery >> " + baseQuery);
+		LoggerUtils.logOnConsole("baseQuery >> " + existingFilterQueryString);
+		LoggerUtils.logOnConsole("baseQuery >> " + existingSorterQueryString);
+		LoggerUtils.logOnConsole("baseQuery >> " + additionalFilterQueryString);
+		LoggerUtils.logOnConsole("baseQuery >> " + additionalSorterQueryString);
 		final String completeQuery = WHITESPACE +  baseQuery + WHITESPACE +  existingFilterQueryString + WHITESPACE + existingSorterQueryString;
-		LoggerUtils.logOnConsoleForcefully("completeQuery >> " + completeQuery);
+		LoggerUtils.logOnConsole("completeQuery >> " + completeQuery);
 		return completeQuery;
 	}	
 }

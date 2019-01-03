@@ -34,6 +34,8 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 	private String whoContactedName;
 	private String whoNotAnsweredName;
 	private String updatedByName;
+	private String isMailSent;
+	private Long mailSentMillis;
 	
 	public SubmitQuery() {}
 	
@@ -189,6 +191,22 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 		this.updatedByName = updatedByName;
 	}
 	
+	public String getIsMailSent() {
+		return isMailSent;
+	}
+
+	public void setIsMailSent(String isMailSent) {
+		this.isMailSent = isMailSent;
+	}
+
+	public Long getMailSentMillis() {
+		return mailSentMillis;
+	}
+
+	public void setMailSentMillis(Long mailSentMillis) {
+		this.mailSentMillis = mailSentMillis;
+	}
+
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -213,6 +231,8 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 			case "whoContactedName" : return "WHO_CONTACTED_NAME";
 			case "whoNotAnsweredName" : return "WHO_NOT_ANSWERED_NAME";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "isMailSent" : return "IS_MAIL_SENT";
+			case "mailSentMillis" : return "MAIL_SENT_MILLIS";
 		}
 		return EMPTY_STRING;
 	}

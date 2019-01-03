@@ -420,6 +420,9 @@
 	<query type="filter" id="submitQueryQueryStatusFilter">
 		WHERE QUERY_STATUS = :queryStatus
 	</query>
+	<query type="filter" id="submitQueryRespondedNonEmailSentFilter">
+		WHERE (IS_MAIL_SENT IS NULL OR IS_MAIL_SENT &lt;&gt; 'Y')
+	</query>
 	<query type="sorter" id="submitQueryExistingSorter">
 		ORDER BY QUERY_REQUESTED_DATE_MILLIS DESC
 	</query>
@@ -442,6 +445,12 @@
 			NOT_ANSWERED_REASON = :notAnsweredReason,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy
+		 WHERE QUERY_ID = :queryId
+	</query>
+	<query type="update" id="updateRespondSubmitQueryMailSent" paramClass="com.model.components.publicaccess.SubmitQuery">
+		UPDATE SUBMIT_QUERY SET
+			IS_MAIL_SENT = :isMailSent, 
+			MAIL_SENT_MILLIS = :mailSentMillis 
 		 WHERE QUERY_ID = :queryId
 	</query>
 </queryMapper>

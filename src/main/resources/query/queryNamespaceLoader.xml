@@ -11,6 +11,7 @@
 	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>
 	<namespace name="sales-tutor-mapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
 	<namespace name="sales-demo" mapperFilePath="query/components/sales/demo.xml"/>
+	<namespace name="sales-subscriptionpackage" mapperFilePath="query/components/sales/subscriptionpackage.xml"/>
 	<namespace name="admin-registeredtutor" mapperFilePath="query/components/admin/registeredtutor.xml"/>
 	<namespace name="admin-registeredtutor-tutordocument" mapperFilePath="query/components/admin/tutordocument.xml"/>
 	<namespace name="admin-registeredtutor-bankdetail" mapperFilePath="query/components/admin/bankdetail.xml"/>

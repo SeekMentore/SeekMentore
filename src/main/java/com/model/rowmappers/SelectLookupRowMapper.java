@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.constants.components.SelectLookupConstants;
 import com.model.components.commons.SelectLookup;
 import com.utils.ExceptionUtils;
+import com.utils.RowMapperUtils;
 
 public class SelectLookupRowMapper implements RowMapper<SelectLookup>, SelectLookupConstants {
 
 	@Override
 	public SelectLookup mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SelectLookup selectLookup = new SelectLookup();
 		selectLookup.setValue(ExceptionUtils.exceptionHandlerForRowMapper(row, "VALUE", String.class));
 		selectLookup.setLabel(ExceptionUtils.exceptionHandlerForRowMapper(row, "LABEL", String.class));

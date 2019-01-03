@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.AWSS3DeleteReport;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class AWSS3DeleteReportRowMapper implements RowMapper<AWSS3DeleteReport> {
 
 	@Override
 	public AWSS3DeleteReport mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final AWSS3DeleteReport awsS3DeleteReport = new AWSS3DeleteReport();
 		awsS3DeleteReport.setS3DeleteId(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("s3DeleteId"), Long.class));
 		awsS3DeleteReport.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("occuredAtMillis"), Long.class));

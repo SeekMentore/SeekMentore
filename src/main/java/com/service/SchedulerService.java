@@ -2,6 +2,7 @@ package com.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,20 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
+import com.constants.MailConstants;
 import com.constants.SchedulerConstants;
 import com.constants.components.EnquiryConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
 import com.model.ErrorPacket;
+import com.model.components.Demo;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
+import com.model.components.SubscriptionPackage;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
+import com.model.components.publicaccess.SubmitQuery;
 import com.model.mail.ApplicationMail;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
+import com.service.components.DemoService;
 import com.service.components.EnquiryService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
@@ -51,6 +58,9 @@ public class SchedulerService implements SchedulerConstants {
 	private transient LockService lockService;
 	
 	@Autowired
+	private transient AdminService adminService;
+	
+	@Autowired
 	private transient TutorService tutorService;
 	
 	@Autowired
@@ -58,6 +68,9 @@ public class SchedulerService implements SchedulerConstants {
 	
 	@Autowired
 	private transient EnquiryService enquiryService;
+	
+	@Autowired
+	private transient DemoService demoService;
 	
 	@Autowired
 	private transient MailService mailService;
@@ -255,6 +268,84 @@ public class SchedulerService implements SchedulerConstants {
 				throw new ApplicationException(e);
 			}
 			lockService.releaseLock("executeSubscribedCustomerJob", key);
+		}
+	}
+	
+	public void executeSubmitQueryResponderJob(final JobExecutionContext context) throws Exception {
+		final String key = lockService.lockObject("executeSubmitQueryResponderJob");
+		if (null != key) {
+			try {
+				LoggerUtils.logOnConsole("executeSubmitQueryResponderJob");
+				final Date currentTimestamp = new Date();
+				final List<SubmitQuery> submitQueryList = adminService.getSubmitQueryListForQueryResponded(true, 20);
+				if (ValidationUtils.checkNonEmptyList(submitQueryList)) {
+					final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+					for (final SubmitQuery submitQueryObj : submitQueryList) {
+						// TODO - Proper mail template
+						final Map<String, Object> mailParams = new HashMap<String, Object>();
+						mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryObj.getEmailId());
+						mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Response from Seek Mentore for your query");
+						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, submitQueryObj.getQueryResponse());
+						mailParamList.add(mailParams);
+						submitQueryObj.setIsMailSent(YES);
+						submitQueryObj.setMailSentMillis(currentTimestamp.getTime());
+					}
+					MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateRespondSubmitQueryMailSent", submitQueryList);
+				}
+			} catch(Exception e) {
+				lockService.releaseLock("executeSubmitQueryResponderJob", key);
+				throw new ApplicationException(e);
+			}
+			lockService.releaseLock("executeSubmitQueryResponderJob", key);
+		}
+	}
+	
+	public void executeSubscriptionCreationJob(final JobExecutionContext context) throws Exception {
+		final String key = lockService.lockObject("executeSubscriptionCreationJob");
+		if (null != key) {
+			try {
+				LoggerUtils.logOnConsole("executeSubscriptionCreationJob");
+				final Date currentTimestamp = new Date();
+				final List<Demo> demoList = demoService.getSuccessfullDemoList(true, 20);
+				if (ValidationUtils.checkNonEmptyList(demoList)) {
+					final List<SubscriptionPackage> subscriptionPackageList = new ArrayList<SubscriptionPackage>();
+					final List<Enquiry> enquiryList = new ArrayList<Enquiry>();
+					for (final Demo demo : demoList) {
+						final SubscriptionPackage subscriptionPackage = new SubscriptionPackage();
+						subscriptionPackage.setDemoId(demo.getDemoTrackerId());
+						subscriptionPackage.setTutorMapperId(demo.getTutorMapperId());
+						subscriptionPackage.setEnquiryId(demo.getEnquiryId());
+						subscriptionPackage.setCustomerId(demo.getCustomerId());
+						subscriptionPackage.setTutorId(demo.getTutorId());
+						subscriptionPackage.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+						subscriptionPackage.setCreatedMillis(currentTimestamp.getTime());
+						subscriptionPackage.setUpdatedBy("SYSTEM_SCHEDULER");
+						subscriptionPackageList.add(subscriptionPackage);
+						final Enquiry enquiry = new Enquiry();
+						enquiry.setEnquiryId(demo.getEnquiryId());
+						enquiry.setMatchStatus(EnquiryConstants.MATCH_STATUS_COMPLETED);
+						enquiry.setWhoActed("SYSTEM_SCHEDULER");
+						enquiry.setLastActionDateMillis(currentTimestamp.getTime());
+						enquiry.setAdminRemarks("Completed enquiry by Scheduler");
+						enquiryList.add(enquiry);
+						demo.setIsSubscriptionCreated(YES);
+						demo.setSubscriptionCreatedMillis(currentTimestamp.getTime());
+					}
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertSubscriptionPackage", subscriptionPackageList);
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoSubscriptionCreated", demoList);
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "updateEnquiryMatchStatus", enquiryList);
+				}
+				final Map<String, Object> paramsMap = new HashMap<String, Object>();
+				paramsMap.put("isEnquiryClosed", YES);
+				paramsMap.put("enquiryClosedMillis", currentTimestamp.getTime());
+				paramsMap.put("matchStatusList", Arrays.asList(new String[] {EnquiryConstants.MATCH_STATUS_COMPLETED, EnquiryConstants.MATCH_STATUS_ABORTED}));
+				applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapperEnquiryClosedForEnquiryMatchStatusList"), paramsMap);
+			} catch(Exception e) {
+				lockService.releaseLock("executeSubscriptionCreationJob", key);
+				throw new ApplicationException(e);
+			}
+			lockService.releaseLock("executeSubscriptionCreationJob", key);
 		}
 	}
 	

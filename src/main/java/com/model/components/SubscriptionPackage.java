@@ -2,24 +2,30 @@ package com.model.components;
 
 import java.io.Serializable;
 
+import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class SubscriptionPackage extends GridComponentObject implements Serializable {
+public class SubscriptionPackage extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = -171799632331459916L;
 	
 	private Long subscriptionPackageId;
 	private Long customerId;
 	private String customerName;
+	private String customerEmail;
+	private String customerContactNumber;
 	private Long tutorId;
 	private String tutorName;
+	private String tutorEmail;
+	private String tutorContactNumber;
 	private Integer totalHours;
 	private Long startDateMillis;
 	private Integer completedHours;
 	private Integer completedMinutes;
 	private Long endDateMillis;
 	private String whoActed;
+	private String whoActedName;
 	private String adminRemarks;
 	private String customerRemarks;
 	private String tutorRemarks;
@@ -30,6 +36,23 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String tutorHappinessIndex;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
+	private String updatedByName;
+	private Long tutorMapperId;
+	private Integer tutorMapperQuotedTutorRate;
+	private Integer tutorMapperNegotiatedRateWithTutor;
+	private String tutorMapperTutorNegotiationRemarks;
+	private Long enquiryId;
+	private String enquirySubject;
+	private String enquiryGrade;
+	private String enquiryLocation;
+	private String enquiryAddressDetails;
+	private String enquiryAdditionalDetails;
+	private String enquiryPreferredTeachingType;
+	private Integer enquiryQuotedClientRate ;
+	private Integer enquiryNegotiatedRateWithClient;
+	private String enquiryClientNegotiationRemarks;
+	private Long demoId;
+	private Long createdMillis;
 	
 	public SubscriptionPackage() {}
 
@@ -177,36 +200,6 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.updatedBy = updatedBy;
 	}
 	
-	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "subscriptionPackageId" : return "SUBSCRIPTION_PACKAGE_ID";
-			case "customerId" : return "CUSTOMER_ID";
-			case "customerName" : return "CUSTOMER_NAME";
-			case "tutorId" : return "TUTOR_ID";
-			case "tutorName" : return "TUTOR_NAME";
-			case "totalHours" : return "TOTAL_HOURS";
-			case "startDateMillis" : return "START_DATE_MILLIS";
-			case "completedHours" : return "COMPLETED_HOURS";
-			case "completedMinutes" : return "COMPLETED_MINUTES";
-			case "endDateMillis" : return "END_DATE_MILLIS";
-			case "whoActed" : return "WHO_ACTED";
-			case "adminRemarks" : return "ADMIN_REMARKS";
-			case "customerRemarks" : return "CUSTOMER_REMARKS";
-			case "tutorRemarks" : return "TUTOR_REMARKS";
-			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
-			case "isCustomerGrieved" : return "IS_CUSTOMER_GRIEVED";
-			case "isTutorGrieved" : return "IS_TUTOR_GRIEVED";
-			case "customerHappinessIndex" : return "CUSTOMER_HAPPINESS_INDEX";
-			case "tutorHappinessIndex" : return "TUTOR_HAPPINESS_INDEX";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "updatedBy" : return "UPDATED_BY";
-		}
-		return EMPTY_STRING;
-	}
-
 	public Long getCustomerId() {
 		return customerId;
 	}
@@ -229,5 +222,243 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 
 	public void setTutorName(String tutorName) {
 		this.tutorName = tutorName;
+	}
+	
+	public Long getDemoId() {
+		return demoId;
+	}
+
+	public void setDemoId(Long demoId) {
+		this.demoId = demoId;
+	}
+
+	public Long getTutorMapperId() {
+		return tutorMapperId;
+	}
+
+	public void setTutorMapperId(Long tutorMapperId) {
+		this.tutorMapperId = tutorMapperId;
+	}
+
+	public Long getEnquiryId() {
+		return enquiryId;
+	}
+
+	public void setEnquiryId(Long enquiryId) {
+		this.enquiryId = enquiryId;
+	}
+
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
+	}
+
+	public String getUpdatedByName() {
+		return updatedByName;
+	}
+
+	public void setUpdatedByName(String updatedByName) {
+		this.updatedByName = updatedByName;
+	}
+	
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerContactNumber() {
+		return customerContactNumber;
+	}
+
+	public void setCustomerContactNumber(String customerContactNumber) {
+		this.customerContactNumber = customerContactNumber;
+	}
+
+	public String getTutorEmail() {
+		return tutorEmail;
+	}
+
+	public void setTutorEmail(String tutorEmail) {
+		this.tutorEmail = tutorEmail;
+	}
+
+	public String getTutorContactNumber() {
+		return tutorContactNumber;
+	}
+
+	public void setTutorContactNumber(String tutorContactNumber) {
+		this.tutorContactNumber = tutorContactNumber;
+	}
+
+	public Integer getTutorMapperQuotedTutorRate() {
+		return tutorMapperQuotedTutorRate;
+	}
+
+	public void setTutorMapperQuotedTutorRate(Integer tutorMapperQuotedTutorRate) {
+		this.tutorMapperQuotedTutorRate = tutorMapperQuotedTutorRate;
+	}
+
+	public Integer getTutorMapperNegotiatedRateWithTutor() {
+		return tutorMapperNegotiatedRateWithTutor;
+	}
+
+	public void setTutorMapperNegotiatedRateWithTutor(Integer tutorMapperNegotiatedRateWithTutor) {
+		this.tutorMapperNegotiatedRateWithTutor = tutorMapperNegotiatedRateWithTutor;
+	}
+
+	public String getTutorMapperTutorNegotiationRemarks() {
+		return tutorMapperTutorNegotiationRemarks;
+	}
+
+	public void setTutorMapperTutorNegotiationRemarks(String tutorMapperTutorNegotiationRemarks) {
+		this.tutorMapperTutorNegotiationRemarks = tutorMapperTutorNegotiationRemarks;
+	}
+
+	public String getEnquirySubject() {
+		return enquirySubject;
+	}
+
+	public void setEnquirySubject(String enquirySubject) {
+		this.enquirySubject = enquirySubject;
+	}
+
+	public String getEnquiryGrade() {
+		return enquiryGrade;
+	}
+
+	public void setEnquiryGrade(String enquiryGrade) {
+		this.enquiryGrade = enquiryGrade;
+	}
+
+	public String getEnquiryLocation() {
+		return enquiryLocation;
+	}
+
+	public void setEnquiryLocation(String enquiryLocation) {
+		this.enquiryLocation = enquiryLocation;
+	}
+
+	public String getEnquiryAddressDetails() {
+		return enquiryAddressDetails;
+	}
+
+	public void setEnquiryAddressDetails(String enquiryAddressDetails) {
+		this.enquiryAddressDetails = enquiryAddressDetails;
+	}
+
+	public String getEnquiryAdditionalDetails() {
+		return enquiryAdditionalDetails;
+	}
+
+	public void setEnquiryAdditionalDetails(String enquiryAdditionalDetails) {
+		this.enquiryAdditionalDetails = enquiryAdditionalDetails;
+	}
+
+	public String getEnquiryPreferredTeachingType() {
+		return enquiryPreferredTeachingType;
+	}
+
+	public void setEnquiryPreferredTeachingType(String enquiryPreferredTeachingType) {
+		this.enquiryPreferredTeachingType = enquiryPreferredTeachingType;
+	}
+
+	public Integer getEnquiryQuotedClientRate() {
+		return enquiryQuotedClientRate;
+	}
+
+	public void setEnquiryQuotedClientRate(Integer enquiryQuotedClientRate) {
+		this.enquiryQuotedClientRate = enquiryQuotedClientRate;
+	}
+
+	public Integer getEnquiryNegotiatedRateWithClient() {
+		return enquiryNegotiatedRateWithClient;
+	}
+
+	public void setEnquiryNegotiatedRateWithClient(Integer enquiryNegotiatedRateWithClient) {
+		this.enquiryNegotiatedRateWithClient = enquiryNegotiatedRateWithClient;
+	}
+
+	public String getEnquiryClientNegotiationRemarks() {
+		return enquiryClientNegotiationRemarks;
+	}
+
+	public void setEnquiryClientNegotiationRemarks(String enquiryClientNegotiationRemarks) {
+		this.enquiryClientNegotiationRemarks = enquiryClientNegotiationRemarks;
+	}
+
+	public Long getCreatedMillis() {
+		return createdMillis;
+	}
+
+	public void setCreatedMillis(Long createdMillis) {
+		this.createdMillis = createdMillis;
+	}
+
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "subscriptionPackageId" : return "SUBSCRIPTION_PACKAGE_ID";
+			case "customerId" : return "CUSTOMER_ID";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorId" : return "TUTOR_ID";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "totalHours" : return "TOTAL_HOURS";
+			case "startDateMillis" : return "START_DATE_MILLIS";
+			case "completedHours" : return "COMPLETED_HOURS";
+			case "completedMinutes" : return "COMPLETED_MINUTES";
+			case "endDateMillis" : return "END_DATE_MILLIS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "adminRemarks" : return "ADMIN_REMARKS";
+			case "customerRemarks" : return "CUSTOMER_REMARKS";
+			case "tutorRemarks" : return "TUTOR_REMARKS";
+			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
+			case "isCustomerGrieved" : return "IS_CUSTOMER_GRIEVED";
+			case "isTutorGrieved" : return "IS_TUTOR_GRIEVED";
+			case "customerHappinessIndex" : return "CUSTOMER_HAPPINESS_INDEX";
+			case "tutorHappinessIndex" : return "TUTOR_HAPPINESS_INDEX";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySubject" : return "ENQUIRY_SUBJECT";
+			case "enquiryGrade" : return "ENQUIRY_GRADE";
+			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryAddressDetails" : return "ENQUIRY_ADDRESS_DETAILS";
+			case "enquiryAdditionalDetails" : return "ENQUIRY_ADDITIONAL_DETAILS";
+			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
+			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
+			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
+			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
+			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
+			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
+			case "demoId" : return "DEMO_ID";
+			case "createdMillis" : return "CREATED_MILLIS";
+		}
+		return EMPTY_STRING;
 	}
 }

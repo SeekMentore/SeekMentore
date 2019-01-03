@@ -127,9 +127,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public void takeActionOnEnquiry(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("sales-enquiry", "updateEnquiry"));
-		query.append(queryMapperService.getQuerySQL("sales-enquiry", "updateEnquiryMatchStatus"));
+	public void takeActionOnEnquiry(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
 		String matchStatus = EMPTY_STRING;
 		switch(button) {
 			case BUTTON_ACTION_TO_BE_MAPPED : {
@@ -145,17 +144,17 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		final List<Enquiry> paramObjectList = new LinkedList<Enquiry>();
 		for (final String enquiryId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("matchStatus", matchStatus);
-			paramsMap.put("enquiryId", enquiryId);
-			paramsList.add(paramsMap);
+			final Enquiry enquiry = new Enquiry();
+			enquiry.setWhoActed(activeUser.getUserId());
+			enquiry.setAdminRemarks(comments);
+			enquiry.setMatchStatus(matchStatus);
+			enquiry.setLastActionDateMillis(currentTimestamp.getTime());
+			enquiry.setEnquiryId(Long.valueOf(enquiryId));
+			paramObjectList.add(enquiry);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "updateEnquiryMatchStatus", paramObjectList);
 	}
 	
 	@Transactional
@@ -165,7 +164,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Transactional
 	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
-		final String baseQuery = "UPDATE ENQUIRIES SET";
+		final String baseQuery = "UPDATE ENQUIRY SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE ENQUIRY_ID = :enquiryId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -297,9 +296,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public void takeActionOnTutorMapper(final String button, final List<String> idList, final String comments, final User activeUser) {
-		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapper"));
-		query.append(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapperMappingStatus"));
+	public void takeActionOnTutorMapper(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
 		String mappingStatus = EMPTY_STRING;
 		switch(button) {
 			case BUTTON_ACTION_DEMO_READY : {
@@ -311,17 +309,17 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		final List<TutorMapper> paramObjectList = new LinkedList<TutorMapper>();
 		for (final String tutorMapperId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("mappingStatus", mappingStatus);
-			paramsMap.put("tutorMapperId", tutorMapperId);
-			paramsList.add(paramsMap);
+			final TutorMapper tutorMapper = new TutorMapper();
+			tutorMapper.setWhoActed(activeUser.getUserId());
+			tutorMapper.setAdminActionRemarks(comments);
+			tutorMapper.setMappingStatus(mappingStatus);
+			tutorMapper.setAdminActionDateMillis(currentTimestamp.getTime());
+			tutorMapper.setTutorMapperId(Long.valueOf(tutorMapperId));
+			paramObjectList.add(tutorMapper);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "updateTutorMapperMappingStatus", paramObjectList);
 	}
 	
 	@Transactional

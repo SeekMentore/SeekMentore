@@ -279,8 +279,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 
 	@Transactional
 	public void takeActionOnDemo(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
-		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("sales-demo", "updateDemo"));
-		query.append(queryMapperService.getQuerySQL("sales-demo", "updateDemoStatus"));
+		final Date currentTimestamp = new Date();
 		String demoStatus = EMPTY_STRING;
 		switch(button) {
 			case BUTTON_ACTION_CANCEL : {
@@ -288,17 +287,17 @@ public class DemoService implements DemoConstants, SalesConstants {
 				break;
 			}
 		}
-		final String baseQuery = query.toString();
-		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
+		final List<Demo> paramObjectList = new LinkedList<Demo>();
 		for (final String demoTrackerId : idList) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("userId", activeUser.getUserId());
-			paramsMap.put("remarks", comments);
-			paramsMap.put("demoStatus", demoStatus);
-			paramsMap.put("demoTrackerId", demoTrackerId);
-			paramsList.add(paramsMap);
+			final Demo demo = new Demo();
+			demo.setWhoActed(activeUser.getUserId());
+			demo.setAdminFinalizingRemarks(comments);
+			demo.setDemoStatus(demoStatus);
+			demo.setAdminActionDateMillis(currentTimestamp.getTime());
+			demo.setDemoTrackerId(Long.valueOf(demoTrackerId));
+			paramObjectList.add(demo);
 		}
-		applicationDao.executeBatchUpdate(baseQuery, paramsList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoStatus", paramObjectList);
 		if (sendEmails) {
 			switch(button) {
 				case BUTTON_ACTION_CANCEL : {
@@ -315,7 +314,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 
 	@Transactional
 	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) {
-		final String baseQuery = "UPDATE DEMO_TRACKER SET";
+		final String baseQuery = "UPDATE DEMO SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE DEMO_TRACKER_ID = :demoTrackerId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -419,5 +418,16 @@ public class DemoService implements DemoConstants, SalesConstants {
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
 		}
+	}
+	
+	public List<Demo> getSuccessfullDemoList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+		GridComponent gridComponent = null;
+		if (limitRecords) {
+			gridComponent = new GridComponent(1, limit, Demo.class);
+		} else {
+			gridComponent = new GridComponent(Demo.class);
+		}
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("sales-demo", "successfullDemoSubscriptionPendingFilter"));
+		return getDemoList(RestMethodConstants.REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST, gridComponent);
 	}
 }

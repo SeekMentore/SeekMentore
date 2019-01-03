@@ -9,12 +9,14 @@ import com.constants.components.CustomerConstants;
 import com.model.components.SubscribedCustomer;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 import com.utils.UserUtils;
 
 public class SubscribedCustomerRowMapper implements RowMapper<SubscribedCustomer>, CustomerConstants {
 
 	@Override 
 	public SubscribedCustomer mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
 		subscribedCustomer.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("customerId"), Long.class));
 		subscribedCustomer.setFindTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomer.resolveColumnNameForMapping("findTutorId"), Long.class));

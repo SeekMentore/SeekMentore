@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.Complaint;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class ComplaintRowMapper implements RowMapper<Complaint> {
 
 	@Override
 	public Complaint mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Complaint complaint = new Complaint();
 		complaint.setComplaintId(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("complaintId"), Long.class));
 		complaint.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("name"), String.class));

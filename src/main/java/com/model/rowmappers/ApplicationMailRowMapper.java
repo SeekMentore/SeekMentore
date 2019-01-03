@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.mail.ApplicationMail;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class ApplicationMailRowMapper implements RowMapper<ApplicationMail> {
 
 	@Override
 	public ApplicationMail mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final ApplicationMail mailObject = new ApplicationMail();
 		mailObject.setMailId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("mailId"), Long.class));
 		mailObject.setMailType(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("mailType"), String.class));

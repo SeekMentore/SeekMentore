@@ -11,11 +11,13 @@ import com.model.components.publicaccess.BecomeTutor;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
 import com.utils.PublicApplicationUtils;
+import com.utils.RowMapperUtils;
 
 public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutorConstants {
 
 	@Override
 	public BecomeTutor mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final BecomeTutor becomeTutor = new BecomeTutor();
 		becomeTutor.setTentativeTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("tentativeTutorId"), Long.class));
 		becomeTutor.setApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("applicationDateMillis"), Long.class));

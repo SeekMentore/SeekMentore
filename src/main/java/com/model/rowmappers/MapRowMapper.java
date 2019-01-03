@@ -8,10 +8,13 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.utils.RowMapperUtils;
+
 public class MapRowMapper implements RowMapper<Map<String, Object>> {
 
 	@Override
 	public Map<String, Object> mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Map<String, Object> resultMap = new HashMap<String, Object>();
 		final ResultSetMetaData resultSetMetaData = row.getMetaData();
 		// The column count starts from 1

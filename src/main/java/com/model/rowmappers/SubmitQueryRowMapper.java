@@ -10,11 +10,13 @@ import com.model.components.publicaccess.SubmitQuery;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
 import com.utils.PublicApplicationUtils;
+import com.utils.RowMapperUtils;
 
 public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQueryConstants {
 
 	@Override
 	public SubmitQuery mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubmitQuery submitQuery = new SubmitQuery();
 		submitQuery.setQueryId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryId"), Long.class));
 		submitQuery.setQueryRequestedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryRequestedDateMillis"), Long.class));
@@ -35,6 +37,8 @@ public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQuery
 		submitQuery.setWhoContactedName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoContactedName"), String.class));
 		submitQuery.setWhoNotAnsweredName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoNotAnsweredName"), String.class));
 		submitQuery.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("updatedByName"), String.class));
+		submitQuery.setIsMailSent(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("isMailSent"), String.class));
+		submitQuery.setMailSentMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("mailSentMillis"), Long.class));
 		PublicApplicationUtils.mapMigrationColumnsForRecords(submitQuery, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(submitQuery, row, rowNum);
 		return submitQuery;

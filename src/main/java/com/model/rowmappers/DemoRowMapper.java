@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.model.components.Demo;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
+import com.utils.RowMapperUtils;
 
 public class DemoRowMapper implements RowMapper<Demo> {
 
 	@Override
 	public Demo mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Demo demo = new Demo();
 		demo.setDemoTrackerId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("demoTrackerId"), Long.class));
 		demo.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorMapperId"), Long.class));
@@ -61,6 +63,8 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		demo.setTutorMapperTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorMapperTutorNegotiationRemarks"), String.class));
 		demo.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("entryDateMillis"), Long.class));
 		demo.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("whoActedName"), String.class));
+		demo.setIsSubscriptionCreated(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("isSubscriptionCreated"), String.class));
+		demo.setSubscriptionCreatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("subscriptionCreatedMillis"), Long.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(demo, row, rowNum);
 		return demo;
 	}

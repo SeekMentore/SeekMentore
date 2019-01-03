@@ -10,11 +10,13 @@ import com.model.components.publicaccess.FindTutor;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
 import com.utils.PublicApplicationUtils;
+import com.utils.RowMapperUtils;
 
 public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConstants {
 
 	@Override
 	public FindTutor mapRow(ResultSet row, int rowNum) throws SQLException {
+		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final FindTutor findTutor = new FindTutor();
 		findTutor.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("enquiryId"), Long.class));
 		findTutor.setEnquiryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("enquiryDateMillis"), Long.class));

@@ -1,49 +1,27 @@
 package com.webservices.rest.components.old;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
-import org.apache.poi.util.IOUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.TutorConstants;
-import com.model.ErrorPacket;
-import com.model.components.RegisteredTutor;
-import com.model.components.TutorDocument;
-import com.service.components.CommonsService;
-import com.service.components.TutorService;
-import com.utils.ApplicationUtils;
-import com.utils.FileSystemUtils;
-import com.utils.FileUtils;
-import com.utils.JSONUtils;
-import com.utils.ValidationUtils;
-import com.utils.WebServiceUtils;
-import com.utils.context.AppContext;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_TUTOR+"old") 
 public class TutorRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
+
+	@Override
+	protected void doSecurity(HttpServletRequest request) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}/*
 	
 	private Long tutorId;
 	private String panCardFileName;
@@ -173,9 +151,9 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		}
 	}
 	
-	/*
+	
 	 * Admin Functions
-	 */
+	 
 	@Path(REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST)
 	@Consumes({MediaType.APPLICATION_JSON})
 	@POST
@@ -511,4 +489,4 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	}
-}
+*/}
