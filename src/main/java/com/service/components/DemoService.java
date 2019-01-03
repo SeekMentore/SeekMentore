@@ -172,29 +172,46 @@ public class DemoService implements DemoConstants, SalesConstants {
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
-				existingFilterQueryString += queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter");
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
+											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST : {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
-				existingFilterQueryString += queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
+											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
 				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SCHEDULED_DEMO_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
 				paramsMap.put("demoStatus", DEMO_STATUS_SUCCESS);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_FAILED_DEMO_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
 				paramsMap.put("demoStatus", DEMO_STATUS_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CANCELED_DEMO_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter")
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
+				paramsMap.put("demoStatus", DEMO_STATUS_CANCELED);
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoEnquiryClosedFilter");
 				paramsMap.put("demoStatus", DEMO_STATUS_CANCELED);
 				break;
 			}

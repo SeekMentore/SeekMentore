@@ -2,13 +2,15 @@
 <queryMapper namespace="admin-subscribedcustomer">
 	<query type="insert" id="insertSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		INSERT INTO SUBSCRIBED_CUSTOMER
-			(NAME, CONTACT_NUMBER, EMAIL_ID, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
+			(NAME, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
 		VALUES
-			(:name, :contactNumber, :emailId, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
+			(:name, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
 	</query>
 	<query type="select" id="selectSubscribedCustomer">
 		SELECT
 			C.*,
+			(SELECT EMAIL_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID SCE WHERE SCE.CUSTOMER_ID = C.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y') AS EMAIL_ID,
+    		(SELECT CONTACT_NUMBER FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC WHERE SCC.CUSTOMER_ID = C.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y') AS CONTACT_NUMBER,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_BLACKLISTED), C.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_UN_BLACKLISTED), C.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME

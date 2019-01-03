@@ -59,6 +59,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	private Long entryDateMillis;
 	private String isSubscriptionCreated;
 	private Long subscriptionCreatedMillis;
+	private String isEnquiryClosed;
+	private Long enquiryClosedMillis;
 	
 	public Demo() {}
 	
@@ -453,6 +455,22 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	public void setSubscriptionCreatedMillis(Long subscriptionCreatedMillis) {
 		this.subscriptionCreatedMillis = subscriptionCreatedMillis;
 	}
+	
+	public String getIsEnquiryClosed() {
+		return isEnquiryClosed;
+	}
+
+	public void setIsEnquiryClosed(String isEnquiryClosed) {
+		this.isEnquiryClosed = isEnquiryClosed;
+	}
+
+	public Long getEnquiryClosedMillis() {
+		return enquiryClosedMillis;
+	}
+
+	public void setEnquiryClosedMillis(Long enquiryClosedMillis) {
+		this.enquiryClosedMillis = enquiryClosedMillis;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -518,6 +536,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
 			case "isSubscriptionCreated" : return "IS_SUBSCRIPTION_CREATED";
 			case "subscriptionCreatedMillis" : return "SUBSCRIPTION_CREATED_MILLIS";
+			case "isEnquiryClosed" : return "IS_ENQUIRY_CLOSED";
+			case "enquiryClosedMillis" : return "ENQUIRY_CLOSED_MILLIS";
 		}
 		return EMPTY_STRING;
 	}

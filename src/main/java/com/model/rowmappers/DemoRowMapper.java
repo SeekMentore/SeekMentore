@@ -65,6 +65,8 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		demo.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("whoActedName"), String.class));
 		demo.setIsSubscriptionCreated(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("isSubscriptionCreated"), String.class));
 		demo.setSubscriptionCreatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("subscriptionCreatedMillis"), Long.class));
+		demo.setIsEnquiryClosed(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("isEnquiryClosed"), String.class));
+		demo.setEnquiryClosedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryClosedMillis"), Long.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(demo, row, rowNum);
 		return demo;
 	}

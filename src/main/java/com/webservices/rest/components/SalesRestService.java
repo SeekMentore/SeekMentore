@@ -839,6 +839,34 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String enquiryClosedDemoList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
+			final List<Demo> demoList = getDemoService().getDemoList(REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, demoList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(demoList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_DEMO)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1050,6 +1078,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
 			case REST_METHOD_NAME_FAILED_DEMO_LIST : 
 			case REST_METHOD_NAME_CANCELED_DEMO_LIST : 
+			case REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST : 
 			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
 			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : {
 				this.securityPassed = true;

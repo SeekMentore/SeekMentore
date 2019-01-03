@@ -78,6 +78,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST = "/successfulDemoList";
 	String REST_METHOD_NAME_FAILED_DEMO_LIST = "/failedDemoList";
 	String REST_METHOD_NAME_CANCELED_DEMO_LIST = "/canceledDemoList";
+	String REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST = "/enquiryClosedDemoList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_DEMO = "/takeActionOnDemo";
 	String REST_METHOD_NAME_RE_SCHEDULE_DEMO = "/reScheduleDemo";
 	String REST_METHOD_NAME_UPDATE_DEMO_RECORD = "/updateDemoRecord";

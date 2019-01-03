@@ -325,22 +325,27 @@ public class SchedulerService implements SchedulerConstants {
 						final Enquiry enquiry = new Enquiry();
 						enquiry.setEnquiryId(demo.getEnquiryId());
 						enquiry.setMatchStatus(EnquiryConstants.MATCH_STATUS_COMPLETED);
+						enquiry.setTutorId(demo.getTutorId());
+						enquiry.setIsMapped(YES);
 						enquiry.setWhoActed("SYSTEM_SCHEDULER");
 						enquiry.setLastActionDateMillis(currentTimestamp.getTime());
 						enquiry.setAdminRemarks("Completed enquiry by Scheduler");
 						enquiryList.add(enquiry);
 						demo.setIsSubscriptionCreated(YES);
 						demo.setSubscriptionCreatedMillis(currentTimestamp.getTime());
+						demo.setIsEnquiryClosed(YES);
+						demo.setEnquiryClosedMillis(currentTimestamp.getTime());
 					}
 					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertSubscriptionPackage", subscriptionPackageList);
 					applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoSubscriptionCreated", demoList);
-					applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "updateEnquiryMatchStatus", enquiryList);
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "updateEnquiryCompleted", enquiryList);
 				}
 				final Map<String, Object> paramsMap = new HashMap<String, Object>();
 				paramsMap.put("isEnquiryClosed", YES);
 				paramsMap.put("enquiryClosedMillis", currentTimestamp.getTime());
 				paramsMap.put("matchStatusList", Arrays.asList(new String[] {EnquiryConstants.MATCH_STATUS_COMPLETED, EnquiryConstants.MATCH_STATUS_ABORTED}));
 				applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-tutormapper", "updateTutorMapperEnquiryClosedForEnquiryMatchStatusList"), paramsMap);
+				applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-demo", "updateDemoEnquiryClosedForEnquiryMatchStatusList"), paramsMap);
 			} catch(Exception e) {
 				lockService.releaseLock("executeSubscriptionCreationJob", key);
 				throw new ApplicationException(e);
