@@ -340,7 +340,7 @@ public class SchedulerService implements SchedulerConstants {
 				paramsMap.put("isEnquiryClosed", YES);
 				paramsMap.put("enquiryClosedMillis", currentTimestamp.getTime());
 				paramsMap.put("matchStatusList", Arrays.asList(new String[] {EnquiryConstants.MATCH_STATUS_COMPLETED, EnquiryConstants.MATCH_STATUS_ABORTED}));
-				applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-tutor-mapper", "updateTutorMapperEnquiryClosedForEnquiryMatchStatusList"), paramsMap);
+				applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-tutormapper", "updateTutorMapperEnquiryClosedForEnquiryMatchStatusList"), paramsMap);
 			} catch(Exception e) {
 				lockService.releaseLock("executeSubscriptionCreationJob", key);
 				throw new ApplicationException(e);

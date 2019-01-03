@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<queryMapper namespace="sales-tutor-mapper">
+<queryMapper namespace="sales-tutormapper">
 	<query type="select" id="selectTutorMapper">
 		SELECT
 			TM.*,
@@ -36,6 +36,12 @@
 	</query>
 	<query type="filter" id="tutorMapperCurrentEnquiryAllMappedTutors">
 		WHERE TM.ENQUIRY_ID = :enquiryId
+	</query>
+	<query type="filter" id="tutorMapperEnquiryClosedFilter">
+		WHERE TM.IS_ENQUIRY_CLOSED = 'Y'
+	</query>
+	<query type="filter" id="tutorMapperEnquiryOpenAdditionalFilter">
+		AND (TM.IS_ENQUIRY_CLOSED IS NULL OR TM.IS_ENQUIRY_CLOSED &lt;&gt; 'Y')
 	</query>
 	<query type="sorter" id="tutorMapperEntryDateSorter">
 		ORDER BY ENTRY_DATE_MILLIS

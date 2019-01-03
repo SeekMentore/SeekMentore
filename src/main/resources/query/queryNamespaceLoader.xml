@@ -9,7 +9,7 @@
 	<namespace name="complaint" mapperFilePath="query/components/commons/complaint.xml"/>
 	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
 	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>
-	<namespace name="sales-tutor-mapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
+	<namespace name="sales-tutormapper" mapperFilePath="query/components/sales/tutormapper.xml"/>
 	<namespace name="sales-demo" mapperFilePath="query/components/sales/demo.xml"/>
 	<namespace name="sales-subscriptionpackage" mapperFilePath="query/components/sales/subscriptionpackage.xml"/>
 	<namespace name="admin-registeredtutor" mapperFilePath="query/components/admin/registeredtutor.xml"/>

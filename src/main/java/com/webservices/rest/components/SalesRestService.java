@@ -516,6 +516,34 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String enquiryClosedMappedTutorsList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1017,6 +1045,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
+			case REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_SCHEDULED_DEMO_LIST : 
 			case REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST : 
 			case REST_METHOD_NAME_FAILED_DEMO_LIST : 

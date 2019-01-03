@@ -247,35 +247,48 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final String baseQuery = queryMapperService.getQuerySQL("sales-tutor-mapper", "selectTutorMapper");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperMappingStatusFilter");
-		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperEntryDateSorter");
+		final String baseQuery = queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapper");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEntryDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperMappingStatusFilter") 
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("mappingStatus", MAPPING_STATUS_PENDING);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperMappingStatusFilter") 
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("mappingStatus", MAPPING_STATUS_DEMO_READY);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperMappingStatusFilter") 
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("mappingStatus", MAPPING_STATUS_DEMO_SCHEDULED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentEnquiryAllMappedTutors");
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentEnquiryAllMappedTutors")
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentTutorMappingFilter");
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentTutorMappingFilter")
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutor-mapper", "tutorMapperCurrentCustomerMappingFilter");
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentCustomerMappingFilter")
+											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST : {
+				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryClosedFilter");
 				break;
 			}
 		}
@@ -297,7 +310,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			tutorMapperObject.setEntryDateMillis(currentTimestamp.getTime());
 			tutorMapperList.add(tutorMapperObject);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "insertTutorMapper", tutorMapperList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutormapper", "insertTutorMapper", tutorMapperList);
 	}
 	
 	@Transactional
@@ -308,7 +321,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			tutorMapperObject.setTutorMapperId(Long.valueOf(tutorMapperId));
 			tutorMapperList.add(tutorMapperObject);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "deleteTutorMapper", tutorMapperList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutormapper", "deleteTutorMapper", tutorMapperList);
 	}
 	
 	@Transactional
@@ -335,7 +348,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			tutorMapper.setTutorMapperId(Long.valueOf(tutorMapperId));
 			paramObjectList.add(tutorMapper);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutor-mapper", "updateTutorMapperMappingStatus", paramObjectList);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutormapper", "updateTutorMapperMappingStatus", paramObjectList);
 	}
 	
 	@Transactional
@@ -449,7 +462,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		tutorMapperObject.setMappingStatus(EnquiryConstants.MAPPING_STATUS_DEMO_SCHEDULED);
 		tutorMapperObject.setWhoActed(activeUser.getUserId());
 		tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
-		applicationDao.executeUpdateWithQueryMapper("sales-tutor-mapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
+		applicationDao.executeUpdateWithQueryMapper("sales-tutormapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
 		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null);
 	}
 }

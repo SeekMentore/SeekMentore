@@ -83,6 +83,7 @@
 			<webservice id="pendingMappedTutorsList" url="/pendingMappedTutorsList"></webservice>
 			<webservice id="demoReadyMappedTutorsList" url="/demoReadyMappedTutorsList"></webservice>
 			<webservice id="demoScheduledMappedTutorsList" url="/demoScheduledMappedTutorsList"></webservice>
+			<webservice id="enquiryClosedMappedTutorsList" url="/enquiryClosedMappedTutorsList"></webservice>
 			<webservice id="takeActionOnMappedTutor" url="/takeActionOnMappedTutor"></webservice>
 			<webservice id="mappedTutorCheckScheduleDemoAccess" url="/mappedTutorCheckScheduleDemoAccess"></webservice>
 			<webservice id="currentTutorMappingList" url="/currentTutorMappingList"></webservice>
