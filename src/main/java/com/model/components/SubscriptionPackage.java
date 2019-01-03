@@ -52,6 +52,20 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private Integer enquiryNegotiatedRateWithClient;
 	private String enquiryClientNegotiationRemarks;
 	private Long demoId;
+	private String demoClientRemarks;
+	private String demoTutorRemarks;
+	private String demoClientSatisfiedFromTutor;
+	private String demoTutorSatisfiedWithClient;
+	private String demoAdminSatisfiedFromTutor;
+	private String demoAdminSatisfiedWithClient;
+	private String demoNeedPriceNegotiationWithClient;
+	private String demoClientNegotiationRemarks;
+	private String demoNeedPriceNegotiationWithTutor;
+	private String demoTutorNegotiationRemarks;
+	private String demoAdminRemarks;
+	private Integer demoNegotiatedOverrideRateWithClient;
+	private Integer demoNegotiatedOverrideRateWithTutor;
+	private String demoAdminFinalizingRemarks;
 	private Long createdMillis;
 	
 	public SubscriptionPackage() {}
@@ -400,6 +414,118 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.createdMillis = createdMillis;
 	}
 
+	public String getDemoClientRemarks() {
+		return demoClientRemarks;
+	}
+
+	public void setDemoClientRemarks(String demoClientRemarks) {
+		this.demoClientRemarks = demoClientRemarks;
+	}
+
+	public String getDemoTutorRemarks() {
+		return demoTutorRemarks;
+	}
+
+	public void setDemoTutorRemarks(String demoTutorRemarks) {
+		this.demoTutorRemarks = demoTutorRemarks;
+	}
+
+	public String getDemoClientSatisfiedFromTutor() {
+		return demoClientSatisfiedFromTutor;
+	}
+
+	public void setDemoClientSatisfiedFromTutor(String demoClientSatisfiedFromTutor) {
+		this.demoClientSatisfiedFromTutor = demoClientSatisfiedFromTutor;
+	}
+
+	public String getDemoTutorSatisfiedWithClient() {
+		return demoTutorSatisfiedWithClient;
+	}
+
+	public void setDemoTutorSatisfiedWithClient(String demoTutorSatisfiedWithClient) {
+		this.demoTutorSatisfiedWithClient = demoTutorSatisfiedWithClient;
+	}
+
+	public String getDemoAdminSatisfiedFromTutor() {
+		return demoAdminSatisfiedFromTutor;
+	}
+
+	public void setDemoAdminSatisfiedFromTutor(String demoAdminSatisfiedFromTutor) {
+		this.demoAdminSatisfiedFromTutor = demoAdminSatisfiedFromTutor;
+	}
+
+	public String getDemoAdminSatisfiedWithClient() {
+		return demoAdminSatisfiedWithClient;
+	}
+
+	public void setDemoAdminSatisfiedWithClient(String demoAdminSatisfiedWithClient) {
+		this.demoAdminSatisfiedWithClient = demoAdminSatisfiedWithClient;
+	}
+
+	public String getDemoNeedPriceNegotiationWithClient() {
+		return demoNeedPriceNegotiationWithClient;
+	}
+
+	public void setDemoNeedPriceNegotiationWithClient(String demoNeedPriceNegotiationWithClient) {
+		this.demoNeedPriceNegotiationWithClient = demoNeedPriceNegotiationWithClient;
+	}
+
+	public String getDemoClientNegotiationRemarks() {
+		return demoClientNegotiationRemarks;
+	}
+
+	public void setDemoClientNegotiationRemarks(String demoClientNegotiationRemarks) {
+		this.demoClientNegotiationRemarks = demoClientNegotiationRemarks;
+	}
+
+	public String getDemoNeedPriceNegotiationWithTutor() {
+		return demoNeedPriceNegotiationWithTutor;
+	}
+
+	public void setDemoNeedPriceNegotiationWithTutor(String demoNeedPriceNegotiationWithTutor) {
+		this.demoNeedPriceNegotiationWithTutor = demoNeedPriceNegotiationWithTutor;
+	}
+
+	public String getDemoTutorNegotiationRemarks() {
+		return demoTutorNegotiationRemarks;
+	}
+
+	public void setDemoTutorNegotiationRemarks(String demoTutorNegotiationRemarks) {
+		this.demoTutorNegotiationRemarks = demoTutorNegotiationRemarks;
+	}
+
+	public String getDemoAdminRemarks() {
+		return demoAdminRemarks;
+	}
+
+	public void setDemoAdminRemarks(String demoAdminRemarks) {
+		this.demoAdminRemarks = demoAdminRemarks;
+	}
+
+	public Integer getDemoNegotiatedOverrideRateWithClient() {
+		return demoNegotiatedOverrideRateWithClient;
+	}
+
+	public void setDemoNegotiatedOverrideRateWithClient(Integer demoNegotiatedOverrideRateWithClient) {
+		this.demoNegotiatedOverrideRateWithClient = demoNegotiatedOverrideRateWithClient;
+	}
+
+	public Integer getDemoNegotiatedOverrideRateWithTutor() {
+		return demoNegotiatedOverrideRateWithTutor;
+	}
+
+	public void setDemoNegotiatedOverrideRateWithTutor(Integer demoNegotiatedOverrideRateWithTutor) {
+		this.demoNegotiatedOverrideRateWithTutor = demoNegotiatedOverrideRateWithTutor;
+	}
+
+	public String getDemoAdminFinalizingRemarks() {
+		return demoAdminFinalizingRemarks;
+	}
+
+	public void setDemoAdminFinalizingRemarks(String demoAdminFinalizingRemarks) {
+		this.demoAdminFinalizingRemarks = demoAdminFinalizingRemarks;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -457,6 +583,20 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
 			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
 			case "demoId" : return "DEMO_ID";
+			case "demoClientRemarks" : return "DEMO_CLIENT_REMARKS";
+			case "demoTutorRemarks" : return "DEMO_TUTOR_REMARKS";
+			case "demoClientSatisfiedFromTutor" : return "DEMO_CLIENT_SATISFIED_FROM_TUTOR";
+			case "demoTutorSatisfiedWithClient" : return "DEMO_TUTOR_SATISFIED_WITH_CLIENT";
+			case "demoAdminSatisfiedFromTutor" : return "DEMO_ADMIN_SATISFIED_FROM_TUTOR";
+			case "demoAdminSatisfiedWithClient" : return "DEMO_ADMIN_SATISFIED_WITH_CLIENT";
+			case "demoNeedPriceNegotiationWithClient" : return "DEMO_NEED_PRICE_NEGOTIATION_WITH_CLIENT";
+			case "demoClientNegotiationRemarks" : return "DEMO_CLIENT_NEGOTIATION_REMARKS";
+			case "demoNeedPriceNegotiationWithTutor" : return "DEMO_NEED_PRICE_NEGOTIATION_WITH_TUTOR";
+			case "demoTutorNegotiationRemarks" : return "DEMO_TUTOR_NEGOTIATION_REMARKS";
+			case "demoAdminRemarks" : return "DEMO_ADMIN_REMARKS";
+			case "demoNegotiatedOverrideRateWithClient" : return "DEMO_NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT";
+			case "demoNegotiatedOverrideRateWithTutor" : return "DEMO_NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR";
+			case "demoAdminFinalizingRemarks" : return "DEMO_ADMIN_FINALIZING_REMARKS";
 			case "createdMillis" : return "CREATED_MILLIS";
 		}
 		return EMPTY_STRING;
