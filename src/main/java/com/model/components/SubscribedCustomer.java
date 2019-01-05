@@ -1,6 +1,7 @@
 package com.model.components;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
@@ -30,6 +31,8 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 	private Long unblacklistedDateMillis;
 	private String whoUnBlacklisted;
 	private String whoUnBlacklistedName;
+	private List<SubscribedCustomerEmail> subscribedCustomerEmails;
+	private List<SubscribedCustomerContactNumber> subscribedCustomerContactNumbers;
 	
 	public SubscribedCustomer() {}
 	
@@ -159,6 +162,22 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 
 	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
 		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+	
+	public List<SubscribedCustomerEmail> getSubscribedCustomerEmails() {
+		return subscribedCustomerEmails;
+	}
+
+	public void setSubscribedCustomerEmails(List<SubscribedCustomerEmail> subscribedCustomerEmails) {
+		this.subscribedCustomerEmails = subscribedCustomerEmails;
+	}
+
+	public List<SubscribedCustomerContactNumber> getSubscribedCustomerContactNumbers() {
+		return subscribedCustomerContactNumbers;
+	}
+
+	public void setSubscribedCustomerContactNumbers(List<SubscribedCustomerContactNumber> subscribedCustomerContactNumbers) {
+		this.subscribedCustomerContactNumbers = subscribedCustomerContactNumbers;
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import com.constants.UserConstants;
 import com.model.User;
+import com.model.components.OtherContactNumber;
+import com.model.components.OtherEmail;
 
 public class UserUtils implements UserConstants {
 	
@@ -18,6 +20,16 @@ public class UserUtils implements UserConstants {
 		user.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, user.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		user.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, user.resolveColumnNameForMapping("updatedBy"), String.class));
 		user.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, user.resolveColumnNameForMapping("updatedByName"), String.class));
+	}
+	
+	public static void mapUserPseudoColumnsForOtherEmails(final OtherEmail otherEmail, final ResultSet row, final int rowNum) throws SQLException {
+		otherEmail.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, otherEmail.resolveColumnNameForMapping("emailId"), String.class));
+		otherEmail.setIsPrimary(ExceptionUtils.exceptionHandlerForRowMapper(row, otherEmail.resolveColumnNameForMapping("isPrimary"), String.class));
+	}
+	
+	public static void mapUserPseudoColumnsForOtherContactNumbers(final OtherContactNumber otherContactNumber, final ResultSet row, final int rowNum) throws SQLException {
+		otherContactNumber.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, otherContactNumber.resolveColumnNameForMapping("emailId"), String.class));
+		otherContactNumber.setIsPrimary(ExceptionUtils.exceptionHandlerForRowMapper(row, otherContactNumber.resolveColumnNameForMapping("isPrimary"), String.class));
 	}
 	
 	public static User returnUserObjWithoutPasswordInformationFromSessionUserObjectBeforeSendingOnUI(final User user) throws CloneNotSupportedException {

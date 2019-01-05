@@ -333,7 +333,7 @@ public class TutorService implements TutorConstants {
 	
 	/***********************************************************************************************************************************/
 	public List<RegisteredTutor> getRegisteredTutorList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
-		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor"), null, null, gridComponent), new RegisteredTutorRowMapper());
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
 	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
@@ -345,15 +345,15 @@ public class TutorService implements TutorConstants {
 	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
-		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
-								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorEmailFilter"), paramsMap, new RegisteredTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
+								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorEmailFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
 	public RegisteredTutor getRegisteredTutorInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
-		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
-								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorContactNumberFilter"), paramsMap, new RegisteredTutorRowMapper());
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
+								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
 	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
@@ -399,7 +399,7 @@ public class TutorService implements TutorConstants {
 			registeredTutor.setTutorId(Long.valueOf(tutorId));
 			paramObjectList.add(registeredTutor);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorBlacklist", paramObjectList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredTutorBlacklist", paramObjectList);
 	}
 	
 	@Transactional
@@ -417,7 +417,7 @@ public class TutorService implements TutorConstants {
 			registeredTutor.setTutorId(Long.valueOf(tutorId));
 			paramObjectList.add(registeredTutor);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorUnBlacklist", paramObjectList);
+		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredTutorUnBlacklist", paramObjectList);
 	}
 	
 	@Transactional
@@ -531,13 +531,6 @@ public class TutorService implements TutorConstants {
 		// @ TODO - Email functionality 
 	}
 	
-	@Transactional
-	public void feedRegisteredTutorList(final List<RegisteredTutor> registeredTutorList, final List<BecomeTutor> becomeTutorObjList) throws Exception {
-		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredtutor", registeredTutorList);
-		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateMigratedBecomeTutor", becomeTutorObjList);
-		sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
-	}
-	
 	public void sendProfileGenerationEmailToRegisteredTutorList(final List<RegisteredTutor> registeredTutorList) throws Exception {
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		for (final RegisteredTutor registeredTutorObj : registeredTutorList) {
@@ -620,13 +613,13 @@ public class TutorService implements TutorConstants {
 		throw new ApplicationException("Invalid Document Type");
 	}
 	
-	private void sendEmailAboutEmailAndUserIdChange(final Long tutorId, final String newEmailId) {
+	/*private void sendEmailAboutEmailAndUserIdChange(final Long tutorId, final String newEmailId) {
 		// TODO - Email
 	}
 	
 	private void sendEmailAboutContactNumberChange(final Long tutorId, final String newContactNumber) {
 		// TODO - Email
-	}
+	}*/
 	
 	@Transactional
 	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) throws Exception {
@@ -643,16 +636,16 @@ public class TutorService implements TutorConstants {
 						break;
 					}
 					case "contactNumber" : {
-						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
-						sendEmailAboutContactNumberChange(tutor.getTutorId(), tutor.getContactNumber());
+						//updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						//sendEmailAboutContactNumberChange(tutor.getTutorId(), tutor.getContactNumber());
 						paramsMap.put("contactNumber", tutor.getContactNumber());
 						break;
 					}
 					case "emailId" : {
-						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						//updateAttributesQuery.add("EMAIL_ID = :emailId");
 						// If emailId is changed also change the userId
-						updateAttributesQuery.add("USER_ID = :emailId");
-						sendEmailAboutEmailAndUserIdChange(tutor.getTutorId(), tutor.getEmailId());
+						//updateAttributesQuery.add("USER_ID = :emailId");
+						//sendEmailAboutEmailAndUserIdChange(tutor.getTutorId(), tutor.getEmailId());
 						paramsMap.put("emailId", tutor.getEmailId());
 						break;
 					}
@@ -739,8 +732,8 @@ public class TutorService implements TutorConstants {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());
-			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredtutor") 
-									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredtutorUserIdFilter"), paramsMap, new RegisteredTutorRowMapper());
+			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
+									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorUserIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		}
 		return null;
 	}

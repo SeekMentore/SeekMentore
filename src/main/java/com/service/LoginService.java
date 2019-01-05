@@ -17,11 +17,14 @@ import com.constants.RestMethodConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
 import com.model.Credential;
+import com.model.Employee;
 import com.model.ErrorPacket;
 import com.model.LogonTracker;
 import com.model.PasswordChangeTracker;
 import com.model.User;
 import com.model.UserAccessOptions;
+import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.EmployeeService;
@@ -171,20 +174,26 @@ public class LoginService implements LoginConstants {
 	}
 	
 	private void changePasswordAsPerUserType(final String userType, final String loggedInUserId, final String encryptedNewPassword) throws Exception {
-		final User user = new User();
-		user.setUserId(loggedInUserId);
-		user.setEncryptedPassword(encryptedNewPassword);
 		switch(userType) {
 			case USER_TYPE_EMPLOYEE : {
-				applicationDao.executeUpdateWithQueryMapper("employee", "updateEmployeePassword", user);
+				final Employee employee = new Employee();
+				employee.setUserId(loggedInUserId);
+				employee.setEncryptedPassword(encryptedNewPassword);
+				applicationDao.executeUpdateWithQueryMapper("employee", "updateEmployeePassword", employee);
 				break;
 			}
 			case USER_TYPE_TUTOR : {
-				applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorPassword", user);
+				final RegisteredTutor registeredtutor = new RegisteredTutor();
+				registeredtutor.setUserId(loggedInUserId);
+				registeredtutor.setEncryptedPassword(encryptedNewPassword);
+				applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredtutorPassword", registeredtutor);
 				break;
 			}
 			case USER_TYPE_CUSTOMER : {
-				applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "updateSubscribedCustomerPassword", user);
+				final SubscribedCustomer subscribedcustomer = new SubscribedCustomer();
+				subscribedcustomer.setUserId(loggedInUserId);
+				subscribedcustomer.setEncryptedPassword(encryptedNewPassword);
+				applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "updateSubscribedCustomerPassword", subscribedcustomer);
 				break;
 			}
 			default	: {

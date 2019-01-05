@@ -13,6 +13,7 @@ import javax.mail.MessagingException;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.MailConstants;
@@ -24,7 +25,11 @@ import com.model.ErrorPacket;
 import com.model.components.Demo;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
+import com.model.components.RegisteredTutorContactNumber;
+import com.model.components.RegisteredTutorEmail;
 import com.model.components.SubscribedCustomer;
+import com.model.components.SubscribedCustomerContactNumber;
+import com.model.components.SubscribedCustomerEmail;
 import com.model.components.SubscriptionPackage;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
@@ -78,6 +83,7 @@ public class SchedulerService implements SchedulerConstants {
 	@Autowired
 	private transient QueryMapperService queryMapperService;
 	
+	@Transactional
 	public void executeEmailSenderJob(final JobExecutionContext context) throws IOException, MessagingException {
 		final String key = lockService.lockObject("executeEmailSenderJob");
 		if (null != key) {
@@ -133,6 +139,7 @@ public class SchedulerService implements SchedulerConstants {
 		}
 	}
 	
+	@Transactional
 	public void executeTutorRegisterJob(final JobExecutionContext context) throws Exception {
 		final String key = lockService.lockObject("executeTutorRegisterJob");
 		if (null != key) {
@@ -166,11 +173,23 @@ public class SchedulerService implements SchedulerConstants {
 						registeredTutorObj.setUserId(tutorObj.getEmailId());
 						registeredTutorObj.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 						registeredTutorObj.setUpdatedBy("SYSTEM_SCHEDULER");
+						final Long tutorId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-registeredtutor", "insertRegisteredTutor", registeredTutorObj);
+						final RegisteredTutorEmail registeredTutorEmail = new RegisteredTutorEmail();
+						registeredTutorEmail.setTutorId(tutorId);
+						registeredTutorEmail.setEmailId(registeredTutorObj.getEmailId());
+						registeredTutorEmail.setIsPrimary(YES);
+						applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorEmail", registeredTutorEmail);
+						final RegisteredTutorContactNumber registeredTutorContactNumber = new RegisteredTutorContactNumber();
+						registeredTutorContactNumber.setTutorId(tutorId);
+						registeredTutorContactNumber.setContactNumber(registeredTutorObj.getContactNumber());
+						registeredTutorContactNumber.setIsPrimary(YES);
+						applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorContactNumber", registeredTutorContactNumber);
 						registeredTutorList.add(registeredTutorObj);
 						tutorObj.setIsDataMigrated(YES);
 						tutorObj.setWhenMigratedMillis(currentTimestamp.getTime());
 					}
-					tutorService.feedRegisteredTutorList(registeredTutorList, tutorObjList);
+					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateMigratedBecomeTutor", tutorObjList);
+					tutorService.sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);
@@ -180,6 +199,7 @@ public class SchedulerService implements SchedulerConstants {
 		}
 	}
 	
+	@Transactional
 	public void executeSubscribedCustomerJob(final JobExecutionContext context) throws Exception {
 		final String key = lockService.lockObject("executeSubscribedCustomerJob");
 		if (null != key) {
@@ -208,6 +228,16 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
 							subscribedCustomerObj.setRecordLastUpdatedMillis(currenTimestamp.getTime());
 							final Long customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
+							final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
+							subscribedCustomerEmail.setCustomerId(customerId);
+							subscribedCustomerEmail.setEmailId(subscribedCustomerObj.getEmailId());
+							subscribedCustomerEmail.setIsPrimary(YES);
+							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
+							final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
+							subscribedCustomerContactNumber.setCustomerId(customerId);
+							subscribedCustomerContactNumber.setContactNumber(subscribedCustomerObj.getContactNumber());
+							subscribedCustomerContactNumber.setIsPrimary(YES);
+							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
 							final Enquiry enquiryObject = new Enquiry();
 							enquiryObject.setCustomerId(customerId);
 							enquiryObject.setSubject(findTutorObj.getSubjects());
@@ -219,6 +249,8 @@ public class SchedulerService implements SchedulerConstants {
 							enquiryObjectList.add(enquiryObject);
 							customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
 						} else {
+							boolean emailPresentInSystem = false;
+							boolean contactNumberPresentInSystem = false;
 							Map<String, Object> paramsMap = new HashMap<String, Object>();
 							paramsMap.put("emailId", findTutorObj.getEmailId());
 							StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
@@ -226,6 +258,7 @@ public class SchedulerService implements SchedulerConstants {
 							final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
 							if (null != subscribedCustomerInDatabaseWithEmailId) {
 								if (null != subscribedCustomerInDatabaseWithEmailId.getCustomerId()) {
+									emailPresentInSystem = true;
 									final Enquiry enquiryObject = new Enquiry();
 									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
 									enquiryObject.setSubject(findTutorObj.getSubjects());
@@ -244,6 +277,7 @@ public class SchedulerService implements SchedulerConstants {
 							final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
 							if (null != subscribedCustomerInDatabaseWithContactNumber) {
 								if (null != subscribedCustomerInDatabaseWithContactNumber.getCustomerId()) {
+									contactNumberPresentInSystem = true;
 									final Enquiry enquiryObject = new Enquiry();
 									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
 									enquiryObject.setSubject(findTutorObj.getSubjects());
@@ -254,8 +288,33 @@ public class SchedulerService implements SchedulerConstants {
 									enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
 									enquiryObjectList.add(enquiryObject);
 								}
-							} 
-							
+							}
+							if (!emailPresentInSystem || !contactNumberPresentInSystem) {
+								if (!emailPresentInSystem) {
+									if (contactNumberPresentInSystem) {
+										final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
+										subscribedCustomerEmail.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
+										subscribedCustomerEmail.setEmailId(findTutorObj.getEmailId());
+										subscribedCustomerEmail.setIsPrimary(YES);
+										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
+									} else {
+										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Email Id " + findTutorObj.getEmailId() + " Not present in system and no customer fetched for Contact Number " +findTutorObj.getContactNumber());
+										commonsService.feedErrorRecord(errorPacket);
+									}
+								}
+								if (!contactNumberPresentInSystem) {
+									if (emailPresentInSystem) {
+										final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
+										subscribedCustomerContactNumber.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
+										subscribedCustomerContactNumber.setContactNumber(findTutorObj.getContactNumber());
+										subscribedCustomerContactNumber.setIsPrimary(YES);
+										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
+									} else {
+										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Contact Number " +findTutorObj.getContactNumber()+ " Not present in system and no customer fetched for Email Id " + findTutorObj.getEmailId());
+										commonsService.feedErrorRecord(errorPacket);
+									}
+								}
+							}
 						}
 						if (!enquiryObjectList.isEmpty()) {
 							enquiryService.feedEnquiryList(enquiryObjectList);
@@ -271,6 +330,7 @@ public class SchedulerService implements SchedulerConstants {
 		}
 	}
 	
+	@Transactional
 	public void executeSubmitQueryResponderJob(final JobExecutionContext context) throws Exception {
 		final String key = lockService.lockObject("executeSubmitQueryResponderJob");
 		if (null != key) {
@@ -301,6 +361,7 @@ public class SchedulerService implements SchedulerConstants {
 		}
 	}
 	
+	@Transactional
 	public void executeSubscriptionCreationJob(final JobExecutionContext context) throws Exception {
 		final String key = lockService.lockObject("executeSubscriptionCreationJob");
 		if (null != key) {

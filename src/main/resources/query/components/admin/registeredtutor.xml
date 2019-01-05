@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="admin-registeredtutor">
-	<query type="insert" id="insertRegisteredtutor" paramClass="com.model.components.RegisteredTutor">
+	<query type="insert" id="insertRegisteredTutor" paramClass="com.model.components.RegisteredTutor">
 		INSERT INTO REGISTERED_TUTOR
 			(NAME, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, 
 			TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, 
@@ -9,7 +9,7 @@
 				:transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, 
 				:addressDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, :preferredTeachingType, 'Tutor')
 	</query>
-    <query type="select" id="selectRegisteredtutor">
+    <query type="select" id="selectRegisteredTutor">
 		SELECT
             R.*,
             (SELECT EMAIL_ID FROM REGISTERED_TUTOR_EMAIL_ID RTE WHERE RTE.TUTOR_ID = R.TUTOR_ID AND RTE.IS_PRIMARY = 'Y') AS EMAIL_ID,
@@ -19,16 +19,16 @@
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.WHO_UN_BLACKLISTED), R.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME
         FROM REGISTERED_TUTOR R
 	</query>
-	<query type="filter" id="registeredtutorUserIdFilter">
+	<query type="filter" id="registeredTutorUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
-    <query type="filter" id="registeredtutorEmailFilter">
+    <query type="filter" id="registeredTutorEmailFilter">
 		WHERE EMAIL_ID = :emailId
 	</query>
-    <query type="filter" id="registeredtutorContactNumberFilter">
+    <query type="filter" id="registeredTutorContactNumberFilter">
 		WHERE CONTACT_NUMBER = :contactNumber
 	</query>
-    <query type="update" id="updateRegisteredtutorBlacklist" paramClass="com.model.components.RegisteredTutor">
+    <query type="update" id="updateRegisteredTutorBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET
 			IS_BLACKLISTED = :isBlacklisted,
 			BLACKLISTED_REMARKS = :blacklistedRemarks,
@@ -38,7 +38,7 @@
 			UPDATED_BY = :updatedBy
 		WHERE TUTOR_ID = :tutorId
 	</query>
-	<query type="update" id="updateRegisteredtutorUnBlacklist" paramClass="com.model.components.RegisteredTutor">
+	<query type="update" id="updateRegisteredTutorUnBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET
 			IS_BLACKLISTED = :isBlacklisted,
 			UN_BLACKLISTED_REMARKS = :unblacklistedRemarks,
@@ -48,9 +48,21 @@
 			UPDATED_BY = :updatedBy
 		WHERE TUTOR_ID = :tutorId
 	</query>
-	<query type="update" id="updateRegisteredtutorPassword" paramClass="com.model.User">
+	<query type="update" id="updateRegisteredTutorPassword" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET 
 			ENCRYPTED_PASSWORD = :encryptedPassword 
 		WHERE USER_ID = :userId
+	</query>
+	<query type="insert" id="insertRegisteredTutorEmail" paramClass="com.model.components.RegisteredTutorEmail">
+		INSERT INTO REGISTERED_TUTOR_EMAIL_ID
+			(TUTOR_ID, EMAIL_ID, IS_PRIMARY) 
+		VALUES
+			(:tutorId, :emailId, :isPrimary)
+	</query>
+	<query type="insert" id="insertRegisteredTutorContactNumber" paramClass="com.model.components.RegisteredTutorContactNumber">
+		INSERT INTO REGISTERED_TUTOR_CONTACT_NUMBER
+			(TUTOR_ID, CONTACT_NUMBER, IS_PRIMARY) 
+		VALUES
+			(:tutorId, :contactNumber, :isPrimary)
 	</query>
 </queryMapper>

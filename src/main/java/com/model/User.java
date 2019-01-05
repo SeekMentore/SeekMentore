@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.utils.ValidationUtils;
 
-public class User extends GridComponentObject implements Serializable, Cloneable {
+public abstract class User extends GridComponentObject implements Serializable {
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
@@ -20,8 +20,6 @@ public class User extends GridComponentObject implements Serializable, Cloneable
 	private String updatedByName;
 	private List<String> pageAccessTypes;
 	private UserAccessOptions accessOptions;
-	
-	public User() {}
 	
 	public String getName() {
 		return name;

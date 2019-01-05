@@ -1,7 +1,10 @@
 package com.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import com.model.components.EmployeeContactNumber;
+import com.model.components.EmployeeEmail;
 import com.utils.ValidationUtils;
 
 public class Employee extends User implements Serializable, Cloneable, ApplicationWorkbookObject {
@@ -10,6 +13,8 @@ public class Employee extends User implements Serializable, Cloneable, Applicati
 	
 	private Long employeeId;
 	private String emailDomain;
+	private List<EmployeeEmail> employeeEmails;
+	private List<EmployeeContactNumber> employeeContactNumbers;
 	
 	public Employee() {}
 	
@@ -27,6 +32,22 @@ public class Employee extends User implements Serializable, Cloneable, Applicati
 
 	public void setEmailDomain(String emailDomain) {
 		this.emailDomain = emailDomain;
+	}
+	
+	public List<EmployeeEmail> getEmployeeEmails() {
+		return employeeEmails;
+	}
+
+	public void setEmployeeEmails(List<EmployeeEmail> employeeEmails) {
+		this.employeeEmails = employeeEmails;
+	}
+
+	public List<EmployeeContactNumber> getEmployeeContactNumbers() {
+		return employeeContactNumbers;
+	}
+
+	public void setEmployeeContactNumbers(List<EmployeeContactNumber> employeeContactNumbers) {
+		this.employeeContactNumbers = employeeContactNumbers;
 	}
 	
 	@Override

@@ -261,13 +261,13 @@ import com.utils.WorkbookUtils;
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateUnBlacklistSubscribedCustomer", paramObjectList);
 	}
 	
-	private void sendEmailAboutEmailAndUserIdChange(final Long customerId, final String newEmailId) {
+	/*private void sendEmailAboutEmailAndUserIdChange(final Long customerId, final String newEmailId) {
 		// TODO - Email
 	}
 	
 	private void sendEmailAboutContactNumberChange(final Long customerId, final String newContactNumber) {
 		// TODO - Email
-	}
+	}*/
 
 	@Transactional
 	public void updateCustomerRecord(final SubscribedCustomer customer, final List<String> changedAttributes, final User activeUser) {
@@ -284,16 +284,16 @@ import com.utils.WorkbookUtils;
 						break;
 					}
 					case "contactNumber" : {
-						updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
-						sendEmailAboutContactNumberChange(customer.getCustomerId(), customer.getContactNumber());
+						//updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
+						//sendEmailAboutContactNumberChange(customer.getCustomerId(), customer.getContactNumber());
 						paramsMap.put("contactNumber", customer.getContactNumber());
 						break;
 					}
 					case "emailId" : {
-						updateAttributesQuery.add("EMAIL_ID = :emailId");
+						//updateAttributesQuery.add("EMAIL_ID = :emailId");
 						// If emailId is changed also change the userId
-						updateAttributesQuery.add("USER_ID = :emailId");
-						sendEmailAboutEmailAndUserIdChange(customer.getCustomerId(), customer.getEmailId());
+						//updateAttributesQuery.add("USER_ID = :emailId");
+						//sendEmailAboutEmailAndUserIdChange(customer.getCustomerId(), customer.getEmailId());
 						paramsMap.put("emailId", customer.getEmailId());
 						break;
 					}

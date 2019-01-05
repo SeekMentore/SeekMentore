@@ -41,6 +41,9 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 	private String whoUnBlacklisted;
 	private String whoUnBlacklistedName;
 	private List<TutorDocument> documents;
+	private List<BankDetail> bankDetails;
+	private List<RegisteredTutorEmail> registeredTutorEmails;
+	private List<RegisteredTutorContactNumber> registeredTutorContactNumbers;
 	
 	public RegisteredTutor() {}
 	
@@ -234,6 +237,30 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 
 	public void setWhoUnBlacklistedName(String whoUnBlacklistedName) {
 		this.whoUnBlacklistedName = whoUnBlacklistedName;
+	}
+	
+	public List<RegisteredTutorEmail> getRegisteredTutorEmails() {
+		return registeredTutorEmails;
+	}
+
+	public void setRegisteredTutorEmails(List<RegisteredTutorEmail> registeredTutorEmails) {
+		this.registeredTutorEmails = registeredTutorEmails;
+	}
+	
+	public List<RegisteredTutorContactNumber> getRegisteredTutorContactNumbers() {
+		return registeredTutorContactNumbers;
+	}
+
+	public void setRegisteredTutorContactNumbers(List<RegisteredTutorContactNumber> registeredTutorContactNumbers) {
+		this.registeredTutorContactNumbers = registeredTutorContactNumbers;
+	}
+	
+	public List<BankDetail> getBankDetails() {
+		return bankDetails;
+	}
+
+	public void setBankDetails(List<BankDetail> bankDetails) {
+		this.bankDetails = bankDetails;
 	}
 
 	@Override

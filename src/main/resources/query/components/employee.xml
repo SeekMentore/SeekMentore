@@ -11,7 +11,7 @@
 	<query type="filter" id="employeeUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
-	<query type="update" id="updateEmployeePassword" paramClass="com.model.User">
+	<query type="update" id="updateEmployeePassword" paramClass="com.model.Employee">
 		UPDATE EMPLOYEE SET 
 			ENCRYPTED_PASSWORD = :encryptedPassword 
 		WHERE USER_ID = :userId

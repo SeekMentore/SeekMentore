@@ -45,9 +45,21 @@
 			UPDATED_BY = :updatedBy
 		WHERE CUSTOMER_ID = :customerId
 	</query>
-	<query type="update" id="updateSubscribedCustomerPassword" paramClass="com.model.User">
+	<query type="update" id="updateSubscribedCustomerPassword" paramClass="com.model.components.SubscribedCustomer">
 		UPDATE SUBSCRIBED_CUSTOMER SET 
 			ENCRYPTED_PASSWORD = :encryptedPassword 
 		WHERE USER_ID = :userId
+	</query>
+	<query type="insert" id="insertSubscribedCustomerEmail" paramClass="com.model.components.SubscribedCustomerEmail">
+		INSERT INTO SUBSCRIBED_CUSTOMER_EMAIL_ID
+			(CUSTOMER_ID, EMAIL_ID, IS_PRIMARY) 
+		VALUES
+			(:customerId, :emailId, :isPrimary)
+	</query>
+	<query type="insert" id="insertSubscribedCustomerContactNumber" paramClass="com.model.components.SubscribedCustomerContactNumber">
+		INSERT INTO SUBSCRIBED_CUSTOMER_CONTACT_NUMBER
+			(CUSTOMER_ID, CONTACT_NUMBER, IS_PRIMARY) 
+		VALUES
+			(:customerId, :contactNumber, :isPrimary)
 	</query>
 </queryMapper>

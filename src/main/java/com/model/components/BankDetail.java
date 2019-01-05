@@ -2,10 +2,11 @@ package com.model.components;
 
 import java.io.Serializable;
 
+import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class BankDetail extends GridComponentObject implements Serializable {
+public class BankDetail extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -7058576359707327688L;
 	
@@ -72,27 +73,6 @@ public class BankDetail extends GridComponentObject implements Serializable {
 		this.isDefault = isDefault;
 	}
 	
-	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "bankAccountId" : return "BANK_ACCOUNT_ID";
-			case "tutorId" : return "TUTOR_ID";
-			case "bankName" : return "BANK_NAME";
-			case "accountNumber" : return "ACCOUNT_NUMBER";
-			case "ifscCode" : return "IFSC_CODE";
-			case "accountHolderName" : return "ACCOUNT_HOLDER_NAME";
-			case "isDefault" : return "IS_DEFAULT";
-			case "isApproved" : return "IS_APPROVED";
-			case "whoActed" : return "WHO_ACTED";
-			case "whoActedName" : return "WHO_ACTED_NAME";
-			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
-			case "remarks" : return "REMARKS";
-		}
-		return EMPTY_STRING;
-	}
-
 	public Long getTutorId() {
 		return tutorId;
 	}
@@ -139,5 +119,41 @@ public class BankDetail extends GridComponentObject implements Serializable {
 
 	public void setWhoActedName(String whoActedName) {
 		this.whoActedName = whoActedName;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "bankAccountId" : return "BANK_ACCOUNT_ID";
+			case "tutorId" : return "TUTOR_ID";
+			case "bankName" : return "BANK_NAME";
+			case "accountNumber" : return "ACCOUNT_NUMBER";
+			case "ifscCode" : return "IFSC_CODE";
+			case "accountHolderName" : return "ACCOUNT_HOLDER_NAME";
+			case "isDefault" : return "IS_DEFAULT";
+			case "isApproved" : return "IS_APPROVED";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
+			case "remarks" : return "REMARKS";
+		}
+		return EMPTY_STRING;
+	}
+	
+	@Override
+	public BankDetail clone() throws CloneNotSupportedException {  
+		return (BankDetail)super.clone();
 	}
 }
