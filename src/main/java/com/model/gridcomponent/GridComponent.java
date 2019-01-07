@@ -1,15 +1,18 @@
 package com.model.gridcomponent;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.json.JsonObject;
 
+import com.constants.GridComponentConstants;
 import com.model.GridComponentObject;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
+import com.utils.ValidationUtils;
 
-public class GridComponent implements Serializable {
+public class GridComponent implements Serializable, GridComponentConstants {
 
 	private static final long serialVersionUID = -7525245577014493220L;
 	
@@ -233,5 +236,124 @@ public class GridComponent implements Serializable {
 
 	public void setOtherParamsAsJSONObject(JsonObject otherParamsAsJSONObject) {
 		this.otherParamsAsJSONObject = otherParamsAsJSONObject;
+	}
+	
+	public void addStringFilterToFilterList (
+			final String mapping,
+			final String stringValue, 
+			final Boolean textCaseSensitiveSearch, 
+			final Boolean clubbedFilterMapping, 
+			final List<String> clubbedFilterProperties) {
+		if (!ValidationUtils.checkObjectAvailability(filterList)) {
+			this.filterList = new LinkedList<Filter>();
+		}
+		this.filterList.add(GridComponentUtils.getFilter(
+													DUMMY_COLUMN_FILTER, 
+													COLUMN_FILTER_MAPPING_STRING,
+													mapping, 
+													DUMMY_COLUMN, 
+													false, 
+													clubbedFilterMapping, 
+													clubbedFilterProperties,
+													stringValue,
+													textCaseSensitiveSearch,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null));
+	}
+	
+	public void addDateFilterToFilterList (
+			final String mapping,
+			final Long beforeDateMillis,
+			final Long onDateMillis,
+			final Long afterDateMillis,
+			final Long localTimezoneOffsetInMilliseconds,
+			final Boolean clubbedFilterMapping, 
+			final List<String> clubbedFilterProperties) {
+		if (!ValidationUtils.checkObjectAvailability(filterList)) {
+			this.filterList = new LinkedList<Filter>();
+		}
+		this.filterList.add(GridComponentUtils.getFilter(
+													DUMMY_COLUMN_FILTER, 
+													COLUMN_FILTER_MAPPING_DATE,
+													mapping, 
+													DUMMY_COLUMN, 
+													false, 
+													clubbedFilterMapping, 
+													clubbedFilterProperties,
+													null,
+													null,
+													beforeDateMillis,
+													onDateMillis,
+													afterDateMillis,
+													localTimezoneOffsetInMilliseconds,
+													null,
+													null,
+													null,
+													null));
+	}
+	
+	public void addNumberFilterToFilterList (
+			final String mapping,
+			final Integer lessThan,
+			final Integer equalTo,
+			final Integer greaterThan,
+			final Boolean clubbedFilterMapping, 
+			final List<String> clubbedFilterProperties) {
+		if (!ValidationUtils.checkObjectAvailability(filterList)) {
+			this.filterList = new LinkedList<Filter>();
+		}
+		this.filterList.add(GridComponentUtils.getFilter(
+													DUMMY_COLUMN_FILTER, 
+													COLUMN_FILTER_MAPPING_NUMBER,
+													mapping, 
+													DUMMY_COLUMN, 
+													false, 
+													clubbedFilterMapping, 
+													clubbedFilterProperties,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													lessThan,
+													equalTo,
+													greaterThan,
+													null));
+	}
+	
+	public void addListFilterToFilterList (
+			final String mapping,
+			final List<String> listValue,
+			final Boolean multiList,
+			final Boolean clubbedFilterMapping, 
+			final List<String> clubbedFilterProperties) {
+		if (!ValidationUtils.checkObjectAvailability(filterList)) {
+			this.filterList = new LinkedList<Filter>();
+		}
+		this.filterList.add(GridComponentUtils.getFilter(
+													DUMMY_COLUMN_FILTER, 
+													COLUMN_FILTER_MAPPING_LIST,
+													mapping, 
+													DUMMY_COLUMN, 
+													multiList, 
+													clubbedFilterMapping, 
+													clubbedFilterProperties,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													listValue));
 	}
 }

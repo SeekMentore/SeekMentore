@@ -12,7 +12,6 @@ public class Filter implements Serializable {
 	private String type;
 	private String mapping;
 	private String columnId;
-	private Boolean multiList;
 	private Integer lessThan;
 	private Integer equalTo;
 	private Integer greaterThan;
@@ -26,6 +25,7 @@ public class Filter implements Serializable {
 	private Long afterDateMillis;
 	private Long localTimezoneOffsetInMilliseconds;
 	private List<String> listValue;
+	private Boolean multiList;
 	private Boolean clubbedFilterMapping;
 	private List<String> clubbedFilterProperties;
 

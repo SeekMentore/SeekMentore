@@ -20,8 +20,8 @@ public class RowMapperUtils implements ApplicationConstants {
 			isServerLocal = getJNDIandControlConfigurationLoadService().getServerName().equals(JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL);
 		} catch(Exception e) {}
 		if (isServerLocal) {
+			final ResultSetMetaData resultSetMetaData = row.getMetaData();
 			if (rowNum == 0) {
-				final ResultSetMetaData resultSetMetaData = row.getMetaData();
 				LoggerUtils.logOnConsole("All Columns fetched from the Query");
 				final StringBuilder columnNames = new StringBuilder(EMPTY_STRING);
 				columnNames.append(LEFT_SQUARE_BRACKET);
@@ -35,11 +35,15 @@ public class RowMapperUtils implements ApplicationConstants {
 				LoggerUtils.logOnConsole(columnNames.toString().trim());
 				LoggerUtils.logOnConsole("All Column Data fetched from the Query");
 			}
-			final ResultSetMetaData resultSetMetaData = row.getMetaData();
 			final StringBuilder columnValues = new StringBuilder(EMPTY_STRING);
 			columnValues.append(LEFT_SQUARE_BRACKET);
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-				columnValues.append(row.getObject(resultSetMetaData.getColumnName(i)));
+				//columnValues.append(ExceptionUtils.exceptionHandlerForRowMapper(row, resultSetMetaData.getColumnName(i), Object.class));
+				try {
+					columnValues.append(row.getObject(resultSetMetaData.getColumnName(i)));
+				} catch(Exception e) {
+					columnValues.append("CANNOT_FETCH_FOR_COLUMN##["+resultSetMetaData.getColumnName(i)+"]");
+				}
 				if (i < resultSetMetaData.getColumnCount()) {
 					columnValues.append(WHITESPACE).append(WHITESPACE);
 				}

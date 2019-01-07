@@ -336,6 +336,10 @@ public class TutorService implements TutorConstants {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
+	public List<RegisteredTutor> getRegisteredTutorListWithParams(final GridComponent gridComponent, final Map<String, Object> paramsMap) throws DataAccessException, InstantiationException, IllegalAccessException {
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), paramsMap, new RegisteredTutorRowMapper());
+	}
+	
 	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("REGISTERED_TUTORS", getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT);

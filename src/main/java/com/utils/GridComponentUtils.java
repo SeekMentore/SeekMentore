@@ -54,54 +54,96 @@ public class GridComponentUtils implements GridComponentConstants {
 						clubbedFilterProperties.add(value);
 					}
 				}
-				final Filter filter = new Filter(id, type, mapping, columnId, multiList, clubbedFilterMapping, clubbedFilterProperties);
+				Filter filter = null;
 				switch (type) {
 					case COLUMN_FILTER_MAPPING_STRING : {
-						final String stringValue = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_STRING_VALUE, String.class);
-						final Boolean textCaseSensitiveSearch = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_TEXT_CASE_SENSITIVE_SEARCH, Boolean.class);
-						filter.setStringValue(stringValue);
-						filter.setTextCaseSensitiveSearch(textCaseSensitiveSearch);
+						filter = getFilter(
+								id, 
+								type,
+								mapping, 
+								columnId, 
+								multiList, 
+								clubbedFilterMapping, 
+								clubbedFilterProperties,
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_STRING_VALUE, String.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_TEXT_CASE_SENSITIVE_SEARCH, Boolean.class),
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null);
 						break;
 					}
 					case COLUMN_FILTER_MAPPING_DATE : {
-						final Long beforeDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_BEFORE_DATE_MILLIS, Long.class);
-						final Long onDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_ON_DATE_MILLIS, Long.class);
-						final Long afterDateMillis = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_AFTER_DATE_MILLIS, Long.class);
-						Long localTimezoneOffsetInMilliseconds = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LOCAL_TIMEZONE_OFFSET_IN_MILLISECONDS, Long.class);
-						if (!ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
-							localTimezoneOffsetInMilliseconds = 0L;
-						}
-						filter.setLocalTimezoneOffsetInMilliseconds(localTimezoneOffsetInMilliseconds);
-						if (ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
-							filter.setBeforeDateMillis(beforeDateMillis + localTimezoneOffsetInMilliseconds);
-							filter.setBeforeDate(new Date(beforeDateMillis + localTimezoneOffsetInMilliseconds));
-						}
-						if (ValidationUtils.checkObjectAvailability(onDateMillis)) {
-							filter.setOnDateMillis(onDateMillis + localTimezoneOffsetInMilliseconds);
-							filter.setOnDate(new Date(onDateMillis + localTimezoneOffsetInMilliseconds));
-						}
-						if (ValidationUtils.checkObjectAvailability(afterDateMillis)) {
-							filter.setAfterDateMillis(afterDateMillis + localTimezoneOffsetInMilliseconds);
-							filter.setAfterDate(new Date(afterDateMillis + localTimezoneOffsetInMilliseconds));
-						}
+						filter = getFilter(
+								id, 
+								type,
+								mapping, 
+								columnId, 
+								multiList, 
+								clubbedFilterMapping, 
+								clubbedFilterProperties,
+								null,
+								null,
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_BEFORE_DATE_MILLIS, Long.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_ON_DATE_MILLIS, Long.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_AFTER_DATE_MILLIS, Long.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LOCAL_TIMEZONE_OFFSET_IN_MILLISECONDS, Long.class),
+								null,
+								null,
+								null,
+								null);
 						break;
 					}
 					case COLUMN_FILTER_MAPPING_NUMBER : {
-						final Integer lessThan = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LESS_THAN, Integer.class);
-						final Integer equalTo = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_EQUAL_TO, Integer.class);
-						final Integer greaterThan = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_GREATER_THAN, Integer.class);
-						filter.setLessThan(lessThan);
-						filter.setEqualTo(equalTo);
-						filter.setGreaterThan(greaterThan);
+						filter = getFilter(
+								id, 
+								type,
+								mapping, 
+								columnId, 
+								multiList, 
+								clubbedFilterMapping, 
+								clubbedFilterProperties,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LESS_THAN, Integer.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_EQUAL_TO, Integer.class),
+								JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_GREATER_THAN, Integer.class),
+								null);
 						break;
 					}
 					case COLUMN_FILTER_MAPPING_LIST : {
 						final JsonArray listValueJSONArray = JSONUtils.getValueFromJSONObject(jsonObject, COLUMN_FILTER_VALUE_LIST_VALUE, JsonArray.class);
-						filter.setListValue(new LinkedList<String>());
-						for (Object listValueObject : listValueJSONArray) {
+						final List<String> listValue = new LinkedList<String>();
+						for (final Object listValueObject : listValueJSONArray) {
 							final String value = listValueObject.toString().replaceAll(INVERTED_COMMA, EMPTY_STRING);
-							filter.addListValue(value);
+							listValue.add(value);
 						}
+						filter = getFilter(
+								id, 
+								type,
+								mapping, 
+								columnId, 
+								multiList, 
+								clubbedFilterMapping, 
+								clubbedFilterProperties,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								null,
+								listValue);
 						break;
 					}
 				}
@@ -109,6 +151,65 @@ public class GridComponentUtils implements GridComponentConstants {
 			}
 		}
 		return filterList;
+	}
+	
+	public static Filter getFilter (
+			final String id,
+			final String type,
+			final String mapping,
+			final String columnId,
+			final Boolean multiList,
+			final Boolean clubbedFilterMapping,
+			final List<String> clubbedFilterProperties,
+			final String stringValue,
+			final Boolean textCaseSensitiveSearch,
+			final Long beforeDateMillis,
+			final Long onDateMillis,
+			final Long afterDateMillis,
+			Long localTimezoneOffsetInMilliseconds,
+			final Integer lessThan,
+			final Integer equalTo,
+			final Integer greaterThan,
+			final List<String> listValue
+	) {
+		final Filter filter = new Filter(id, type, mapping, columnId, multiList, clubbedFilterMapping, clubbedFilterProperties);
+		switch (type) {
+			case COLUMN_FILTER_MAPPING_STRING : {
+				filter.setStringValue(stringValue);
+				filter.setTextCaseSensitiveSearch(textCaseSensitiveSearch);
+				break;
+			}
+			case COLUMN_FILTER_MAPPING_DATE : {
+				if (!ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
+					localTimezoneOffsetInMilliseconds = 0L;
+				}
+				filter.setLocalTimezoneOffsetInMilliseconds(localTimezoneOffsetInMilliseconds);
+				if (ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
+					filter.setBeforeDateMillis(beforeDateMillis + localTimezoneOffsetInMilliseconds);
+					filter.setBeforeDate(new Date(beforeDateMillis + localTimezoneOffsetInMilliseconds));
+				}
+				if (ValidationUtils.checkObjectAvailability(onDateMillis)) {
+					filter.setOnDateMillis(onDateMillis + localTimezoneOffsetInMilliseconds);
+					filter.setOnDate(new Date(onDateMillis + localTimezoneOffsetInMilliseconds));
+				}
+				if (ValidationUtils.checkObjectAvailability(afterDateMillis)) {
+					filter.setAfterDateMillis(afterDateMillis + localTimezoneOffsetInMilliseconds);
+					filter.setAfterDate(new Date(afterDateMillis + localTimezoneOffsetInMilliseconds));
+				}
+				break;
+			}
+			case COLUMN_FILTER_MAPPING_NUMBER : {
+				filter.setLessThan(lessThan);
+				filter.setEqualTo(equalTo);
+				filter.setGreaterThan(greaterThan);
+				break;
+			}
+			case COLUMN_FILTER_MAPPING_LIST : {
+				filter.setListValue(listValue);
+				break;
+			}
+		}
+		return filter;
 	}
 	
 	public static List<Sorter> createSorterListFromSorterJSON(final String sorters) {

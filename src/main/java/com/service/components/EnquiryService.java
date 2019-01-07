@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.json.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,6 +23,7 @@ import com.constants.components.SalesConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.Enquiry;
+import com.model.components.RegisteredTutor;
 import com.model.components.TutorMapper;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.EnquiryRowMapper;
@@ -42,6 +44,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Autowired
 	private transient DemoService demoService;
+	
+	@Autowired
+	private transient TutorService tutorService;
 	
 	@PostConstruct
 	public void init() {}
@@ -238,6 +243,49 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("matchStatusList", Arrays.asList(new String[] {EnquiryConstants.MATCH_STATUS_COMPLETED, EnquiryConstants.MATCH_STATUS_ABORTED}));
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
+	}
+	
+	public List<RegisteredTutor> getEligibleTutorsList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+		final Long enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
+		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
+		final String filterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEnquiryIdFilter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		final Enquiry enquiry = applicationDao.find(baseQuery + filterQueryString, paramsMap, new EnquiryRowMapper());
+		final JsonObject searchTutorExtraParam = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "searchTutorExtraParam", JsonObject.class);
+		final Map<String, Object> searchTutorExtraParamMap = new HashMap<String, Object>();
+		searchTutorExtraParamMap.put("matchSubject", JSONUtils.getValueFromJSONObject(searchTutorExtraParam, "matchSubject", Boolean.class));
+		searchTutorExtraParamMap.put("matchGrade", JSONUtils.getValueFromJSONObject(searchTutorExtraParam, "matchGrade", Boolean.class));
+		searchTutorExtraParamMap.put("matchTeachingType", JSONUtils.getValueFromJSONObject(searchTutorExtraParam, "matchTeachingType", Boolean.class));
+		searchTutorExtraParamMap.put("matchLocation", JSONUtils.getValueFromJSONObject(searchTutorExtraParam, "matchLocation", Boolean.class));
+		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParamMap.get("matchSubject")) && (Boolean)searchTutorExtraParamMap.get("matchSubject")) {
+			final List<String> listValue = new ArrayList<String>();
+			listValue.add(enquiry.getSubject());
+			gridComponent.addListFilterToFilterList("interestedSubjects", listValue, true, false, null);
+		}
+		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParamMap.get("matchGrade")) && (Boolean)searchTutorExtraParamMap.get("matchGrade")) {
+			final List<String> listValue = new ArrayList<String>();
+			listValue.add(enquiry.getGrade());
+			gridComponent.addListFilterToFilterList("interestedStudentGrades", listValue, true, false, null);
+		}
+		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParamMap.get("matchTeachingType")) && (Boolean)searchTutorExtraParamMap.get("matchTeachingType")) {
+			final List<String> listValue = new ArrayList<String>();
+			if (ValidationUtils.checkStringAvailability(enquiry.getPreferredTeachingType())) {
+				if (ValidationUtils.checkNonEmptyList(Arrays.asList(enquiry.getPreferredTeachingType().split(SEMICOLON)))) {
+					for (final String teachingType : Arrays.asList(enquiry.getPreferredTeachingType().split(SEMICOLON))) {
+						listValue.add(teachingType);
+					}
+				}
+			}
+			gridComponent.addListFilterToFilterList("preferredTeachingType", listValue, true, false, null);
+		}
+		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParamMap.get("matchLocation")) && (Boolean)searchTutorExtraParamMap.get("matchLocation")) {
+			final List<String> listValue = new ArrayList<String>();
+			listValue.add(enquiry.getLocationDetails());
+			gridComponent.addListFilterToFilterList("comfortableLocations", listValue, true, false, null);
+		}
+		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorAlreadyMappedFilter"));
+		return tutorService.getRegisteredTutorListWithParams(gridComponent, paramsMap);
 	}
 	
 	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {

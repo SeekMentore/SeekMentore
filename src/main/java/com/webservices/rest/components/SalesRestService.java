@@ -301,10 +301,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			gridComponent.setAdditionalFilterQueryString("WHERE TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = "+this.enquiryId+")");
-			final List<RegisteredTutor> registeredTutorsList = getTutorService().getRegisteredTutorList(gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, registeredTutorsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(registeredTutorsList, gridComponent));
+			final List<RegisteredTutor> eligibleTutorsList = getEnquiryService().getEligibleTutorsList(gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, eligibleTutorsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(eligibleTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
