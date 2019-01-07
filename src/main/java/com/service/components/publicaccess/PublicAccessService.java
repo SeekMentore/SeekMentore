@@ -126,15 +126,6 @@ public class PublicAccessService implements PublicAccessConstants {
 			final FindTutor findTutorApplication, 
 			final Date currentTimestamp
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
-		// Check email Id in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = customerService.getSubscribedCustomerInDatabaseWithEmailId(findTutorApplication.getEmailId());
-		// Check contact number in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = customerService.getSubscribedCustomerInDatabaseWithContactNumber(findTutorApplication.getContactNumber());
-		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
-			findTutorApplication.setSubscribedCustomer(YES);
-		} else {
-			findTutorApplication.setSubscribedCustomer(NO);
-		}
 		findTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		findTutorApplication.setEnquiryDateMillis(currentTimestamp.getTime());
 		findTutorApplication.setEnquiryStatus(STATUS_FRESH);
@@ -146,15 +137,6 @@ public class PublicAccessService implements PublicAccessConstants {
 			final SubscribeWithUs subscribeWithUsApplication, 
 			final Date currentTimestamp
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
-		// Check email Id in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = customerService.getSubscribedCustomerInDatabaseWithEmailId(subscribeWithUsApplication.getEmailId());
-		// Check contact number in system for Subscribed Customer
-		final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = customerService.getSubscribedCustomerInDatabaseWithContactNumber(subscribeWithUsApplication.getContactNumber());
-		if (null != subscribedCustomerInDatabaseWithEmailId || null != subscribedCustomerInDatabaseWithContactNumber) {
-			subscribeWithUsApplication.setSubscribedCustomer(YES);
-		} else {
-			subscribeWithUsApplication.setSubscribedCustomer(NO);
-		}
 		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationDateMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationStatus(STATUS_FRESH);

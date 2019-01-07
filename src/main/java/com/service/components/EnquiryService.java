@@ -159,11 +159,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public void feedEnquiryList(final List<Enquiry> enquiryList) throws Exception {
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "insertEnquiry", enquiryList);
-	}
-	
-	@Transactional
 	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE ENQUIRY SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();

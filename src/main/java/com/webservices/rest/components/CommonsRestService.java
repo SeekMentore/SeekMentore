@@ -160,15 +160,15 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	private List<UIMenu> computeBOUIMenuForUser(final User user) {
+	private List<UIMenu> computeBOUIMenuForUser(final User user) throws CloneNotSupportedException {
 		final List<UIMenu> uiMenuList = new LinkedList<UIMenu>();
 		for (final UIMenu uiMenu : getMenuService().getBOUIMenuArray()) {
 			if (getMenuService().hasAccessToBOUIMenuItem(user.getPageAccessTypes(), uiMenu)) {
-				final UIMenu uiMenuUICopy = uiMenu.getACopyForSendingToBOUI();
+				final UIMenu uiMenuUICopy = uiMenu.cloneForSendingToBOUI();
 				Boolean hasSubMenu = false;
 				for (final UISubMenu uiSubMenu : uiMenu.getSubMenuArray()) {
 					if (getMenuService().hasAccessToBOUISubMenuItem(user.getPageAccessTypes(), uiSubMenu)) {
-						uiMenuUICopy.addUISubMenu(uiSubMenu.getACopyForSendingToBOUI());
+						uiMenuUICopy.addUISubMenu(uiSubMenu.cloneForSendingToBOUI());
 						hasSubMenu = true;
 					}
 				}

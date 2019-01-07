@@ -2,7 +2,7 @@ package com.model.bouipath;
 
 import java.io.Serializable;
 
-public class UISubMenu implements Serializable {
+public class UISubMenu implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = -8666630836973456529L;
 	
@@ -20,10 +20,10 @@ public class UISubMenu implements Serializable {
 		this.order = order;
 	}
 	
-	public UISubMenu getACopyForSendingToBOUI() {
-		final UISubMenu newInstance = new UISubMenu();
-		newInstance.name = this.name;
-		newInstance.url = this.url;
+	public UISubMenu cloneForSendingToBOUI() throws CloneNotSupportedException {
+		final UISubMenu newInstance = clone();
+		newInstance.pageAccessType = null;
+		newInstance.order = null;
 		return newInstance;
 	}
 
@@ -57,5 +57,10 @@ public class UISubMenu implements Serializable {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+	
+	@Override
+	public UISubMenu clone() throws CloneNotSupportedException {  
+		return (UISubMenu)super.clone();
 	}
 }

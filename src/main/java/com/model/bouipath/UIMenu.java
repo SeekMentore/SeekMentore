@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UIMenu implements Serializable {
+public class UIMenu implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = -2691803338338336066L;
 	
@@ -40,14 +40,15 @@ public class UIMenu implements Serializable {
 		}
 	}
 	
-	public UIMenu getACopyForSendingToBOUI() {
-		final UIMenu newInstance = new UIMenu();
-		newInstance.name = this.name;
-		newInstance.url = this.url;
-		newInstance.submenu = this.submenu;
+	public UIMenu cloneForSendingToBOUI() throws CloneNotSupportedException {
+		final UIMenu newInstance = clone();
 		if (newInstance.submenu) {
 			newInstance.subMenuItems = new LinkedList<UISubMenu>();
 		}
+		newInstance.pageAccessType = null;
+		newInstance.order = null;
+		newInstance.hidden = null;
+		newInstance.subMenuArray = null;
 		return newInstance;
 	}
 	
@@ -135,5 +136,10 @@ public class UIMenu implements Serializable {
 
 	public void setHidden(Boolean hidden) {
 		this.hidden = hidden;
+	}
+	
+	@Override
+	public UIMenu clone() throws CloneNotSupportedException {  
+		return (UIMenu)super.clone();
 	}
 }

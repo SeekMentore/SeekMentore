@@ -54,4 +54,5 @@ public interface FindTutorConstants extends PublicAccessConstants {
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION = "Please select valid 'Location'";
 	String VALIDATION_MESSAGE_PLEASE_SELECT_VALID_REFERENCE = "Please select valid 'Reference'";
 	String VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS = "Please provide 'Address Details'";
+	String VALIDATION_MESSAGE_EMAIL_ID_CONTACT_NUMBER_MULTIPLE_CUSTOMERS = "'EmailId' & 'Contact Number' entered by you belong to two different Customers in our system. If you feel this message is an error and someone has stolen your identity please contact us from the form below.";
 }

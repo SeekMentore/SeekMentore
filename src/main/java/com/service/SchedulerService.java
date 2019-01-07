@@ -40,7 +40,6 @@ import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.DemoService;
-import com.service.components.EnquiryService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
 import com.utils.ExceptionUtils;
@@ -70,9 +69,6 @@ public class SchedulerService implements SchedulerConstants {
 	
 	@Autowired
 	private transient CustomerService customerService;
-	
-	@Autowired
-	private transient EnquiryService enquiryService;
 	
 	@Autowired
 	private transient DemoService demoService;
@@ -208,9 +204,59 @@ public class SchedulerService implements SchedulerConstants {
 				final Date currenTimestamp = new Date();
 				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForEnquiryStatusSelected(true, 20);
 				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
+					final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
 					for (final FindTutor findTutorObj : findTutorObjList) {
-						final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
-						if (NO.equalsIgnoreCase(findTutorObj.getSubscribedCustomer())) {
+						Boolean proceedForEnquiryCreation = false;
+						Long customerId = null;
+						Boolean emailPresentInSystem = false;
+						Boolean contactNumberPresentInSystem = false;
+						Map<String, Object> paramsMap = new HashMap<String, Object>();
+						paramsMap.put("emailId", findTutorObj.getEmailId());
+						StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+						query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailFilter"));
+						final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
+						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId.getCustomerId())) {
+							emailPresentInSystem = true;
+						} 
+						paramsMap = new HashMap<String, Object>();
+						paramsMap.put("contactNumber", findTutorObj.getContactNumber());
+						query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
+						query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberFilter"));
+						final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
+						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber.getCustomerId())) {
+							contactNumberPresentInSystem = true;
+						}
+						if (emailPresentInSystem || contactNumberPresentInSystem) {
+							if (emailPresentInSystem && contactNumberPresentInSystem) {
+								if (subscribedCustomerInDatabaseWithEmailId.getCustomerId().equals(subscribedCustomerInDatabaseWithContactNumber.getCustomerId())) {
+									proceedForEnquiryCreation = true;
+									customerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+								} else {
+									final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +" ; Set to Subscribed Customer = Y have different Customer Records for EmailId & Contact Number");
+									commonsService.feedErrorRecord(errorPacket);
+								}
+							} else {
+								if (emailPresentInSystem) {
+									proceedForEnquiryCreation = true;
+									customerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+									final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
+									subscribedCustomerContactNumber.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
+									subscribedCustomerContactNumber.setContactNumber(findTutorObj.getContactNumber());
+									subscribedCustomerContactNumber.setIsPrimary(NO);
+									applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
+								}
+								if (contactNumberPresentInSystem) {
+									proceedForEnquiryCreation = true;
+									customerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+									final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
+									subscribedCustomerEmail.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
+									subscribedCustomerEmail.setEmailId(findTutorObj.getEmailId());
+									subscribedCustomerEmail.setIsPrimary(NO);
+									applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
+								}
+							}
+						} else {
+							proceedForEnquiryCreation = true;
 							final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 							final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 							final SubscribedCustomer subscribedCustomerObj = new SubscribedCustomer();
@@ -227,7 +273,7 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerObj.setUserId(findTutorObj.getEmailId());
 							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
 							subscribedCustomerObj.setRecordLastUpdatedMillis(currenTimestamp.getTime());
-							final Long customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
+							customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
 							final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
 							subscribedCustomerEmail.setCustomerId(customerId);
 							subscribedCustomerEmail.setEmailId(subscribedCustomerObj.getEmailId());
@@ -238,87 +284,27 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerContactNumber.setContactNumber(subscribedCustomerObj.getContactNumber());
 							subscribedCustomerContactNumber.setIsPrimary(YES);
 							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
-							final Enquiry enquiryObject = new Enquiry();
-							enquiryObject.setCustomerId(customerId);
-							enquiryObject.setSubject(findTutorObj.getSubjects());
-							enquiryObject.setGrade(findTutorObj.getStudentGrade());
-							enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-							enquiryObject.setLocationDetails(findTutorObj.getLocation());
-							enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-							enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-							enquiryObjectList.add(enquiryObject);
 							customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
-						} else {
-							boolean emailPresentInSystem = false;
-							boolean contactNumberPresentInSystem = false;
-							Map<String, Object> paramsMap = new HashMap<String, Object>();
-							paramsMap.put("emailId", findTutorObj.getEmailId());
-							StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
-							query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailFilter"));
-							final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
-							if (null != subscribedCustomerInDatabaseWithEmailId) {
-								if (null != subscribedCustomerInDatabaseWithEmailId.getCustomerId()) {
-									emailPresentInSystem = true;
-									final Enquiry enquiryObject = new Enquiry();
-									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
-									enquiryObject.setSubject(findTutorObj.getSubjects());
-									enquiryObject.setGrade(findTutorObj.getStudentGrade());
-									enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-									enquiryObject.setLocationDetails(findTutorObj.getLocation());
-									enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-									enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-									enquiryObjectList.add(enquiryObject);
-								}
-							} 
-							paramsMap = new HashMap<String, Object>();
-							paramsMap.put("contactNumber", findTutorObj.getContactNumber());
-							query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
-							query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberFilter"));
-							final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
-							if (null != subscribedCustomerInDatabaseWithContactNumber) {
-								if (null != subscribedCustomerInDatabaseWithContactNumber.getCustomerId()) {
-									contactNumberPresentInSystem = true;
-									final Enquiry enquiryObject = new Enquiry();
-									enquiryObject.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
-									enquiryObject.setSubject(findTutorObj.getSubjects());
-									enquiryObject.setGrade(findTutorObj.getStudentGrade());
-									enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-									enquiryObject.setLocationDetails(findTutorObj.getLocation());
-									enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
-									enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
-									enquiryObjectList.add(enquiryObject);
-								}
-							}
-							if (!emailPresentInSystem || !contactNumberPresentInSystem) {
-								if (!emailPresentInSystem) {
-									if (contactNumberPresentInSystem) {
-										final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
-										subscribedCustomerEmail.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
-										subscribedCustomerEmail.setEmailId(findTutorObj.getEmailId());
-										subscribedCustomerEmail.setIsPrimary(NO);
-										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
-									} else {
-										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Email Id " + findTutorObj.getEmailId() + " Not present in system and no customer fetched for Contact Number " +findTutorObj.getContactNumber());
-										commonsService.feedErrorRecord(errorPacket);
-									}
-								}
-								if (!contactNumberPresentInSystem) {
-									if (emailPresentInSystem) {
-										final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
-										subscribedCustomerContactNumber.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
-										subscribedCustomerContactNumber.setContactNumber(findTutorObj.getContactNumber());
-										subscribedCustomerContactNumber.setIsPrimary(NO);
-										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
-									} else {
-										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Contact Number " +findTutorObj.getContactNumber()+ " Not present in system and no customer fetched for Email Id " + findTutorObj.getEmailId());
-										commonsService.feedErrorRecord(errorPacket);
-									}
-								}
+						}
+						if (proceedForEnquiryCreation) {
+							final String[] splitSubjects = findTutorObj.getSubjects().split(SEMICOLON);
+							for (final String subject : splitSubjects) {
+								final Enquiry enquiryObject = new Enquiry();
+								enquiryObject.setCustomerId(customerId);
+								enquiryObject.setEnquiryContactNumber(findTutorObj.getContactNumber());
+								enquiryObject.setEnquiryEmail(findTutorObj.getEmailId());
+								enquiryObject.setSubject(subject);
+								enquiryObject.setGrade(findTutorObj.getStudentGrade());
+								enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
+								enquiryObject.setLocationDetails(findTutorObj.getLocation());
+								enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
+								enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
+								enquiryObjectList.add(enquiryObject);
 							}
 						}
-						if (!enquiryObjectList.isEmpty()) {
-							enquiryService.feedEnquiryList(enquiryObjectList);
-						}
+					}
+					if (ValidationUtils.checkNonEmptyList(enquiryObjectList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "insertEnquiry", enquiryObjectList);
 					}
 					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateFindTutorDataMigrated", findTutorObjList);
 				}

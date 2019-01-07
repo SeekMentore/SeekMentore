@@ -25,6 +25,7 @@ import com.constants.components.publicaccess.SubmitQueryConstants;
 import com.constants.components.publicaccess.SubscribeWithUsConstants;
 import com.model.ErrorPacket;
 import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
@@ -32,6 +33,7 @@ import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
+import com.service.components.CustomerService;
 import com.service.components.TutorService;
 import com.service.components.publicaccess.PublicAccessService;
 import com.utils.ApplicationUtils;
@@ -197,6 +199,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	
 	public TutorService getTutorService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_TUTOR_SERVICE, TutorService.class);
+	}
+	
+	public CustomerService getCustomerService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_CUSTOMER_SERVICE, CustomerService.class);
 	}
 	
 	public CommonsService getCommonsService() {
@@ -442,6 +448,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	}
 	
 	private void handleFindTutorSecurity() throws Exception {
+		Boolean isEmailIdCustomerPresent = false;
+		Boolean isContactNumberCustomerPresent = false;
+		Long emailIdCustomerId = null;
+		Long contactNumberCustomerId = null;
 		final FindTutor findTutorApplication = (FindTutor) this.application;
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePhoneNumber(findTutorApplication.getContactNumber(), 10)) {
@@ -450,6 +460,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
+		} else {
+			isContactNumberCustomerPresent = true;
+			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(findTutorApplication.getContactNumber());
+			contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
 		}
 		if (!ValidationUtils.validateEmailAddress(findTutorApplication.getEmailId())) {
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -457,6 +471,24 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
+		} else {
+			isEmailIdCustomerPresent = true;
+			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(findTutorApplication.getEmailId());
+			emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+		}
+		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
+			findTutorApplication.setSubscribedCustomer(YES);
+			if (isEmailIdCustomerPresent && isContactNumberCustomerPresent) {
+				if (!contactNumberCustomerId.equals(emailIdCustomerId)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							FindTutorConstants.VALIDATION_MESSAGE_EMAIL_ID_CONTACT_NUMBER_MULTIPLE_CUSTOMERS,
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+				}
+			}
+		} else {
+			findTutorApplication.setSubscribedCustomer(NO);
 		}
 		if (!ValidationUtils.validateNameString(findTutorApplication.getName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -510,6 +542,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	}
 	
 	private void handleSubscribeWithUsSecurity() throws Exception {
+		Boolean isEmailIdCustomerPresent = false;
+		Boolean isContactNumberCustomerPresent = false;
+		Long emailIdCustomerId = null;
+		Long contactNumberCustomerId = null;
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) this.application;
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePhoneNumber(subscribeWithUsApplication.getContactNumber(), 10)) {
@@ -518,6 +554,10 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
+		} else {
+			isContactNumberCustomerPresent = true;
+			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(subscribeWithUsApplication.getContactNumber());
+			contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
 		}
 		if (!ValidationUtils.validateEmailAddress(subscribeWithUsApplication.getEmailId())) {
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -525,6 +565,24 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					SubscribeWithUsConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
+		} else {
+			isEmailIdCustomerPresent = true;
+			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(subscribeWithUsApplication.getEmailId());
+			emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+		}
+		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
+			subscribeWithUsApplication.setSubscribedCustomer(YES);
+			if (isEmailIdCustomerPresent && isContactNumberCustomerPresent) {
+				if (!contactNumberCustomerId.equals(emailIdCustomerId)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							FindTutorConstants.VALIDATION_MESSAGE_EMAIL_ID_CONTACT_NUMBER_MULTIPLE_CUSTOMERS,
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+				}
+			}
+		} else {
+			subscribeWithUsApplication.setSubscribedCustomer(NO);
 		}
 		if (!ValidationUtils.validateNameString(subscribeWithUsApplication.getFirstName(), true)) {
 			ApplicationUtils.appendMessageInMapAttribute(
