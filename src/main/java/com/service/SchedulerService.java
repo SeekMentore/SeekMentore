@@ -295,7 +295,7 @@ public class SchedulerService implements SchedulerConstants {
 										final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
 										subscribedCustomerEmail.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
 										subscribedCustomerEmail.setEmailId(findTutorObj.getEmailId());
-										subscribedCustomerEmail.setIsPrimary(YES);
+										subscribedCustomerEmail.setIsPrimary(NO);
 										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
 									} else {
 										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Email Id " + findTutorObj.getEmailId() + " Not present in system and no customer fetched for Contact Number " +findTutorObj.getContactNumber());
@@ -307,7 +307,7 @@ public class SchedulerService implements SchedulerConstants {
 										final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
 										subscribedCustomerContactNumber.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
 										subscribedCustomerContactNumber.setContactNumber(findTutorObj.getContactNumber());
-										subscribedCustomerContactNumber.setIsPrimary(YES);
+										subscribedCustomerContactNumber.setIsPrimary(NO);
 										applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
 									} else {
 										final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +"Contact Number " +findTutorObj.getContactNumber()+ " Not present in system and no customer fetched for Email Id " + findTutorObj.getEmailId());

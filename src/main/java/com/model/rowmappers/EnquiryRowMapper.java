@@ -41,6 +41,8 @@ public class EnquiryRowMapper implements RowMapper<Enquiry> {
 		enquiryObject.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("whoActedName"), String.class));
 		enquiryObject.setPreferredTeachingType(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("preferredTeachingType"), String.class));
 		enquiryObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("entryDateMillis"), Long.class));
+		enquiryObject.setEnquiryEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("enquiryEmail"), String.class));
+		enquiryObject.setEnquiryContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("enquiryContactNumber"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(enquiryObject, row, rowNum);
 		return enquiryObject;
 	}

@@ -1,10 +1,14 @@
 package com.model.components;
 
+import java.io.Serializable;
+
 import com.constants.ApplicationConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.ValidationUtils;
 
-public class EmployeeContactNumber extends OtherContactNumber implements Cloneable, ApplicationConstants, ApplicationWorkbookObject {
+public class EmployeeContactNumber extends OtherContactNumber implements Serializable, Cloneable, ApplicationConstants, ApplicationWorkbookObject {
+	
+	private static final long serialVersionUID = -6545113536464760606L;
 	
 	private Long employeeContactNumberId;
 	private Long employeeId;

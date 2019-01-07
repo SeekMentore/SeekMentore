@@ -73,6 +73,8 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("whoActedName"), String.class));
 		subscriptionPackage.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("updatedByName"), String.class));
 		subscriptionPackage.setCreatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("createdMillis"), Long.class));
+		subscriptionPackage.setEnquiryEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryEmail"), String.class));
+		subscriptionPackage.setEnquiryContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryContactNumber"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscriptionPackage, row, rowNum);
 		return subscriptionPackage;
 	}

@@ -6,7 +6,7 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class SubscriptionPackage extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
+public class SubscriptionPackage extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = -171799632331459916L;
 	
@@ -67,6 +67,8 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private Integer demoNegotiatedOverrideRateWithTutor;
 	private String demoAdminFinalizingRemarks;
 	private Long createdMillis;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	
 	public SubscriptionPackage() {}
 
@@ -525,6 +527,22 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	public void setDemoAdminFinalizingRemarks(String demoAdminFinalizingRemarks) {
 		this.demoAdminFinalizingRemarks = demoAdminFinalizingRemarks;
 	}
+	
+	public String getEnquiryEmail() {
+		return enquiryEmail;
+	}
+
+	public void setEnquiryEmail(String enquiryEmail) {
+		this.enquiryEmail = enquiryEmail;
+	}
+
+	public String getEnquiryContactNumber() {
+		return enquiryContactNumber;
+	}
+
+	public void setEnquiryContactNumber(String enquiryContactNumber) {
+		this.enquiryContactNumber = enquiryContactNumber;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -578,6 +596,8 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
@@ -600,5 +620,10 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "createdMillis" : return "CREATED_MILLIS";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public SubscriptionPackage clone() throws CloneNotSupportedException {  
+		return (SubscriptionPackage)super.clone();
 	}
 }

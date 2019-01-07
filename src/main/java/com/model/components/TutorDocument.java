@@ -2,10 +2,11 @@ package com.model.components;
 
 import java.io.Serializable;
 
+import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class TutorDocument extends GridComponentObject implements Serializable {
+public class TutorDocument extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
@@ -27,22 +28,6 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 		this.documentType = documentType;
 		this.filename = filename;
 		this.content = content;
-	}
-	
-	public TutorDocument getACopy() {
-		final TutorDocument newInstance = new TutorDocument();
-		newInstance.documentId = this.documentId;
-		newInstance.tutorId = this.tutorId;
-		newInstance.documentType = this.documentType;
-		newInstance.fsKey = this.fsKey;
-		newInstance.filename = this.filename;
-		newInstance.isApproved = this.isApproved;
-		newInstance.whoActed = this.whoActed;
-		newInstance.whoActedName = this.whoActedName;
-		newInstance.remarks = this.remarks;
-		newInstance.actionDateMillis = this.actionDateMillis;
-		newInstance.content = this.content;
-		return newInstance;
 	}
 	
 	public Long getDocumentId() {
@@ -117,6 +102,32 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 		this.actionDateMillis = actionDateMillis;
 	}
 	
+	public String getWhoActedName() {
+		return whoActedName;
+	}
+
+	public void setWhoActedName(String whoActedName) {
+		this.whoActedName = whoActedName;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+	
+	@Override
+	public Object[] getReportHeaders(String reportSwitch) {
+		return null;
+	}
+
+	@Override
+	public Object[] getReportRecords(String reportSwitch) {
+		return null;
+	}
+	
 	@Override
 	public String resolveColumnNameForMapping(final String mappingProperty) {
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
@@ -135,20 +146,9 @@ public class TutorDocument extends GridComponentObject implements Serializable {
 		}
 		return EMPTY_STRING;
 	}
-
-	public String getWhoActedName() {
-		return whoActedName;
-	}
-
-	public void setWhoActedName(String whoActedName) {
-		this.whoActedName = whoActedName;
-	}
-
-	public String getDocumentType() {
-		return documentType;
-	}
-
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
+	
+	@Override
+	public TutorDocument clone() throws CloneNotSupportedException {  
+		return (TutorDocument)super.clone();
 	}
 }

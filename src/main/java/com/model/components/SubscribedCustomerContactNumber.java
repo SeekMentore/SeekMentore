@@ -1,10 +1,14 @@
 package com.model.components;
 
+import java.io.Serializable;
+
 import com.constants.components.publicaccess.SubscribedCustomerConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.ValidationUtils;
 
-public class SubscribedCustomerContactNumber extends OtherContactNumber implements Cloneable, SubscribedCustomerConstants, ApplicationWorkbookObject {
+public class SubscribedCustomerContactNumber extends OtherContactNumber implements Serializable, Cloneable, SubscribedCustomerConstants, ApplicationWorkbookObject {
+	
+	private static final long serialVersionUID = 1168913907463884239L;
 	
 	private Long subscribedCustomerContactNumberId;
 	private Long customerId;

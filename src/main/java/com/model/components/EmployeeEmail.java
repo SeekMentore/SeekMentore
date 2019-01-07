@@ -1,10 +1,14 @@
 package com.model.components;
 
+import java.io.Serializable;
+
 import com.constants.ApplicationConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.ValidationUtils;
 
-public class EmployeeEmail extends OtherEmail implements Cloneable, ApplicationConstants, ApplicationWorkbookObject {
+public class EmployeeEmail extends OtherEmail implements Serializable, Cloneable, ApplicationConstants, ApplicationWorkbookObject {
+	
+	private static final long serialVersionUID = 5224262790290205742L;
 	
 	private Long employeeEmailIdId;
 	private Long employeeId;
@@ -47,7 +51,7 @@ public class EmployeeEmail extends OtherEmail implements Cloneable, ApplicationC
 	}
 	
 	@Override
-	public SubscribedCustomerEmail clone() throws CloneNotSupportedException {  
-		return (SubscribedCustomerEmail)super.clone();
+	public EmployeeEmail clone() throws CloneNotSupportedException {  
+		return (EmployeeEmail)super.clone();
 	}
 }

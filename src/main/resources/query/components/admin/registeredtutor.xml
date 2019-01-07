@@ -23,10 +23,10 @@
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
     <query type="filter" id="registeredTutorEmailFilter">
-		WHERE EMAIL_ID = :emailId
+		WHERE TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
     <query type="filter" id="registeredTutorContactNumberFilter">
-		WHERE CONTACT_NUMBER = :contactNumber
+		WHERE TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
     <query type="update" id="updateRegisteredTutorBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET

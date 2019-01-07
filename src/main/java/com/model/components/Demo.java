@@ -6,7 +6,7 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class Demo extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
+public class Demo extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
@@ -61,6 +61,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	private Long subscriptionCreatedMillis;
 	private String isEnquiryClosed;
 	private Long enquiryClosedMillis;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	
 	public Demo() {}
 	
@@ -471,6 +473,22 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 	public void setEnquiryClosedMillis(Long enquiryClosedMillis) {
 		this.enquiryClosedMillis = enquiryClosedMillis;
 	}
+	
+	public String getEnquiryEmail() {
+		return enquiryEmail;
+	}
+
+	public void setEnquiryEmail(String enquiryEmail) {
+		this.enquiryEmail = enquiryEmail;
+	}
+
+	public String getEnquiryContactNumber() {
+		return enquiryContactNumber;
+	}
+
+	public void setEnquiryContactNumber(String enquiryContactNumber) {
+		this.enquiryContactNumber = enquiryContactNumber;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -523,6 +541,8 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
 			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
@@ -540,5 +560,10 @@ public class Demo extends GridComponentObject implements Serializable, Applicati
 			case "enquiryClosedMillis" : return "ENQUIRY_CLOSED_MILLIS";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public Demo clone() throws CloneNotSupportedException {  
+		return (Demo)super.clone();
 	}
 }

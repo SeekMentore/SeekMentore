@@ -7,7 +7,7 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class TutorMapper extends GridComponentObject implements Serializable, CustomerConstants, ApplicationWorkbookObject {
+public class TutorMapper extends GridComponentObject implements Serializable, CustomerConstants, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
@@ -57,6 +57,8 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private Long entryDateMillis;
 	private String isEnquiryClosed;
 	private Long enquiryClosedMillis;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	
 	public TutorMapper() {}
 	
@@ -427,6 +429,22 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	public void setEnquiryClosedMillis(Long enquiryClosedMillis) {
 		this.enquiryClosedMillis = enquiryClosedMillis;
 	}
+	
+	public String getEnquiryEmail() {
+		return enquiryEmail;
+	}
+
+	public void setEnquiryEmail(String enquiryEmail) {
+		this.enquiryEmail = enquiryEmail;
+	}
+
+	public String getEnquiryContactNumber() {
+		return enquiryContactNumber;
+	}
+
+	public void setEnquiryContactNumber(String enquiryContactNumber) {
+		this.enquiryContactNumber = enquiryContactNumber;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -454,6 +472,8 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
@@ -490,5 +510,10 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "enquiryClosedMillis" : return "ENQUIRY_CLOSED_MILLIS";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public TutorMapper clone() throws CloneNotSupportedException {  
+		return (TutorMapper)super.clone();
 	}
 }

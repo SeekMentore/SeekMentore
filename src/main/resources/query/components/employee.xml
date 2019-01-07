@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="employee">
+	<query type="insert" id="insertEmployee" paramClass="com.model.Employee">
+		INSERT INTO EMPLOYEE
+			(NAME, USER_ID, EMAIL_DOMAIN, USER_TYPE, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES
+			(:name, :userId, :emailDomain, 'Employee', :encryptedPassword, :recordLastUpdatedMillis, :updatedBy)
+	</query>
 	<query type="select" id="selectEmployee">
 		SELECT
             EMP.*,
@@ -11,9 +17,27 @@
 	<query type="filter" id="employeeUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
+	<query type="filter" id="employeeEmailFilter">
+		WHERE EMPLOYEE_ID = (SELECT EMPLOYEE_ID FROM EMPLOYEE_EMAIL_ID WHERE EMAIL_ID = :emailId)
+	</query>
+	<query type="filter" id="employeeContactNumberFilter">
+		WHERE EMPLOYEE_ID = (SELECT EMPLOYEE_ID FROM EMPLOYEE_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
+	</query>
 	<query type="update" id="updateEmployeePassword" paramClass="com.model.Employee">
 		UPDATE EMPLOYEE SET 
 			ENCRYPTED_PASSWORD = :encryptedPassword 
 		WHERE USER_ID = :userId
+	</query>
+	<query type="insert" id="insertEmployeeEmail" paramClass="com.model.components.EmployeeEmail">
+		INSERT INTO EMPLOYEE_EMAIL_ID
+			(EMPLOYEE_ID, EMAIL_ID, IS_PRIMARY) 
+		VALUES
+			(:employeeId, :emailId, :isPrimary)
+	</query>
+	<query type="insert" id="insertEmployeeContactNumber" paramClass="com.model.components.EmployeeContactNumber">
+		INSERT INTO EMPLOYEE_CONTACT_NUMBER
+			(EMPLOYEE_ID, CONTACT_NUMBER, IS_PRIMARY) 
+		VALUES
+			(:employeeId, :contactNumber, :isPrimary)
 	</query>
 </queryMapper>

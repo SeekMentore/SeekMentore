@@ -61,6 +61,8 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("entryDateMillis"), Long.class));
 		tutorMapperObject.setIsEnquiryClosed(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("isEnquiryClosed"), String.class));
 		tutorMapperObject.setEnquiryClosedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryClosedMillis"), Long.class));
+		tutorMapperObject.setEnquiryEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryEmail"), String.class));
+		tutorMapperObject.setEnquiryContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryContactNumber"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(tutorMapperObject, row, rowNum);
 		return tutorMapperObject;
 	}

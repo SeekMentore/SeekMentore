@@ -1,10 +1,14 @@
 package com.model.components;
 
+import java.io.Serializable;
+
 import com.constants.components.publicaccess.RegisteredTutorConstants;
 import com.model.ApplicationWorkbookObject;
 import com.utils.ValidationUtils;
 
-public class RegisteredTutorEmail extends OtherEmail implements Cloneable, RegisteredTutorConstants, ApplicationWorkbookObject {
+public class RegisteredTutorEmail extends OtherEmail implements Serializable, Cloneable, RegisteredTutorConstants, ApplicationWorkbookObject {
+	
+	private static final long serialVersionUID = -3524058676928237906L;
 	
 	private Long registeredTutorEmailIdId;
 	private Long tutorId;

@@ -6,7 +6,7 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class Enquiry extends GridComponentObject implements Serializable, ApplicationWorkbookObject {
+public class Enquiry extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
@@ -35,6 +35,8 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 	private String whoActed;
 	private String whoActedName;
 	private String preferredTeachingType;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	
 	public Enquiry() {}
 	
@@ -238,6 +240,22 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 		this.entryDateMillis = entryDateMillis;
 	}
 	
+	public String getEnquiryEmail() {
+		return enquiryEmail;
+	}
+
+	public void setEnquiryEmail(String enquiryEmail) {
+		this.enquiryEmail = enquiryEmail;
+	}
+
+	public String getEnquiryContactNumber() {
+		return enquiryContactNumber;
+	}
+
+	public void setEnquiryContactNumber(String enquiryContactNumber) {
+		this.enquiryContactNumber = enquiryContactNumber;
+	}
+	
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -278,7 +296,14 @@ public class Enquiry extends GridComponentObject implements Serializable, Applic
 			case "whoActedName" : return "WHO_ACTED_NAME";
 			case "preferredTeachingType" : return "PREFERRED_TEACHING_TYPE";
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 		}
 		return EMPTY_STRING;
+	}
+	
+	@Override
+	public Enquiry clone() throws CloneNotSupportedException {  
+		return (Enquiry)super.clone();
 	}
 }
