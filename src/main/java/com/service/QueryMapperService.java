@@ -118,6 +118,19 @@ public class QueryMapperService implements QueryMapperConstants {
 		throw new ApplicationException("No data found for >> Namespace = " + namespaceName + "; Query Id = " + queryId);
 	}
 	
+	public String getQuerySQL(final String namespaceName, final String queryId, final Map<String, Object> dynamicQueryReplacements) {
+		final String querySQL = namespaceQueryListMap.get(namespaceName).get(queryId).getSQL(jndiAndControlConfigurationLoadService.getControlConfiguration().getDefaultDatabaseEngine());
+		if (ValidationUtils.checkStringAvailability(querySQL)) {
+			
+			return querySQL;
+		}
+		throw new ApplicationException("No data found for >> Namespace = " + namespaceName + "; Query Id = " + queryId);
+	}
+	
+	private String replaceDynamicQueryString(final String querySQL) {
+		
+	}
+	
 	public List<Map<String, Object>> getQueryParamsList(final String namespaceName, final String queryId, final List<?> paramObjectList) throws Exception {
 		final List<Map<String, Object>> paramsList = new LinkedList<Map<String, Object>>();
 		if (!ValidationUtils.checkNonEmptyList(paramObjectList)) 
