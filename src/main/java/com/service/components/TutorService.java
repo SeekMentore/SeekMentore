@@ -104,7 +104,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public TutorDocument getTutorDocument(final Long tutorId, final String filename) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public TutorDocument getTutorDocument(final Long tutorId, final String filename) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		paramsMap.put("filename", filename);
@@ -288,7 +288,7 @@ public class TutorService implements TutorConstants {
 				null);
 	}
 	
-	public RegisteredTutor getRegisteredTutorObject(final Long tutorId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public RegisteredTutor getRegisteredTutorObject(final Long tutorId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());

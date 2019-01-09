@@ -7,6 +7,7 @@
 	<namespace name="error" mapperFilePath="query/components/error.xml"/>
 	<namespace name="notification" mapperFilePath="query/components/notification.xml"/>
 	<namespace name="employee" mapperFilePath="query/components/employee.xml"/>
+	<namespace name="grid" mapperFilePath="query/components/grid.xml"/>
 	<namespace name="complaint" mapperFilePath="query/components/commons/complaint.xml"/>
 	<namespace name="public-application" mapperFilePath="query/components/publicaccess/publicapplication.xml"/>
 	<namespace name="sales-enquiry" mapperFilePath="query/components/sales/enquiry.xml"/>

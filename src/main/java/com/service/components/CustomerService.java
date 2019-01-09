@@ -161,7 +161,7 @@ import com.utils.WorkbookUtils;
 		return subscribedCustomerList;
 	}
 	
-	public SubscribedCustomer getSubscribedCustomerObject(final Long customerId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public SubscribedCustomer getSubscribedCustomerObject(final Long customerId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("customerId", customerId);
 		return applicationDao.find("SELECT * FROM SUBSCRIBED_CUSTOMER WHERE CUSTOMER_ID = :customerId", paramsMap, new SubscribedCustomerRowMapper());

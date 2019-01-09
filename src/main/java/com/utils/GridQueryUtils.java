@@ -1,12 +1,17 @@
 package com.utils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.constants.BeanConstants;
 import com.constants.GridComponentConstants;
 import com.model.GridComponentObject;
 import com.model.gridcomponent.Filter;
 import com.model.gridcomponent.GridComponent;
 import com.model.gridcomponent.Sorter;
+import com.service.QueryMapperService;
+import com.utils.context.AppContext;
 
 public class GridQueryUtils implements GridComponentConstants {
 	
@@ -300,7 +305,7 @@ public class GridQueryUtils implements GridComponentConstants {
 			String existingFilterQueryString,
 			String existingSorterQueryString,
 			final GridComponent gridComponent
-	) throws InstantiationException, IllegalAccessException {
+	) throws Exception {
 		final Integer start = gridComponent.getStart(); 
 		final Integer end = gridComponent.getEnd(); 
 		final Boolean isPagingAvailable = gridComponent.getPagingAvailable();
@@ -310,7 +315,7 @@ public class GridQueryUtils implements GridComponentConstants {
 		String filterQueryString = createFilterQuery(gridComponent.getFilterList(), gridComponentObject);
 		String sorterQueryString = createSorterQuery(gridComponent.getSorterList(), gridComponentObject);
 		
-		String completeQuery = EMPTY_STRING;
+		String queryId = EMPTY_STRING;
 		
 		if (!ValidationUtils.checkStringAvailability(existingFilterQueryString)) {
 			existingFilterQueryString = WHITESPACE;
@@ -347,20 +352,25 @@ public class GridQueryUtils implements GridComponentConstants {
 			completeSorterQuery += WHITESPACE + existingSorterQueryString;
 		}
 		
-		final String encapsulatedBaseQueryWithVirtualColumns = "SELECT ENCAPSULATEDQUERYWITHVIRTUALCOLUMNS.* FROM ( " + baseQuery + WHITESPACE + existingFilterQueryString + ") AS ENCAPSULATEDQUERYWITHVIRTUALCOLUMNS";
+		final Map<String, Object> gridQueryParamsMap = new HashMap<String, Object>();
+		gridQueryParamsMap.put("baseQuery", baseQuery);
+		gridQueryParamsMap.put("existingFilterQueryString", existingFilterQueryString);
+		gridQueryParamsMap.put("completeFilterQuery", completeFilterQuery);
+		gridQueryParamsMap.put("completeSorterQuery", completeSorterQuery);
 		if (isPagingAvailable) {
-			final String coreQuery =  WHITESPACE +  encapsulatedBaseQueryWithVirtualColumns + WHITESPACE +  completeFilterQuery;
-			final String mainQueryPseudoTable = " (" + coreQuery + WHITESPACE + completeSorterQuery + ") AS MAINQUERYPSEUDOTABLE";
-			final String totalRecordsPseudoTable = " (SELECT COUNT(1) AS RECORD_COUNT FROM (" + coreQuery + ") AS COUNTPSEUDOTABLE) AS TOTALRECORDSPSEUDOTABLE";
-			final String resultPseudoTable = " (SELECT TOTALRECORDSPSEUDOTABLE.RECORD_COUNT AS TOTAL_RECORDS, MAINQUERYPSEUDOTABLE.* FROM " + mainQueryPseudoTable + COMMA_APPENDER + totalRecordsPseudoTable + ") AS RESULTPSEUDOTABLE";
-			final String rownumPseudoTable = " (SELECT @row_number:=0) AS ROWNUMPSEUDOTABLE";
-			final String completeQueryPseudoTable = "(SELECT (@row_number:=@row_number + 1) AS RNUM, RESULTPSEUDOTABLE.* FROM " + resultPseudoTable + COMMA_APPENDER + rownumPseudoTable + ") AS COMPLETEQUERYPSEUDOTABLE";
-			completeQuery += " SELECT COMPLETEQUERYPSEUDOTABLE.* FROM " + completeQueryPseudoTable + " WHERE RNUM BETWEEN " + start + " AND " + end + WHITESPACE;
+			gridQueryParamsMap.put("start", start);
+			gridQueryParamsMap.put("end", end);
+			queryId = "paginatedGridQuery";
 		} else {
-			completeQuery += WHITESPACE +  encapsulatedBaseQueryWithVirtualColumns + WHITESPACE +  completeFilterQuery + WHITESPACE + completeSorterQuery;
+			queryId = "nonPaginatedGridQuery";
 		}
+		final String completeQuery = getQueryMapperService().getQuerySQL("grid", queryId, gridQueryParamsMap);
 		LoggerUtils.logOnConsole("GRID QUERY >> " + completeQuery);
 		return completeQuery;
+	}
+	
+	public static QueryMapperService getQueryMapperService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_QUERY_MAPPER_SERVICE, QueryMapperService.class);
 	}
 	
 }

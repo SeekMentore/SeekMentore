@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="core">
 	<query type="select" id="encapsulationQueryToGetPseudoColumnsInMetadata">
-		SELECT PSEUDOCOLUMNENCAPSULATIONTABLE.* FROM ($querySQL$) PSEUDOCOLUMNENCAPSULATIONTABLE
+		SELECT 
+			PSEUDOCOLUMNENCAPSULATIONTABLE.* 
+		FROM ($querySQL$) PSEUDOCOLUMNENCAPSULATIONTABLE
 	</query>
 </queryMapper>
