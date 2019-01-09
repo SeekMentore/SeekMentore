@@ -127,7 +127,7 @@ public class QueryMapperService implements QueryMapperConstants {
 		throw new ApplicationException("No data found for >> Namespace = " + namespaceName + "; Query Id = " + queryId);
 	}
 	
-	private String replaceDynamicQueryString(final String querySQL) {
+	private String replaceDynamicQueryString(final String querySQL, final Map<String, Object> dynamicQueryReplacements) {
 		
 	}
 	
