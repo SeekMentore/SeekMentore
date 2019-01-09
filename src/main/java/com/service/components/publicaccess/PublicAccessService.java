@@ -147,7 +147,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	private void prepareSubmitQueryApplication (
 			final SubmitQuery submitQueryApplication, 
 			final Date currentTimestamp
-	) throws DataAccessException, InstantiationException, IllegalAccessException {
+	) throws Exception {
 		// Check contact number in system for Registered Tutor
 		final RegisteredTutor registeredTutorInDatabaseWithEmailId = tutorService.getRegisteredTutorInDatabaseWithEmailId(submitQueryApplication.getEmailId());
 		// Check email Id in system for Subscribed Customer

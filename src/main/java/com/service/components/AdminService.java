@@ -1,6 +1,5 @@
 package com.service.components;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,8 +121,9 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		subscribeWithUsObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRejectionRemarks()));
 	}
 	
-	/**************************************************************************************************/
-	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	/**
+	 * @throws Exception ************************************************************************************************/
+	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectBecomeTutor");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter");
@@ -178,21 +177,21 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new BecomeTutorRowMapper());
 	}
 	
-	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
 		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
 									+ queryMapperService.getQuerySQL("public-application", "becomeTutorEmailFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
-	public BecomeTutor getBecomeTutorApplicationInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public BecomeTutor getBecomeTutorApplicationInDatabaseWithContactNumber(final String contactNumber) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
 		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
 								+ queryMapperService.getQuerySQL("public-application", "becomeTutorContactNumberFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
@@ -466,7 +465,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		}
 	}
 	
-	public List<FindTutor> getFindTutorList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<FindTutor> getFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectFindTutor");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorExistingSorter");
@@ -511,7 +510,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new FindTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getFindTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
@@ -747,7 +746,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		}
 	}
 	
-	public List<SubscribeWithUs> getSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubscribeWithUs> getSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectSubscribeWithUs");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsExistingSorter");
@@ -792,7 +791,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscribeWithUsRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getSubscribeWithUsReportSheetName(grid), getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
@@ -1033,7 +1032,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		}
 	}
 	
-	public List<SubmitQuery> getSubmitQueryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubmitQuery> getSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectSubmitQuery");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryExistingSorter");
@@ -1058,7 +1057,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubmitQueryRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getSubmitQueryReportSheetName(grid), getSubmitQueryList(grid, gridComponent), SubmitQuery.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
@@ -1119,7 +1118,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		
 	}
 	
-	public List<SubmitQuery> getSubmitQueryListForQueryResponded(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubmitQuery> getSubmitQueryListForQueryResponded(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, SubmitQuery.class);
@@ -1130,7 +1129,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 		return getSubmitQueryList(RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST, gridComponent);
 	}
 	
-	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<Complaint> getComplaintList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("complaint", "selectComplaint");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("complaint", "complaintExistingSorter");

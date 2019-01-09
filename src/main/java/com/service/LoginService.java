@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +88,7 @@ public class LoginService implements LoginConstants {
 		applicationDao.executeUpdateWithQueryMapper("login", "insertPasswordChangeTracker", passwordChangeTracker);
 	}
 	
-	public User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public User getUserFromDbUsingUserIdSwitchByUserType(final String userId, final String userType) throws Exception {
 		switch(userType) {
 			case USER_TYPE_EMPLOYEE : return employeeService.getEmployeeFromDbUsingUserId(userId);
 			case USER_TYPE_TUTOR    : return tutorService.getRegisteredTutorFromDbUsingUserId(userId);

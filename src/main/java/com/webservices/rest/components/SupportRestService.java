@@ -1837,7 +1837,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	private void createFindTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
+	private void createFindTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws Exception {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.findTutorObject = new FindTutor();
 			this.findTutorObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
@@ -1991,7 +1991,7 @@ public class SupportRestService extends AbstractRestWebservice implements RestMe
 		}
 	}
 	
-	private void createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws DataAccessException, InstantiationException, IllegalAccessException {
+	private void createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) throws Exception {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscriptionObject = new SubscribeWithUs();
 			this.subscriptionObject.setFirstName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "firstName", String.class));

@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.json.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,8 +98,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		return response;
 	}*/
 	
-	/**************************************************************************************************************/
-	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	/**
+	 * @throws Exception ************************************************************************************************************/
+	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryMatchStatusFilter");
@@ -230,7 +230,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		}
 	}
 	
-	public List<Enquiry> getCompletedAndAbortedEnquiryList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<Enquiry> getCompletedAndAbortedEnquiryList(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, Enquiry.class);
@@ -245,7 +245,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
 	}
 	
-	public List<RegisteredTutor> getEligibleTutorsList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<RegisteredTutor> getEligibleTutorsList(final GridComponent gridComponent) throws Exception {
 		final Long enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
@@ -254,7 +254,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		return tutorService.getRegisteredTutorListWithParams(gridComponent, paramsMap);
 	}
 	
-	private void setSearchFiltersAsPerEligibilitySelection(final Map<String, Object> paramsMap, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	private void setSearchFiltersAsPerEligibilitySelection(final Map<String, Object> paramsMap, final GridComponent gridComponent) throws Exception {
 		final JsonObject searchTutorExtraParam = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "searchTutorExtraParam", JsonObject.class);
 		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParam)) {
 			final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
@@ -302,7 +302,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		}
 	}
 	
-	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapper");
 		String existingFilterQueryString = EMPTY_STRING;

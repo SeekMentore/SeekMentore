@@ -82,7 +82,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	
-	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws Exception {
 		final Map<String, Object> response = new HashMap<String, Object>();
 		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
@@ -97,7 +97,7 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public List<TutorDocument> getTutorDocuments(final Long tutorId) {
+	public List<TutorDocument> getTutorDocuments(final Long tutorId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll("SELECT * FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId", paramsMap, new TutorDocumentRowMapper());
@@ -238,7 +238,7 @@ public class TutorService implements TutorConstants {
 	/*
 	 * Admin Functions
 	 */
-	public List<RegisteredTutor> registeredTutorsList(final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<RegisteredTutor> registeredTutorsList(final String delimiter) throws Exception {
 		final List<RegisteredTutor> registeredTutorList = applicationDao.findAllWithoutParams("SELECT * FROM REGISTERED_TUTOR", new RegisteredTutorRowMapper());
 		for (final RegisteredTutor registeredTutorObject : registeredTutorList) {
 			// Get all lookup data and user ids back to original label and values
@@ -248,7 +248,7 @@ public class TutorService implements TutorConstants {
 		return registeredTutorList;
 	}
 
-	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) {
+	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
 		final String filename = null;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("whoActed", userId);
@@ -332,35 +332,35 @@ public class TutorService implements TutorConstants {
 	}
 	
 	/***********************************************************************************************************************************/
-	public List<RegisteredTutor> getRegisteredTutorList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<RegisteredTutor> getRegisteredTutorList(final GridComponent gridComponent) throws Exception {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), new RegisteredTutorRowMapper());
 	}
 	
-	public List<RegisteredTutor> getRegisteredTutorListWithParams(final GridComponent gridComponent, final Map<String, Object> paramsMap) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<RegisteredTutor> getRegisteredTutorListWithParams(final GridComponent gridComponent, final Map<String, Object> paramsMap) throws Exception {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("REGISTERED_TUTORS", getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
-	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public RegisteredTutor getRegisteredTutorInDatabaseWithEmailId(final String emailId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
 		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
 								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorEmailFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
-	public RegisteredTutor getRegisteredTutorInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public RegisteredTutor getRegisteredTutorInDatabaseWithContactNumber(final String contactNumber) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
 		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
 								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
-	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll(
@@ -380,7 +380,7 @@ public class TutorService implements TutorConstants {
 		return tutorDocument;
 	}
 	
-	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail"), 
@@ -508,7 +508,7 @@ public class TutorService implements TutorConstants {
 		applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateMakeDefaultBankDetail", bankDetail);
 	}
 	
-	private void resetPreviousDefaultBankAccount(final Long tutorId) {
+	private void resetPreviousDefaultBankAccount(final Long tutorId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		applicationDao.executeUpdate(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "resetPreviousDefaultBankAccount"), paramsMap);
@@ -552,7 +552,7 @@ public class TutorService implements TutorConstants {
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
-	public List<BecomeTutor> getBecomeTutorListForApplicationStatusSelected(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<BecomeTutor> getBecomeTutorListForApplicationStatusSelected(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, BecomeTutor.class);
@@ -732,7 +732,7 @@ public class TutorService implements TutorConstants {
 		}
 	}
 	
-	public RegisteredTutor getRegisteredTutorFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public RegisteredTutor getRegisteredTutorFromDbUsingUserId(final String userId) throws Exception {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());

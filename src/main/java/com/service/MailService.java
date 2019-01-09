@@ -1,15 +1,11 @@
 package com.service;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -90,14 +86,14 @@ public class MailService implements MailConstants {
 		}
 	}
 	
-	public List<ApplicationMail> getApplicationMailList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<ApplicationMail> getApplicationMailList(final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("mail", "selectApplicationMail");
 		final String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("mail", "applicationMailSorter");
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new ApplicationMailRowMapper());
 	}
 	
-	public List<ApplicationMail> getPedingApplicationMailList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<ApplicationMail> getPedingApplicationMailList(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, ApplicationMail.class);
@@ -108,7 +104,7 @@ public class MailService implements MailConstants {
 		return getApplicationMailList(gridComponent);
 	}
 	
-	public List<MailAttachment> getMailAttachmentList(final Long mailId) throws IOException, MessagingException {
+	public List<MailAttachment> getMailAttachmentList(final Long mailId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("mailId", mailId);
 		final List<MailAttachment> dbMailAttachmentList = applicationDao.findAll(queryMapperService.getQuerySQL("mail", "selectMailAttachment")

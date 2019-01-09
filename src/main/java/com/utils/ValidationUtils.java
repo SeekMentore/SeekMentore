@@ -38,6 +38,13 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
+	public static Boolean checkNonEmptyArray(final Object[] objectArray) {
+		if (checkObjectAvailability(objectArray)) {
+			return objectArray.length > 0;
+		}
+		return false;
+	}
+	
 	public static Boolean validatePlainNotNullAndEmptyTextString(final Object text) {
 		if (null != text && !EMPTY_STRING.equals(text.toString()))
 			return true;

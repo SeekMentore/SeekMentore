@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -163,8 +162,9 @@ public class DemoService implements DemoConstants, SalesConstants {
 				null);
 	}*/
 	
-	/**********************************************************************************************/
-	public List<Demo> getDemoList(final String grid, final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	/**
+	 * @throws Exception ********************************************************************************************/
+	public List<Demo> getDemoList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-demo", "selectDemo");
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter");
@@ -437,7 +437,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		}
 	}
 	
-	public List<Demo> getSuccessfullDemoList(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<Demo> getSuccessfullDemoList(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, Demo.class);

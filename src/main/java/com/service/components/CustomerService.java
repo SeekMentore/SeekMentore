@@ -1,6 +1,5 @@
 package com.service.components;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -147,13 +146,13 @@ import com.utils.WorkbookUtils;
 		tutorDocumentObj.setActionDateMillis(null);
 	}
 	@Transactional
-	public List<FindTutor> getNonSubscribedCustomer(final int numberOfRecords) {
+	public List<FindTutor> getNonSubscribedCustomer(final int numberOfRecords) throws Exception {
 		return applicationDao.findAllWithoutParams("SELECT * FROM FIND_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new FindTutorRowMapper());
 	}
 	/*
 	 * Admin Functions
 	 */
-	public List<SubscribedCustomer> subscribedCustomersList(final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<SubscribedCustomer> subscribedCustomersList(final String delimiter) throws Exception {
 		final List<SubscribedCustomer> subscribedCustomerList = applicationDao.findAllWithoutParams("SELECT * FROM SUBSCRIBED_CUSTOMER", new SubscribedCustomerRowMapper());
 		for (final SubscribedCustomer subscribedCustomerObject : subscribedCustomerList) {
 			// Get all lookup data and user ids back to original label and values
@@ -178,7 +177,7 @@ import com.utils.WorkbookUtils;
 	}
 	
 	@Transactional
-	public List<FindTutor> getSelectedTutorRegistrations(final int numberOfRecords) {
+	public List<FindTutor> getSelectedTutorRegistrations(final int numberOfRecords) throws Exception {
 		return applicationDao.findAllWithoutParams("SELECT * FROM FIND_TUTOR WHERE IS_SELECTED = 'Y' AND IS_DATA_MIGRATED IS NULL", new FindTutorRowMapper());
 	}
 	
@@ -198,18 +197,19 @@ import com.utils.WorkbookUtils;
 				null);
 	}
 	
-	/************************************************************************************************************/
-	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws DataAccessException, InstantiationException, IllegalAccessException {
+	/**
+	 * @throws Exception **********************************************************************************************************/
+	public List<SubscribedCustomer> getSubscribedCustomersList(final GridComponent gridComponent) throws Exception {
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"), null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws InstantiationException, IllegalAccessException, IOException {
+	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
-	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
@@ -217,7 +217,7 @@ import com.utils.WorkbookUtils;
 		return applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
 	}
 	
-	public SubscribedCustomer getSubscribedCustomerInDatabaseWithContactNumber(final String contactNumber) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public SubscribedCustomer getSubscribedCustomerInDatabaseWithContactNumber(final String contactNumber) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
@@ -335,7 +335,7 @@ import com.utils.WorkbookUtils;
 		}
 	}
 	
-	public List<FindTutor> getFindTutorListForEnquiryStatusSelected(final Boolean limitRecords, final Integer limit) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public List<FindTutor> getFindTutorListForEnquiryStatusSelected(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, FindTutor.class);
@@ -346,7 +346,7 @@ import com.utils.WorkbookUtils;
 		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 	}
 	
-	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws Exception {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());

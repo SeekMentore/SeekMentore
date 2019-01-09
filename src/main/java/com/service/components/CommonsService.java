@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +44,7 @@ public class CommonsService implements CommonsConstants {
 		return applicationLookupDataService.getSelectLookupItem(selectLookUpTable, value);
 	}
 	
-	public EmailTemplate getEmailTemplateFromLookupValue(final String value) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public EmailTemplate getEmailTemplateFromLookupValue(final String value) throws Exception {
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("emailTemplateLookupValue", value);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("mail", "selectEmailTemplate"));

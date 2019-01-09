@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.constants.BeanConstants;
@@ -27,7 +26,7 @@ public class EmployeeService {
 	@PostConstruct
 	public void init() {}
 	
-	public Employee getEmployeeFromDbUsingUserId(final String userId) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Employee getEmployeeFromDbUsingUserId(final String userId) throws Exception {
 		if (null != userId) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());

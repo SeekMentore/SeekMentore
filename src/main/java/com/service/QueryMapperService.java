@@ -110,25 +110,44 @@ public class QueryMapperService implements QueryMapperConstants {
 		return false;
 	}
 	
-	public String getQuerySQL(final String namespaceName, final String queryId) {
-		final String querySQL = namespaceQueryListMap.get(namespaceName).get(queryId).getSQL(jndiAndControlConfigurationLoadService.getControlConfiguration().getDefaultDatabaseEngine());
-		if (ValidationUtils.checkStringAvailability(querySQL)) {
-			return querySQL;
+	public String getQuerySQL(final String namespaceName, final String queryId) throws Exception {
+		return getQuerySQL(namespaceName, queryId, null);
+	}
+	
+	public String getQuerySQL(final String namespaceName, final String queryId, final Object dynamicQueryReplacements) throws Exception {
+		final Map<String, Query> namespace = namespaceQueryListMap.get(namespaceName);
+		if (!ValidationUtils.checkObjectAvailability(namespace))
+			throw new ApplicationException("No namespace found for >> Namespace = " + namespaceName);
+		final Query query = namespace.get(queryId);
+		if (ValidationUtils.checkObjectAvailability(query)) {
+			if (query.getHasDynamicPlaceHolders()) {
+				return replaceDynamicQueryString(query, dynamicQueryReplacements);
+			}
+			return query.getSQL(jndiAndControlConfigurationLoadService.getControlConfiguration().getDefaultDatabaseEngine());
 		}
 		throw new ApplicationException("No data found for >> Namespace = " + namespaceName + "; Query Id = " + queryId);
 	}
 	
-	public String getQuerySQL(final String namespaceName, final String queryId, final Map<String, Object> dynamicQueryReplacements) {
-		final String querySQL = namespaceQueryListMap.get(namespaceName).get(queryId).getSQL(jndiAndControlConfigurationLoadService.getControlConfiguration().getDefaultDatabaseEngine());
-		if (ValidationUtils.checkStringAvailability(querySQL)) {
-			
+	@SuppressWarnings("unchecked")
+	private String replaceDynamicQueryString(final Query query, final Object dynamicQueryReplacements) throws Exception {
+		if (ValidationUtils.checkObjectAvailability(dynamicQueryReplacements)) {
+			String querySQL = new String(query.getSQL(jndiAndControlConfigurationLoadService.getControlConfiguration().getDefaultDatabaseEngine()));
+			if (!(dynamicQueryReplacements instanceof Map)) {
+				final Class<?> paramClass = Class.forName(query.getParamClass());
+				if (!dynamicQueryReplacements.getClass().equals(paramClass)) 
+					throw new ApplicationException("Param Object class is different from Query 'paramClass'");
+				for (final String dynamicReplacementPlaceHolder : query.getDynamicReplacementPlaceHolderList()) {
+					querySQL = querySQL.replaceAll("\\$"+dynamicReplacementPlaceHolder+"\\$", String.valueOf(getValueForAttributeNameFromParamObject(paramClass, dynamicReplacementPlaceHolder, dynamicQueryReplacements)));
+				}
+			} else {
+				final Map<String, Object> dynamicQueryReplacementsParams = (Map<String, Object>)dynamicQueryReplacements;
+				for (final String dynamicReplacementPlaceHolder : query.getDynamicReplacementPlaceHolderList()) {
+					querySQL = querySQL.replaceAll("\\$"+dynamicReplacementPlaceHolder+"\\$", String.valueOf(dynamicQueryReplacementsParams.get(dynamicReplacementPlaceHolder)));
+				}
+			}
 			return querySQL;
 		}
-		throw new ApplicationException("No data found for >> Namespace = " + namespaceName + "; Query Id = " + queryId);
-	}
-	
-	private String replaceDynamicQueryString(final String querySQL, final Map<String, Object> dynamicQueryReplacements) {
-		
+		throw new ApplicationException("Dynamic query replacements are present for query Id = " + query.getId()+"; You would need to pass replacement object");
 	}
 	
 	public List<Map<String, Object>> getQueryParamsList(final String namespaceName, final String queryId, final List<?> paramObjectList) throws Exception {

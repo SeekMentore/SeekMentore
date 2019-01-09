@@ -44,11 +44,11 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@PostConstruct
-	public void init() {
+	public void init() throws Exception {
 		refreshAllSelectLookups();
 	}
 	
-	public void refreshAllSelectLookups() {
+	public void refreshAllSelectLookups() throws Exception {
 		final String baseQuery = "SELECT LT.* FROM SELECT_LOOKUP_TABLE_NAME LT";
 		final String existingFilterQueryString = "WHERE LT.HIDDEN IS NULL";
 		final String existingSorterQueryString = "ORDER BY LT.ORDER_OF_CATEGORY, LT.ORDER_IN_CATEGORY";

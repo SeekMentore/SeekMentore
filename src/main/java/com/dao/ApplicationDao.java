@@ -1,12 +1,12 @@
 package com.dao;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -178,10 +178,14 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT single record
 	 */
-	public <T extends Object> T find(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public <T extends Object> T find(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws Exception {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
-		final List<T> list = namedParameterJdbcTemplate.query(query, parameters, rowmapper);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		final List<T> list = namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, parameters, rowmapper);
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -195,9 +199,13 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
-	public <T extends Object> T findWithoutParams(final String query, final RowMapper<T> rowmapper) {
+	public <T extends Object> T findWithoutParams(final String query, final RowMapper<T> rowmapper) throws Exception {
 		LoggerUtils.logOnConsole(query);
-		final List<T> list = namedParameterJdbcTemplate.query(query, rowmapper);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		final List<T> list = namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, rowmapper);
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -211,10 +219,14 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
-	public Map<String, Object> find(String query, final Map<String, Object> params) throws DataAccessException, InstantiationException, IllegalAccessException {
+	public Map<String, Object> find(String query, final Map<String, Object> params) throws Exception {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
-		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, parameters, new MapRowMapper());
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -228,9 +240,13 @@ public class ApplicationDao implements ApplicationConstants {
 		return null;
     }
 	
-	public Map<String, Object> findWithoutParams(final String query) {
+	public Map<String, Object> findWithoutParams(final String query) throws Exception {
 		LoggerUtils.logOnConsole(query);
-		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(query, new MapRowMapper());
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		final List<Map<String, Object>> list = namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, new MapRowMapper());
 		if (list != null) {
 			if (list.isEmpty()) {
 				return null;
@@ -248,25 +264,41 @@ public class ApplicationDao implements ApplicationConstants {
 	 * Use the below query for
 	 * SELECT multiple records
 	 */
-	public < T extends Object > List<T> findAll(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) {
+	public < T extends Object > List<T> findAll(String query, final Map<String, Object> params, final RowMapper<T> rowmapper) throws Exception {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
-		return namedParameterJdbcTemplate.query(query, parameters, rowmapper);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		return namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, parameters, rowmapper);
     }
 	
-	public < T extends Object > List<T> findAllWithoutParams(final String query, final RowMapper<T> rowmapper) {
+	public < T extends Object > List<T> findAllWithoutParams(final String query, final RowMapper<T> rowmapper) throws Exception {
 		LoggerUtils.logOnConsole(query);
-		return namedParameterJdbcTemplate.query(query, rowmapper);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
+		return namedParameterJdbcTemplate.query(encapsulatedPseudoColumnInMetadataQuery, rowmapper);
     }
 	
-	public List<Map<String, Object>> findAll(String query, final Map<String, Object> params) {
+	public List<Map<String, Object>> findAll(String query, final Map<String, Object> params) throws Exception {
 		LoggerUtils.logOnConsole(query);
 		final SqlParameterSource parameters = getSqlParameterSource(params);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
 		return namedParameterJdbcTemplate.query(query, parameters, new MapRowMapper());
     }
 	
-	public List<Map<String, Object>> findAllWithoutParams(final String query) {
+	public List<Map<String, Object>> findAllWithoutParams(final String query) throws Exception {
 		LoggerUtils.logOnConsole(query);
+		final Map<String, Object> encapsulatedPseudoColumnInMetadataQueryParamsMap = new HashMap<String, Object>();
+		encapsulatedPseudoColumnInMetadataQueryParamsMap.put("querySQL", query);
+		final String encapsulatedPseudoColumnInMetadataQuery = queryMapperService.getQuerySQL("core", "encapsulationQueryToGetPseudoColumnsInMetadata", encapsulatedPseudoColumnInMetadataQueryParamsMap);
+		LoggerUtils.logOnConsole(encapsulatedPseudoColumnInMetadataQuery);
 		return namedParameterJdbcTemplate.query(query, new MapRowMapper());
     }
 }

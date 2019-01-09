@@ -33,7 +33,7 @@ public class NotificationService {
 	@PostConstruct
 	public void init() {}
 
-	public List<AlertReminder> getAlertAndReminderList(final String userId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+	public List<AlertReminder> getAlertAndReminderList(final String userId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", userId);
 		final String baseQuery = queryMapperService.getQuerySQL("notification", "selectAlertReminder");
@@ -42,7 +42,7 @@ public class NotificationService {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new AlertReminderRowMapper());
 	}
 	
-	public List<Task> getTaskList(final String userId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+	public List<Task> getTaskList(final String userId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", userId);
 		final String baseQuery = queryMapperService.getQuerySQL("notification", "selectTask");
@@ -51,7 +51,7 @@ public class NotificationService {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TaskRowMapper());
 	}
 	
-	public List<Workflow> getWorkflowList(final String userId, final GridComponent gridComponent) throws InstantiationException, IllegalAccessException {
+	public List<Workflow> getWorkflowList(final String userId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("userId", userId);
 		final String baseQuery = queryMapperService.getQuerySQL("notification", "selectWorkflow");
