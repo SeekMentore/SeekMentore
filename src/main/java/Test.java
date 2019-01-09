@@ -4,9 +4,14 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String foo = "<foo>foo</foo><foo>boo</foo>";
-		String bar = StringUtils.substringBetween(foo, "<foo>", "</foo>");
-		System.out.println(bar);
+		String foo = "$foo     $   $foo     $           $boo$";
+		//String bar = StringUtils.substringBetween(foo, "$", "$");
+		String bara[] = StringUtils.substringsBetween(foo, "$", "$");
+		//System.out.println(bar+"A");
+		for (String b:bara) {
+			System.out.println(b+"A");
+		}
+		System.out.println(foo.replaceAll("\\$foo     \\$", "Hello"));
 	}
 
 }
