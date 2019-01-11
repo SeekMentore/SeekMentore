@@ -47,6 +47,7 @@ import com.utils.JSONUtils;
 import com.utils.MailUtils;
 import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 import com.utils.context.AppContext;
 import com.utils.localization.Message;
 import com.webservices.rest.AbstractRestWebservice;
@@ -288,7 +289,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 					cc,
 					bcc,
 					subject, 
-					body,
+					VelocityUtils.createEmailFromHTMLContent(body),
 					attachments.isEmpty() ? null : attachments);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.EMAIL_SEND_SUCCESS));

@@ -22,6 +22,13 @@ public class DateUtils implements DateConstants {
 		return null;
 	}
 	
+	public static String parseDateInFormat(final Date date, final String format) {
+		if (!isValid(date))
+			return null;
+		final SimpleDateFormat formatter = new SimpleDateFormat(format);
+		return formatter.format(date);
+	}
+	
 	public static String parseDateInIndianDTFormat(final Date date) {
 		if (!isValid(date))
 			return null;
@@ -67,6 +74,12 @@ public class DateUtils implements DateConstants {
 		if (!isValid(localDateTimeMillis))
 			return null;
 		return parseDateInIndianDTFormatWithoutTime(convertToIndianTimeZone(localDateTimeMillis));
+	}
+	
+	public static String parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(final Long localDateTimeMillis, final String format) {
+		if (!isValid(localDateTimeMillis))
+			return null;
+		return parseDateInFormat(convertToIndianTimeZone(localDateTimeMillis), format);
 	}
 	
 	private static boolean isValid(final Date date) {

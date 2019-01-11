@@ -1,57 +1,68 @@
-<html>
-<head>
-<style>
-
-body {
-	font-family: "Times New Roman", Times, serif;
-}
-
-.tborder, .tborder td {
-  border: solid black;
-}
-.tborder {
-  border-width: 1px 1px 0 0;
-}
-.tborder td {
-  border-width: 0 0 1px 1px;
-}
-
-.noborder tbody {
-	border: none;
-}
-
-
-</style>
-</head>
-<body>
-Hello $subscribedCustomerObj.getName(),
-
-<br/><br/>
+Hello $newDemo.customerName,
+<p>Greetings from "Seek Mentore".</p>
+<p>Tutor demo has been re-scheduled for your enquiry, please find below the details.</p>
+<p><strong><ins>Enquiry Details</ins></strong></p>
 <p>
-	Tutor demo has been re-scheduled for your enquiry, please find below the details.
-	<br/><br/>
-	<b>Subject</b> - $enquiryObject.getSubject()
-	<br/>
-	<b>Grade</b> - $enquiryObject.getGrade()
-	<br/>
-	<b>Tutor Name</b> - $registeredTutorObj.getName()
-	<br/>
-	<b>Mobile Number</b> - $registeredTutorObj.getContactNumber()
-	<br/>
-	<b>Initial Demo Date & Time</b> - $oldDemoTrackerObject.getDemoDateAndTime()
-	<br/>
-	<b>Re-Scheduled Demo Date & Time</b> - $newDemoTrackerObject.getDemoDateAndTime()
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Subject</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('SUBJECTS_LOOKUP', $newDemo.enquirySubject)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('STUDENT_GRADE_LOOKUP', $newDemo.enquiryGrade)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Location</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('LOCATIONS_LOOKUP', $newDemo.enquiryLocation)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Address</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($newDemo.enquiryAddressDetails)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($newDemo.enquiryAdditionalDetails)</td>
+		</tr>
+	</table>
 </p>
-<br/><br/>
+<p><strong><ins>Tutor Details</ins></strong></p>
 <p>
-	Please contact the tutor on the afore-mentioned contact details. 
-	<br/>
-	In case you are not able to connect with Tutor please call our Customer Service Center on the below provided details.
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$newDemo.tutorName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$newDemo.tutorContactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$newDemo.tutorEmail</td>
+		</tr>
+	</table>
 </p>
-<br/><br/>
-
-Thanks & Regards
-<br/>
-$companyContactInfo
-</body>
-</html>
+<p><strong><ins>Previous Demo Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Old Date</strong></td>
+			<td style="$CoreTableTDStyling color:red;"><del>$DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone($oldDemo.demoDateAndTimeMillis, 'dd-MMM-yyyy')</del></td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Old Time</strong></td>
+			<td style="$CoreTableTDStyling color:red;"><del>$DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone($oldDemo.demoDateAndTimeMillis, 'hh:mm a')</del></td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>New Date</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone($newDemo.demoDateAndTimeMillis, 'dd-MMM-yyyy')</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>New Time</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone($newDemo.demoDateAndTimeMillis, 'hh:mm a')</td>
+		</tr>
+	</table>
+</p>
+<p>Please contact the tutor on the afore-mentioned details.</p>
+<p>In case you are not able to connect with Tutor please call us on the below provided details.</p>

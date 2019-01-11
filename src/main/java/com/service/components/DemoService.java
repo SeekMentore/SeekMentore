@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.DemoConstants;
 import com.constants.components.SalesConstants;
@@ -22,10 +23,13 @@ import com.model.User;
 import com.model.components.Demo;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.DemoRowMapper;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
+import com.utils.MailUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_DEMO_SERVICE)
 public class DemoService implements DemoConstants, SalesConstants {
@@ -34,136 +38,14 @@ public class DemoService implements DemoConstants, SalesConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
-	private QueryMapperService queryMapperService;
+	private transient QueryMapperService queryMapperService;
+	
+	@Autowired
+	private transient JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@PostConstruct
 	public void init() {}
 
-	/*public void sendDemoSuccessNotificationEmails(final Long demoTrackerId) throws Exception {
-		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
-		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoTrackerObject", demoTrackerObject);
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo was successful with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_TUTOR_EMAIL_PATH, attributes),
-				null);
-		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo was successful for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes),
-				null);
-	}
-	
-	public void sendDemoFailedNotificationEmails(final Long demoTrackerId) throws Exception {
-		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
-		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoTrackerObject", demoTrackerObject);
-		// Sales Team Email
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(), 
-				null,
-				null,
-				"Demo faild with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
-				null);
-	}
-	
-	public void sendDemoCanceledNotificationEmails(final Long demoTrackerId) throws Exception {
-		final DemoTracker demoTrackerObject = getDemoTracker(demoTrackerId);
-		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(demoTrackerObject.getTutorMapperId());
-		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoTrackerObject", demoTrackerObject);
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo has been canceled with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_TUTOR_EMAIL_PATH, attributes),
-				null);
-		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo has been cenceled for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_CLIENT_EMAIL_PATH, attributes),
-				null);
-	}
-	
-	public void sendDemoScheduledNotificationEmails(final Long newDemoTrackerId, final DemoTracker oldDemoTrackerObject) throws Exception {
-		final DemoTracker newDemoTrackerObject = getDemoTracker(newDemoTrackerId);
-		final TutorMapper tutorMapperObject = enquiryService.getTutorMapperObject(newDemoTrackerObject.getTutorMapperId());
-		final Enquiry enquiryObject =  enquiryService.getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		enquiryService.replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("oldDemoTrackerObject", oldDemoTrackerObject);
-		attributes.put("newDemoTrackerObject", newDemoTrackerObject);
-		attributes.put("demoDateAndTimeISTOld", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(oldDemoTrackerObject.getDemoDateAndTimeMillis()));
-		attributes.put("demoDateAndTimeISTNew", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(newDemoTrackerObject.getDemoDateAndTimeMillis()));
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo has been re-scheduled with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_TUTOR_EMAIL_PATH, attributes),
-				null);
-		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo has been re-scheduled for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_CLIENT_EMAIL_PATH, attributes),
-				null);
-	}*/
-	
-	/**
-	 * @throws Exception ********************************************************************************************/
 	public List<Demo> getDemoList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-demo", "selectDemo");
@@ -174,7 +56,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
 											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter")
-											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
 				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
 				break;
 			}
@@ -182,7 +64,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				paramsMap.put("demoStatus", DEMO_STATUS_SCHEDULED);
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
 											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter")
-											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter");
+											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
 				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
 				break;
 			}
@@ -251,34 +133,39 @@ public class DemoService implements DemoConstants, SalesConstants {
 	}
 	
 	public void sendDemoScheduledNotificationEmails(final Long demoTrackerId) throws Exception {
-		/*final TutorMapper tutorMapperObject = getTutorMapperObject(tutorMapperId);
-		final Enquiry enquiryObject =  getEnquiriesObject(tutorMapperObject.getEnquiryId());
-		final RegisteredTutor registeredTutorObj = tutorService.getRegisteredTutorObject(tutorMapperObject.getTutorId());
-		final SubscribedCustomer subscribedCustomerObj = customerService.getSubscribedCustomerObject(enquiryObject.getCustomerId());
-		replacePlaceHolderAndIdsFromEnquiryObject(enquiryObject, LINE_BREAK);
+		final Demo demo = getDemo(demoTrackerId);
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		attributes.put("enquiryObject", enquiryObject);
-		attributes.put("subscribedCustomerObj", subscribedCustomerObj);
-		attributes.put("registeredTutorObj", registeredTutorObj);
-		attributes.put("tutorMapperObject", tutorMapperObject);
-		attributes.put("demoDateAndTimeIST", DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(demoTimeInMillis));
-		// Tutor Email
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Your demo has been scheduled with Client - " + subscribedCustomerObj.getName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes),
-				null);
+		attributes.put("demo", demo);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Client Email
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(),
-				"Tutor demo has been scheduled for your enquiry", 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes),
-				null);*/
+		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been scheduled for your enquiry");
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
+		// Tutor Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getTutorEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo has been scheduled with Client - " + demo.getCustomerName());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+	}
+	
+	public Demo getDemo(final Long demoTrackerId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("demoTrackerId", demoTrackerId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
+									+ queryMapperService.getQuerySQL("sales-demo", "demoDemoTrackerIdFilter"), paramsMap, new DemoRowMapper());
+	}
+	
+	public List<Demo> getDemoList(final List<?> demoTrackerIdList) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("demoTrackerIdList", demoTrackerIdList);
+		return applicationDao.findAll(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
+										+ queryMapperService.getQuerySQL("sales-demo", "demoDemoTrackerIdListFilter"), paramsMap, new DemoRowMapper());
 	}
 	
 	@Transactional
@@ -291,7 +178,27 @@ public class DemoService implements DemoConstants, SalesConstants {
 	}
 	
 	public void sendDemoReScheduledNotificationEmails(final Long oldDemoTrackerId, final Long newDemoTrackerId) throws Exception {
+		final Demo oldDemo = getDemo(oldDemoTrackerId);
+		final Demo newDemo = getDemo(newDemoTrackerId);
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("oldDemo", oldDemo);
+		attributes.put("newDemo", newDemo);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Client Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, newDemo.getEnquiryEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_CC, newDemo.isEnquiryAndCustomerWithDifferentEmail() ? newDemo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been re-scheduled for your enquiry");
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_CLIENT_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
+		// Tutor Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, newDemo.getTutorEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo has been re-scheduled with Client - " + newDemo.getCustomerName());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_TUTOR_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
 		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 
 	@Transactional
@@ -326,14 +233,74 @@ public class DemoService implements DemoConstants, SalesConstants {
 	}
 	
 	public void sendDemoCanceledNotificationEmails(final List<String> idList) throws Exception {
+		if (ValidationUtils.checkNonEmptyList(idList)) {
+			final List<Demo> demoList = getDemoList(idList);
+			if (ValidationUtils.checkNonEmptyList(demoList)) {
+				final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+				for (final Demo demo : demoList) {
+					final Map<String, Object> attributes = new HashMap<String, Object>();
+					attributes.put("demo", demo);
+					Map<String, Object> mailParams = new HashMap<String, Object>();
+					// Client Email
+					mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
+					mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+					mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been cenceled for your enquiry");
+					mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_CLIENT_EMAIL_PATH, attributes));
+					mailParamList.add(mailParams);
+					mailParams = new HashMap<String, Object>();
+					// Tutor Email
+					mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getTutorEmail());
+					mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo has been canceled with Client - " + demo.getCustomerName());
+					mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_TUTOR_EMAIL_PATH, attributes));
+					mailParamList.add(mailParams);
+				}
+				MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+			}
+		}
+	}
+	
+	public void sendDemoSuccessNotificationEmails(final Long demoTrackerId) throws Exception {
+		final Demo demo = getDemo(demoTrackerId);
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("demo", demo);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Client Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo was successful for your enquiry");
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
+		// Tutor Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getTutorEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo was successful with Client - " + demo.getCustomerName());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_TUTOR_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
 		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+	}
+	
+	public void sendDemoFailedNotificationEmails(final Long demoTrackerId) throws Exception {
+		final Demo demo = getDemo(demoTrackerId);
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("demo", demo);
+		// Sales Team Email
+		MailUtils.sendMimeMessageEmail( 
+				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(), 
+				null,
+				null,
+				"Demo faild with Client - " + demo.getCustomerName(), 
+				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
+				null);
 	}
 
 	@Transactional
-	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) {
+	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) throws Exception {
 		final String baseQuery = "UPDATE DEMO SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE DEMO_TRACKER_ID = :demoTrackerId";
+		Boolean demoSuccessFailureResponseArrived = false;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -374,6 +341,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 						break;
 					}
 					case "isDemoSuccess" : {
+						demoSuccessFailureResponseArrived = true;
 						updateAttributesQuery.add("IS_DEMO_SUCCESS = :isDemoSuccess");
 						updateAttributesQuery.add("DEMO_STATUS = :demoStatus");
 						paramsMap.put("isDemoSuccess", demoObject.getIsDemoSuccess());
@@ -434,6 +402,13 @@ public class DemoService implements DemoConstants, SalesConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
+			if (demoSuccessFailureResponseArrived) {
+				if (YES.equals(demoObject.getIsDemoSuccess())) {
+					sendDemoSuccessNotificationEmails(demoObject.getDemoTrackerId());
+				} else {
+					sendDemoFailedNotificationEmails(demoObject.getDemoTrackerId());
+				}
+			}
 		}
 	}
 	

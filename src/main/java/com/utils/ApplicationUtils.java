@@ -237,6 +237,13 @@ public class ApplicationUtils implements ApplicationConstants {
 		return mailSignatureString.toString();
     }
     
+    public static String formatRemarksAndComments(final String remarksAndComments) {
+    	if (ValidationUtils.checkStringAvailability(remarksAndComments)) {
+    		return remarksAndComments.trim().replaceAll(NEW_LINE, WHITESPACE + LINE_BREAK);
+    	}
+    	return EMPTY_STRING;
+    }
+    
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
 	}

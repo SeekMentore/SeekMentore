@@ -40,6 +40,12 @@
 	<query type="filter" id="demoDemoStatusFilter">
 		WHERE D.DEMO_STATUS = :demoStatus
 	</query>
+	<query type="filter" id="demoDemoTrackerIdFilter">
+		WHERE D.DEMO_TRACKER_ID = :demoTrackerId
+	</query>
+	<query type="filter" id="demoDemoTrackerIdListFilter">
+		WHERE D.DEMO_TRACKER_ID IN (:demoTrackerIdList)
+	</query>
 	<query type="filter" id="demoCurrentTutorAdditionalFilter">
 		 AND TM.TUTOR_ID = :tutorId
 	</query>

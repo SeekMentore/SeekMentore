@@ -4,11 +4,11 @@ Hello Sir/Ma'am,
 <p>
 	<table style="$CoreTableStyling">
 		<tr>
-			<td style="$CoreTableTDStyling width:15%;"><strong>Query</strong></td>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Query</strong></td>
 			<td style="$CoreTableTDStyling">$submitQueryObj.getQueryDetails()</td>
 		</tr>
 		<tr>
-			<td style="$CoreTableTDStyling width:15%;"><strong>Response</strong></td>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Response</strong></td>
 			<td style="$CoreTableTDStyling">$submitQueryObj.getQueryResponse()</td>
 		</tr>
 	</table>

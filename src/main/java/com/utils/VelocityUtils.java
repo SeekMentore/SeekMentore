@@ -1,6 +1,7 @@
 package com.utils;
 
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -63,18 +64,33 @@ public class VelocityUtils implements VelocityConstants {
     	return result;
 	}
 	
+	public static String createEmailFromHTMLContent(final String htmlContent) throws Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("htmlContent", htmlContent);
+		attributes.put("parseHTMLContent", true);
+		attributes.put("parseFile", false);
+		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(getDefaultMailSignature()));
+		return parseTemplate(VELOCITY_EMAIL_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, attributes);
+	}
+	
 	public static String parseEmailTemplate(final String filePath, final Map<String, Object> attributes) throws Exception {
+		return parseEmailTemplate(filePath, attributes, getDefaultMailSignature());
+	}
+	
+	public static MailSignature getDefaultMailSignature() {
 		final SupportContactDetails supportContactDetails = getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getSupportContactDetails();
 		final MailSignature mailSignature = new MailSignature(supportContactDetails.getFromText());
 		mailSignature.addAllMobile(supportContactDetails.getMobile());
 		mailSignature.addAllEmail(supportContactDetails.getEmail());
 		mailSignature.addAllWebsite(supportContactDetails.getWebsite());
-		return parseEmailTemplate(filePath, attributes, mailSignature);
+		return mailSignature;
 	}
 	
 	public static String parseEmailTemplate(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws Exception {
 		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
 		attributes.put("contentFilePath", filePath);
+		attributes.put("parseFile", true);
+		attributes.put("parseHTMLContent", false);
 		return parseTemplate(VELOCITY_EMAIL_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, attributes);
 	}
 	
