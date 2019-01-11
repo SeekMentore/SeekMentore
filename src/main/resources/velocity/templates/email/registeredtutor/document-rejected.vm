@@ -1,12 +1,13 @@
 Hello $addressName,
+<p>Greetings from "Seek Mentore".</p>
 <p>Your below uploaded document/s has been asked for Re-Upload due to mentioned reasons.</p>
 <p>
-	<table style="border-collapse: collapse; width: 80%;">
+	<table style="$CoreTableStyling">
 	  #foreach( $document in $tutorDocuments )
 	    <tr>
-	    	<td style="border: 1px solid black; width: 10%; padding: 10px;">$velocityCount</td>
-	    	<td style="border: 1px solid black; width: 20%; padding: 10px;">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
-	    	<td style="border: 1px solid black; padding: 10px;">$document.remarks</td>
+	    	<td style="$CoreTableTDStyling width: 10%;">$velocityCount</td>
+	    	<td style="$CoreTableTDStyling width: 20%; ">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
+	    	<td style="$CoreTableTDStyling">$document.remarks</td>
 		</tr>
 	  #end
 	</table>

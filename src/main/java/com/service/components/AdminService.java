@@ -1136,30 +1136,30 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("complaint", "complaintExistingSorter");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_CUSTOMER_COMPLAINT_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
 				paramsMap.put("complaintStatus", STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_CUSTOMER);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_TUTOR_COMPLAINT_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TUTOR_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
 				paramsMap.put("complaintStatus", STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_TUTOR);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_EMPLOYEE_COMPLAINT_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
 				paramsMap.put("complaintStatus", STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_EMPLOYEE);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_RESOLVED_COMPLAINT_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
 				paramsMap.put("complaintStatus", STATUS_RESOLVED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
 				paramsMap.put("complaintStatus", STATUS_PUT_ON_HOLD);
 				break;

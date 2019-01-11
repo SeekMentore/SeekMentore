@@ -19,6 +19,7 @@ import com.constants.BeanConstants;
 import com.constants.MailConstants;
 import com.constants.SchedulerConstants;
 import com.constants.components.EnquiryConstants;
+import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
 import com.model.ErrorPacket;
@@ -48,6 +49,7 @@ import com.utils.MailUtils;
 import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_SCHEDULER_SERVICE)
 public class SchedulerService implements SchedulerConstants {
@@ -201,8 +203,9 @@ public class SchedulerService implements SchedulerConstants {
 		if (null != key) {
 			try {
 				LoggerUtils.logOnConsole("executeSubscribedCustomerJob");
-				final Date currenTimestamp = new Date();
+				final Date currentTimestamp = new Date();
 				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForEnquiryStatusSelected(true, 20);
+				final List<FindTutor> findTutorObjListToBeMigrated = new ArrayList<FindTutor>();
 				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
 					final List<SubscribedCustomer> subscribedCustomerList = new ArrayList<SubscribedCustomer>();
 					final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
@@ -273,7 +276,7 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerObj.setEncryptedPassword(encryptedTemporaryPassword);
 							subscribedCustomerObj.setUserId(findTutorObj.getEmailId());
 							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
-							subscribedCustomerObj.setRecordLastUpdatedMillis(currenTimestamp.getTime());
+							subscribedCustomerObj.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 							customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
 							subscribedCustomerList.add(subscribedCustomerObj);
 							final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
@@ -302,6 +305,9 @@ public class SchedulerService implements SchedulerConstants {
 								enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
 								enquiryObjectList.add(enquiryObject);
 							}
+							findTutorObj.setIsDataMigrated(YES);
+							findTutorObj.setWhenMigratedMillis(currentTimestamp.getTime());
+							findTutorObjListToBeMigrated.add(findTutorObj);
 						}
 					}
 					if (ValidationUtils.checkNonEmptyList(subscribedCustomerList)) {
@@ -310,7 +316,9 @@ public class SchedulerService implements SchedulerConstants {
 					if (ValidationUtils.checkNonEmptyList(enquiryObjectList)) {
 						applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "insertEnquiry", enquiryObjectList);
 					}
-					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateFindTutorDataMigrated", findTutorObjList);
+					if (ValidationUtils.checkNonEmptyList(findTutorObjListToBeMigrated)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateFindTutorDataMigrated", findTutorObjListToBeMigrated);
+					}
 				}
 			} catch (Exception e) {
 				lockService.releaseLock("executeSubscribedCustomerJob", key);
@@ -331,11 +339,12 @@ public class SchedulerService implements SchedulerConstants {
 				if (ValidationUtils.checkNonEmptyList(submitQueryList)) {
 					final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 					for (final SubmitQuery submitQueryObj : submitQueryList) {
-						// TODO - Proper mail template
+						final Map<String, Object> attributes = new HashMap<String, Object>();
+						attributes.put("submitQueryObj", submitQueryObj);
 						final Map<String, Object> mailParams = new HashMap<String, Object>();
 						mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryObj.getEmailId());
 						mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Response from Seek Mentore for your query");
-						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, submitQueryObj.getQueryResponse());
+						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PublicAccessConstants.SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 						mailParamList.add(mailParams);
 						submitQueryObj.setIsMailSent(YES);
 						submitQueryObj.setMailSentMillis(currentTimestamp.getTime());

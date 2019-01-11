@@ -1,11 +1,12 @@
 Hello $addressName,
+<p>Greetings from "Seek Mentore".</p>
 <p>Your below document/s are still not uploaded.</p>
 <p>
-	<table style="border-collapse: collapse; width: 80%;">
+	<table style="$CoreTableStyling">
 	  #foreach( $document in $tutorDocuments )
 	    <tr>
-	    	<td style="border: 1px solid black; width: 10%; padding: 10px;">$velocityCount</td>
-	    	<td style="border: 1px solid black; padding: 10px;">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
+	    	<td style="$CoreTableTDStyling width: 10%;">$velocityCount</td>
+	    	<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
 		</tr>
 	  #end
 	</table>

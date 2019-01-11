@@ -1,23 +1,24 @@
 Hello $addressName,
+<p>Greetings from "Seek Mentore".</p>
 <p>Your Parent & Student Profile has been created in "Seek Mentore".</p>
 <p>Please <a href="$serverURL/customer" target="_blank">Login Here</a> with below credentials.</p>
 <p>If the link does not work, copy and paste this URL <strong>($serverURL/customer)</strong> in your browser address bar.</p>
 <p>
-	<table style="width:80%;">
+	<table style="$CoreTableStyling">
 		<tr>
-			<td><strong>User-Id</strong></td>
-			<td>$userId</td>
+			<td style="$CoreTableTDStyling"><strong>User-Id</strong></td>
+			<td style="$CoreTableTDStyling">$userId</td>
 		</tr>
 		<tr>
-			<td><strong>Temporary Password</strong></td>
-			<td>$temporaryPassword</td>
+			<td style="$CoreTableTDStyling"><strong>Temporary Password</strong></td>
+			<td style="$CoreTableTDStyling">$temporaryPassword</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="color: red;"><strong>[Please change your password after login]</strong></td>
+			<td colspan="2" style="$CoreTableTDStyling color: red;"><strong>[Please change your password after login]</strong></td>
 		</tr>
 		<tr>
-			<td><strong>User-Type</strong></td>
-			<td>Parent & Students</td>
+			<td style="$CoreTableTDStyling"><strong>User-Type</strong></td>
+			<td style="$CoreTableTDStyling">Parent & Students</td>
 		</tr>
 	</table>
 </p>

@@ -1259,7 +1259,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_CUSTOMER_COMPLAINT_LIST)
+	@Path(REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String customerComplaintList (
@@ -1271,12 +1271,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_CUSTOMER_COMPLAINT_LIST;
+		this.methodName = REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_CUSTOMER_COMPLAINT_LIST, gridComponent);
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1287,7 +1287,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_TUTOR_COMPLAINT_LIST)
+	@Path(REST_METHOD_NAME_TUTOR_COMPLAINT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String tutorComplaintList (
@@ -1299,12 +1299,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_TUTOR_COMPLAINT_LIST;
+		this.methodName = REST_METHOD_NAME_TUTOR_COMPLAINT_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_TUTOR_COMPLAINT_LIST, gridComponent);
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NAME_TUTOR_COMPLAINT_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1315,7 +1315,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_EMPLOYEE_COMPLAINT_LIST)
+	@Path(REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String employeeComplaintList (
@@ -1327,12 +1327,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_EMPLOYEE_COMPLAINT_LIST;
+		this.methodName = REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_EMPLOYEE_COMPLAINT_LIST, gridComponent);
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1343,7 +1343,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_RESOLVED_COMPLAINT_LIST)
+	@Path(REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String resolvedComplaintList (
@@ -1355,12 +1355,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_RESOLVED_COMPLAINT_LIST;
+		this.methodName = REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_RESOLVED_COMPLAINT_LIST, gridComponent);
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1371,7 +1371,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST)
+	@Path(REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String holdComplaintList (
@@ -1383,12 +1383,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST;
+		this.methodName = REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST;
 		doSecurity(request);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST, gridComponent);
+			final List<Complaint> complaintList = getAdminService().getComplaintList(REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, complaintList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(complaintList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1513,11 +1513,11 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			case REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : 
 			case REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : 
 			case REST_METHOD_NAME_ANSWERED_QUERY_LIST :
-			case REST_METHOD_CUSTOMER_COMPLAINT_LIST :
-			case REST_METHOD_TUTOR_COMPLAINT_LIST : 
-			case REST_METHOD_EMPLOYEE_COMPLAINT_LIST : 
-			case REST_METHOD_RESOLVED_COMPLAINT_LIST :
-			case REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST : {
+			case REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST :
+			case REST_METHOD_NAME_TUTOR_COMPLAINT_LIST : 
+			case REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST : 
+			case REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST :
+			case REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST : {
 				this.securityPassed = true;
 				break;
 			}

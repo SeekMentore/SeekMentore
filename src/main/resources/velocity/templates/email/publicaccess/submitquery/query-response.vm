@@ -1,0 +1,16 @@
+Hello Sir/Ma'am,
+<p>Greetings from "Seek Mentore".</p>
+<p>Please find below response to your query.</p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:15%;"><strong>Query</strong></td>
+			<td style="$CoreTableTDStyling">$submitQueryObj.getQueryDetails()</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:15%;"><strong>Response</strong></td>
+			<td style="$CoreTableTDStyling">$submitQueryObj.getQueryResponse()</td>
+		</tr>
+	</table>
+</p>
+<p>Please let us know on below details if you need any more information.</p>

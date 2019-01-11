@@ -19,10 +19,9 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String RESPONSE_MAP_ATTRIBUTE_UNKNOWN_PUBLIC_PAGE_REFERENCE = "Unknown Object passed in request";
 	String RESPONSE_MAP_ATTRIBUTE_MISMATCH_PUBLIC_PAGE_REFERENCE = "The function accessed and the Object passed in request do not match";	
 	
-	String VELOCITY_EMAIL_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH = VelocityConstants.VELOCITY_EMAIL_TEMPLATES_FOLDER_PATH + "/publicaccess";
-	String SUPPORT_MAIL_LIST_ID_VM_OBJECT = "supportMailListId";
 	String ADDRESS_NAME_VM_OBJECT = "addressName";
 
+	String VELOCITY_EMAIL_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH = VelocityConstants.VELOCITY_EMAIL_TEMPLATES_FOLDER_PATH + "/publicaccess";
 	
 	String VELOCITY_EMAIL_TEMPLATES_BECOME_TUTOR_PATH = VELOCITY_EMAIL_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH + "/becometutor";
 	
@@ -57,6 +56,7 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	
 	String SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_SUBMIT_QUERY_PATH + "/registration-notification.vm";
 	String SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_SUBMIT_QUERY_PATH + "/registration-confirmation.vm";
+	String SUBMIT_QUERY_RESPONSE_NOTIFICATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_SUBMIT_QUERY_PATH + "/query-response.vm";
 	
 	String SUBJECT_SUBMIT_QUERY_REQUEST = "New Query has been requested";
 	String SUBMIT_QUERY_APPLICATION_VM_OBJECT = "submitQueryApplication";

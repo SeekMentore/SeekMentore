@@ -126,11 +126,11 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST = "/downloadAdminReportSubmitQueryList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY = "/takeActionOnSubmitQuery";
 	String REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD = "/updateSubmitQueryRecord";
-	String REST_METHOD_CUSTOMER_COMPLAINT_LIST = "/customerComplaintList";
-	String REST_METHOD_TUTOR_COMPLAINT_LIST = "/tutorComplaintList";
-	String REST_METHOD_EMPLOYEE_COMPLAINT_LIST = "/employeeComplaintList";
-	String REST_METHOD_RESOLVED_COMPLAINT_LIST = "/resolvedComplaintList";
-	String REST_METHOD_NOT_RESOLVED_COMPLAINT_LIST = "/holdComplaintList";
+	String REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST = "/customerComplaintList";
+	String REST_METHOD_NAME_TUTOR_COMPLAINT_LIST = "/tutorComplaintList";
+	String REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST = "/employeeComplaintList";
+	String REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST = "/resolvedComplaintList";
+	String REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST = "/holdComplaintList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT = "/takeActionOnComplaint";
 	String REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD = "/updateComplaintRecord";
 }

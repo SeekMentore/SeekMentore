@@ -194,8 +194,8 @@
 	</query>
 	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET 
-			IS_DATA_MIGRATED = 'Y', 
-			WHEN_MIGRATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000) 
+			IS_DATA_MIGRATED = :isDataMigrated, 
+			WHEN_MIGRATED_MILLIS = :whenMigratedMillis
 		WHERE ENQUIRY_ID = :enquiryId
 	</query>
 	<query type="update" id="updateBlacklistFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
