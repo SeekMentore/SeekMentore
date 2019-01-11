@@ -291,7 +291,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				null,
 				null,
 				"Demo faild with Client - " + demo.getCustomerName(), 
-				VelocityUtils.parseTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
+				VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
 				null);
 	}
 
