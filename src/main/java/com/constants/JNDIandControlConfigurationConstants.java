@@ -16,6 +16,7 @@ public interface JNDIandControlConfigurationConstants extends ApplicationConstan
 	String SECRET_ACCESS_ENCRYPTED = "secretAccessEncrypted";
 	String ACCESS_KEY_ID_ENCRYPTED = "accessKeyIDEncrypted";
 	
-	String SERVER_NAME_PROD = "Prod";
 	String SERVER_NAME_LOCAL = "Local";
+	String SERVER_NAME_DEV = "Dev";
+	String SERVER_NAME_PROD = "Prod";
 }

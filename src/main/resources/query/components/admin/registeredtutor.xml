@@ -22,16 +22,19 @@
         INNER JOIN REGISTERED_TUTOR_CONTACT_NUMBER RTC ON R.TUTOR_ID = RTC.TUTOR_ID AND RTC.IS_PRIMARY = 'Y'
 	</query>
 	<query type="filter" id="registeredTutorUserIdFilter">
-		WHERE LOWER(USER_ID) = LOWER(:userId)
+		WHERE LOWER(R.USER_ID) = LOWER(:userId)
+	</query>
+	<query type="filter" id="registeredTutorTutorIdFilter">
+		WHERE R.TUTOR_ID = :tutorId
 	</query>
     <query type="filter" id="registeredTutorEmailFilter">
-		WHERE TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_EMAIL_ID WHERE EMAIL_ID = :emailId)
+		WHERE R.TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
     <query type="filter" id="registeredTutorContactNumberFilter">
-		WHERE TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
+		WHERE R.TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
 	<query type="filter" id="registeredTutorAlreadyMappedFilter">
-		WHERE TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = :enquiryId)
+		WHERE R.TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = :enquiryId)
 	</query>
     <query type="update" id="updateRegisteredTutorBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET

@@ -1,0 +1,15 @@
+Hello $addressName,
+<p>Your below uploaded document/s has been asked for Re-Upload due to mentioned reasons.</p>
+<p>
+	<table style="border-collapse: collapse; width: 80%;">
+	  #foreach( $document in $tutorDocuments )
+	    <tr>
+	    	<td style="border: 1px solid black; width: 10%; padding: 10px;">$velocityCount</td>
+	    	<td style="border: 1px solid black; width: 20%; padding: 10px;">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
+	    	<td style="border: 1px solid black; padding: 10px;">$document.remarks</td>
+		</tr>
+	  #end
+	</table>
+</p>
+<p>Please login to your account and upload them again.</p>
+<p>The document/s you uploaded has been attached here for your reference.</p>

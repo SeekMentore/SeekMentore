@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
+import com.constants.components.SupportConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
@@ -43,7 +44,7 @@ import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
 
 @Service(BeanConstants.BEAN_NAME_ADMIN_SERVICE)
-public class AdminService implements AdminConstants, PublicAccessConstants {
+public class AdminService implements AdminConstants, SupportConstants, PublicAccessConstants {
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
@@ -63,7 +64,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 			replaceNullWithBlankRemarksInTutorRegistrationObject(tutorRegisterObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("tutorRegisterObject", tutorRegisterObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(TUTOR_REGISTER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(BECOME_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}	
@@ -85,7 +86,7 @@ public class AdminService implements AdminConstants, PublicAccessConstants {
 			replaceNullWithBlankRemarksInTutorEnquiryObject(tutorEnquiryObject);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("tutorEnquiryObject", tutorEnquiryObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(TUTOR_ENQUIRY_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(FIND_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}

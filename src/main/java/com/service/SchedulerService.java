@@ -204,6 +204,7 @@ public class SchedulerService implements SchedulerConstants {
 				final Date currenTimestamp = new Date();
 				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForEnquiryStatusSelected(true, 20);
 				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
+					final List<SubscribedCustomer> subscribedCustomerList = new ArrayList<SubscribedCustomer>();
 					final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
 					for (final FindTutor findTutorObj : findTutorObjList) {
 						Boolean proceedForEnquiryCreation = false;
@@ -274,6 +275,7 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
 							subscribedCustomerObj.setRecordLastUpdatedMillis(currenTimestamp.getTime());
 							customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
+							subscribedCustomerList.add(subscribedCustomerObj);
 							final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
 							subscribedCustomerEmail.setCustomerId(customerId);
 							subscribedCustomerEmail.setEmailId(subscribedCustomerObj.getEmailId());
@@ -284,7 +286,6 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerContactNumber.setContactNumber(subscribedCustomerObj.getContactNumber());
 							subscribedCustomerContactNumber.setIsPrimary(YES);
 							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
-							customerService.sendProfileGenerationEmailToCustomer(subscribedCustomerObj, generateTemporaryPassword);
 						}
 						if (proceedForEnquiryCreation) {
 							final String[] splitSubjects = findTutorObj.getSubjects().split(SEMICOLON);
@@ -302,6 +303,9 @@ public class SchedulerService implements SchedulerConstants {
 								enquiryObjectList.add(enquiryObject);
 							}
 						}
+					}
+					if (ValidationUtils.checkNonEmptyList(subscribedCustomerList)) {
+						customerService.sendProfileGenerationEmailToSubscribedCustomerList(subscribedCustomerList);
 					}
 					if (ValidationUtils.checkNonEmptyList(enquiryObjectList)) {
 						applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "insertEnquiry", enquiryObjectList);

@@ -2,17 +2,20 @@
 <queryMapper namespace="admin-registeredtutor-tutordocument">
 	<query type="select" id="selectTutorDocument">
 		SELECT
-			T.*,
-			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = T.WHO_ACTED), T.WHO_ACTED) AS WHO_ACTED_NAME
-		FROM TUTOR_DOCUMENT T
+			TD.*,
+			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TD.WHO_ACTED), TD.WHO_ACTED) AS WHO_ACTED_NAME
+		FROM TUTOR_DOCUMENT TD
 	</query>
 	<query type="filter" id="tutorDocumentDocumentIdFilter">
 		WHERE DOCUMENT_ID = :documentId
 	</query>
-	<query type="filter" id="tutorDocumentExistingFilter">
+	<query type="filter" id="tutorDocumentMultiDocumentIdFilter">
+		WHERE DOCUMENT_ID IN (:documentIdList)
+	</query>
+	<query type="filter" id="tutorDocumentTutorIdFilter">
 		WHERE TUTOR_ID = :tutorId
 	</query>
-	<query type="sorter" id="tutorDocumentExistingSorter">
+	<query type="sorter" id="tutorDocumentFilenameSorter">
 		ORDER BY FILENAME
 	</query>
 	<query type="delete" id="deleteTutorDocumentForTutorIdDocumentType" paramClass="com.model.components.TutorDocument">
@@ -36,7 +39,7 @@
 		FROM TUTOR_DOCUMENT T
 	</query>
 	<query type="filter" id="tutorDocumentMultiDocumentTypeFilter">
-		WHERE TUTOR_ID = :tutorId AND DOCUMENT_TYPE IN 
+		WHERE TUTOR_ID = :tutorId AND DOCUMENT_TYPE IN (:documentTypeList)
 	</query>
 	<query type="update" id="updateTakeActionTutorDocument" paramClass="com.model.components.TutorDocument">
 		UPDATE TUTOR_DOCUMENT SET

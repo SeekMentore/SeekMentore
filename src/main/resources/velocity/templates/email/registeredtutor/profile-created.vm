@@ -1,0 +1,24 @@
+Hello $addressName,
+<p>Your Tutor Profile has been created in "Seek Mentore".</p>
+<p>Please <a href="$serverURL/tutor" target="_blank">Login Here</a> with below credentials.</p>
+<p>If the link does not work, copy and paste this URL <strong>($serverURL/tutor)</strong> in your browser address bar.</p>
+<p>
+	<table style="width:80%;">
+		<tr>
+			<td><strong>User-Id</strong></td>
+			<td>$userId</td>
+		</tr>
+		<tr>
+			<td><strong>Temporary Password</strong></td>
+			<td>$temporaryPassword</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="color: red;"><strong>[Please change your password after login]</strong></td>
+		</tr>
+		<tr>
+			<td><strong>User-Type</strong></td>
+			<td>Tutor</td>
+		</tr>
+	</table>
+</p>
+<p>In case you are not able to login and facing any issues, please contact us on the below details.</p>

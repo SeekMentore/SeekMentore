@@ -13,12 +13,14 @@ import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 
 import com.constants.BeanConstants;
+import com.constants.MessageConstants;
 import com.constants.VelocityConstants;
 import com.model.MailSignature;
 import com.model.control.SupportContactDetails;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.VelocityEngineService;
 import com.utils.context.AppContext;
+import com.utils.localization.Message;
 
 public class VelocityUtils implements VelocityConstants {
 	
@@ -27,8 +29,16 @@ public class VelocityUtils implements VelocityConstants {
 		velocityContext.put(VELOCITY_TOOL_MATH_TOOL, new MathTool());
 		velocityContext.put(VELOCITY_TOOL_NUMBER_TOOL, new NumberTool());
 		velocityContext.put(VELOCITY_LOCALE_US, Locale.US);
+		addVelocityContextForStaticUtilityClasses(velocityContext);
 	}
-
+	
+	private static void addVelocityContextForStaticUtilityClasses(final VelocityContext velocityContext) {
+		velocityContext.put("String", String.class);
+		velocityContext.put("ApplicationUtils", ApplicationUtils.class);
+		velocityContext.put("ValidationUtils", ValidationUtils.class);
+		velocityContext.put("DateUtils", DateUtils.class);
+	}
+	
 	private static void addAttributesToVelocityContext(final VelocityContext velocityContext, final Map<String,Object> attributes) {
 		if (attributes != null) {
 			for (final Map.Entry<String,Object> entry : attributes.entrySet()) {
@@ -54,32 +64,25 @@ public class VelocityUtils implements VelocityConstants {
     	return result;
 	}
 	
-	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes) throws JAXBException, URISyntaxException {
+	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes) throws Exception {
 		final SupportContactDetails supportContactDetails = getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getSupportContactDetails();
 		final MailSignature mailSignature = new MailSignature(supportContactDetails.getFromText());
 		mailSignature.addAllMobile(supportContactDetails.getMobile());
 		mailSignature.addAllEmail(supportContactDetails.getEmail());
 		mailSignature.addAllWebsite(supportContactDetails.getWebsite());
-		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
-		attributes.put("contentFilePath", filePath);
-		final VelocityContext velocityContext = new VelocityContext();
-		addVelocityContextProperties(velocityContext);
-		addAttributesToVelocityContext(velocityContext, attributes);
-		StringWriter writer = new StringWriter();
-		getVelocityEngineService().getVelocityEngine().mergeTemplate(VELOCITY_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, UTF_ENCODING, velocityContext, writer);
-		final String result = writer.toString();
-		writer = null;
-    	return result;
+		return parseTemplateForEmail(filePath, attributes, mailSignature);
 	}
 	
-	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws JAXBException, URISyntaxException {
+	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws Exception {
 		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
+		attributes.put("serverURL", ApplicationUtils.getServerURL());
+		attributes.put("imageServerURL", Message.getMessage(MessageConstants.IMAGE_SERVER_URL));
 		attributes.put("contentFilePath", filePath);
 		final VelocityContext velocityContext = new VelocityContext();
 		addVelocityContextProperties(velocityContext);
 		addAttributesToVelocityContext(velocityContext, attributes);
 		StringWriter writer = new StringWriter();
-		getVelocityEngineService().getVelocityEngine().mergeTemplate(VELOCITY_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, UTF_ENCODING, velocityContext, writer);
+		getVelocityEngineService().getVelocityEngine().mergeTemplate(VELOCITY_EMAIL_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, UTF_ENCODING, velocityContext, writer);
 		final String result = writer.toString();
 		writer = null;
     	return result;

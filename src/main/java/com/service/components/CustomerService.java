@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
@@ -24,10 +25,10 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.workbook.WorkbookReport;
-import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
+import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -37,9 +38,6 @@ import com.utils.WorkbookUtils;
 
 	@Autowired
 	private transient ApplicationDao applicationDao;
-	
-	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@Autowired
 	private transient AdminService adminService;
@@ -197,19 +195,20 @@ import com.utils.WorkbookUtils;
 		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
 	}
 	
-	public void sendProfileGenerationEmailToCustomer(final SubscribedCustomer subscribedCustomerObj, final String temporaryPassword) throws Exception {
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("addressName", subscribedCustomerObj.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("userId", subscribedCustomerObj.getUserId());
-		attributes.put("temporaryPassword", temporaryPassword);
-		MailUtils.sendMimeMessageEmail( 
-				subscribedCustomerObj.getEmailId(), 
-				null,
-				null,
-				"Your Seek Mentore Customer profile is created", 
-				VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes),
-				null);
+	public void sendProfileGenerationEmailToSubscribedCustomerList(final List<SubscribedCustomer> subscribedCustomerList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final SubscribedCustomer subscribedCustomerObj : subscribedCustomerList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("addressName", subscribedCustomerObj.getName());
+			attributes.put("userId", subscribedCustomerObj.getUserId());
+			attributes.put("temporaryPassword", SecurityUtil.decrypt(subscribedCustomerObj.getEncryptedPassword()));
+			final Map<String, Object> mailParams = new HashMap<String, Object>();
+			mailParams.put(MailConstants.MAIL_PARAM_TO, subscribedCustomerObj.getEmailId());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore \"Parent & Student\" profile is created");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes));
+			mailParamList.add(mailParams);
+		}
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws Exception {

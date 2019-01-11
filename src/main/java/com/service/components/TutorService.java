@@ -1,6 +1,5 @@
 package com.service.components;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,15 +12,14 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
-import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
@@ -29,16 +27,14 @@ import com.model.User;
 import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
-import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
+import com.model.mail.MailAttachment;
 import com.model.rowmappers.BankDetailRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
 import com.model.rowmappers.TutorDocumentRowMapper;
 import com.model.workbook.WorkbookReport;
-import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
-import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
@@ -55,12 +51,6 @@ public class TutorService implements TutorConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
-	
-	@Autowired
-	private transient CommonsService commonsService;
-	
-	@Autowired
 	private transient AdminService adminService;
 	
 	@Autowired
@@ -69,264 +59,14 @@ public class TutorService implements TutorConstants {
 	@PostConstruct
 	public void init() {}
 	
-	@Transactional
-	public void feedDocumentsRecord(final Long tutorId, final Map<String, String> uploadedFiles) {
-		for (Map.Entry<String, String> entry : uploadedFiles.entrySet()) {
-			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tutorId", tutorId);
-			paramsMap.put("fsKey", entry.getValue());
-			paramsMap.put("filename", entry.getKey());
-			applicationDao.executeUpdate("DELETE FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId AND FS_KEY = :fsKey", paramsMap);
-			applicationDao.executeUpdate("INSERT INTO TUTOR_DOCUMENTS(TUTOR_ID, FS_KEY, FILENAME) VALUES(:tutorId, :fsKey, :filename)", paramsMap);
-		}
-	}
-	
-	
-	public Map<String, Object> getTutorRecordWithDocuments(final RegisteredTutor registeredTutorObj) throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		final List<TutorDocument> tutorDocumentList = getTutorDocuments(registeredTutorObj.getTutorId());
-		for (final TutorDocument tutorDocument : tutorDocumentList) {
-			removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
-		}
-		response.put("tutorDocuments", tutorDocumentList);
-		removeAllSensitiveInformationFromRegisteredTutorObject(registeredTutorObj);
-		response.put("tutorObj", registeredTutorObj);
-		return response;
-	}
-	
-	@Transactional
-	public List<TutorDocument> getTutorDocuments(final Long tutorId) throws Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
-		return applicationDao.findAll("SELECT * FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId", paramsMap, new TutorDocumentRowMapper());
-	}
-	
-	@Transactional
-	public TutorDocument getTutorDocument(final Long tutorId, final String filename) throws Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
-		paramsMap.put("filename", filename);
-		return applicationDao.find("SELECT * FROM TUTOR_DOCUMENTS WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap, new TutorDocumentRowMapper());
-	}
-	
-	public Map<String, List<SelectLookup>> getDropdownListData() {
-		final Map<String, List<SelectLookup>> mapListSelectLookup = new HashMap<String, List<SelectLookup>>();
-		mapListSelectLookup.put("qualificationLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP));
-		mapListSelectLookup.put("professionLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP));
-		mapListSelectLookup.put("transportModeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP));
-		mapListSelectLookup.put("studentGradeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP));
-		mapListSelectLookup.put("subjectsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP));
-		mapListSelectLookup.put("locationsLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP));
-		mapListSelectLookup.put("preferredTeachingTypeLookUp", commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP));
-		return mapListSelectLookup;
-	}
-	
-	@Transactional
-	public Map<String, Object> updateDetails(final RegisteredTutor registeredTutorObj) throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>(); 
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Nothing to be updated.");
-		String updateQuery = "UPDATE REGISTERED_TUTOR SET ";
-		final Map<String, Object> updatedPropertiesParams = new HashMap<String, Object>();
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getQualification(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_QUALIFICATION_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "QUALIFICATION = :qualification";
-			updatedPropertiesParams.put("qualification", registeredTutorObj.getQualification());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getPrimaryProfession(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PROFESSION_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "PRIMARY_PROFESSION = :primaryProfession";
-			updatedPropertiesParams.put("primaryProfession", registeredTutorObj.getPrimaryProfession());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getTransportMode(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_TRANSPORT_MODE_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "TRANSPORT_MODE = :transportMode";
-			updatedPropertiesParams.put("transportMode", registeredTutorObj.getTransportMode());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getInterestedStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "INTERESTED_STUDENT_GRADES = :interestedStudentGrades";
-			updatedPropertiesParams.put("interestedStudentGrades", registeredTutorObj.getInterestedStudentGrades());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "INTERESTED_SUBJECTS = :interestedSubjects";
-			updatedPropertiesParams.put("interestedSubjects", registeredTutorObj.getInterestedSubjects());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getComfortableLocations(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "COMFORTABLE_LOCATIONS = :comfortableLocations";
-			updatedPropertiesParams.put("comfortableLocations", registeredTutorObj.getComfortableLocations());
-		}
-		if (ValidationUtils.validateNumber(registeredTutorObj.getTeachingExp(), true, 99, false, 0)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "TEACHING_EXP = :teachingExp";
-			updatedPropertiesParams.put("teachingExp", registeredTutorObj.getTeachingExp());
-		}
-		if (ValidationUtils.validateAgainstSelectLookupValues(registeredTutorObj.getPreferredTeachingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TEACHING_TYPE_LOOKUP)) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "PREFERRED_TEACHING_TYPE = :preferredTeachingType";
-			updatedPropertiesParams.put("preferredTeachingType", registeredTutorObj.getPreferredTeachingType());
-		}
-		if (ValidationUtils.validatePlainNotNullAndEmptyTextString(registeredTutorObj.getAdditionalDetails())) {
-			if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-				updateQuery += " ,";
-			}
-			updateQuery += "ADDITIONAL_DETAILS = :additionalDetails";
-			updatedPropertiesParams.put("additionalDetails", registeredTutorObj.getAdditionalDetails());
-		}
-		if (!"UPDATE REGISTERED_TUTOR SET ".equals(updateQuery)) {
-			updatedPropertiesParams.put("updatedBy", "SELF");
-			updateQuery += " ,RECORD_LAST_UPDATED = SYSDATE(), UPDATED_BY = :updatedBy WHERE TUTOR_ID = :tutorId";
-			updatedPropertiesParams.put("tutorId", registeredTutorObj.getTutorId());
-			applicationDao.executeUpdate(updateQuery, updatedPropertiesParams);
-			response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-			response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		}
-		return response;
-	}
-	
-	private void replaceNullWithBlankRemarksInRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
-		registeredTutorObj.setAdditionalDetails(ApplicationUtils.returnBlankIfStringNull(registeredTutorObj.getAdditionalDetails()));
-	}
-	
-	public void removeAllSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
-		registeredTutorObj.setTutorId(null);
-		registeredTutorObj.setTentativeTutorId(null);
-		registeredTutorObj.setEncryptedPassword(null);
-		registeredTutorObj.setUserId(null);
-		registeredTutorObj.setRecordLastUpdatedMillis(null);
-		registeredTutorObj.setUpdatedBy(null);
-	}
-	
-	public void removeUltraSensitiveInformationFromRegisteredTutorObject(final RegisteredTutor registeredTutorObj) {
-		registeredTutorObj.setTentativeTutorId(null);
-		registeredTutorObj.setEncryptedPassword(null);
-	}
-
-	public TutorDocument downloadDocument(final String documentType, final Long tutorId, final String folderPathToUploadDocuments) throws Exception {
-		final String filename = null;
-		final TutorDocument tutorDocument = getTutorDocument(tutorId, filename);
-		removeSensitiveInformationFromTutorDocumentObject(tutorDocument);
-		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystem(folderPathToUploadDocuments, tutorDocument.getFilename()));
-		return tutorDocument;
-	}
-	
-	public void removeSensitiveInformationFromTutorDocumentObject(final TutorDocument tutorDocumentObj) {
-		tutorDocumentObj.setWhoActed(null);
-		tutorDocumentObj.setActionDateMillis(null);
-	}
-	
-	/*
-	 * Admin Functions
-	 */
-	public List<RegisteredTutor> registeredTutorsList(final String delimiter) throws Exception {
-		final List<RegisteredTutor> registeredTutorList = applicationDao.findAllWithoutParams("SELECT * FROM REGISTERED_TUTOR", new RegisteredTutorRowMapper());
-		for (final RegisteredTutor registeredTutorObject : registeredTutorList) {
-			// Get all lookup data and user ids back to original label and values
-			registeredTutorObject.setDocuments(getTutorDocuments(registeredTutorObject.getTutorId()));
-			removeUltraSensitiveInformationFromRegisteredTutorObject(registeredTutorObject);
-		}
-		return registeredTutorList;
-	}
-
-	public List<TutorDocument> aprroveDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
-		final String filename = null;
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("whoActed", userId);
-		paramsMap.put("tutorId", tutorId);
-		paramsMap.put("filename", filename);
-		paramsMap.put("remarks", remarks);
-		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'Y', WHO_ACTED = :whoActed, REMARKS = :remarks, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
-		return getTutorDocuments(tutorId);
-	}
-	
-	public List<TutorDocument> rejectDocumentFromAdmin(final Long tutorId, final String documentType, final String userId, final String remarks) throws Exception {
-		final String filename = null;
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("whoActed", userId);
-		paramsMap.put("tutorId", tutorId);
-		paramsMap.put("filename", filename);
-		paramsMap.put("remarks", remarks);
-		applicationDao.executeUpdate("UPDATE TUTOR_DOCUMENTS SET IS_APPROVED = 'N', WHO_ACTED = :whoActed, REMARKS = :remarks, ACTION_DATE = SYSDATE() WHERE TUTOR_ID = :tutorId AND FILENAME = :filename", paramsMap);
-		sendDocumentRejectionEmailToTutor(tutorId, documentType, remarks);
-		return getTutorDocuments(tutorId);
-	}
-	
-	public void sendDocumentRejectionEmailToTutor(final Long tutorId, final String documentType, final String remarks) throws Exception {
-		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("addressName", registeredTutorObj.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("documentType", documentType);
-		attributes.put("remarks", remarks);
-		//attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				null,
-				"Your " + documentType + " file has been asked for Re-upload", 
-				VelocityUtils.parseTemplateForEmail(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
-	}
-	
-	public RegisteredTutor getRegisteredTutorObject(final Long tutorId) throws Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
-		return applicationDao.find("SELECT * FROM REGISTERED_TUTOR WHERE TUTOR_ID = :tutorId", paramsMap, new RegisteredTutorRowMapper());
-	}
-	
-	public Map<String, Object> sendDocumentReminderEmailToTutor(final Long tutorId, final String documentType) throws Exception {
-		final Map<String, Object> response = new HashMap<String, Object>(); 
-		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("addressName", registeredTutorObj.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("documentType", documentType);
-		//attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				null,
-				"Reminder: Your " + documentType + " is missing", 
-				VelocityUtils.parseTemplateForEmail(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
-		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
-		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
-		return response;
-	}
-
-	public byte[] downloadAdminReportRegisteredTutors() throws DataAccessException, InstantiationException, IllegalAccessException, IOException {
-		final WorkbookReport workbookReport = new WorkbookReport();
-		//workbookReport.createSheet("REGISTERED_TUTORS", registeredTutorsList(WHITESPACE+SEMICOLON+WHITESPACE), RegisteredTutor.class);
-		return WorkbookUtils.createWorkbook(workbookReport);
-	}
-
+	@SuppressWarnings("unused")
 	public byte[] downloadAdminIndividualRegisteredTutorProfilePdf(final Long tutorId) throws JAXBException, URISyntaxException, Exception {
-		final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
+		final RegisteredTutor registeredTutorObj = null;
 		if (null != registeredTutorObj) {
-			replaceNullWithBlankRemarksInRegisteredTutorObject(registeredTutorObj);
+			//replaceNullWithBlankRemarksInRegisteredTutorObject(registeredTutorObj);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("registeredTutorObj", registeredTutorObj);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
 		}
 		return null;
 	}
@@ -365,9 +105,23 @@ public class TutorService implements TutorConstants {
 		paramsMap.put("tutorId", tutorId);
 		return applicationDao.findAll(
 				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentExistingFilter"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentExistingSorter"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentFilenameSorter"), 
 											gridComponent), paramsMap, new TutorDocumentRowMapper());
+	}
+	
+	public List<TutorDocument> getTutorDocumentList(final Long tutorId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorId", tutorId);
+		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
+										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), paramsMap, new TutorDocumentRowMapper());
+	}
+	
+	public List<TutorDocument> getTutorDocumentList(final List<String> documentIdList) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("documentIdList", documentIdList);
+		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
+										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentIdFilter"), paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public TutorDocument getTutorDocument(final Long documentId) throws Exception {
@@ -453,30 +207,54 @@ public class TutorService implements TutorConstants {
 			tutorDocument.setDocumentId(Long.valueOf(documentId));
 			paramObjectList.add(tutorDocument);
 		}
-		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
-		sendTutorDocumentListRejectionEmails(idList, tutorId, comments, activeUser);
+		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
+			sendTutorDocumentListRejectionEmails(idList, tutorId, comments, activeUser);
+		}
 	}
 	
 	public void sendTutorDocumentListRejectionEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		// @ TODO - Email functionality 
-		/*final RegisteredTutor registeredTutorObj = getRegisteredTutorObject(tutorId);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("addressName", registeredTutorObj.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("documentType", documentType);
-		attributes.put("remarks", remarks);
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
-		MailUtils.sendMimeMessageEmail( 
-				registeredTutorObj.getEmailId(), 
-				null,
-				null,
-				"Your " + documentType + " file has been asked for Re-upload", 
-				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
-				null);*/
+		final RegisteredTutor registeredTutor = getRegisteredTutor(tutorId);
+		if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
+			final List<TutorDocument> tutorDocuments = getTutorDocumentList(idList);
+			if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
+				final Map<String, Object> attributes = new HashMap<String, Object>();
+				attributes.put("addressName", registeredTutor.getName());
+				attributes.put("tutorDocuments", tutorDocuments);
+				final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+				for (final TutorDocument tutorDocument : tutorDocuments) {
+					attachments.add(new MailAttachment(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+				}
+				MailUtils.sendMimeMessageEmail( 
+						registeredTutor.getEmailId(), 
+						null,
+						null,
+						"Your document/s has been asked for Re-upload", 
+						VelocityUtils.parseTemplateForEmail(REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
+						attachments);
+			}
+		}
 	}
 	
 	public void sendTutorDocumentListReminderEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		// @ TODO - Email functionality 
+		if (ValidationUtils.checkNonEmptyList(idList)) {
+			final RegisteredTutor registeredTutor = getRegisteredTutor(tutorId);
+			if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
+				final List<TutorDocument> tutorDocuments = getTutorDocumentList(idList);
+				if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
+					final Map<String, Object> attributes = new HashMap<String, Object>();
+					attributes.put("addressName", registeredTutor.getName());
+					attributes.put("tutorDocuments", tutorDocuments);
+					MailUtils.sendMimeMessageEmail( 
+							registeredTutor.getEmailId(), 
+							null,
+							null,
+							"Your document/s has been asked for upload", 
+							VelocityUtils.parseTemplateForEmail(REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
+							null);
+				}
+			}
+		}
 	}
 	
 	@Transactional
@@ -540,12 +318,11 @@ public class TutorService implements TutorConstants {
 		for (final RegisteredTutor registeredTutorObj : registeredTutorList) {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("addressName", registeredTutorObj.getName());
-			attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 			attributes.put("userId", registeredTutorObj.getUserId());
 			attributes.put("temporaryPassword", SecurityUtil.decrypt(registeredTutorObj.getEncryptedPassword()));
 			final Map<String, Object> mailParams = new HashMap<String, Object>();
-			mailParams.put(MailConstants.MAIL_PARAM_TO, registeredTutorObj.getName());
-			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore tutor profile is created");
+			mailParams.put(MailConstants.MAIL_PARAM_TO, registeredTutorObj.getEmailId());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore \"Tutor\" profile is created");
 			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
 			mailParamList.add(mailParams);
 		}
@@ -578,15 +355,15 @@ public class TutorService implements TutorConstants {
 				queryIdInsert = "insertTutorDocumentFromTutor";
 			}
 			final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
-			final List<String> documentTypes = new ArrayList<String>();
+			final List<String> documentTypeList = new ArrayList<String>();
 			for (final TutorDocument document : documents) {
-				documentTypes.add(APOSTROPHE + document.getDocumentType() + APOSTROPHE);
+				documentTypeList.add(document.getDocumentType());
 			}
 			final Map<String, Object> params = new HashMap<String, Object>();
 			params.put("tutorId", tutorId);
+			params.put("documentTypeList", documentTypeList);
 			final String queryToSelectOlderFileName = queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocumentFileNameAndFSKey") + 
-														queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentTypeFilter") + 
-														"( " + String.join(COMMA, documentTypes) + ")";
+														queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentTypeFilter");
 			final List<Map<String, Object>> documentsToBeDeletedFromFileSystem = applicationDao.findAll(queryToSelectOlderFileName, params);
 			for (final Map<String, Object> document : documentsToBeDeletedFromFileSystem) {
 				FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(String.valueOf(document.get("FS_KEY")), activeUser);
@@ -738,6 +515,16 @@ public class TutorService implements TutorConstants {
 			paramsMap.put("userId", userId.toLowerCase());
 			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
 									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorUserIdFilter"), paramsMap, new RegisteredTutorRowMapper());
+		}
+		return null;
+	}
+	
+	public RegisteredTutor getRegisteredTutor(final Long tutorId) throws Exception {
+		if (null != tutorId) {
+			final Map<String, Object> paramsMap = new HashMap<String, Object>();
+			paramsMap.put("tutorId", tutorId);
+			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
+									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		}
 		return null;
 	}

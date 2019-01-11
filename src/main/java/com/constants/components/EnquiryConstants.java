@@ -1,6 +1,6 @@
 package com.constants.components;
 
-public interface EnquiryConstants extends ResponseMapConstants {
+public interface EnquiryConstants extends SalesConstants {
 	
 	String MATCH_STATUS_PENDING = "01";
 	String MATCH_STATUS_TO_BE_MAPPED = "02";
@@ -17,10 +17,6 @@ public interface EnquiryConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_INVALID_TUTOR_ID_LIST = "Invalid Tutor Id List.";
 	String VALIDATION_MESSAGE_INVALID_TUTOR_MAPPER_ID_LIST = "Invalid Tutor Mapper Id List.";
 	String VALIDATION_MESSAGE_INVALID_SCHEDULE_TIME = "Invalid Schedule Date & Time..";
-	
-	String VELOCITY_TEMPLATES_ENQUIRIES_PATH = AdminConstants.VELOCITY_TEMPLATES_ADMIN_FOLDER_PATH + "/enquiries";
-	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_TUTOR_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-tutor-email.vm";
-	String VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH = VELOCITY_TEMPLATES_ENQUIRIES_PATH + "/demo-scheduled-client-email.vm";
 	
 	String VALIDATION_MESSAGE_ENQUIRY_ID_ABSENT = "No 'enquiryId' found in request, hence cannot load data.";
 }
