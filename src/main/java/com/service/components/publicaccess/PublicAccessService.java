@@ -180,13 +180,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_NEW_TUTOR_REGISTRATION_REQUEST);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(BECOME_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(BECOME_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, becomeTutorApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -201,13 +201,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_TUTOR_ENQUIRY_REQUEST);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, findTutorApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -222,13 +222,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBSCRIBE_WITH_US_REQUEST);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, subscribeWithUsApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -242,13 +242,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBMIT_QUERY_REQUEST);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION);
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);

@@ -63,16 +63,16 @@ public class VelocityUtils implements VelocityConstants {
     	return result;
 	}
 	
-	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes) throws Exception {
+	public static String parseEmailTemplate(final String filePath, final Map<String, Object> attributes) throws Exception {
 		final SupportContactDetails supportContactDetails = getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getSupportContactDetails();
 		final MailSignature mailSignature = new MailSignature(supportContactDetails.getFromText());
 		mailSignature.addAllMobile(supportContactDetails.getMobile());
 		mailSignature.addAllEmail(supportContactDetails.getEmail());
 		mailSignature.addAllWebsite(supportContactDetails.getWebsite());
-		return parseTemplateForEmail(filePath, attributes, mailSignature);
+		return parseEmailTemplate(filePath, attributes, mailSignature);
 	}
 	
-	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws Exception {
+	public static String parseEmailTemplate(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws Exception {
 		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
 		attributes.put("contentFilePath", filePath);
 		return parseTemplate(VELOCITY_EMAIL_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, attributes);

@@ -205,7 +205,7 @@ import com.utils.WorkbookUtils;
 			final Map<String, Object> mailParams = new HashMap<String, Object>();
 			mailParams.put(MailConstants.MAIL_PARAM_TO, subscribedCustomerObj.getEmailId());
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore \"Parent & Student\" profile is created");
-			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes));
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH_SUBSCRIBED_CUSTOMER, attributes));
 			mailParamList.add(mailParams);
 		}
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);

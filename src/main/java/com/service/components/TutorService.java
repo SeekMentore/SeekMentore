@@ -230,7 +230,7 @@ public class TutorService implements TutorConstants {
 						null,
 						null,
 						"Your document/s has been asked for Re-upload", 
-						VelocityUtils.parseTemplateForEmail(REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
+						VelocityUtils.parseEmailTemplate(REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
 						attachments);
 			}
 		}
@@ -250,7 +250,7 @@ public class TutorService implements TutorConstants {
 							null,
 							null,
 							"Your document/s has been asked for upload", 
-							VelocityUtils.parseTemplateForEmail(REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
+							VelocityUtils.parseEmailTemplate(REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
 							null);
 				}
 			}
@@ -323,7 +323,7 @@ public class TutorService implements TutorConstants {
 			final Map<String, Object> mailParams = new HashMap<String, Object>();
 			mailParams.put(MailConstants.MAIL_PARAM_TO, registeredTutorObj.getEmailId());
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore \"Tutor\" profile is created");
-			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
 			mailParamList.add(mailParams);
 		}
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);

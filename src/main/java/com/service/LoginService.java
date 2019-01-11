@@ -163,7 +163,7 @@ public class LoginService implements LoginConstants {
 				null,
 				null,
 				"Alert - Your Seek Mentore password has been changed", 
-				VelocityUtils.parseTemplateForEmail(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
+				VelocityUtils.parseEmailTemplate(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}
 	
