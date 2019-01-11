@@ -1,51 +1,22 @@
-<html>
-<head>
-<style>
-
-body {
-	font-family: "Times New Roman", Times, serif;
-}
-
-.tborder, .tborder td {
-  border: solid black;
-}
-.tborder {
-  border-width: 1px 1px 0 0;
-}
-.tborder td {
-  border-width: 0 0 1px 1px;
-}
-
-.noborder tbody {
-	border: none;
-}
-
-
-</style>
-</head>
-<body>
-
 Hello $addressName,
-
-<br/><br/>
-Your Customer Profile has been created in 'Seek Mentore'.
-<br/><br/>
-Please login here http://www.seekmentore.com/customer with the below credentials.
-<br/><br/>
-User-Id : $userId
-<br/><br/>
-Temporary Password : $temporaryPassword  
-<br/><br/>
-[Please change your password after login]
-<br/><br/>
-User-Type : Parent & Students
-<br/><br/>
-
-Thanks & Regards
-<br/>
-Seek Mentore Team
-<br/>
-Mail to : $supportMailListId
-
-</body>
-</html>
+<p>Your Customer Profile has been created in 'Seek Mentore'.</p>
+<p>Please login here http://www.seekmentore.com/customer with the below credentials.</p>
+<p>
+	<table style="width:80%;">
+		<tr>
+			<td>User-Id</td>
+			<td>$userId</td>
+		</tr>
+		<tr>
+			<td>Temporary Password</td>
+			<td>$temporaryPassword</td>
+		</tr>
+		<tr>
+			<td colspan="2">[Please change your password after login]</td>
+		</tr>
+		<tr>
+			<td>User-Type</td>
+			<td>Parent & Students</td>
+		</tr>
+	</table>
+<p>

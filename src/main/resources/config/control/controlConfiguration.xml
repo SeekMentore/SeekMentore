@@ -10,12 +10,13 @@
 		<apiVerifyURL>https://www.google.com/recaptcha/api/siteverify</apiVerifyURL>
 	</captchaParams>
 	<companyContactDetails>
-		<companyAdminContactDetails>
-			<salutationText>Seek Mentore Admin Team</salutationText>
-			<mobile>+91 8318939844, +91 8588076802, +91 8960818347</mobile>
+		<supportContactDetails>
+			<fromText>Seek Mentore Team</fromText>
+			<mobile>+91 6391222214</mobile>
+			<mobile>+91 8588076802</mobile>
 			<email>support@seekmentore.com</email>
 			<website>http://www.seekmentore.com</website>
-		</companyAdminContactDetails>
+		</supportContactDetails>
 	</companyContactDetails>
 	<mailConfiguration>
 		<host>smtp.gmail.com</host>

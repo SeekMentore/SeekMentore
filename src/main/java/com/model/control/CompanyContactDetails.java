@@ -8,15 +8,15 @@ public class CompanyContactDetails implements Serializable {
 	
 	private static final long serialVersionUID = 6693618464803123134L;
 	
-	private CompanyAdminContactDetails companyAdminContactDetails;
+	private SupportContactDetails supportContactDetails;
 
-	public CompanyAdminContactDetails getCompanyAdminContactDetails() {
-		return companyAdminContactDetails;
+	public SupportContactDetails getSupportContactDetails() {
+		return supportContactDetails;
 	}
 
 	@XmlElement
-	public void setCompanyAdminContactDetails(CompanyAdminContactDetails companyAdminContactDetails) {
-		this.companyAdminContactDetails = companyAdminContactDetails;
+	public void setSupportContactDetails(SupportContactDetails supportContactDetails) {
+		this.supportContactDetails = supportContactDetails;
 	}
 	
 }

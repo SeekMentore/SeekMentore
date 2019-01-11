@@ -12,5 +12,6 @@ public interface VelocityConstants extends ApplicationConstants {
 	String UTF_ENCODING = "ISO-8859-1";
 	
 	String VELOCITY_TEMPLATES_FOLDER_PATH = "/velocity/templates";
+	String VELOCITY_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH = "/velocity/templates/core-mail-template.vm";
 	
 }

@@ -50,9 +50,6 @@ public class LoginService implements LoginConstants {
 	@Autowired
 	private transient CustomerService customerService;
 	
-	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
-	
 	public User validateCredential(final Credential credential) throws Exception {
 		User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
 		if (null != user) {
@@ -161,14 +158,12 @@ public class LoginService implements LoginConstants {
 	public void sendPasswordChangeEmailToUser(final User user, final String emailIdOfUserInSession) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", user.getName());
-		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 		MailUtils.sendMimeMessageEmail( 
 				emailIdOfUserInSession, 
 				null,
 				null,
 				"Alert - Your Seek Mentore password has been changed", 
-				VelocityUtils.parseTemplate(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
+				VelocityUtils.parseTemplateForEmail(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}
 	

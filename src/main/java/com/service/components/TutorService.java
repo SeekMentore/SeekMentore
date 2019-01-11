@@ -278,13 +278,13 @@ public class TutorService implements TutorConstants {
 		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		attributes.put("documentType", documentType);
 		attributes.put("remarks", remarks);
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		//attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 		MailUtils.sendMimeMessageEmail( 
 				registeredTutorObj.getEmailId(), 
 				null,
 				null,
 				"Your " + documentType + " file has been asked for Re-upload", 
-				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
+				VelocityUtils.parseTemplateForEmail(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}
 	
@@ -301,13 +301,13 @@ public class TutorService implements TutorConstants {
 		attributes.put("addressName", registeredTutorObj.getName());
 		attributes.put("supportMailListId", jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
 		attributes.put("documentType", documentType);
-		attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
+		//attributes.put("companyContactInfo", jndiAndControlConfigurationLoadService.getControlConfiguration().getCompanyContactDetails().getCompanyAdminContactDetails().getContactDetailsInEmbeddedFormat());
 		MailUtils.sendMimeMessageEmail( 
 				registeredTutorObj.getEmailId(), 
 				null,
 				null,
 				"Reminder: Your " + documentType + " is missing", 
-				VelocityUtils.parseTemplate(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
+				VelocityUtils.parseTemplateForEmail(AdminConstants.REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 		response.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 		response.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
@@ -546,7 +546,7 @@ public class TutorService implements TutorConstants {
 			final Map<String, Object> mailParams = new HashMap<String, Object>();
 			mailParams.put(MailConstants.MAIL_PARAM_TO, registeredTutorObj.getName());
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Seek Mentore tutor profile is created");
-			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplate(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(PROFILE_CREATION_VELOCITY_TEMPLATE_PATH, attributes));
 			mailParamList.add(mailParams);
 		}
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);

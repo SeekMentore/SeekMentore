@@ -14,6 +14,9 @@ import org.apache.velocity.tools.generic.NumberTool;
 
 import com.constants.BeanConstants;
 import com.constants.VelocityConstants;
+import com.model.MailSignature;
+import com.model.control.SupportContactDetails;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.VelocityEngineService;
 import com.utils.context.AppContext;
 
@@ -51,7 +54,42 @@ public class VelocityUtils implements VelocityConstants {
     	return result;
 	}
 	
+	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes) throws JAXBException, URISyntaxException {
+		final SupportContactDetails supportContactDetails = getJNDIandControlConfigurationLoadService().getControlConfiguration().getCompanyContactDetails().getSupportContactDetails();
+		final MailSignature mailSignature = new MailSignature(supportContactDetails.getFromText());
+		mailSignature.addAllMobile(supportContactDetails.getMobile());
+		mailSignature.addAllEmail(supportContactDetails.getEmail());
+		mailSignature.addAllWebsite(supportContactDetails.getWebsite());
+		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
+		attributes.put("contentFilePath", filePath);
+		final VelocityContext velocityContext = new VelocityContext();
+		addVelocityContextProperties(velocityContext);
+		addAttributesToVelocityContext(velocityContext, attributes);
+		StringWriter writer = new StringWriter();
+		getVelocityEngineService().getVelocityEngine().mergeTemplate(VELOCITY_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, UTF_ENCODING, velocityContext, writer);
+		final String result = writer.toString();
+		writer = null;
+    	return result;
+	}
+	
+	public static String parseTemplateForEmail(final String filePath, final Map<String, Object> attributes, final MailSignature mailSignature) throws JAXBException, URISyntaxException {
+		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(mailSignature));
+		attributes.put("contentFilePath", filePath);
+		final VelocityContext velocityContext = new VelocityContext();
+		addVelocityContextProperties(velocityContext);
+		addAttributesToVelocityContext(velocityContext, attributes);
+		StringWriter writer = new StringWriter();
+		getVelocityEngineService().getVelocityEngine().mergeTemplate(VELOCITY_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, UTF_ENCODING, velocityContext, writer);
+		final String result = writer.toString();
+		writer = null;
+    	return result;
+	}
+	
 	public static VelocityEngineService getVelocityEngineService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_VELOCITY_ENGINE_SERVICE, VelocityEngineService.class);
+	}
+	
+	public static JNDIandControlConfigurationLoadService getJNDIandControlConfigurationLoadService() {
+		return AppContext.getBean(BeanConstants.BEAN_NAME_JNDI_AND_CONTROL_CONFIGURATION_LOAD_SERVICE, JNDIandControlConfigurationLoadService.class);
 	}
 }

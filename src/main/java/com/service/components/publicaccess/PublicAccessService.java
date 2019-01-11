@@ -1,5 +1,6 @@
 package com.service.components.publicaccess;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.MailConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
@@ -170,93 +172,85 @@ public class PublicAccessService implements PublicAccessConstants {
 	}
 	
 	private void sendNotificationAndConfirmationEmailsToTutor(final BecomeTutor becomeTutorApplication) throws Exception {
-		// Send Registration notification message to concerned team
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, becomeTutorApplication.getFirstName() + WHITESPACE + becomeTutorApplication.getLastName());
 		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication.getFormattedApplicationForPrinting());
-		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList(), 
-				null,
-				null,
-				SUBJECT_NEW_TUTOR_REGISTRATION_REQUEST, 
-				VelocityUtils.parseTemplate(BECOME_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Send Registration notification message to concerned team
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_NEW_TUTOR_REGISTRATION_REQUEST);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(BECOME_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
-		MailUtils.sendMimeMessageEmail( 
-				becomeTutorApplication.getEmailId(), 
-				null,
-				null,
-				SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION, 
-				VelocityUtils.parseTemplate(BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		mailParams.put(MailConstants.MAIL_PARAM_TO, becomeTutorApplication.getEmailId());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
 	private void sendNotificationAndConfirmationEmailsToParentForTutorEnquiry(final FindTutor findTutorApplication) throws Exception {
-		// Send Registration notification message to concerned team
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, findTutorApplication.getName());
 		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication.getFormattedApplicationForPrinting());
-		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
-				null,
-				null,
-				SUBJECT_TUTOR_ENQUIRY_REQUEST, 
-				VelocityUtils.parseTemplate(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Send Registration notification message to concerned team
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_TUTOR_ENQUIRY_REQUEST);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
-		MailUtils.sendMimeMessageEmail( 
-				findTutorApplication.getEmailId(), 
-				null,
-				null,
-				SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION, 
-				VelocityUtils.parseTemplate(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		mailParams.put(MailConstants.MAIL_PARAM_TO, findTutorApplication.getEmailId());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
 	private void sendNotificationAndConfirmationEmailsToParentForSubscribingWithUs(final SubscribeWithUs subscribeWithUsApplication) throws Exception {
-		// Send Registration notification message to concerned team
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, subscribeWithUsApplication.getFirstName() + WHITESPACE + subscribeWithUsApplication.getLastName());
 		attributes.put(SUBSCRIBE_WITH_US_APPLICATION_VM_OBJECT, subscribeWithUsApplication.getFormattedApplicationForPrinting());
-		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList(), 
-				null,
-				null,
-				SUBJECT_SUBSCRIBE_WITH_US_REQUEST, 
-				VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Send Registration notification message to concerned team
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBSCRIBE_WITH_US_REQUEST);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
-		MailUtils.sendMimeMessageEmail( 
-				subscribeWithUsApplication.getEmailId(), 
-				null,
-				null,
-				SUBJECT_SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION, 
-				VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		mailParams.put(MailConstants.MAIL_PARAM_TO, subscribeWithUsApplication.getEmailId());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
 	private void sendNotificationAndConfirmationEmailsForQueryEnquiry(final SubmitQuery submitQueryApplication) throws Exception {
-		// Send Registration notification message to concerned team
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication.getFormattedApplicationForPrinting());
-		attributes.put(SUPPORT_MAIL_LIST_ID_VM_OBJECT, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSystemSupportMailList());
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList(), 
-				null,
-				null,
-				SUBJECT_SUBMIT_QUERY_REQUEST, 
-				VelocityUtils.parseTemplate(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Send Registration notification message to concerned team
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBMIT_QUERY_REQUEST);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		mailParams = new HashMap<String, Object>();
 		// Send Registration confirmation message to Tutor on his provided email Id
-		MailUtils.sendMimeMessageEmail( 
-				submitQueryApplication.getEmailId(), 
-				null,
-				null,
-				SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION, 
-				VelocityUtils.parseTemplate(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes),
-				null);
+		mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryApplication.getEmailId());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION);
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseTemplateForEmail(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 }

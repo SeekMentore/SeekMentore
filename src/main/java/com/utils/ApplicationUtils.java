@@ -14,6 +14,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
+import com.model.MailSignature;
 import com.model.components.commons.SelectLookup;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.ApplicationLookupDataService;
@@ -197,6 +198,30 @@ public class ApplicationUtils implements ApplicationConstants {
     		}
     	}
     	return null;
+    }
+    
+    public static String getFormattedMailSignatureForEmails(final MailSignature mailSignature) {
+    	final StringBuilder mailSignatureString = new StringBuilder(EMPTY_STRING);
+    	mailSignatureString.append(mailSignature.getFrom());
+		if (ValidationUtils.checkNonEmptyList(mailSignature.getMobiles())) {
+			for (final String mobile : mailSignature.getMobiles()) {
+				mailSignatureString.append(LINE_BREAK);
+				mailSignatureString.append(mobile);
+			}
+		}
+		if (ValidationUtils.checkNonEmptyList(mailSignature.getEmails())) {
+			for (final String email : mailSignature.getEmails()) {
+				mailSignatureString.append(LINE_BREAK);
+				mailSignatureString.append(email);
+			}
+		}
+		if (ValidationUtils.checkNonEmptyList(mailSignature.getWebsites())) {
+			for (final String website : mailSignature.getWebsites()) {
+				mailSignatureString.append(LINE_BREAK);
+				mailSignatureString.append(website);
+			}
+		}
+		return mailSignatureString.toString();
     }
     
     private static BasicDataSource getBasicDataSource() {

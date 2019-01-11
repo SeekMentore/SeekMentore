@@ -1,0 +1,28 @@
+<html>
+	<body style="font-family: 'Verdana', Sans, serif;">
+		<div id="main-div" style="font-family: 'Verdana', Sans, serif; width: 50%; padding: 10px; border: 10px solid #10213a; margin-left: 20%;">
+			<div id="title-div" style="background: #10213a; color: white; min-height: 60px; padding: 10px;">
+				<a href="http://www.seekmentore.com/" target="_blank">
+					<img src="http://imageserver.seekmentore.com/images/company-logo-complete.png" id="company-logo" alt="Seek Mentore Logo"/>
+				</a>				
+			</div>
+			<div id="content-div" style="margin-top: 10px; padding: 5px;">
+				<p id="content-section">
+					#parse($contentFilePath)
+				</p>
+			</div>
+			<div id="signature-div" style="padding: 5px;">
+				Kind Regards
+				<p id="signature-section">
+					$mailSignature
+				</p>
+			</div>
+			<div id="footer-div" style="margin-top: 25px; background: #10213a; min-height: 50px; color: white; padding-top: 1px; padding-bottom: 1px;">
+				<a href="http://www.seekmentore.com/" target="_blank" style="text-decoration: none !important;">
+					<p style="color: white !important; text-align: center;">Seek Mentore</p>
+					<p style="color: white !important; text-align: center;">One stop solution for all tutoring problems</p>
+				</a>				
+			</div>			
+		</div>		
+	</body>
+</html>
