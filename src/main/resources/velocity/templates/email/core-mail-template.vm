@@ -5,7 +5,7 @@
 		<div id="main-div" style="font-family: 'Verdana', Sans, serif; width: 50%; padding: 10px; border: 10px solid #10213a; margin-left: 20%;">
 			<div id="title-div" style="background: #10213a; color: white; min-height: 60px; padding: 10px;">
 				<a href="$serverURL/" target="_blank">
-					<img src="$imageServerURL/images/company-logo-complete.png" id="company-logo" alt="Seek Mentore Logo"/>
+					<img src="$imageServerURL/images/company-logo-complete.png" id="company-logo" alt="Seek Mentore Logo" style="width: 100%; max-width: 335px; height: 51px;"/>
 				</a>				
 			</div>
 			<div id="content-div" style="margin-top: 10px; padding: 5px;">
