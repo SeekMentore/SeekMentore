@@ -64,6 +64,26 @@ public class VelocityUtils implements VelocityConstants {
     	return result;
 	}
 	
+	/* PDF Creation Functions */
+	
+	public static String createPDFFromHTMLContent(final String htmlContent) throws Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("htmlContent", htmlContent);
+		attributes.put("parseHTMLContent", true);
+		attributes.put("parseFile", false);
+		attributes.put("mailSignature", ApplicationUtils.getFormattedMailSignatureForEmails(getDefaultMailSignature()));
+		return parseTemplate(VELOCITY_PDF_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, attributes);
+	}
+	
+	public static String parsePDFTemplate(final String filePath, final Map<String, Object> attributes) throws Exception {
+		attributes.put("contentFilePath", filePath);
+		attributes.put("parseFile", true);
+		attributes.put("parseHTMLContent", false);
+		return parseTemplate(VELOCITY_PDF_TEMPLATES_CORE_EMAIL_TEMPLATE_PATH, attributes);
+	}
+	
+	/* Email Creation Functions */
+	
 	public static String createEmailFromHTMLContent(final String htmlContent) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("htmlContent", htmlContent);

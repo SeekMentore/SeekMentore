@@ -175,7 +175,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, becomeTutorApplication.getFirstName() + WHITESPACE + becomeTutorApplication.getLastName());
-		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication.getFormattedApplicationForPrinting());
+		attributes.put(BECOME_TUTOR_APPLICATION_VM_OBJECT, becomeTutorApplication);
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getTutorRegistrationSupportMailList());

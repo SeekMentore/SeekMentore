@@ -344,7 +344,7 @@ public class SchedulerService implements SchedulerConstants {
 						final Map<String, Object> mailParams = new HashMap<String, Object>();
 						mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryObj.getEmailId());
 						mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Response from \"Seek Mentore\" for your query");
-						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(PublicAccessConstants.SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(PublicAccessConstants.SUBMIT_QUERY_RESPONSE_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 						mailParamList.add(mailParams);
 						submitQueryObj.setIsMailSent(YES);
 						submitQueryObj.setMailSentMillis(currentTimestamp.getTime());

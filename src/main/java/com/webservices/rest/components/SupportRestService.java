@@ -58,6 +58,7 @@ import com.webservices.rest.AbstractRestWebservice;
 public class SupportRestService extends AbstractRestWebservice implements SupportConstants, RestMethodConstants {
 	
 	private BecomeTutor becomeTutorObject;
+	private Long tentativeTutorId;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
 	private SubmitQuery submitQueryObject;
@@ -80,7 +81,25 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Tutor_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportBecomeTutorList(this.grid, gridComponent));
+			FileUtils.writeFileToResponse(response, "Become_Tutor_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadReportBecomeTutorList(this.grid, gridComponent));
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminBecomeTutorProfilePdf (
+    		@FormParam("tentativeTutorId") final String tentativeTutorId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF;
+		try {
+			this.tentativeTutorId = Long.valueOf(tentativeTutorId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Become_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadBecomeTutorProfilePdf(Long.valueOf(tentativeTutorId)));
 		}
     }
 	
@@ -1561,8 +1580,23 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				handleSubscribeWithUsSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF : {
+				handleTentativeTutorId();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
+	}
+	
+	public void handleTentativeTutorId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.tentativeTutorId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_TENTATIVE_TUTOR_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	}
 	
 	public void handleTakeAction() throws Exception {

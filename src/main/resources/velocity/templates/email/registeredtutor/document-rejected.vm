@@ -7,7 +7,7 @@ Hello $addressName,
 	    <tr>
 	    	<td style="$CoreTableTDStyling width: 10%;">$velocityCount</td>
 	    	<td style="$CoreTableTDStyling width: 20%; ">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
-	    	<td style="$CoreTableTDStyling">$document.remarks</td>
+	    	<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($document.remarks)</td>
 		</tr>
 	  #end
 	</table>

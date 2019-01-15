@@ -29,7 +29,7 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_BECOME_TUTOR_PATH + "/registration-confirmation.vm";
 	
 	String SUBJECT_NEW_TUTOR_REGISTRATION_REQUEST = "New Tutor Registration request arrived";
-	String BECOME_TUTOR_APPLICATION_VM_OBJECT = "becomeTutorApplication";
+	String BECOME_TUTOR_APPLICATION_VM_OBJECT = "becomeTutor";
 	String SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION = "Congratulations !! Your Registration is successful with " + COMPANY_NAME_IN_QUOTES;
 	
 	

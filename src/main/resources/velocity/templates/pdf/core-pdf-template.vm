@@ -1,0 +1,35 @@
+#set($TitleDivStyling='background: #10213a; color: white; min-height: 60px; padding: 10px;')##
+#set($TitleImageStyling='width: 100%; max-width: 335px; height: 51px;')##
+#set($ContentDivStyling='margin-top: 10px; padding: 5px;')##
+#set($FooterDivStyling='margin-top: 25px; background: #10213a; min-height: 50px; color: white; padding-top: 1px; padding-bottom: 1px;')##
+#set($FooterParaStyling='color: white !important; text-align: center;')##
+#set($CoreTableStyling='border-collapse: collapse; width: 80%;')##
+#set($CoreTableTDStyling='border: 1px solid black; padding: 10px;')##
+<html>
+	<body style="font-family: 'Verdana', Sans, serif;">
+		<div id="main-div" style="font-family: 'Verdana', Sans, serif;">
+			<div id="title-div" style="$TitleDivStyling">
+				<a href="$serverURL/" target="_blank">
+					<img src="$imageServerURL/images/company-logo-complete.png" id="company-logo" alt="Seek Mentore Logo" style="$TitleImageStyling"/>
+				</a>				
+			</div>
+			<div id="content-div" style="$ContentDivStyling">
+				<p id="content-section">
+					#if( $parseFile )
+						#parse($contentFilePath)
+				  	#elseif( $parseHTMLContent )
+				  		$htmlContent
+				  	#else
+				  		<p id="no-content" style="color: red;"> NO CONTENT SPECIFIED </p>
+					#end
+				</p>
+			</div>
+			<div id="footer-div" style="$FooterDivStyling">
+				<a href="$serverURL/" target="_blank" style="text-decoration: none !important;">
+					<p style="$FooterParaStyling">Seek Mentore</p>
+					<p style="$FooterParaStyling">One stop solution for all tutoring problems</p>
+				</a>				
+			</div>
+		</div>		
+	</body>
+</html>

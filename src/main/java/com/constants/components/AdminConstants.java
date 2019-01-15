@@ -13,6 +13,7 @@ public interface AdminConstants extends ResponseMapConstants {
 	String VALIDATION_MESSAGE_COMMENTS_ABSENT = "No 'comments' found in request which needs mandatory comments, hence cannot perform action.";
 	String VALIDATION_MESSAGE_GRID_ABSENT = "No 'grid' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_BUTTON_ABSENT = "No 'button' found in request, hence cannot perform action.";
+	String VALIDATION_MESSAGE_TENTATIVE_TUTOR_ID_ABSENT = "No 'tentativeTutorId' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_BUTTON_UNKNOWN = "Unknown 'button' found in request, hence cannot perform action.";
 	String VALIDATION_MESSAGE_PARENT_ID_ABSENT = "No 'parentId' found in request, hence cannot perform action.";
 	

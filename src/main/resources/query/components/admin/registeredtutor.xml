@@ -34,7 +34,7 @@
 		WHERE R.TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
 	<query type="filter" id="registeredTutorAlreadyMappedFilter">
-		WHERE R.TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = :enquiryId)
+		WHERE TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = :enquiryId)
 	</query>
     <query type="update" id="updateRegisteredTutorBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET

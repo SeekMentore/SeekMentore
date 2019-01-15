@@ -106,6 +106,7 @@
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>
+			<webservice id="downloadAdminBecomeTutorProfilePdf" url="/downloadAdminBecomeTutorProfilePdf"></webservice>
 			<webservice id="nonContactedBecomeTutorsList" url="/nonContactedBecomeTutorsList"></webservice>
 			<webservice id="nonVerifiedBecomeTutorsList" url="/nonVerifiedBecomeTutorsList"></webservice>
 			<webservice id="verifiedBecomeTutorsList" url="/verifiedBecomeTutorsList"></webservice>

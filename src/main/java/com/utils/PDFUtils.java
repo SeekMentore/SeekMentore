@@ -19,10 +19,14 @@ public class PDFUtils implements PDFConstants {
 	public static byte[] getPDFByteArrayFromHTMLString(final String htmlString) throws Exception {
 		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		final ITextRenderer renderer = new ITextRenderer();
-		renderer.setDocument(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(htmlString.getBytes())), null);
+		renderer.setDocument(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(replaceNonRenderableCharactersAndTags(htmlString).getBytes())), null);
 		renderer.layout();
 		renderer.createPDF(outputStream);
 		return outputStream.toByteArray();
+	}
+	
+	private static String replaceNonRenderableCharactersAndTags(final String htmlString) {
+		return htmlString.replaceAll("<br>", "<BR/>").replaceAll("<Br>", "<BR/>").replaceAll("<bR>", "<BR/>").replaceAll("<BR>", "<BR/>");
 	}
 	
 	public static byte[] getPDFAsByteArray(final String sourcePath) throws IOException {

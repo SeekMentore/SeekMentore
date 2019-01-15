@@ -181,22 +181,35 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public BecomeTutor getBecomeTutorApplicationInDatabaseWithEmailId(final String emailId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("emailId", emailId);
-		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
 									+ queryMapperService.getQuerySQL("public-application", "becomeTutorEmailFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
 	public BecomeTutor getBecomeTutorApplicationInDatabaseWithContactNumber(final String contactNumber) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("contactNumber", contactNumber);
-		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "becomeTutorExistingSorter") 
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
 								+ queryMapperService.getQuerySQL("public-application", "becomeTutorContactNumberFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
+	public byte[] downloadReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
+	
+	public byte[] downloadBecomeTutorProfilePdf(final Long tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tentativeTutorId", tentativeTutorId);
+		final BecomeTutor becomeTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
+										+ queryMapperService.getQuerySQL("public-application", "becomeTutorTentativeTutorIdFilter"), paramsMap, new BecomeTutorRowMapper());
+		if (ValidationUtils.checkObjectAvailability(becomeTutor)) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("becomeTutor", becomeTutor);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(BECOME_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
+		return null;
+	}	
 	
 	private String getBecomeTutorReportSheetName(final String grid) {
 		switch(grid) {

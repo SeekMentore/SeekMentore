@@ -32,10 +32,10 @@
                 <uipage id="subscriptionpackages" url="/subscriptionpackages" urlActive="true" itemHeader="Packages" order="5"></uipage>
             </menuitem>
             <menuitem id="support" url="/support" pageAccessType="support" itemHeader="Support" order="4" faClass="">
-                <uipage id="tutorregistration" url="/tutorregistration" urlActive="true" itemHeader="Tutor Registrations" order="1"></uipage>
-                <uipage id="enquiryregistration" url="/enquiryregistration" urlActive="true" itemHeader="Enquiry Registrations" order="2"></uipage>
-                <uipage id="querysubmitted" url="/querysubmitted" urlActive="true" itemHeader="Query Submitted" order="3"></uipage>
-                <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscriptions Requested" order="4"></uipage>
+                <uipage id="tutorregistration" url="/tutorregistration" urlActive="true" itemHeader="Become Tutor" order="1"></uipage>
+                <uipage id="enquiryregistration" url="/enquiryregistration" urlActive="true" itemHeader="Find Tutor" order="2"></uipage>
+                <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscribe With Us" order="3"></uipage>
+                <uipage id="querysubmitted" url="/querysubmitted" urlActive="true" itemHeader="Query Submitted" order="4"></uipage>
                 <uipage id="complaints" url="/complaints" urlActive="true" itemHeader="User Complaints" order="5"></uipage>
             </menuitem>
             <menuitem id="superadmin" url="/superadmin" pageAccessType="superadmin" itemHeader="System" order="5" hidden="true" faClass="">

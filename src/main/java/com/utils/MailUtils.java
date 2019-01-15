@@ -158,7 +158,7 @@ public class MailUtils implements MailConstants {
 													getJNDIandControlConfigurationLoadService().getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getErrorHandlingMailList(),
 													null,
 													null,
-													SUBJECT_EXCEPTION_OCCURED_IN + getJNDIandControlConfigurationLoadService().getServerName() + SUBJECT_FOR_EXCEPTION_SERVER_AT + (new Date()).toString(),
+													SUBJECT_EXCEPTION_OCCURED_IN + getJNDIandControlConfigurationLoadService().getServerName() + SUBJECT_FOR_EXCEPTION_SERVER_AT + DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(new Date()),
 													htmlMessage,
 													attachments
 												);

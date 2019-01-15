@@ -62,6 +62,9 @@
 	<query type="filter" id="becomeTutorContactNumberFilter">
 		WHERE CONTACT_NUMBER = :contactNumber
 	</query>
+	<query type="filter" id="becomeTutorTentativeTutorIdFilter">
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
 	<query type="sorter" id="becomeTutorExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
 	</query>

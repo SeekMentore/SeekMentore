@@ -1,225 +1,205 @@
-<html>
-<head>
-<style>
-
-body {
-	font-family: "Times New Roman", Times, serif;
-}
-
-.tborder, .tborder td {
-  border: solid black;
-}
-.tborder {
-  border-width: 1px 1px 0 0;
-}
-.tborder td {
-  border-width: 0 0 1px 1px;
-}
-
-.noborder tbody {
-	border: none;
-}
-
-
-</style>
-</head>
-<body>
-		<h3 align="center">Tutor Profile</h3>
-		<br/>
-		<table align="center">
-	    	<tr>
-	    		<td>Application Date</td>
-	    		<td>$tutorRegisterObject.applicationDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Application Status</td>
-	    		<td>$tutorRegisterObject.applicationStatus</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Date of Birth</td>
-	    		<td>$tutorRegisterObject.dateOfBirth</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Contact Number</td>
-	    		<td>$tutorRegisterObject.contactNumber</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Email Id</td>
-	    		<td>$tutorRegisterObject.emailId</td>
-	    	</tr>
-	    	<tr>
-	    		<td>First Name</td>
-	    		<td>$tutorRegisterObject.firstName</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Last Name</td>
-	    		<td>$tutorRegisterObject.lastName</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Gender</td>
-	    		<td>$tutorRegisterObject.gender</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Qualification</td>
-	    		<td>$tutorRegisterObject.qualification</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Primary Profession</td>
-	    		<td>$tutorRegisterObject.primaryProfession</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Transport Mode</td>
-	    		<td>$tutorRegisterObject.transportMode</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Teaching Experience</td>
-	    		<td>$tutorRegisterObject.teachingExp</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Student Grade</td>
-	    		<td>$tutorRegisterObject.studentGrade</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Subjects</td>
-	    		<td>$tutorRegisterObject.subjects</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Locations</td>
-	    		<td>$tutorRegisterObject.locations</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Preferred Time To Call</td>
-	    		<td>$tutorRegisterObject.preferredTimeToCall</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Reference</td>
-	    		<td>$tutorRegisterObject.reference</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Preferred Teaching Type</td>
-	    		<td>$tutorRegisterObject.preferredTeachingType</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Additional Details</td>
-	    		<td>$tutorRegisterObject.additionalDetails</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is Contacted</td>
-	    		<td>$tutorRegisterObject.isContacted</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Contacted</td>
-	    		<td>$tutorRegisterObject.whoContacted</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Contacted Date</td>
-	    		<td>$tutorRegisterObject.contactedDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Contacted Remarks</td>
-	    		<td>$tutorRegisterObject.contactedRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is Authentication Verified</td>
-	    		<td>$tutorRegisterObject.isAuthenticationVerified</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Verified</td>
-	    		<td>$tutorRegisterObject.whoVerified</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Verification Date</td>
-	    		<td>$tutorRegisterObject.verificationDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Verification Remarks</td>
-	    		<td>$tutorRegisterObject.verificationRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is To Be Recontacted</td>
-	    		<td>$tutorRegisterObject.isToBeRecontacted</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Suggested For Re-contact</td>
-	    		<td>$tutorRegisterObject.whoSuggestedForRecontact</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Suggestion Date</td>
-	    		<td>$tutorRegisterObject.suggestionDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Suggestion Remarks</td>
-	    		<td>$tutorRegisterObject.suggestionRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Recontacted</td>
-	    		<td>$tutorRegisterObject.whoRecontacted</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Recontacted Date</td>
-	    		<td>$tutorRegisterObject.recontactedDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Recontacted Remarks</td>
-	    		<td>$tutorRegisterObject.recontactedRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is Selected</td>
-	    		<td>$tutorRegisterObject.isSelected</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Selected</td>
-	    		<td>$tutorRegisterObject.whoSelected</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Selection Date</td>
-	    		<td>$tutorRegisterObject.selectionDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Selection Remarks</td>
-	    		<td>$tutorRegisterObject.selectionRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is Rejected</td>
-	    		<td>$tutorRegisterObject.isRejected</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Who Rejected</td>
-	    		<td>$tutorRegisterObject.whoRejected</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Rejection Date</td>
-	    		<td>$tutorRegisterObject.rejectionDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Rejection Remarks</td>
-	    		<td>$tutorRegisterObject.rejectionRemarks</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Rejection Count</td>
-	    		<td>$tutorRegisterObject.rejectionCount</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Re Applied</td>
-	    		<td>$tutorRegisterObject.reApplied</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Previous Application Date</td>
-	    		<td>$tutorRegisterObject.previousApplicationDate</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Record Last Updated</td>
-	    		<td>$tutorRegisterObject.recordLastUpdated</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Is Data Migrated</td>
-	    		<td>$tutorRegisterObject.isDataMigrated</td>
-	    	</tr>
-	    	<tr>
-	    		<td>When Migrated</td>
-	    		<td>$tutorRegisterObject.whenMigrated</td>
-	    	</tr>
-		</table>
-
-</body>
-</html>
+<p><strong><ins>Become Tutor Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>TENTATIVE_TUTOR_ID</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.tentativeTutorId</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Application Date</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.applicationDateMillis)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Application Status</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.applicationStatus</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Date of Birth</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatWithoutTime($becomeTutor.dateOfBirth)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.contactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.emailId</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>First Name</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.firstName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Last Name</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.lastName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Gender</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $becomeTutor.gender)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Qualification</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('QUALIFICATION_LOOKUP', $becomeTutor.qualification)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Primary Profession</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('PROFESSION_LOOKUP', $becomeTutor.primaryProfession)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Transport Mode</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TRANSPORT_MODE_LOOKUP', $becomeTutor.transportMode)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Teaching Experience</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.teachingExp</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Student Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.studentGrade, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Subjects</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.subjects, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Locations</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.locations, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Time To Call</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.preferredTimeToCall, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Reference</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TRANSPORT_MODE_LOOKUP', $becomeTutor.reference)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Teaching Type</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.preferredTeachingType, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.additionalDetails)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Address Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.addressDetails)</td>
+		</tr>
+		<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Contacted</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isContacted)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Contacted</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoContactedName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Contacted Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.contactedDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Contacted Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.contactedRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Authentication Verified</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isAuthenticationVerified)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Verified</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoVerifiedName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Verification Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.verificationDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Verification Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.verificationRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is To Be Recontacted</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isToBeRecontacted)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Suggested For Re-contact</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoSuggestedForRecontactName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Suggestion Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.suggestionDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Suggestion Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.suggestionRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Recontacted</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoRecontactedName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Recontacted Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.recontactedDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Recontacted Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.recontactedRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Selected</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isSelected)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Selected</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoSelectedName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Selection Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.selectionDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Selection Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.selectionRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Rejected</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isRejected)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Rejected</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.whoRejectedName</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Rejection Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.rejectionDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Rejection Remarks</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.rejectionRemarks)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Rejection Count</strong></td>
+    		<td style="$CoreTableTDStyling">$becomeTutor.rejectionCount</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Re Applied</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.reApplied)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Previous Application Date</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.previousApplicationDateMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Record Last Updated</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.recordLastUpdatedMillis)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Data Migrated</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $becomeTutor.isDataMigrated)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong>When Migrated</strong></td>
+    		<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.whenMigratedMillis)</td>
+    	</tr>
+	</table>
+</p>

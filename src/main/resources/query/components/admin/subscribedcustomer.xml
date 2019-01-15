@@ -22,10 +22,10 @@
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
-		WHERE CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID WHERE EMAIL_ID = :emailId)
+		WHERE C.CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
 	<query type="filter" id="subscribedCustomerContactNumberFilter">
-		WHERE CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
+		WHERE C.CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
 	<query type="update" id="updateBlacklistSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		UPDATE SUBSCRIBED_CUSTOMER SET

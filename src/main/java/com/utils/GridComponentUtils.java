@@ -180,21 +180,21 @@ public class GridComponentUtils implements GridComponentConstants {
 				break;
 			}
 			case COLUMN_FILTER_MAPPING_DATE : {
-				if (!ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
+				if (!ValidationUtils.checkObjectAvailability(localTimezoneOffsetInMilliseconds)) {
 					localTimezoneOffsetInMilliseconds = 0L;
 				}
 				filter.setLocalTimezoneOffsetInMilliseconds(localTimezoneOffsetInMilliseconds);
 				if (ValidationUtils.checkObjectAvailability(beforeDateMillis)) {
 					filter.setBeforeDateMillis(beforeDateMillis + localTimezoneOffsetInMilliseconds);
-					filter.setBeforeDate(new Date(beforeDateMillis + localTimezoneOffsetInMilliseconds));
+					filter.setBeforeDate(new Date(filter.getBeforeDateMillis()));
 				}
 				if (ValidationUtils.checkObjectAvailability(onDateMillis)) {
 					filter.setOnDateMillis(onDateMillis + localTimezoneOffsetInMilliseconds);
-					filter.setOnDate(new Date(onDateMillis + localTimezoneOffsetInMilliseconds));
+					filter.setOnDate(new Date(filter.getOnDateMillis()));
 				}
 				if (ValidationUtils.checkObjectAvailability(afterDateMillis)) {
 					filter.setAfterDateMillis(afterDateMillis + localTimezoneOffsetInMilliseconds);
-					filter.setAfterDate(new Date(afterDateMillis + localTimezoneOffsetInMilliseconds));
+					filter.setAfterDate(new Date(filter.getAfterDateMillis()));
 				}
 				break;
 			}

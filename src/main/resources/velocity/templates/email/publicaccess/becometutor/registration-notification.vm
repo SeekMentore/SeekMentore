@@ -1,4 +1,91 @@
 Hello Team,
 <p>A new tutor registration request has arrived in the System.</p>
 <p>Please find below the details.</p>
-$becomeTutorApplication
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>TENTATIVE_TUTOR_ID</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.tentativeTutorId</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Application Date</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($becomeTutor.applicationDateMillis)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Application Status</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.applicationStatus</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Date of Birth</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatWithoutTime($becomeTutor.dateOfBirth)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.contactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.emailId</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>First Name</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.firstName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Last Name</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.lastName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Gender</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $becomeTutor.gender)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Qualification</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('QUALIFICATION_LOOKUP', $becomeTutor.qualification)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Primary Profession</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('PROFESSION_LOOKUP', $becomeTutor.primaryProfession)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Transport Mode</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TRANSPORT_MODE_LOOKUP', $becomeTutor.transportMode)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Teaching Experience</strong></td>
+			<td style="$CoreTableTDStyling">$becomeTutor.teachingExp</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Student Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.studentGrade, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Subjects</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.subjects, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Locations</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.locations, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Time To Call</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.preferredTimeToCall, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Reference</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TRANSPORT_MODE_LOOKUP', $becomeTutor.reference)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Teaching Type</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('TRANSPORT_MODE_LOOKUP', $becomeTutor.preferredTeachingType, null, null)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.additionalDetails)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Address Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($becomeTutor.addressDetails)</td>
+		</tr>
+	</table>
+</p>
