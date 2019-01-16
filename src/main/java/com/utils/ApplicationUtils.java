@@ -181,6 +181,13 @@ public class ApplicationUtils implements ApplicationConstants {
     	return getApplicationLookupDataService().getSelectLookupItem(selectLookUpTable, value);
     }
     
+    public static String getBlankForNull(final Object object) {
+    	if(ValidationUtils.checkObjectAvailability(object)) {
+    		return String.valueOf(object);
+    	}
+    	return EMPTY_STRING;
+    }
+    
     public static String getSelectLookupItemLabel(final String selectLookUpTable, final String value) {
     	final SelectLookup selectLookupItem = getSelectLookupItem(selectLookUpTable, value);
     	if (ValidationUtils.checkObjectAvailability(selectLookupItem)) {

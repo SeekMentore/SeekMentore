@@ -39,7 +39,7 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_FIND_TUTOR_PATH + "/registration-confirmation.vm";
 	
 	String SUBJECT_TUTOR_ENQUIRY_REQUEST = "New Tutor enquiry request arrived";
-	String FIND_TUTOR_APPLICATION_VM_OBJECT = "findTutorApplication";
+	String FIND_TUTOR_APPLICATION_VM_OBJECT = "findTutor";
 	String SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION = "Your Tutor enquiry is registered with " + COMPANY_NAME_IN_QUOTES;
 	
 	String VELOCITY_EMAIL_TEMPLATES_SUBSCRIBE_WITH_US_PATH = VELOCITY_EMAIL_TEMPLATES_PUBLIC_ACCESS_FOLDER_PATH + "/subscribe";

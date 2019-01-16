@@ -1,4 +1,63 @@
 Hello Team,
 <p>A new tutor enquiry request has arrived in the System.</p>
 <p>Please find below the details.</p>
-$findTutorApplication
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.enquiryId)</td>
+		</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Enquiry Date</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($findTutor.enquiryDateMillis))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Enquiry Status</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PUBLIC_APPLICATION_STATUS_LOOKUP', $findTutor.enquiryStatus))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Name</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.name)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Contact Number</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.contactNumber)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Email Id</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.emailId)</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Student Grade</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('STUDENT_GRADE_LOOKUP', $findTutor.studentGrade))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Subjects</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('SUBJECTS_LOOKUP', $findTutor.subjects))</td>
+    	</tr>
+    	<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Time To Call</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('PREFERRED_TIME_LOOKUP', $findTutor.preferredTimeToCall, '', ''))</td>
+		</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Location</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('LOCATIONS_LOOKUP', $findTutor.location))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Reference</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('REFERENCE_LOOKUP', $findTutor.reference))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Address Details</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($findTutor.addressDetails))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Additional Details</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($findTutor.additionalDetails))</td>
+    	</tr>
+    	<tr>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Subscribed Customer</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $findTutor.subscribedCustomer))</td>
+    	</tr>
+	</table>
+</p>

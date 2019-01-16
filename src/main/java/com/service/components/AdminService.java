@@ -36,7 +36,6 @@ import com.model.rowmappers.SubmitQueryRowMapper;
 import com.model.rowmappers.SubscribeWithUsRowMapper;
 import com.model.workbook.WorkbookReport;
 import com.service.QueryMapperService;
-import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
 import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
@@ -55,75 +54,6 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	@PostConstruct
 	public void init() {}
 	
-	
-	public byte[] downloadAdminTutorRegistrationProfilePdf(final String tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tentativeTutorId", tentativeTutorId);
-		final BecomeTutor tutorRegisterObject = applicationDao.find("SELECT * FROM BECOME_TUTOR WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId", paramsMap, new BecomeTutorRowMapper());
-		if (null != tutorRegisterObject) {
-			replaceNullWithBlankRemarksInTutorRegistrationObject(tutorRegisterObject);
-			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("tutorRegisterObject", tutorRegisterObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(BECOME_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
-		}
-		return null;
-	}	
-	
-	private void replaceNullWithBlankRemarksInTutorRegistrationObject(final BecomeTutor tutorRegisterObject) {
-		tutorRegisterObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getContactedRemarks()));
-		tutorRegisterObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getVerificationRemarks()));
-		tutorRegisterObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getSuggestionRemarks()));
-		tutorRegisterObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRecontactedRemarks()));
-		tutorRegisterObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getSelectionRemarks()));
-		tutorRegisterObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorRegisterObject.getRejectionRemarks()));
-	}
-	
-	public byte[] downloadAdminTutorEnquiryProfilePdf(final String enquiryId) throws JAXBException, URISyntaxException, Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("enquiryId", enquiryId);
-		final FindTutor tutorEnquiryObject = applicationDao.find("SELECT * FROM FIND_TUTOR WHERE ENQUIRY_ID = :enquiryId", paramsMap, new FindTutorRowMapper());
-		if (null != tutorEnquiryObject) {
-			replaceNullWithBlankRemarksInTutorEnquiryObject(tutorEnquiryObject);
-			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("tutorEnquiryObject", tutorEnquiryObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(FIND_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
-		}
-		return null;
-	}
-	
-	private void replaceNullWithBlankRemarksInTutorEnquiryObject(final FindTutor tutorEnquiryObject) {
-		tutorEnquiryObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getContactedRemarks()));
-		tutorEnquiryObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getVerificationRemarks()));
-		tutorEnquiryObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getSuggestionRemarks()));
-		tutorEnquiryObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRecontactedRemarks()));
-		tutorEnquiryObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getSelectionRemarks()));
-		tutorEnquiryObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(tutorEnquiryObject.getRejectionRemarks()));
-	}
-	
-	public byte[] downloadAdminIndividualSubscriptionProfilePdf(final String tentativeSubscriptionId) throws JAXBException, URISyntaxException, Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tentativeSubscriptionId", tentativeSubscriptionId);
-		final SubscribeWithUs subscribeWithUsObject = applicationDao.find("SELECT * FROM SUBSCRIBE_WITH_US WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId", paramsMap, new SubscribeWithUsRowMapper());
-		if (null != subscribeWithUsObject) {
-			replaceNullWithBlankRemarksInSubscribeWithUsObject(subscribeWithUsObject);
-			final Map<String, Object> attributes = new HashMap<String, Object>();
-	        attributes.put("subscribeWithUsObject", subscribeWithUsObject);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parseTemplate(SUBSCRIBE_WITH_US_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
-		}
-		return null;
-	}
-	
-	private void replaceNullWithBlankRemarksInSubscribeWithUsObject(final SubscribeWithUs subscribeWithUsObject) {
-		subscribeWithUsObject.setContactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getContactedRemarks()));
-		subscribeWithUsObject.setVerificationRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getVerificationRemarks()));
-		subscribeWithUsObject.setSuggestionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getSuggestionRemarks()));
-		subscribeWithUsObject.setRecontactedRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRecontactedRemarks()));
-		subscribeWithUsObject.setSelectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getSelectionRemarks()));
-		subscribeWithUsObject.setRejectionRemarks(ApplicationUtils.returnBlankIfStringNull(subscribeWithUsObject.getRejectionRemarks()));
-	}
-	
-	/**
-	 * @throws Exception ************************************************************************************************/
 	public List<BecomeTutor> getBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final String baseQuery = queryMapperService.getQuerySQL("public-application", "selectBecomeTutor");
 		String existingFilterQueryString = EMPTY_STRING;
@@ -529,6 +459,19 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		workbookReport.createSheet(getFindTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
+	
+	public byte[] downloadFindTutorProfilePdf(final Long enquiryId) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquiryId", enquiryId);
+		final FindTutor findTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectFindTutor") 
+										+ queryMapperService.getQuerySQL("public-application", "findTutorEnquiryIdFilter"), paramsMap, new FindTutorRowMapper());
+		if (ValidationUtils.checkObjectAvailability(findTutor)) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("findTutor", findTutor);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(FIND_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
+		return null;
+	}	
 	
 	private String getFindTutorReportSheetName(final String grid) {
 		switch(grid) {

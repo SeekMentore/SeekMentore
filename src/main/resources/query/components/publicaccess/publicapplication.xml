@@ -192,6 +192,9 @@
 	<query type="filter" id="findTutorNonMigratedFilter">
 		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
 	</query>
+	<query type="filter" id="findTutorEnquiryIdFilter">
+		WHERE ENQUIRY_ID = :enquiryId
+	</query>
 	<query type="sorter" id="findTutorExistingSorter">
 		ORDER BY ENQUIRY_DATE_MILLIS DESC
 	</query>

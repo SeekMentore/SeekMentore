@@ -59,6 +59,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	
 	private BecomeTutor becomeTutorObject;
 	private Long tentativeTutorId;
+	private Long enquiryId;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
 	private SubmitQuery submitQueryObject;
@@ -460,6 +461,24 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		doSecurity(request);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Enquiry_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminFindTutorProfilePdf (
+    		@FormParam("enquiryId") final String enquiryId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF;
+		try {
+			this.enquiryId = Long.valueOf(enquiryId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Find_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadFindTutorProfilePdf(Long.valueOf(enquiryId)));
 		}
     }
 	
@@ -1584,6 +1603,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				handleTentativeTutorId();
 				break;
 			}
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF : {
+				handleEnquiryId();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
@@ -1594,6 +1617,17 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_TENTATIVE_TUTOR_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	public void handleEnquiryId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.enquiryId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_ENQUIRY_ID_ABSENT,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
