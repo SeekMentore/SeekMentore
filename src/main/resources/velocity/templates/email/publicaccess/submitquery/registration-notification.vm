@@ -1,4 +1,43 @@
 Hello Team,
 <p>A new Query has been requested in the System.</p>
 <p>Please find below the details.</p>
-$submitQueryApplication
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Query Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.tentativeTutorId)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Query Date</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($submitQuery.queryRequestedDateMillis))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Query Status</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PUBLIC_APPLICATION_STATUS_LOOKUP', $submitQuery.queryStatus))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Date of Birth</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatWithoutTime($submitQuery.dateOfBirth))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.contactNumber)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.emailId)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>First Name</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.firstName)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Last Name</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.lastName)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Gender</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $submitQuery.gender))</td>
+		</tr>
+	</table>
+</p>
