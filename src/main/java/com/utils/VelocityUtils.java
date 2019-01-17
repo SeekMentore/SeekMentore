@@ -39,6 +39,7 @@ public class VelocityUtils implements VelocityConstants {
 	
 	private static void addAttributesToVelocityContext(final VelocityContext velocityContext, final Map<String,Object> attributes) throws Exception {
 		attributes.put("serverURL", ApplicationUtils.getServerURL());
+		attributes.put("backofficeURL", ApplicationUtils.getBackofficeURL());
 		attributes.put("imageServerURL", Message.getMessage(MessageConstants.IMAGE_SERVER_URL));
 		if (attributes != null) {
 			for (final Map.Entry<String,Object> entry : attributes.entrySet()) {

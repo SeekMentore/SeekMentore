@@ -177,6 +177,16 @@ public class ApplicationUtils implements ApplicationConstants {
     	}
     }
     
+    public static String getBackofficeURL() throws Exception {
+    	final String serverName = getJNDIandControlConfigurationLoadService().getServerName();
+    	switch(serverName) {
+	    	case JNDIandControlConfigurationConstants.SERVER_NAME_LOCAL : return Message.getMessage(MessageConstants.BACKOFFICE_URL_LOCAL);
+	    	case JNDIandControlConfigurationConstants.SERVER_NAME_DEV : return Message.getMessage(MessageConstants.BACKOFFICE_URL_DEV);
+	    	case JNDIandControlConfigurationConstants.SERVER_NAME_PROD : return Message.getMessage(MessageConstants.BACKOFFICE_URL_PROD);
+	    	default: return Message.getMessage(MessageConstants.BACKOFFICE_URL_DEV);
+    	}
+    }
+    
     public static SelectLookup getSelectLookupItem(final String selectLookUpTable, final String value) {
     	return getApplicationLookupDataService().getSelectLookupItem(selectLookUpTable, value);
     }

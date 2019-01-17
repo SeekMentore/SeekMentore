@@ -1,5 +1,6 @@
 package com.service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import com.exception.ApplicationException;
 import com.model.Credential;
 import com.model.Employee;
 import com.model.ErrorPacket;
+import com.model.ForgotPasswordToken;
 import com.model.LogonTracker;
 import com.model.PasswordChangeTracker;
 import com.model.User;
@@ -30,6 +32,8 @@ import com.service.components.EmployeeService;
 import com.service.components.TutorService;
 import com.utils.MailUtils;
 import com.utils.SecurityUtil;
+import com.utils.UUIDGeneratorUtils;
+import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
@@ -162,7 +166,7 @@ public class LoginService implements LoginConstants {
 				emailIdOfUserInSession, 
 				null,
 				null,
-				"Alert - Your Seek Mentore password has been changed", 
+				"Alert - Your \"Seek Mentore\" password has been changed", 
 				VelocityUtils.parseEmailTemplate(PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}
@@ -194,5 +198,39 @@ public class LoginService implements LoginConstants {
 				throw new ApplicationException("Invalid Usertype " + userType);
 			}
 		}
+	}
+	
+	/* Returns error message if any else returns EMPTY_STRING*/
+	public String resetPassword(final Credential credential) throws Exception {
+		String errorMessage = EMPTY_STRING;
+		final User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
+		if (ValidationUtils.checkObjectAvailability(user)) {
+			final Date currentTimestamp = new Date();
+			final ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
+			forgotPasswordToken.setUserId(user.getUserId());
+			forgotPasswordToken.setUserType(user.getUserType());
+			forgotPasswordToken.setToken(SecurityUtil.encrypt(UUIDGeneratorUtils.generateRandomGUID()));
+			forgotPasswordToken.setIssueDateMillis(currentTimestamp.getTime());
+			forgotPasswordToken.setExpiryDateMillis(currentTimestamp.getTime() + (12 * 60 * 60 * 1000)); // 12 hours
+			forgotPasswordToken.setIsValid(YES);
+			applicationDao.executeUpdateWithQueryMapper("login", "insertForgotPasswordToken", forgotPasswordToken);
+			sendResetPasswordEmailToUser(user, forgotPasswordToken.getToken());
+		} else {
+			errorMessage = "No user found in system for the credentials provided.";
+		}
+		return errorMessage;
+	}
+	
+	private void sendResetPasswordEmailToUser(final User user, final String token) throws Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("addressName", user.getName());
+		attributes.put("urlEncodedToken", URLEncoder.encode(token, "UTF-8"));
+		MailUtils.sendMimeMessageEmail( 
+				user.getEmailId(), 
+				null,
+				null,
+				"Alert - Your \"Seek Mentore\" password has been reset", 
+				VelocityUtils.parseEmailTemplate(PASSWORD_RESET_VELOCITY_TEMPLATE_PATH, attributes),
+				null);
 	}
 }

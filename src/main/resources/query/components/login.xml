@@ -34,4 +34,21 @@
 			END AS USER_NAME
 		FROM PASSWORD_CHANGE_TRACKER PCT
 	</query>
+	<query type="insert" id="insertForgotPasswordToken" paramClass="com.model.ForgotPasswordToken">
+		INSERT INTO FORGOT_PASSWORD_TOKEN
+			(USER_ID, USER_TYPE, TOKEN, ISSUE_DATE_MILLIS, EXPIRY_DATE_MILLIS, IS_VALID) 
+		VALUES
+			(:userId, :userType, :token, :issueDateMillis, :expiryDateMillis, :isValid)
+	</query>
+	<query type="select" id="selectForgotPasswordToken">
+		SELECT 
+			FPT.*,
+			CASE
+			    WHEN USER_TYPE = 'Employee' THEN IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = FPT.USER_ID), FPT.USER_ID)
+			    WHEN USER_TYPE = 'Tutor' THEN IFNULL((SELECT NAME FROM REGISTERED_TUTOR R WHERE R.USER_ID = FPT.USER_ID), FPT.USER_ID)
+			    WHEN USER_TYPE = 'Customer' THEN IFNULL((SELECT NAME FROM SUBSCRIBED_CUSTOMER S WHERE S.USER_ID = FPT.USER_ID), FPT.USER_ID)
+			    ELSE FPT.USER_ID
+			END AS USER_NAME
+		FROM FORGOT_PASSWORD_TOKEN FPT
+	</query>
 </queryMapper>

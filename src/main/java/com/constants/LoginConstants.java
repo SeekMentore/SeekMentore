@@ -30,6 +30,7 @@ public interface LoginConstants extends ResponseMapConstants, PageConstants {
 	
 	String VELOCITY_EMAIL_TEMPLATES_LOGIN_FOLDER_PATH = VelocityConstants.VELOCITY_EMAIL_TEMPLATES_FOLDER_PATH + "/login";
 	String PASSWORD_CHANGE_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_LOGIN_FOLDER_PATH + "/password-changed.vm";
+	String PASSWORD_RESET_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_LOGIN_FOLDER_PATH + "/password-reset.vm";
 	
 	String UI_ERROR_PAGE_NOT_ACCESSIBLE = "/public/error?errorCode=101";
 }

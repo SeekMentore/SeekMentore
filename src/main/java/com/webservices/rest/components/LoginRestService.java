@@ -58,12 +58,11 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL;
-		final Map<String, Object> restResponse = new HashMap<String, Object>();
 		this.credential = new Credential(userId, userType, password);
 		doSecurity(request);
-		restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 		if (this.securityPassed) {
 			// Trimming User-Id
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			this.credential.setUserId(this.credential.getUserId().trim());
 			final User user = getLoginService().validateCredential(credential);
 			if (null != user) {
@@ -71,12 +70,12 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			} else {
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Invalid user credentials entered.");
 			}
-		} else {
-			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Invalid data entered.");
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS)
@@ -87,6 +86,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS;
 		final Map<String, Object> restResponse = new HashMap<String, Object>();
 		LoggerUtils.logOnConsole("Accessing UI Path " + urlPath);
 		user = getActiveUser(request);
@@ -110,15 +110,22 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		Map<String, Object> restResponse = new HashMap<String, Object>();
-		if("seek".equals(userId) && "admin".equals(userType)) {
-			restResponse.put("success", true);
-			restResponse.put("message", "Password reset successful");
-		} else {
-			restResponse.put("success", false);
-			restResponse.put("message", "Failed to reset password");
+		this.methodName = REST_METHOD_NAME_RESET_PASSWORD;
+		this.credential = new Credential(userId, userType, null);
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
+			final String errorMessage = getLoginService().resetPassword(this.credential);
+			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "An email will be sent to your registered email id. Please follow the steps to reset your password");
+			} else {
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
+			}
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_CHANGE_PASSWORD)
@@ -144,7 +151,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Successfully changed password");
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_LOGOUT)
@@ -199,6 +206,10 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 				handleCredential();
 				break;
 			}
+			case REST_METHOD_NAME_RESET_PASSWORD : {
+				handlePasswordResetCredential();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
@@ -216,6 +227,30 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.credential.getUserType())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_USER_TYPE,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket( 
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.credential.toString());
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	} 
+	
+	private void handlePasswordResetCredential() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.credential.getUserId())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_USER_ID,
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
