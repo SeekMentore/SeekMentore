@@ -64,6 +64,7 @@
 			<webservice id="currentSubscriptionPackageList" url="/currentSubscriptionPackageList"></webservice>
 			<webservice id="historySubscriptionPackageList" url="/historySubscriptionPackageList"></webservice>
 			<webservice id="updateCustomerRecord" url="/updateCustomerRecord"></webservice>
+			<webservice id="downloadAdminSubscribedCustomerProfilePdf" url="/downloadAdminSubscribedCustomerProfilePdf"></webservice>
 		</page>
 		<page id="salesRest" url="/rest/sales" pageAccessType="sales">
 			<webservice id="pendingEnquiriesList" url="/pendingEnquiriesList"></webservice>

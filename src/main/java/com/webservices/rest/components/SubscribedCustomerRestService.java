@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -32,6 +33,7 @@ import com.model.gridcomponent.GridComponent;
 import com.service.components.CustomerService;
 import com.service.components.SubscriptionPackageService;
 import com.utils.ApplicationUtils;
+import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -45,6 +47,24 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	
 	private Long customerId;
 	private SubscribedCustomer subscribedCustomerObject;
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminSubscribedCustomerProfilePdf (
+    		@FormParam("customerId") final String customerId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF;
+		try {
+			this.customerId = Long.valueOf(customerId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Subscribed_Customer_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getCustomerService().downloadSubscribedCustomerProfilePdf(Long.valueOf(customerId), true));
+		}
+    }
 	
 	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -146,7 +166,8 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
 			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
-			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST :{
+			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF : {
 				handleSelectedCustomerDataGridView();
 				break;
 			}

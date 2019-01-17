@@ -52,6 +52,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UPDATE_TUTOR_RECORD = "/updateTutorRecord";
 	// Admin - SubscribedCustomer REST Methods
 	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF = "/downloadAdminSubscribedCustomerProfilePdf";
 	// Sales REST methods
 	String REST_METHOD_NAME_PENDING_ENQUIRIES_LIST = "/pendingEnquiriesList";
 	String REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST = "/completedEnquiriesList";

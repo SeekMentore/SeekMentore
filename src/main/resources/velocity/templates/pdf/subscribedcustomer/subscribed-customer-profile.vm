@@ -1,0 +1,118 @@
+<p style="font-size: 1.5em;" align="center">
+	<strong><ins>Subscribed Customer Profile</ins></strong>
+</p>
+<p>
+	<table style="$CoreTableStyling">
+		#if( $fullAdminProfile )
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Customer Id</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.customerId)</td>
+			</tr>
+		#end
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.name)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.contactNumber)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.emailId)</td>
+		</tr>
+		#if( $fullAdminProfile )
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Location</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('LOCATIONS_LOOKUP', $subscribedCustomer.location, '', ''))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Address Details</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscribedCustomer.addressDetails))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Additional Details</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscribedCustomer.additionalDetails))</td>
+			</tr>
+			<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $subscribedCustomer.isBlacklisted))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.whoBlacklistedName)</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Blacklisted Date</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscribedCustomer.blacklistedDateMillis))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Blacklisted Remarks</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscribedCustomer.blacklistedRemarks))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Un-Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.whoUnBlacklistedName)</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Un-Blacklisted Date</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscribedCustomer.unblacklistedDateMillis))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Un-Blacklisted Remarks</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscribedCustomer.unblacklistedRemarks))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Record Last Updated</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscribedCustomer.recordLastUpdatedMillis))</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Updated By</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.updatedByName)</td>
+	    	</tr>
+    	#end
+	</table>
+</p>
+<p style="font-size: 1.5em;">
+	<strong><ins>Attached Emails &#38; Contact Numbers</ins></strong>
+</p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<th style="$CoreTableTHStyling width:50%;"><strong>Emails</strong></th>
+			<th style="$CoreTableTHStyling width:50%;"><strong>Contact Numbers</strong></th>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:50%;">
+				<table style="$CoreTableStyling">
+					#if( $ValidationUtils.checkNonEmptyList($subscribedCustomer.getSubscribedCustomerEmails()) )
+						#foreach( $subscribedCustomerEmail in $subscribedCustomer.getSubscribedCustomerEmails() )
+							<tr>
+								<td style="$CoreTableTDStyling width:100%;">$ApplicationUtils.getBlankForNull($subscribedCustomerEmail.emailId)</td>
+							</tr>
+						#end
+					#else
+				  		<tr>
+							<td style="$CoreTableTDStyling width:100%; color:red;"><strong>No Emails Found</strong></td>
+						</tr>
+					#end
+				</table>
+			</td>
+			<td style="$CoreTableTDStyling width:50%;">
+				<table style="$CoreTableStyling">
+					#if( $ValidationUtils.checkNonEmptyList($subscribedCustomer.getSubscribedCustomerContactNumbers()) )
+						#foreach( $subscribedCustomerContactNumber in $subscribedCustomer.getSubscribedCustomerContactNumbers() )
+							<tr>
+								<td style="$CoreTableTDStyling width:100%;">$ApplicationUtils.getBlankForNull($subscribedCustomerContactNumber.contactNumber)</td>
+							</tr>
+						#end
+					#else
+				  		<tr>
+							<td style="$CoreTableTDStyling width:100%; color:red;"><strong>No Contact Numbers Found</strong></td>
+						</tr>
+					#end
+				</table>
+			</td>
+		</tr>
+	</table>
+</p>

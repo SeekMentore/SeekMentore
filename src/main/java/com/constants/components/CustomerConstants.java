@@ -15,4 +15,7 @@ public interface CustomerConstants extends ResponseMapConstants {
 	
 	String FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM = "This contact number already exists in the system.";
 	String FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM = "This email id already exists in the system.";
+	
+	String VELOCITY_PDF_TEMPLATES_SUBSCRIBED_CUSTOMER_FOLDER_PATH = VelocityConstants.VELOCITY_PDF_TEMPLATES_FOLDER_PATH + "/subscribedcustomer";
+	String SUBSCRIBED_CUSTOMER_PROFILE_VELOCITY_TEMPLATE_PATH = VELOCITY_PDF_TEMPLATES_SUBSCRIBED_CUSTOMER_FOLDER_PATH + "/subscribed-customer-profile.vm";
 }

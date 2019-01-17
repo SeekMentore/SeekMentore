@@ -21,6 +21,9 @@
 	<query type="filter" id="subscribedCustomerUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
+	<query type="filter" id="subscribedCustomerCustomerIdFilter">
+		WHERE C.CUSTOMER_ID = :customerId
+	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
 		WHERE C.CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
@@ -58,10 +61,26 @@
 		VALUES
 			(:customerId, :emailId, :isPrimary)
 	</query>
+	<query type="select" id="selectSubscribedCustomerEmail">
+		SELECT
+            SCE.*
+        FROM SUBSCRIBED_CUSTOMER_EMAIL_ID SCE
+	</query>
+	<query type="filter" id="subscribedCustomerEmailCustomerIdFilter">
+		WHERE SCE.CUSTOMER_ID = :customerId
+	</query>
 	<query type="insert" id="insertSubscribedCustomerContactNumber" paramClass="com.model.components.SubscribedCustomerContactNumber">
 		INSERT INTO SUBSCRIBED_CUSTOMER_CONTACT_NUMBER
 			(CUSTOMER_ID, CONTACT_NUMBER, IS_PRIMARY) 
 		VALUES
 			(:customerId, :contactNumber, :isPrimary)
+	</query>
+	<query type="select" id="selectSubscribedCustomerContactNumber">
+		SELECT
+            SCC.*
+        FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC
+	</query>
+	<query type="filter" id="subscribedCustomerContactNumberCustomerIdFilter">
+		WHERE SCC.CUSTOMER_ID = :customerId
 	</query>
 </queryMapper>

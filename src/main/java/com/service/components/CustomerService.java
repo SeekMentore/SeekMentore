@@ -23,11 +23,14 @@ import com.model.User;
 import com.model.components.SubscribedCustomer;
 import com.model.components.publicaccess.FindTutor;
 import com.model.gridcomponent.GridComponent;
+import com.model.rowmappers.SubscribedCustomerContactNumberRowMapper;
+import com.model.rowmappers.SubscribedCustomerEmailRowMapper;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.model.workbook.WorkbookReport;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
+import com.utils.PDFUtils;
 import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
@@ -56,6 +59,24 @@ import com.utils.WorkbookUtils;
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT);
 		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	public byte[] downloadSubscribedCustomerProfilePdf(final Long customerId, final Boolean isAdminProfile) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("customerId", customerId);
+		final SubscribedCustomer subscribedCustomer = applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer") 
+														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerCustomerIdFilter"), paramsMap, new SubscribedCustomerRowMapper());
+		if (ValidationUtils.checkObjectAvailability(subscribedCustomer)) {
+			subscribedCustomer.setSubscribedCustomerEmails(applicationDao.findAll(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomerEmail") 
+														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailCustomerIdFilter"), paramsMap, new SubscribedCustomerEmailRowMapper()));
+			subscribedCustomer.setSubscribedCustomerContactNumbers(applicationDao.findAll(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomerContactNumber") 
+																+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberCustomerIdFilter"), paramsMap, new SubscribedCustomerContactNumberRowMapper()));
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+	        attributes.put("subscribedCustomer", subscribedCustomer);
+	        attributes.put("fullAdminProfile", isAdminProfile);
+	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIBED_CUSTOMER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+		}
+		return null;
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws Exception {
