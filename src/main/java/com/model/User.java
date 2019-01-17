@@ -18,6 +18,8 @@ public abstract class User extends GridComponentObject implements Serializable {
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private Boolean hasProfilePicture;
+	private String profilePicturePath;
 	private List<String> pageAccessTypes;
 	private UserAccessOptions accessOptions;
 	
@@ -107,6 +109,22 @@ public abstract class User extends GridComponentObject implements Serializable {
 
 	public void setUpdatedByName(String updatedByName) {
 		this.updatedByName = updatedByName;
+	}
+
+	public Boolean getHasProfilePicture() {
+		return hasProfilePicture;
+	}
+
+	public void setHasProfilePicture(Boolean hasProfilePicture) {
+		this.hasProfilePicture = hasProfilePicture;
+	}
+
+	public String getProfilePicturePath() {
+		return profilePicturePath;
+	}
+
+	public void setProfilePicturePath(String profilePicturePath) {
+		this.profilePicturePath = profilePicturePath;
 	}
 
 	@Override

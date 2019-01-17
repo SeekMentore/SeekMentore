@@ -67,10 +67,26 @@
 		VALUES
 			(:tutorId, :emailId, :isPrimary)
 	</query>
+	<query type="select" id="selectRegisteredTutorEmail">
+		SELECT
+            RTE.*
+        FROM REGISTERED_TUTOR_EMAIL_ID RTE
+	</query>
+	<query type="filter" id="registeredTutorEmailTutorIdFilter">
+		WHERE RTE.TUTOR_ID = :tutorId
+	</query>
 	<query type="insert" id="insertRegisteredTutorContactNumber" paramClass="com.model.components.RegisteredTutorContactNumber">
 		INSERT INTO REGISTERED_TUTOR_CONTACT_NUMBER
 			(TUTOR_ID, CONTACT_NUMBER, IS_PRIMARY) 
 		VALUES
 			(:tutorId, :contactNumber, :isPrimary)
+	</query>
+	<query type="select" id="selectRegisteredTutorContactNumber">
+		SELECT
+            RTC.*
+        FROM REGISTERED_TUTOR_CONTACT_NUMBER RTC
+	</query>
+	<query type="filter" id="registeredTutorContactNumberTutorIdFilter">
+		WHERE RTC.TUTOR_ID = :tutorId
 	</query>
 </queryMapper>

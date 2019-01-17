@@ -28,7 +28,7 @@ public class UserUtils implements UserConstants {
 	}
 	
 	public static void mapUserPseudoColumnsForOtherContactNumbers(final OtherContactNumber otherContactNumber, final ResultSet row, final int rowNum) throws SQLException {
-		otherContactNumber.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, otherContactNumber.resolveColumnNameForMapping("emailId"), String.class));
+		otherContactNumber.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, otherContactNumber.resolveColumnNameForMapping("contactNumber"), String.class));
 		otherContactNumber.setIsPrimary(ExceptionUtils.exceptionHandlerForRowMapper(row, otherContactNumber.resolveColumnNameForMapping("isPrimary"), String.class));
 	}
 	

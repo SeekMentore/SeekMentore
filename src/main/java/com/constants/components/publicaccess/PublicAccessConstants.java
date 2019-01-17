@@ -59,7 +59,7 @@ public interface PublicAccessConstants extends ResponseMapConstants {
 	String SUBMIT_QUERY_RESPONSE_NOTIFICATION_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_SUBMIT_QUERY_PATH + "/query-response.vm";
 	
 	String SUBJECT_SUBMIT_QUERY_REQUEST = "New Query has been requested";
-	String SUBMIT_QUERY_APPLICATION_VM_OBJECT = "submitQueryApplication";
+	String SUBMIT_QUERY_APPLICATION_VM_OBJECT = "submitQuery";
 	String SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION = "Your Query has been registered with " + COMPANY_NAME_IN_QUOTES;
 	
 	String VALIDATION_MESSAGE_CAPTCHA_INVALIDATED_PLEASE_SELECT_AGAIN = "Captcha Invalidated, please click again.";

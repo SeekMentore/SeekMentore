@@ -38,6 +38,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";
 	// Admin - RegisteredTutor REST Methods
 	String REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST = "/uploadedDocumentList";
+	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF = "/downloadAdminRegisteredTutorProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadTutorDocument";
 	String REST_METHOD_NAME_APPROVE_TUTOR_DOCUMENT_LIST = "/approveTutorDocumentList";
 	String REST_METHOD_NAME_SEND_REMINDER_TUTOR_DOCUMENT_LIST = "/sendReminderTutorDocumentList";

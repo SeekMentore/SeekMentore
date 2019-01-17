@@ -1,10 +1,11 @@
-#set($TitleDivStyling='background: #10213a; color: white; min-height: 60px; padding: 10px;')##
-#set($TitleImageStyling='width: 335px; height: 51px;')##
-#set($ContentDivStyling='margin-top: 10px; padding: 5px;')##
-#set($FooterDivStyling='background: #10213a; min-height: 50px; color: white; padding-top: 1px; padding-bottom: 1px;')##
-#set($FooterParaStyling='color: white !important; text-align: center;')##
-#set($CoreTableStyling='border-collapse: collapse; width: 100%;')##
-#set($CoreTableTDStyling='border: 1px solid black; padding: 10px;')##
+#set($TitleDivStyling="background: #10213a; color: white; min-height: 60px; padding: 10px;")##
+#set($TitleImageStyling="width: 335px; height: 51px;")##
+#set($ContentDivStyling="margin-top: 10px; padding: 5px;")##
+#set($FooterDivStyling="background: #10213a; min-height: 50px; color: white; padding-top: 1px; padding-bottom: 1px;")##
+#set($FooterParaStyling="color: white !important; text-align: center;")##
+#set($CoreTableStyling="border-collapse: collapse; width: 100%;")##
+#set($CoreTableTDStyling="border: 1px solid black; padding: 10px;")##
+#set($CoreTableTHStyling="border: 1px solid black; padding: 10px; background-color: lightblue;")##
 <html>
 	<body style="font-family: 'Verdana', Sans, serif;">
 		<div id="main-div" style="font-family: 'Verdana', Sans, serif;">

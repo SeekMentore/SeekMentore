@@ -93,6 +93,24 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAdminRegisteredTutorProfilePdf (
+    		@FormParam("tutorId") final String tutorId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF;
+		try {
+			this.tutorId = Long.valueOf(tutorId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Registered_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadRegisteredTutorProfilePdf(Long.valueOf(tutorId), true));
+		}
+    }
+	
 	@Path(REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT)
 	@Produces({MediaType.APPLICATION_JSON})  
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -455,7 +473,8 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			case REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST : 
 			case REST_METHOD_NAME_BANK_DETAIL_LIST :
 			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
-			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : {
+			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF : {
 				handleSelectedTutorDataView();
 				break;
 			}

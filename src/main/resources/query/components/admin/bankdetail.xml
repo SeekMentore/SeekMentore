@@ -6,6 +6,12 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = B.WHO_ACTED), B.WHO_ACTED) AS WHO_ACTED_NAME
 		FROM BANK_DETAIL B
 	</query>
+	<query type="filter" id="bankDetailBankAccountIdilter">
+		WHERE BANK_ACCOUNT_ID = :bankAccountId
+	</query>
+	<query type="filter" id="bankDetailMultiBankAccountIdFilter">
+		WHERE BANK_ACCOUNT_ID IN (:bankAccountIdList)
+	</query>
 	<query type="filter" id="bankdetailTutorIdFilter">
 		WHERE TUTOR_ID = :tutorId
 	</query>

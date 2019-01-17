@@ -1,101 +1,239 @@
-<html>
-<head>
-<style>
-
-body {
-	font-family: "Times New Roman", Times, serif;
-}
-
-.tborder, .tborder td {
-  border: solid black;
-}
-.tborder {
-  border-width: 1px 1px 0 0;
-}
-.tborder td {
-  border-width: 0 0 1px 1px;
-}
-
-.noborder tbody {
-	border: none;
-}
-
-
-</style>
-</head>
-<body>
-		<h3 align="center">Tutor Profile</h3>
-		<br/>
-		<table align="center">
+<p style="font-size: 1.5em;" align="center">
+	<strong><ins>Registered Tutor Profile</ins></strong>
+</p>
+<div>
+	#if( $registeredTutor.hasProfilePicture )
+		<img src="$imageServerURL$registeredTutor.profilePicturePath" alt="Profile Picture" style="width: 100px; "/>
+	#else
+		#if( $ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $registeredTutor.gender)) == "Male")
+			<img src="$imageServerURL/images/profile/male-placeholder-profile.png" alt="Profile Picture" style="width: 100px; "/>
+	  	#elseif( $ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $registeredTutor.gender)) == "Female" )
+	  		<img src="$imageServerURL/images/profile/female-placeholder-profile.png" alt="Profile Picture" style="width: 100px; "/>
+	  	#else
+	  		<img src="$imageServerURL/images/profile/female-placeholder-profile.png" alt="Profile Picture" style="width: 100px; "/>
+		#end
+	#end
+</div>
+<p>
+	<table style="$CoreTableStyling">
+		#if( $fullAdminProfile )
 			<tr>
-	    		<td>Name</td>
-	    		<td>$registeredTutorObj.name</td>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Tutor Id</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.tutorId)</td>
+			</tr>
+		#end
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.name)</td>
+		</tr>
+		#if( $fullAdminProfile )
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Date of Birth</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatWithoutTime($registeredTutor.dateOfBirth))</td>
+			</tr>
+		#end
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.contactNumber)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.emailId)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Gender</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $registeredTutor.gender))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Qualification</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('QUALIFICATION_LOOKUP', $registeredTutor.qualification))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Primary Profession</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PROFESSION_LOOKUP', $registeredTutor.primaryProfession))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Transport Mode</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('TRANSPORT_MODE_LOOKUP', $registeredTutor.transportMode))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Teaching Experience</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.teachingExp)</td>
+		</tr>
+		#if( $fullAdminProfile )
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Interested Student Grades</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('STUDENT_GRADE_LOOKUP', $registeredTutor.interestedStudentGrades, '', ''))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Interested Subjects</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('SUBJECTS_LOOKUP', $registeredTutor.interestedSubjects, '', ''))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Comfortable Locations</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('LOCATIONS_LOOKUP', $registeredTutor.comfortableLocations, '', ''))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Preferred Teaching Type</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemListConcatenatedLabelString('PREFERRED_TEACHING_TYPE_LOOKUP', $registeredTutor.preferredTeachingType, '', ''))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Additional Details</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($registeredTutor.additionalDetails))</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling width:25%;"><strong>Address Details</strong></td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($registeredTutor.addressDetails))</td>
+			</tr>
+			<tr>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Is Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $registeredTutor.isBlacklisted))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Date of Birth</td>
-	    		<td>$registeredTutorObj.dateOfBirth</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.whoBlacklistedName)</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Contact Number</td>
-	    		<td>$registeredTutorObj.contactNumber</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Blacklisted Date</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($registeredTutor.blacklistedDateMillis))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Email Id</td>
-	    		<td>$registeredTutorObj.emailId</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Blacklisted Remarks</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($registeredTutor.blacklistedRemarks))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>User Id</td>
-	    		<td>$registeredTutorObj.userId</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Who Un-Blacklisted</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.whoUnBlacklistedName)</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Gender</td>
-	    		<td>$registeredTutorObj.gender</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Un-Blacklisted Date</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($registeredTutor.unblacklistedDateMillis))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Qualification</td>
-	    		<td>$registeredTutorObj.qualification</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Un-Blacklisted Remarks</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($registeredTutor.unblacklistedRemarks))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Primary Profession</td>
-	    		<td>$registeredTutorObj.primaryProfession</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Record Last Updated</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($registeredTutor.recordLastUpdatedMillis))</td>
 	    	</tr>
 	    	<tr>
-	    		<td>Transport Mode</td>
-	    		<td>$registeredTutorObj.transportMode</td>
+	    		<td style="$CoreTableTDStyling width:25%;"><strong>Updated By</strong></td>
+	    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.updatedByName)</td>
 	    	</tr>
-	    	<tr>
-	    		<td>Teaching Experience</td>
-	    		<td>$registeredTutorObj.teachingExp</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Interested Student Grades</td>
-	    		<td>$registeredTutorObj.interestedStudentGrades</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Interested Subjects</td>
-	    		<td>$registeredTutorObj.interestedSubjects</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Comfortable Locations</td>
-	    		<td>$registeredTutorObj.comfortableLocations</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Preferred Teaching Type</td>
-	    		<td>$registeredTutorObj.preferredTeachingType</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Additional Details</td>
-	    		<td>$registeredTutorObj.additionalDetails</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Record Last Updated</td>
-	    		<td>$registeredTutorObj.recordLastUpdated</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Updated By</td>
-	    		<td>$registeredTutorObj.updatedBy</td>
-	    	</tr>
+    	#end
+	</table>
+</p>
+<p style="font-size: 1.5em;">
+	<strong><ins>Attached Emails &#38; Contact Numbers</ins></strong>
+</p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<th style="$CoreTableTHStyling width:50%;"><strong>Emails</strong></th>
+			<th style="$CoreTableTHStyling width:50%;"><strong>Contact Numbers</strong></th>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:50%;">
+				<table style="$CoreTableStyling">
+					#if( $ValidationUtils.checkNonEmptyList($registeredTutor.getRegisteredTutorEmails()) )
+						#foreach( $registeredTutorEmail in $registeredTutor.getRegisteredTutorEmails() )
+							<tr>
+								<td style="$CoreTableTDStyling width:100%;">$ApplicationUtils.getBlankForNull($registeredTutorEmail.emailId)</td>
+							</tr>
+						#end
+					#else
+				  		<tr>
+							<td style="$CoreTableTDStyling width:100%; color:red;"><strong>No Emails Found</strong></td>
+						</tr>
+					#end
+				</table>
+			</td>
+			<td style="$CoreTableTDStyling width:50%;">
+				<table style="$CoreTableStyling">
+					#if( $ValidationUtils.checkNonEmptyList($registeredTutor.getRegisteredTutorContactNumbers()) )
+						#foreach( $registeredTutorContactNumber in $registeredTutor.getRegisteredTutorContactNumbers() )
+							<tr>
+								<td style="$CoreTableTDStyling width:100%;">$ApplicationUtils.getBlankForNull($registeredTutorContactNumber.contactNumber)</td>
+							</tr>
+						#end
+					#else
+				  		<tr>
+							<td style="$CoreTableTDStyling width:100%; color:red;"><strong>No Contact Numbers Found</strong></td>
+						</tr>
+					#end
+				</table>
+			</td>
+		</tr>
+	</table>
+</p>
+#if( $fullAdminProfile )
+	<p style="font-size: 1.5em;">
+		<strong><ins>Uploaded Tutor Documents</ins></strong>
+	</p>
+	<p>
+		<table style="$CoreTableStyling">
+			<tr>
+				<th style="$CoreTableTHStyling"><strong>Document Type</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Filename</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Is Approved</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Who Acted</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Action Date</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Remarks</strong></th>
+			</tr>
+			#if( $ValidationUtils.checkNonEmptyList($registeredTutor.getDocuments()) )
+				#foreach( $document in $registeredTutor.getDocuments() )
+					<tr>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($document.filename)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $document.isApproved))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($document.whoActedName)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($document.actionDateMillis))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($document.remarks))</td>
+					</tr>
+				#end
+			#else
+				<tr>
+					<td style="$CoreTableTDStyling width:100%; color:red;" colspan="6"><strong>No Documents Found</strong></td>
+				</tr>
+			#end
 		</table>
-
-</body>
-</html>
+	</p>
+	<p style="font-size: 1.5em;">
+		<strong><ins>Attached Bank Details</ins></strong>
+	</p>
+	<p>
+		<table style="$CoreTableStyling">
+			<tr>
+				<th style="$CoreTableTHStyling"><strong>Bank Name</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Account Number</strong></th>
+				<th style="$CoreTableTHStyling"><strong>IFSC</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Account Holder Name</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Is Default</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Is Approved</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Who Acted</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Action Date</strong></th>
+				<th style="$CoreTableTHStyling"><strong>Remarks</strong></th>
+			</tr>
+			#if( $ValidationUtils.checkNonEmptyList($registeredTutor.getBankDetails()) )
+				#foreach( $bankDetail in $registeredTutor.getBankDetails() )
+					<tr>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($bankDetail.bankName)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($bankDetail.accountNumber)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($bankDetail.ifscCode)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($bankDetail.accountHolderName)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $bankDetail.isDefault))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $bankDetail.isApproved))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($bankDetail.whoActedName)</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($bankDetail.actionDateMillis))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($bankDetail.remarks))</td>
+					</tr>
+				#end
+			#else
+				<tr>
+					<td style="$CoreTableTDStyling width:100%; color:red;" colspan="9"><strong>No Bank Details Found</strong></td>
+				</tr>
+			#end
+		</table>
+	</p>
+#end

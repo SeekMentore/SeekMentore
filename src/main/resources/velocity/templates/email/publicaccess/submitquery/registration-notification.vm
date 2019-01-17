@@ -13,31 +13,23 @@ Hello Team,
 		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Query Status</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PUBLIC_APPLICATION_STATUS_LOOKUP', $submitQuery.queryStatus))</td>
-		</tr>
-		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Date of Birth</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatWithoutTime($submitQuery.dateOfBirth))</td>
-		</tr>
-		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Contact Number</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.contactNumber)</td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('QUERY_STATUS_LOOKUP', $submitQuery.queryStatus))</td>
 		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Email Id</strong></td>
 			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.emailId)</td>
 		</tr>
 		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>First Name</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.firstName)</td>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Query Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.queryDetails)</td>
 		</tr>
 		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Last Name</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.lastName)</td>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Is Registered Tutor</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $submitQuery.registeredTutor))</td>
 		</tr>
 		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Gender</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('GENDER_LOOKUP', $submitQuery.gender))</td>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Is Subscribed Customer</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $submitQuery.subscribedCustomer))</td>
 		</tr>
 	</table>
 </p>
