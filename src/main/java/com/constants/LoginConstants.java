@@ -4,6 +4,14 @@ import com.constants.components.ResponseMapConstants;
 
 public interface LoginConstants extends ResponseMapConstants, PageConstants {
 	
+	String MESG_PROPERTY_FILE_NAME = "spring.loginMessages";
+	
+	String RESET_PASSWORD = "RESET_PASSWORD";
+	String INVALID_TOKEN_ID = "INVALID_TOKEN_ID";
+	String INVALID_TOKEN = "INVALID_TOKEN";
+	String EXPIRED_TOKEN = "EXPIRED_TOKEN";
+	String CHANGED_PASSWORD_FROM_TOKEN = "CHANGED_PASSWORD_FROM_TOKEN";
+	
 	String USER_OBJECT = "user";
 	String USER_TYPE = "user-type";
 	String USER_TYPE_HEADER = "USER-TYPE";

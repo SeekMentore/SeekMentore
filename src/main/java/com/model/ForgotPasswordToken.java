@@ -8,7 +8,7 @@ public class ForgotPasswordToken extends GridComponentObject implements Serializ
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private Long forgotPasswordTokeId;
+	private Long forgotPasswordTokenId;
 	private String userId;
 	private String userName;
 	private String userType;
@@ -19,13 +19,13 @@ public class ForgotPasswordToken extends GridComponentObject implements Serializ
 	
 	public ForgotPasswordToken() {}
 
-	public Long getForgotPasswordTokeId() {
-		return forgotPasswordTokeId;
+	public Long getForgotPasswordTokenId() {
+		return forgotPasswordTokenId;
 	}
 
 
-	public void setForgotPasswordTokeId(Long forgotPasswordTokeId) {
-		this.forgotPasswordTokeId = forgotPasswordTokeId;
+	public void setForgotPasswordTokenId(Long forgotPasswordTokenId) {
+		this.forgotPasswordTokenId = forgotPasswordTokenId;
 	}
 
 
@@ -114,7 +114,7 @@ public class ForgotPasswordToken extends GridComponentObject implements Serializ
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "forgotPasswordTokeId" : return "FORGOT_PASSWORD_TOKEN_ID";
+			case "forgotPasswordTokenId" : return "FORGOT_PASSWORD_TOKEN_ID";
 			case "userId" : return "USER_ID";
 			case "userName" : return "USER_NAME";
 			case "userType" : return "USER_TYPE";

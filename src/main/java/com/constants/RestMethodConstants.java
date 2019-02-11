@@ -14,6 +14,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL = "/validateCredential";
 	String REST_METHOD_NAME_TO_CHECK_UI_PATH_ACCESS = "/checkUIpathAccess";
 	String REST_METHOD_NAME_RESET_PASSWORD = "/resetPassword";
+	String REST_METHOD_NAME_TOKEN_RESET_PASSWORD = "/tokenResetPassword";
 	String REST_METHOD_NAME_CHANGE_PASSWORD = "/changePassword";
 	String REST_METHOD_NAME_TO_LOGOUT = "/logout";
 	// Commons REST methods

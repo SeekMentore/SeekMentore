@@ -16,7 +16,7 @@ public class ForgotPasswordTokenRowMapper implements RowMapper<ForgotPasswordTok
 	public ForgotPasswordToken mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
-		forgotPasswordToken.setForgotPasswordTokeId(ExceptionUtils.exceptionHandlerForRowMapper(row, forgotPasswordToken.resolveColumnNameForMapping("forgotPasswordTokeId"), Long.class));
+		forgotPasswordToken.setForgotPasswordTokenId(ExceptionUtils.exceptionHandlerForRowMapper(row, forgotPasswordToken.resolveColumnNameForMapping("forgotPasswordTokenId"), Long.class));
 		forgotPasswordToken.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, forgotPasswordToken.resolveColumnNameForMapping("userId"), String.class));
 		forgotPasswordToken.setUserName(ExceptionUtils.exceptionHandlerForRowMapper(row, forgotPasswordToken.resolveColumnNameForMapping("userName"), String.class));
 		forgotPasswordToken.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, forgotPasswordToken.resolveColumnNameForMapping("userType"), String.class));

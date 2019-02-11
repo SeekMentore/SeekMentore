@@ -26,6 +26,7 @@ import com.model.User;
 import com.model.UserAccessOptions;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
+import com.model.rowmappers.ForgotPasswordTokenRowMapper;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.EmployeeService;
@@ -35,6 +36,7 @@ import com.utils.SecurityUtil;
 import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
+import com.utils.localization.Message;
 
 @Service(BeanConstants.BEAN_NAME_LOGIN_SERVICE)
 public class LoginService implements LoginConstants {
@@ -53,6 +55,9 @@ public class LoginService implements LoginConstants {
 	
 	@Autowired
 	private transient CustomerService customerService;
+	
+	@Autowired
+	private transient QueryMapperService queryMapperService;
 	
 	public User validateCredential(final Credential credential) throws Exception {
 		User user = getUserFromDbUsingUserIdSwitchByUserType(credential.getUserId(), credential.getUserType());
@@ -144,7 +149,7 @@ public class LoginService implements LoginConstants {
 		user.setAccessOptions(accessOptions);
 	}
 
-	public void changePassword(final User user, final String encryptedOldPassword, final String newPassword, final String emailIdOfUserInSession) throws Exception {
+	public void changePassword(final User user, final String encryptedOldPassword, final String newPassword) throws Exception {
 		final Date currentTimestamp = new Date();
 		final String encryptedNewPassword = SecurityUtil.encrypt(SecurityUtil.decryptClientSide(newPassword));
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
@@ -156,7 +161,7 @@ public class LoginService implements LoginConstants {
 		passwordChangeTracker.setEncryptedPasswordOld(encryptedOldPassword);
 		passwordChangeTracker.setEncryptedPasswordNew(encryptedNewPassword);
 		feedPasswordChangeTracker(passwordChangeTracker);
-		sendPasswordChangeEmailToUser(user, emailIdOfUserInSession);
+		sendPasswordChangeEmailToUser(user, user.getEmailId());
 	}
 	
 	public void sendPasswordChangeEmailToUser(final User user, final String emailIdOfUserInSession) throws Exception {
@@ -209,22 +214,24 @@ public class LoginService implements LoginConstants {
 			final ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
 			forgotPasswordToken.setUserId(user.getUserId());
 			forgotPasswordToken.setUserType(user.getUserType());
-			forgotPasswordToken.setToken(SecurityUtil.encrypt(UUIDGeneratorUtils.generateRandomGUID()));
+			forgotPasswordToken.setToken(UUIDGeneratorUtils.generateRandomGUID());
 			forgotPasswordToken.setIssueDateMillis(currentTimestamp.getTime());
 			forgotPasswordToken.setExpiryDateMillis(currentTimestamp.getTime() + (12 * 60 * 60 * 1000)); // 12 hours
 			forgotPasswordToken.setIsValid(YES);
-			applicationDao.executeUpdateWithQueryMapper("login", "insertForgotPasswordToken", forgotPasswordToken);
-			sendResetPasswordEmailToUser(user, forgotPasswordToken.getToken());
+			final Long tokenId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("login", "insertForgotPasswordToken", forgotPasswordToken);
+			forgotPasswordToken.setForgotPasswordTokenId(tokenId);
+			sendResetPasswordEmailToUser(user, forgotPasswordToken);
 		} else {
 			errorMessage = "No user found in system for the credentials provided.";
 		}
 		return errorMessage;
 	}
 	
-	private void sendResetPasswordEmailToUser(final User user, final String token) throws Exception {
+	private void sendResetPasswordEmailToUser(final User user, final ForgotPasswordToken forgotPasswordToken) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", user.getName());
-		attributes.put("urlEncodedToken", URLEncoder.encode(token, "UTF-8"));
+		attributes.put("tokenId", URLEncoder.encode(SecurityUtil.encrypt(forgotPasswordToken.getForgotPasswordTokenId().toString()), "UTF-8"));
+		attributes.put("token", URLEncoder.encode(SecurityUtil.encrypt(forgotPasswordToken.getToken()), "UTF-8"));
 		MailUtils.sendMimeMessageEmail( 
 				user.getEmailId(), 
 				null,
@@ -232,5 +239,33 @@ public class LoginService implements LoginConstants {
 				"Alert - Your \"Seek Mentore\" password has been reset", 
 				VelocityUtils.parseEmailTemplate(PASSWORD_RESET_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
+	}
+
+	/* Returns error message if any else returns EMPTY_STRING*/
+	public String changePasswordFromToken(final Long tokenId, final String token, final String newPassword) throws Exception {
+		String message = EMPTY_STRING;
+		final Date currentTimestamp = new Date();
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tokenId", tokenId);
+		final ForgotPasswordToken forgotPasswordToken = applicationDao.find(
+																queryMapperService.getQuerySQL("login", "selectForgotPasswordToken") 
+																+ queryMapperService.getQuerySQL("login", "forgotPasswordTokenTokenIdFilter"), paramsMap, new ForgotPasswordTokenRowMapper());
+		if (ValidationUtils.checkObjectAvailability(forgotPasswordToken)) {
+			if (YES.equals(forgotPasswordToken.getIsValid()) && forgotPasswordToken.getToken().equals(token)) {
+				if (currentTimestamp.getTime() <= forgotPasswordToken.getExpiryDateMillis()) {
+					final User user = getUserFromDbUsingUserIdSwitchByUserType(forgotPasswordToken.getUserId(), forgotPasswordToken.getUserType());
+					changePassword(user, user.getEncryptedPassword(), newPassword);
+					forgotPasswordToken.setIsValid(NO);
+					applicationDao.executeUpdateWithQueryMapper("login", "updateForgotPasswordTokenAsInvalid", forgotPasswordToken);
+				} else {
+					message = Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.EXPIRED_TOKEN);
+				}
+			} else {
+				message = Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.INVALID_TOKEN);
+			}
+		} else {
+			message = Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.INVALID_TOKEN_ID);
+		}
+		return message;
 	}
 }

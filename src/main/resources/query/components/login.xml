@@ -51,4 +51,12 @@
 			END AS USER_NAME
 		FROM FORGOT_PASSWORD_TOKEN FPT
 	</query>
+	<query type="filter" id="forgotPasswordTokenTokenIdFilter">
+		WHERE FORGOT_PASSWORD_TOKEN_ID = :tokenId
+	</query>
+	<query type="update" id="updateForgotPasswordTokenAsInvalid" paramClass="com.model.ForgotPasswordToken">
+		UPDATE FORGOT_PASSWORD_TOKEN SET
+		IS_VALID = :isValid
+		WHERE FORGOT_PASSWORD_TOKEN_ID = :forgotPasswordTokenId	
+	</query>
 </queryMapper>

@@ -33,6 +33,7 @@ import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
+import com.utils.localization.Message;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -43,6 +44,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	private Credential credential;
 	private User user;
 	private String oldPassword;
+	private Long tokenId;
+	private String token;
 	private String newPassword;
 	private String retypeNewPassword;
 	private String encryptedUserPassword;
@@ -118,13 +121,48 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			final String errorMessage = getLoginService().resetPassword(this.credential);
 			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "An email will be sent to your registered email id. Please follow the steps to reset your password");
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.RESET_PASSWORD));
 			} else {
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
 			}
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_TOKEN_RESET_PASSWORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String tokenResetPassword (
+			@FormParam("tokenId") final String encryptedTokenId,
+			@FormParam("token") final String encryptedToken,
+			@FormParam("newPassword") final String newPassword,
+			@FormParam("retypeNewPassword") final String retypeNewPassword,
+			@Context final HttpServletRequest request
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TOKEN_RESET_PASSWORD;
+		try {
+			this.tokenId = Long.valueOf(SecurityUtil.decrypt(encryptedTokenId));
+		} catch (Exception e) {}
+		try {
+			this.token = SecurityUtil.decrypt(encryptedToken);
+		} catch (Exception e) {}
+		this.newPassword = newPassword;
+		this.retypeNewPassword = retypeNewPassword;
+		doSecurity(request);
+		if (this.securityPassed) {
+			final Map<String, Object> restResponse = new HashMap<String, Object>();
+			final String errorMessage = getLoginService().changePasswordFromToken(this.tokenId, this.token, this.newPassword);
+			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.CHANGED_PASSWORD_FROM_TOKEN));
+			} else {
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
+			}
+			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} 
 		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
@@ -146,7 +184,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		doSecurity(request);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
-			getLoginService().changePassword(getActiveUser(request), this.encryptedUserPassword, newPassword, LoginUtils.getEmailIdOfUserInSession(request));
+			getLoginService().changePassword(getActiveUser(request), this.encryptedUserPassword, newPassword);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Successfully changed password");
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -208,6 +246,10 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			}
 			case REST_METHOD_NAME_RESET_PASSWORD : {
 				handlePasswordResetCredential();
+				break;
+			}
+			case REST_METHOD_NAME_TOKEN_RESET_PASSWORD : {
+				handleTokenChangePassword();
 				break;
 			}
 		}
@@ -292,6 +334,69 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					LoginConstants.VALIDATION_MESSAGE_INCORRECT_OLD_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.newPassword)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.retypeNewPassword)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_PLEASE_ENTER_RETYPE_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		try {
+			final String decryptUserNewPasswordFromUI = SecurityUtil.decryptClientSide(this.newPassword);
+			final String decryptUserRetypeNewPasswordFromUI = SecurityUtil.decryptClientSide(this.retypeNewPassword);
+			if (!decryptUserNewPasswordFromUI.equals(decryptUserRetypeNewPasswordFromUI)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						LoginConstants.VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD,
+						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+				this.securityPassed = false;
+			} else {
+				if (!PasswordUtils.checkPasswordPolicy(decryptUserNewPasswordFromUI)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							LoginConstants.VALIDATION_MESSAGE_PASSWORD_POLICY_FAILED,
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+				}
+			}
+		} catch(Exception e) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					LoginConstants.VALIDATION_MESSAGE_MISMATCH_NEW_PASSWORD,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!this.securityPassed) {
+			final ErrorPacket errorPacket = new ErrorPacket(
+					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword);
+			getCommonsService().feedErrorRecord(errorPacket);
+		}
+	} 
+	
+	private void handleTokenChangePassword() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tokenId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.INVALID_TOKEN_ID),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.token)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.INVALID_TOKEN),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

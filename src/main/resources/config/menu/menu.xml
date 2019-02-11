@@ -180,6 +180,7 @@
 		<page id="loginRestUnsecured" url="/rest/login">
 			<webservice id="validateCredential" url="/validateCredential"></webservice>
 			<webservice id="resetPassword" url="/resetPassword"></webservice>
+			<webservice id="tokenResetPassword" url="/tokenResetPassword"></webservice>
 			<webservice id="checkUIpathAccess" url="/checkUIpathAccess"></webservice>
 			<webservice id="logout" url="/logout"></webservice>
 		</page>
