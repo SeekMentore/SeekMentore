@@ -196,7 +196,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put(ADDRESS_NAME_VM_OBJECT, findTutorApplication.getName());
-		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication.getFormattedApplicationForPrinting());
+		attributes.put(FIND_TUTOR_APPLICATION_VM_OBJECT, findTutorApplication);
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getCustomerRegistrationSupportMailList());
@@ -237,7 +237,7 @@ public class PublicAccessService implements PublicAccessConstants {
 	private void sendNotificationAndConfirmationEmailsForQueryEnquiry(final SubmitQuery submitQueryApplication) throws Exception {
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication.getFormattedApplicationForPrinting());
+		attributes.put(SUBMIT_QUERY_APPLICATION_VM_OBJECT, submitQueryApplication);
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Send Registration notification message to concerned team
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getQuerySupportMailList());

@@ -461,9 +461,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
-			isContactNumberCustomerPresent = true;
 			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(findTutorApplication.getContactNumber());
-			contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber)) {
+				isContactNumberCustomerPresent = true;
+				contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+			}
 		}
 		if (!ValidationUtils.validateEmailAddress(findTutorApplication.getEmailId())) {
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -472,9 +474,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
-			isEmailIdCustomerPresent = true;
 			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(findTutorApplication.getEmailId());
-			emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId)) {
+				isEmailIdCustomerPresent = true;
+				emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+			}
 		}
 		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
 			findTutorApplication.setSubscribedCustomer(YES);
@@ -555,9 +559,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
-			isContactNumberCustomerPresent = true;
 			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(subscribeWithUsApplication.getContactNumber());
-			contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber)) {
+				isContactNumberCustomerPresent = true;
+				contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+			}
 		}
 		if (!ValidationUtils.validateEmailAddress(subscribeWithUsApplication.getEmailId())) {
 			ApplicationUtils.appendMessageInMapAttribute(
@@ -566,9 +572,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
-			isEmailIdCustomerPresent = true;
 			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(subscribeWithUsApplication.getEmailId());
-			emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId)) {
+				isEmailIdCustomerPresent = true;
+				emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+			}
 		}
 		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
 			subscribeWithUsApplication.setSubscribedCustomer(YES);

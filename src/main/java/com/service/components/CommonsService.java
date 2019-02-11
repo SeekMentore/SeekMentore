@@ -20,6 +20,7 @@ import com.model.rowmappers.EmailTemplateRowMapper;
 import com.service.QueryMapperService;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;
+import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_COMMONS_SERVICE)
 public class CommonsService implements CommonsConstants {
@@ -56,7 +57,7 @@ public class CommonsService implements CommonsConstants {
 	public void feedErrorRecord(final ErrorPacket errorPacket) {
 		try {
 			applicationDao.executeUpdateWithQueryMapper("error", "insertErrorPacket", errorPacket);
-			MailUtils.sendErrorMessageEmail(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace(), null);
+			MailUtils.sendErrorMessageEmail(VelocityUtils.createEmailFromHTMLContent(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace()), null);
 		} catch (Exception e) {
 			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
 		}
