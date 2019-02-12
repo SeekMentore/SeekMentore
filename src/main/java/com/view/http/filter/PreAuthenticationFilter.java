@@ -56,7 +56,7 @@ public class PreAuthenticationFilter extends AbstractWebservice implements Filte
 				if (LoginUtils.validateExistingSession(httpRequest)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "Not a valid user in session.");
+					final ErrorPacket errorPacket = new ErrorPacket(pageURL, "Not a valid user in session.", true, LoginUtils.getUserFromSession(httpRequest));
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.writeError(404, pageURL + " - Is not a public URL, you should be logged in to view the contents", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 				}

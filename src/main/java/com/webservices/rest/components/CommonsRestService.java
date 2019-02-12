@@ -70,7 +70,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_GET_SERVER_INFO;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			restResponse.put(SERVER_NAME, getJNDIandControlConfigurationLoadService().getServerName());
@@ -84,7 +84,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_ERROR_DETAILS)
@@ -96,7 +96,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_GET_ERROR_DETAILS;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			switch(errorCode) {
@@ -135,7 +135,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO)
@@ -147,7 +147,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_GET_LOGIN_BASIC_INFO;
 		this.activeUser = getActiveUser(request);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			final List<UIMenu> uiMenuList = computeBOUIMenuForUser(this.activeUser); 
@@ -158,7 +158,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	private List<UIMenu> computeBOUIMenuForUser(final User user) throws CloneNotSupportedException {
@@ -192,7 +192,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_GET_EMAIL_TEMPLATES;
 		this.activeUser = getActiveUser(request);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			restResponse.put(EMAIL_TEMPLATES, getCommonsService().getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_EMAIL_TEMPLATE_LOOKUP));
@@ -200,7 +200,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE)
@@ -213,7 +213,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_LOAD_EMAIL_TEMPLATE;
 		this.activeUser = getActiveUser(request);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			restResponse.put(EMAIL_TEMPLATE, EmailTemplate.getBlankEmailTemplate());
@@ -228,7 +228,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_SEND_EMAIL)
@@ -281,7 +281,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 				this.attachments.add(new MailAttachment(uploadedFileDetailFile4.getFileName(), fileBytes, FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			}
 		}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			MailUtils.sendMimeMessageEmail( 
@@ -295,7 +295,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.EMAIL_SEND_SUCCESS));
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	public CommonsService getCommonsService() {
@@ -311,8 +311,8 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	}
 	
 	@Override
-	public void doSecurity(final HttpServletRequest request) throws Exception {
-		this.request = request;
+	public void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

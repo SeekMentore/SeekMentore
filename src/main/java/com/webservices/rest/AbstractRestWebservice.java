@@ -29,7 +29,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected HttpServletResponse response;
 	protected Map<String, Object> securityFailureResponse;
 	protected String methodName;
-	protected boolean securityPassed = false;
+	protected Boolean securityPassed = false;
 	protected User activeUser;
 	protected List<String> changedAttributes = new ArrayList<String>();
 	protected Long parentId;
@@ -38,7 +38,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected String button;
 	protected String grid;
 	
-	protected abstract void doSecurity(final HttpServletRequest request) throws Exception;
+	protected abstract void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception;
 	
 	protected <T extends Object> T getValueForPropertyFromCompleteUpdatedJSONObject(final JsonObject jsonObject, final String propertyName, final Class<T> type) {
 		LoggerUtils.logOnConsole("Update record JSON Object >> " + jsonObject);

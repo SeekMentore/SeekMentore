@@ -77,7 +77,7 @@ public class LoggerUtils implements LoggerConstants {
 	}
 	
 	public static void logErrorFromApplicationExceptionConstructor(final Throwable exception) {
-		final ErrorPacket errorPacket = new ErrorPacket("RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception));
+		final ErrorPacket errorPacket = new ErrorPacket("RUNTIME_EXCEPTION_CANNOT_CAPTURE_URI", ExceptionUtils.generateErrorLog(exception), false, null);
 		try {
 			getCommonsService().feedErrorRecord(errorPacket);
 		} catch (Exception e) {}

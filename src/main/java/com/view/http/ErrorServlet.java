@@ -52,7 +52,7 @@ public class ErrorServlet extends HttpServlet implements MessageConstants {
 	     } else {
 	    	 errorText = ExceptionUtils.generateErrorLog(throwable);
 	     }
-	     final ErrorPacket errorPacket = new ErrorPacket(requestUri + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(request), errorText);
+	     final ErrorPacket errorPacket = new ErrorPacket(requestUri, errorText, true, LoginUtils.getUserFromSession(request));
 	     getCommonsService().feedErrorRecord(errorPacket);
 	     WebServiceUtils.writeError(500, requestUri + " - Server error occurred while accessing the URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, response);
 	}

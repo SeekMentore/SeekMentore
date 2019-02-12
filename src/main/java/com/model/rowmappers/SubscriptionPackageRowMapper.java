@@ -25,10 +25,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorName"), String.class));
 		subscriptionPackage.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorEmail"), String.class));
 		subscriptionPackage.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorContactNumber"), String.class));
-		subscriptionPackage.setTotalHours(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("totalHours"), Integer.class));
 		subscriptionPackage.setStartDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("startDateMillis"), Long.class));
-		subscriptionPackage.setCompletedHours(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("completedHours"), Integer.class));
-		subscriptionPackage.setCompletedMinutes(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("completedMinutes"), Integer.class));
 		subscriptionPackage.setEndDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("endDateMillis"), Long.class));
 		subscriptionPackage.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("whoActed"), String.class));
 		subscriptionPackage.setAdminRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("adminRemarks"), String.class));

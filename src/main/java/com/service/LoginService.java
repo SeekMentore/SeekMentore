@@ -70,13 +70,13 @@ public class LoginService implements LoginConstants {
 					setAccessOptions(user);
 				} else {
 					final String message = "Hacking alert !!! <BR/> Received Invalid User Type for : <BR/>" + credential.toString();
-					final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
+					final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message, true, user);
 					commonsService.feedErrorRecord(errorPacket);
 					user = null;
 				}
 			} else {
 				final String message = "Hacking alert !!! <BR/> Received Invalid Password for : <BR/>" + credential.toString();
-				final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message);
+				final ErrorPacket errorPacket = new ErrorPacket(RestMethodConstants.REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL, message, true, user);
 				commonsService.feedErrorRecord(errorPacket);
 				user = null;
 			}
@@ -236,7 +236,7 @@ public class LoginService implements LoginConstants {
 				user.getEmailId(), 
 				null,
 				null,
-				"Alert - Your \"Seek Mentore\" password has been reset", 
+				"Alert - Your \"Seek Mentore\" password has been asked for reset", 
 				VelocityUtils.parseEmailTemplate(PASSWORD_RESET_VELOCITY_TEMPLATE_PATH, attributes),
 				null);
 	}

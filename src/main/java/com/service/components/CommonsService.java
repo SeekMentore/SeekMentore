@@ -57,7 +57,9 @@ public class CommonsService implements CommonsConstants {
 	public void feedErrorRecord(final ErrorPacket errorPacket) {
 		try {
 			applicationDao.executeUpdateWithQueryMapper("error", "insertErrorPacket", errorPacket);
-			MailUtils.sendErrorMessageEmail(VelocityUtils.createEmailFromHTMLContent(errorPacket.getRequestURI() + LINE_BREAK + LINE_BREAK + errorPacket.getErrorTrace()), null);
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("errorPacket", errorPacket);
+			MailUtils.sendErrorMessageEmail(VelocityUtils.parseEmailTemplate(ERROR_REPORT_VELOCITY_TEMPLATE_PATH, attributes), null);
 		} catch (Exception e) {
 			ExceptionUtils.rethrowCheckedExceptionAsUncheckedException(e);
 		}

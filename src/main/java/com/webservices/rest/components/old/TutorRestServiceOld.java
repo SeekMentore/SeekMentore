@@ -1,6 +1,7 @@
 package com.webservices.rest.components.old;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 
 import org.springframework.context.annotation.Scope;
@@ -18,7 +19,7 @@ import com.webservices.rest.AbstractRestWebservice;
 public class TutorRestServiceOld extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}/*
@@ -38,11 +39,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_LOAD_TUTOR_RECORD;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().getTutorRecordWithDocuments(((RegisteredTutor)getActiveUser(request)).clone()), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -53,11 +54,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_REGISTERED_TUTOR;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().getDropdownListData(), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -69,12 +70,12 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_UPDATE_DETAILS;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			registeredTutorObj.setTutorId(((RegisteredTutor)getActiveUser(request)).getTutorId());
 			return JSONUtils.convertObjToJSONString(getTutorService().updateDetails(registeredTutorObj), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -90,7 +91,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT;
 		this.tutorId = ((RegisteredTutor)getActiveUser(request)).getTutorId();
 		this.documentType = documentType;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
 			final TutorDocument tutorDocument = getTutorService().downloadDocument(documentType, this.tutorId, folderPathToUploadDocuments);
@@ -116,7 +117,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.photoFileName = (null != uploadedFileDetailFilePhoto) ? uploadedFileDetailFilePhoto.getFileName() : null; 
 		this.panCardFileName = (null != uploadedFileDetailFilePan) ? uploadedFileDetailFilePan.getFileName() : null; 
 		this.aadhaarCardFileName = (null != uploadedFileDetailFileAadhaarCard) ? uploadedFileDetailFileAadhaarCard.getFileName() : null; 
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
 			final Map<String, String> uploadedFiles = new HashMap<String, String>();
@@ -161,11 +162,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DISPLAY_REGISTERED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().registeredTutorsList(LINE_BREAK), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -182,7 +183,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_TUTOR_DOCUMENT;
 		this.tutorId = tutorId;
 		this.documentType = documentType;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final String folderPathToUploadDocuments = getTutorService().getFolderPathToUploadTutorDocuments(String.valueOf(this.tutorId));
 			final TutorDocument tutorDocument = getTutorService().downloadDocument(documentType, this.tutorId, folderPathToUploadDocuments);
@@ -203,11 +204,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.tutorId = tutorId;
 		this.documentType = documentType;
 		this.remarks = remarks;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().aprroveDocumentFromAdmin(tutorId, documentType, getActiveUserId(request), remarks), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_REJECT_DOCUMENT_FROM_ADMIN)
@@ -223,11 +224,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.tutorId = tutorId;
 		this.documentType = documentType;
 		this.remarks = remarks;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().rejectDocumentFromAdmin(tutorId, documentType, getActiveUserId(request), remarks), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN)
@@ -241,11 +242,11 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_DOCUMENT_REMINDER_FROM_ADMIN;
 		this.tutorId = tutorId;
 		this.documentType = documentType;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getTutorService().sendDocumentReminderEmailToTutor(tutorId, documentType), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} 
-		return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS)
@@ -256,7 +257,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTORS;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Admin_Registered_Tutor_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutors());
 		}
@@ -275,7 +276,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_INDIVIDUAL_REGISTERED_TUTOR_PROFILE_PDF;
 		this.tutorId = tutorId;
 		this.name = name;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Admin_Registered_Tutor_PDF_For_" + name + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminIndividualRegisteredTutorProfilePdf(tutorId));
 		}
@@ -291,7 +292,7 @@ public class TutorRestServiceOld extends AbstractRestWebservice implements RestM
 	
 	@Override
 	public void doSecurity(final HttpServletRequest request) throws Exception {
-		this.request = request;
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

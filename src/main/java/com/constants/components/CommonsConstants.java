@@ -1,6 +1,7 @@
 package com.constants.components;
 
 import com.constants.ApplicationConstants;
+import com.constants.VelocityConstants;
 import com.utils.localization.Message;
 
 public interface CommonsConstants extends ApplicationConstants {
@@ -39,4 +40,7 @@ public interface CommonsConstants extends ApplicationConstants {
 	String EMAIL_TEMPLATE = "emailTemplate";
 	String PARAM_TEMPLATE_ID = "templateId";
 	String PARAM_ERROR_CODE = "errorCode";
+	
+	String VELOCITY_EMAIL_TEMPLATES_SYSTEM_FOLDER_PATH = VelocityConstants.VELOCITY_EMAIL_TEMPLATES_FOLDER_PATH + "/system";
+	String ERROR_REPORT_VELOCITY_TEMPLATE_PATH = VELOCITY_EMAIL_TEMPLATES_SYSTEM_FOLDER_PATH + "/error-report.vm";
 }

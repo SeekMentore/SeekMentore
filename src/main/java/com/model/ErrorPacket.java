@@ -13,27 +13,36 @@ public class ErrorPacket extends GridComponentObject implements Serializable, Cl
 	private Long occuredAtMillis;
 	private String requestURI;
 	private String errorTrace;
+	private Boolean isUserGenerated;
+	private User user;
 	
-	public ErrorPacket() {
-	}
+	public ErrorPacket() {}
 	
 	public ErrorPacket (
-			Long occuredAtMillis,
-			String requestURI,
-			String errorTrace
+		Long occuredAtMillis,
+		String requestURI,
+		String errorTrace,
+		Boolean isUserGenerated,
+		User user
 	) {
 		this.occuredAtMillis = occuredAtMillis;
 		this.requestURI = requestURI;
 		this.errorTrace = errorTrace;
+		this.isUserGenerated = isUserGenerated;
+		this.user = user;
 	}
 	
 	public ErrorPacket (
 			String requestURI,
-			String errorTrace
+			String errorTrace,
+			Boolean isUserGenerated,
+			User user
 	) {
 		this.occuredAtMillis = new Date().getTime();
 		this.requestURI = requestURI;
 		this.errorTrace = errorTrace;
+		this.isUserGenerated = isUserGenerated;
+		this.user = user;
 	}
 	
 	public String getRequestURI() {
@@ -66,6 +75,22 @@ public class ErrorPacket extends GridComponentObject implements Serializable, Cl
 
 	public void setOccuredAtMillis(Long occuredAtMillis) {
 		this.occuredAtMillis = occuredAtMillis;
+	}
+	
+	public Boolean getIsUserGenerated() {
+		return isUserGenerated;
+	}
+
+	public void setIsUserGenerated(Boolean isUserGenerated) {
+		this.isUserGenerated = isUserGenerated;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

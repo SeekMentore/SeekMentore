@@ -80,7 +80,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Become_Tutor_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadReportBecomeTutorList(this.grid, gridComponent));
 		}
@@ -98,7 +98,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.tentativeTutorId = Long.valueOf(tentativeTutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Become_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadBecomeTutorProfilePdf(Long.valueOf(tentativeTutorId)));
 		}
@@ -117,7 +117,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -128,7 +128,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -145,7 +145,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -156,7 +156,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -173,7 +173,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -184,7 +184,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -201,7 +201,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -212,7 +212,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -229,7 +229,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -240,7 +240,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -268,7 +268,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -285,7 +285,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -296,7 +296,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -313,7 +313,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BecomeTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -324,7 +324,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -354,7 +354,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_BLACKLIST_BECOME_TUTOR_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistBecomeTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -362,7 +362,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -378,7 +378,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_BECOME_TUTOR_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistBecomeTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -386,7 +386,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -404,7 +404,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnBecomeTutor(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -412,7 +412,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -430,7 +430,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.becomeTutorObject.setTentativeTutorId(Long.parseLong(parentId));
@@ -439,7 +439,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -458,7 +458,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Enquiry_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
 		}
@@ -476,7 +476,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.enquiryId = Long.valueOf(enquiryId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Find_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadFindTutorProfilePdf(Long.valueOf(enquiryId)));
 		}
@@ -495,7 +495,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -506,7 +506,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -523,7 +523,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -534,7 +534,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -551,7 +551,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -562,7 +562,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -579,7 +579,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -590,7 +590,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -607,7 +607,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -618,7 +618,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -635,7 +635,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -646,7 +646,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -663,7 +663,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -674,7 +674,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -704,7 +704,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistFindTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -712,7 +712,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -728,7 +728,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistFindTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -736,7 +736,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -754,7 +754,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnFindTutor(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -762,7 +762,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -780,7 +780,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.findTutorObject.setEnquiryId(Long.parseLong(parentId));
@@ -789,7 +789,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -808,7 +808,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Subscription_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent));
 		}
@@ -827,7 +827,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -838,7 +838,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -855,7 +855,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -866,7 +866,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -883,7 +883,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -894,7 +894,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -911,7 +911,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -922,7 +922,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -939,7 +939,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -950,7 +950,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -967,7 +967,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -978,7 +978,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}	
 	
@@ -995,7 +995,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1006,7 +1006,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1036,7 +1036,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -1044,7 +1044,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1060,7 +1060,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -1068,7 +1068,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1086,7 +1086,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -1094,7 +1094,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1112,7 +1112,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.subscriptionObject.setTentativeSubscriptionId(Long.parseLong(parentId));
@@ -1121,7 +1121,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1140,7 +1140,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBMIT_QUERY_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Query_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubmitQueryList(this.grid, gridComponent));
 		}
@@ -1159,7 +1159,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1170,7 +1170,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1187,7 +1187,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1198,7 +1198,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1215,7 +1215,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ANSWERED_QUERY_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubmitQuery.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1226,7 +1226,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1258,7 +1258,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubmitQuery(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -1266,7 +1266,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1284,7 +1284,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.submitQueryObject.setQueryId(Long.parseLong(parentId));
@@ -1293,7 +1293,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1310,7 +1310,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1321,7 +1321,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1338,7 +1338,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TUTOR_COMPLAINT_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1349,7 +1349,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1366,7 +1366,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1377,7 +1377,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1394,7 +1394,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1405,7 +1405,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1422,7 +1422,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Complaint.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1433,7 +1433,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1465,7 +1465,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -1473,7 +1473,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1491,7 +1491,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.complaintObject.setComplaintId(Long.parseLong(parentId));
@@ -1500,7 +1500,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1521,8 +1521,8 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	}
 	
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

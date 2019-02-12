@@ -62,7 +62,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_VALIDATE_CREDENTIAL;
 		this.credential = new Credential(userId, userType, password);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			// Trimming User-Id
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
@@ -115,7 +115,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_RESET_PASSWORD;
 		this.credential = new Credential(userId, userType, null);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			final String errorMessage = getLoginService().resetPassword(this.credential);
@@ -150,7 +150,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		} catch (Exception e) {}
 		this.newPassword = newPassword;
 		this.retypeNewPassword = retypeNewPassword;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			final String errorMessage = getLoginService().changePasswordFromToken(this.tokenId, this.token, this.newPassword);
@@ -181,7 +181,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		this.retypeNewPassword = retypeNewPassword;
 		this.user = getActiveUser(request);
 		this.encryptedUserPassword = getLoginService().getUserFromDbUsingUserIdSwitchByUserType(this.user.getUserId(), this.user.getUserType()).getEncryptedPassword();
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
 			getLoginService().changePassword(getActiveUser(request), this.encryptedUserPassword, newPassword);
@@ -201,7 +201,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_LOGOUT;
 		final Map<String, Object> restResponse = new HashMap<String, Object>();
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			LoginUtils.logoutUserSession(request, response);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -226,8 +226,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	}
 	
 	@Override
-	public void doSecurity(final HttpServletRequest request) throws Exception {
-		this.request = request;
+	public void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
@@ -281,8 +281,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket( 
-					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.credential.toString());
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.credential.toString(), true, getActiveUser(this.request));
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 
@@ -305,8 +305,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket( 
-					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.credential.toString());
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.credential.toString(), true, getActiveUser(this.request));
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 
@@ -378,8 +378,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(
-					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword);
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword, true, getActiveUser(this.request));
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 
@@ -441,8 +441,8 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(
-					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.oldPassword + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword);
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tokenId + LINE_BREAK + this.token + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword, true, getActiveUser(this.request));
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 

@@ -60,7 +60,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		try {
 			this.customerId = Long.valueOf(customerId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Subscribed_Customer_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getCustomerService().downloadSubscribedCustomerProfilePdf(Long.valueOf(customerId), true));
 		}
@@ -69,7 +69,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentPackageList (
+	public String currentSubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -81,7 +81,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, customerId, gridComponent);
@@ -91,14 +91,14 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
 	@Path(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String historyPackageList (
+	public String historySubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -110,7 +110,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, customerId, gridComponent);
@@ -120,7 +120,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.subscribedCustomerObject.setCustomerId(Long.parseLong(parentId));
@@ -147,7 +147,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -160,8 +160,8 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	}
 
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

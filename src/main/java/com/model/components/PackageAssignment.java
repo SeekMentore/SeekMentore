@@ -6,10 +6,11 @@ import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.utils.ValidationUtils;
 
-public class SubscriptionPackage extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
+public class PackageAssignment extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 
 	private static final long serialVersionUID = -171799632331459916L;
 	
+	private Long packageAssignmentId;
 	private Long subscriptionPackageId;
 	private Long customerId;
 	private String customerName;
@@ -19,7 +20,10 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
+	private Integer totalHours;
 	private Long startDateMillis;
+	private Integer completedHours;
+	private Integer completedMinutes;
 	private Long endDateMillis;
 	private String whoActed;
 	private String whoActedName;
@@ -67,7 +71,15 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String enquiryEmail;
 	private String enquiryContactNumber;
 	
-	public SubscriptionPackage() {}
+	public PackageAssignment() {}
+	
+	public Long getPackageAssignmentId() {
+		return packageAssignmentId;
+	}
+
+	public void setPackageAssignmentId(Long packageAssignmentId) {
+		this.packageAssignmentId = packageAssignmentId;
+	}
 
 	public Long getSubscriptionPackageId() {
 		return subscriptionPackageId;
@@ -85,12 +97,28 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.customerName = customerName;
 	}
 
+	public Integer getTotalHours() {
+		return totalHours;
+	}
+
+	public void setTotalHours(Integer totalHours) {
+		this.totalHours = totalHours;
+	}
+
 	public Long getStartDateMillis() {
 		return startDateMillis;
 	}
 
 	public void setStartDateMillis(Long startDateMillis) {
 		this.startDateMillis = startDateMillis;
+	}
+
+	public Integer getCompletedHours() {
+		return completedHours;
+	}
+
+	public void setCompletedHours(Integer completedHours) {
+		this.completedHours = completedHours;
 	}
 
 	public Long getEndDateMillis() {
@@ -101,6 +129,14 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.endDateMillis = endDateMillis;
 	}
 
+	public Integer getCompletedMinutes() {
+		return completedMinutes;
+	}
+
+	public void setCompletedMinutes(Integer completedMinutes) {
+		this.completedMinutes = completedMinutes;
+	}
+	
 	public String getWhoActed() {
 		return whoActed;
 	}
@@ -532,6 +568,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
+			case "packageAssignmentId" : return "PACKAGE_ASSIGNMENT_ID";
 			case "subscriptionPackageId" : return "SUBSCRIPTION_PACKAGE_ID";
 			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
@@ -541,7 +578,10 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "totalHours" : return "TOTAL_HOURS";
 			case "startDateMillis" : return "START_DATE_MILLIS";
+			case "completedHours" : return "COMPLETED_HOURS";
+			case "completedMinutes" : return "COMPLETED_MINUTES";
 			case "endDateMillis" : return "END_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";
@@ -593,7 +633,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	}
 	
 	@Override
-	public SubscriptionPackage clone() throws CloneNotSupportedException {  
-		return (SubscriptionPackage)super.clone();
+	public PackageAssignment clone() throws CloneNotSupportedException {  
+		return (PackageAssignment)super.clone();
 	}
 }

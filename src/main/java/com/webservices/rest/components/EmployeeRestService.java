@@ -50,7 +50,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ALERT_REMINDER_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, AlertReminder.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<AlertReminder> alertReminderList = getNotificationService().getAlertAndReminderList(getActiveUserId(request), gridComponent);
@@ -60,7 +60,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TASK_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Task.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<Task> taskList = getNotificationService().getTaskList(getActiveUserId(request), gridComponent);
@@ -88,7 +88,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_WORKFLOW_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Workflow.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<Workflow> workflowList = getNotificationService().getWorkflowList(getActiveUserId(request), gridComponent);
@@ -116,7 +116,7 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -133,8 +133,8 @@ public class EmployeeRestService extends AbstractRestWebservice implements RestM
 	}
 
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

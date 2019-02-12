@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -62,11 +63,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		this.methodName = REST_METHOD_NAME_TO_BECOME_TUTOR;
 		this.isSubmitApplicationRequest = true;
 		this.application = application;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(submitPublicApplication(application, PAGE_REFERENCE_TUTOR_REGISTRATION), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -80,11 +81,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		this.methodName = REST_METHOD_NAME_TO_FIND_TUTOR;
 		this.isSubmitApplicationRequest = true;
 		this.application = application;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(submitPublicApplication(application, PAGE_REFERENCE_TUTOR_ENQUIRY), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -98,11 +99,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		this.methodName = REST_METHOD_NAME_TO_SUBSCRIBE;
 		this.isSubmitApplicationRequest = true;
 		this.application = application;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(submitPublicApplication(application, PAGE_REFERENCE_SUBSCRIBE_WITH_US), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -116,11 +117,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		this.methodName = REST_METHOD_NAME_TO_SUBMIT_QUERY;
 		this.isSubmitApplicationRequest = true;
 		this.application = application;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(submitPublicApplication(application, PAGE_REFERENCE_SUBMIT_QUERY), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -141,11 +142,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_BECOME_TUTOR;
 		this.isReceiveDisplayDataRequest = true;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getDropdownListData(PAGE_REFERENCE_TUTOR_REGISTRATION), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -157,11 +158,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_FIND_TUTOR;
 		this.isReceiveDisplayDataRequest = true;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getDropdownListData(PAGE_REFERENCE_TUTOR_ENQUIRY), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -173,11 +174,11 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_DROPDOWN_LIST_DATA_SUBSCRIBE_WITH_US;
 		this.isReceiveDisplayDataRequest = true;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			return JSONUtils.convertObjToJSONString(getDropdownListData(PAGE_REFERENCE_SUBSCRIBE_WITH_US), RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -210,8 +211,8 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	}
 	
 	@Override
-	public void doSecurity (final HttpServletRequest request) throws Exception {
-		this.request = request;
+	public void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		if (this.isSubmitApplicationRequest) {
@@ -297,8 +298,8 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 		}
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket( 
-					this.methodName + LINE_BREAK + getActiveUserIdAndTypeForPrinting(request), 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.application.getFormattedApplicationForPrinting());
+					this.methodName, 
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.application.getFormattedApplicationForPrinting(), false, null);
 			getCommonsService().feedErrorRecord(errorPacket);
 			// Append contact information if Failure occurred
 			ApplicationUtils.appendMessageInMapAttribute(

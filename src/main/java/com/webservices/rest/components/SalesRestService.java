@@ -74,7 +74,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_PENDING_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -85,7 +85,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -113,7 +113,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -141,7 +141,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -159,7 +159,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().takeActionOnEnquiry(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -167,7 +167,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -199,7 +199,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.enquiryObject.setEnquiryId(Long.parseLong(parentId));
@@ -208,7 +208,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -227,7 +227,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST, gridComponent);
@@ -237,7 +237,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -254,7 +254,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -265,7 +265,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -298,7 +298,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
 		this.enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<RegisteredTutor> eligibleTutorsList = getEnquiryService().getEligibleTutorsList(gridComponent);
@@ -308,7 +308,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -326,7 +326,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().mapRegisteredTutors(Long.parseLong(parentId), Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
@@ -334,7 +334,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -354,7 +354,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
 		enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST, gridComponent);
@@ -364,7 +364,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -378,7 +378,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UN_MAP_REGISTERED_TUTORS;
 		this.allIdsList = allIdsList;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().unmapRegisteredTutors(Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
@@ -386,7 +386,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -418,7 +418,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
@@ -427,7 +427,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -444,7 +444,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
@@ -455,7 +455,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -472,7 +472,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
@@ -483,7 +483,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -500,7 +500,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
@@ -511,7 +511,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -528,7 +528,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
@@ -539,7 +539,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -557,7 +557,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().takeActionOnTutorMapper(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -565,7 +565,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -598,7 +598,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
 		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST, gridComponent);
@@ -608,7 +608,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -627,7 +627,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
 		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST, gridComponent);
@@ -637,7 +637,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -656,7 +656,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
 		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<Demo> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST, gridComponent);
@@ -666,7 +666,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -685,7 +685,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
 		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<Demo> currentTutorAllScheduledDemoList = getDemoService().getDemoList(REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST, gridComponent);
@@ -695,7 +695,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -713,7 +713,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
@@ -722,7 +722,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Scheduled Demo Successfully");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -739,7 +739,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SCHEDULED_DEMO_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
@@ -750,7 +750,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -767,7 +767,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
@@ -778,7 +778,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -795,7 +795,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_FAILED_DEMO_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
@@ -806,7 +806,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -823,7 +823,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CANCELED_DEMO_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
@@ -834,7 +834,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -851,7 +851,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
@@ -862,7 +862,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -880,7 +880,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getDemoService().takeActionOnDemo(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
@@ -888,7 +888,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -920,7 +920,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
@@ -929,7 +929,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Re-Scheduled Demo Successfully");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -947,7 +947,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
@@ -956,14 +956,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentPackageList (
+	public String currentSubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -974,7 +974,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageList(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, gridComponent);
@@ -984,14 +984,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
 	@Path(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String historyPackageList (
+	public String historySubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -1002,7 +1002,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageList(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, gridComponent);
@@ -1012,7 +1012,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -1060,8 +1060,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	}
 	
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

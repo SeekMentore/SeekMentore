@@ -1,0 +1,47 @@
+<h3><p align="center" style="color: red;"><ins>Error Occurred</ins></p></h3>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling"><strong>Path</strong></td>
+			<td style="$CoreTableTDStyling">$errorPacket.requestURI</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Occurred At</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($errorPacket.occuredAtMillis) IST</td>
+		</tr>
+		#if( $errorPacket.isUserGenerated )
+			#set($IsUserGenerated="Yes")##
+		#else
+			#set($IsUserGenerated="No")##
+		#end
+		<tr>
+			<td style="$CoreTableTDStyling"><strong>Is User Generated</strong></td>
+			<td style="$CoreTableTDStyling">$IsUserGenerated</td>
+		</tr>
+		#if( $errorPacket.isUserGenerated )
+			#if( $ValidationUtils.checkObjectAvailability($errorPacket.getUser()) )
+				#set($UserId=$errorPacket.getUser().getUserId())##
+				#set($UserType=$errorPacket.getUser().getUserType())##
+				#set($UserName=$errorPacket.getUser().getName())##
+			#else
+				#set($UserId="No UserId in Session")##
+				#set($UserType="No UserType in Session")##
+				#set($UserName="No UserName in Session")##
+			#end
+			<tr>
+				<td style="$CoreTableTDStyling"><strong>UserId</strong></td>
+				<td style="$CoreTableTDStyling">$UserId</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling"><strong>User-Type</strong></td>
+				<td style="$CoreTableTDStyling">$UserType</td>
+			</tr>
+			<tr>
+				<td style="$CoreTableTDStyling"><strong>Name</strong></td>
+				<td style="$CoreTableTDStyling">$UserName</td>
+			</tr>
+		#end
+	</table>
+</p>
+<p><ins>Error Message &amp; Trace</ins></p>
+<p style="font-size: 1.2em; font-style:italic;border: 1px solid black;padding: 6px;width: 78%;">$errorPacket.errorTrace</p>

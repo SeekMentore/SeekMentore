@@ -58,7 +58,7 @@ public class PostAuthenticationFilter extends AbstractWebservice implements Filt
 				if (null != user && menuService.hasAccessToURL(user.getUserId(), pageURL, user.getPageAccessTypes(), null)) {
 					chain.doFilter(request, response);
 				} else {
-					final ErrorPacket errorPacket = new ErrorPacket(pageURL + LINE_BREAK + LoginUtils.getActiveUserIdAndTypeForPrintingWithExceptionHandled(httpRequest), "No access to this page.");
+					final ErrorPacket errorPacket = new ErrorPacket(pageURL, "No access to this page.", true, LoginUtils.getUserFromSession(httpRequest));
 					commonsService.feedErrorRecord(errorPacket);
 					WebServiceUtils.writeError(404, pageURL + " - Your roles do not permit to view the contents of thiws URL", LoginConstants.UI_ERROR_PAGE_NOT_ACCESSIBLE, httpResponse);
 				}

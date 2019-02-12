@@ -233,7 +233,7 @@ public class AWSS3HelperUtils implements AWSConstants {
 				recycleSuccessfull = true;
 			}
 		} catch (Exception e) {
-			final ErrorPacket errorPacket = new ErrorPacket(currentTimestamp.getTime(), "AWS_S3_DELETE_ERROR_REPORT", ExceptionUtils.generateErrorLog(e));
+			final ErrorPacket errorPacket = new ErrorPacket(currentTimestamp.getTime(), "AWS_S3_DELETE_ERROR_REPORT", ExceptionUtils.generateErrorLog(e), true, activeUser);
 			getCommonsService().feedErrorRecord(errorPacket);
 			recycleSuccessfull = false;
 		}

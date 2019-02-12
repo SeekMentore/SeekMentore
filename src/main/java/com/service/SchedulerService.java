@@ -114,7 +114,7 @@ public class SchedulerService implements SchedulerConstants {
 								// This condition is just a safety check
 							} while(retriedCounter < 2);
 						} catch (Exception e) {
-							final ErrorPacket errorPacket = new ErrorPacket("executeEmailSenderJob", ExceptionUtils.generateErrorLog(e));
+							final ErrorPacket errorPacket = new ErrorPacket("executeEmailSenderJob", ExceptionUtils.generateErrorLog(e), false, null);
 							commonsService.feedErrorRecord(errorPacket);
 							applicationMail.setErrorOccuredWhileSending(YES);
 							applicationMail.setErrorDateMillis(errorPacket.getOccuredAtMillis());
@@ -236,7 +236,7 @@ public class SchedulerService implements SchedulerConstants {
 									proceedForEnquiryCreation = true;
 									customerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
 								} else {
-									final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +" ; Set to Subscribed Customer = Y have different Customer Records for EmailId & Contact Number");
+									final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +" ; Set to Subscribed Customer = Y have different Customer Records for EmailId & Contact Number", false, null);
 									commonsService.feedErrorRecord(errorPacket);
 								}
 							} else {

@@ -60,7 +60,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_REGISTERED_TUTOR_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Registered_Tutors_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadAdminReportRegisteredTutorList(gridComponent));
 		}
@@ -79,7 +79,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REGISTERED_TUTORS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_BLACKLIST_REGISTERED_TUTORS;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().blacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -134,7 +134,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_REGISTERED_TUTORS;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().unBlacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -158,7 +158,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -176,7 +176,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBED_CUSTOMER_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribedCustomer.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Subscribed_Customers_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getCustomerService().downloadAdminReportSubscribedCustomerList(gridComponent));
 		}
@@ -195,7 +195,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SUBSCRIBED_CUSTOMERS_LIST;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribedCustomer.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -206,7 +206,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -238,7 +238,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getCustomerService().blacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -246,7 +246,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -262,7 +262,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getCustomerService().unBlacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
@@ -270,7 +270,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -295,8 +295,8 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	}
 
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {

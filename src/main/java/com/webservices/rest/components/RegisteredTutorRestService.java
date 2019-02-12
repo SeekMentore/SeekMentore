@@ -79,7 +79,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
 		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<TutorDocument> tutorDocumentsList = getTutorService().getTutorDocumentList(tutorId, gridComponent);
@@ -89,7 +89,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.valueOf(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			FileUtils.writeFileToResponse(response, "Registered_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadRegisteredTutorProfilePdf(Long.valueOf(tutorId), true));
 		}
@@ -124,7 +124,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.documentId = Long.parseLong(documentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final TutorDocument tutorDocument = getTutorService().getTutorDocument(Long.parseLong(documentId));
 			FileUtils.writeFileToResponse(response, tutorDocument.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, tutorDocument.getContent());
@@ -146,7 +146,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.methodName = REST_METHOD_NAME_BANK_DETAIL_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BankDetail.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<BankDetail> bankDetailsList = getTutorService().getBankDetailList(tutorId, gridComponent);
@@ -156,14 +156,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentPackageList (
+	public String currentSubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -175,7 +175,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
@@ -185,14 +185,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
 	@Path(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String historyPackageList (
+	public String historySubscriptionPackageList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -204,7 +204,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
 		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
@@ -214,7 +214,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.parseLong(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().aprroveTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -242,7 +242,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -262,7 +262,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.parseLong(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().sendTutorDocumentListReminderEmails(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -270,7 +270,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Sent Reminder for document/s successfully.");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -290,7 +290,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.parseLong(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().rejectTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -298,7 +298,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -318,7 +318,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.parseLong(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().aprroveBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -326,7 +326,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -348,7 +348,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.bankAccountId = Long.parseLong(bankAccountId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().makeDefaultBankAccount(Long.parseLong(bankAccountId), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -356,7 +356,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -376,7 +376,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.tutorId = Long.parseLong(tutorId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().rejectBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
@@ -384,7 +384,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -431,7 +431,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		try {
 			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
-		doSecurity(request);
+		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.registeredTutorObject.setTutorId(Long.parseLong(parentId));
@@ -440,7 +440,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
-			return JSONUtils.convertObjToJSONString(securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
 	
@@ -465,8 +465,8 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	}
 
 	@Override
-	protected void doSecurity(HttpServletRequest request) throws Exception {
-		this.request = request;
+	protected void doSecurity(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		this.request = request; this.response = response;
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
