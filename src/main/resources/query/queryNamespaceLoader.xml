@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryNamespace>
 	<namespace name="core" mapperFilePath="query/components/core.xml"/>
+	<namespace name="system" mapperFilePath="query/components/system.xml"/>
 	<namespace name="mail" mapperFilePath="query/components/mail.xml"/>
 	<namespace name="aws" mapperFilePath="query/components/aws.xml"/>
 	<namespace name="login" mapperFilePath="query/components/login.xml"/>

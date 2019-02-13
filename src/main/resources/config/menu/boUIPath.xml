@@ -29,7 +29,7 @@
                 <uipage id="maptutortoenquiry" url="/maptutortoenquiry" urlActive="true" itemHeader="Map Tutor to Enquiry" order="2"></uipage>
                 <uipage id="scheduledemo" url="/scheduledemo" urlActive="true" itemHeader="Schedule Demo" order="3"></uipage>
                 <uipage id="demotracker" url="/demotracker" urlActive="true" itemHeader="Demo Tracker" order="4"></uipage>
-                <uipage id="subscriptionpackages" url="/subscriptionpackages" urlActive="true" itemHeader="Packages" order="5"></uipage>
+                <uipage id="subscriptionpackages" url="/subscriptionpackages" urlActive="true" itemHeader="Subscription Packages" order="5"></uipage>
             </menuitem>
             <menuitem id="support" url="/support" pageAccessType="support" itemHeader="Support" order="4" faClass="">
                 <uipage id="tutorregistration" url="/tutorregistration" urlActive="true" itemHeader="Become Tutor" order="1"></uipage>

@@ -19,21 +19,6 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
-	private Long startDateMillis;
-	private Long endDateMillis;
-	private String whoActed;
-	private String whoActedName;
-	private String adminRemarks;
-	private String customerRemarks;
-	private String tutorRemarks;
-	private Long actionDateMillis;
-	private String isCustomerGrieved;
-	private String isTutorGrieved;
-	private String customerHappinessIndex;
-	private String tutorHappinessIndex;
-	private Long recordLastUpdatedMillis;
-	private String updatedBy;
-	private String updatedByName;
 	private Long tutorMapperId;
 	private Integer tutorMapperQuotedTutorRate;
 	private Integer tutorMapperNegotiatedRateWithTutor;
@@ -42,6 +27,8 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	private String enquiryAddressDetails;
 	private String enquiryAdditionalDetails;
 	private String enquiryPreferredTeachingType;
@@ -64,8 +51,23 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private Integer demoNegotiatedOverrideRateWithTutor;
 	private String demoAdminFinalizingRemarks;
 	private Long createdMillis;
-	private String enquiryEmail;
-	private String enquiryContactNumber;
+	private Long startDateMillis;
+	private Integer finalizedRate;
+	private String packageBillingType;
+	private Long endDateMillis;
+	private String isCustomerGrieved;
+	private String customerHappinessIndex;
+	private String customerRemarks;
+	private String isTutorGrieved;
+	private String tutorHappinessIndex;
+	private String tutorRemarks;
+	private String adminRemarks;
+	private Long actionDateMillis;
+	private String whoActed;
+	private String whoActedName;
+	private Long recordLastUpdatedMillis;
+	private String updatedBy;
+	private String updatedByName;
 	
 	public SubscriptionPackage() {}
 
@@ -516,6 +518,22 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	public void setEnquiryContactNumber(String enquiryContactNumber) {
 		this.enquiryContactNumber = enquiryContactNumber;
 	}
+	
+	public String getPackageBillingType() {
+		return packageBillingType;
+	}
+
+	public void setPackageBillingType(String packageBillingType) {
+		this.packageBillingType = packageBillingType;
+	}
+
+	public Integer getFinalizedRate() {
+		return finalizedRate;
+	}
+
+	public void setFinalizedRate(Integer finalizedRate) {
+		this.finalizedRate = finalizedRate;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -541,33 +559,18 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
-			case "startDateMillis" : return "START_DATE_MILLIS";
-			case "endDateMillis" : return "END_DATE_MILLIS";
-			case "whoActed" : return "WHO_ACTED";
-			case "whoActedName" : return "WHO_ACTED_NAME";
-			case "adminRemarks" : return "ADMIN_REMARKS";
-			case "customerRemarks" : return "CUSTOMER_REMARKS";
-			case "tutorRemarks" : return "TUTOR_REMARKS";
-			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
-			case "isCustomerGrieved" : return "IS_CUSTOMER_GRIEVED";
-			case "isTutorGrieved" : return "IS_TUTOR_GRIEVED";
-			case "customerHappinessIndex" : return "CUSTOMER_HAPPINESS_INDEX";
-			case "tutorHappinessIndex" : return "TUTOR_HAPPINESS_INDEX";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "updatedBy" : return "UPDATED_BY";
-			case "updatedByName" : return "UPDATED_BY_NAME";
 			case "enquiryId" : return "ENQUIRY_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 			case "enquiryAddressDetails" : return "ENQUIRY_ADDRESS_DETAILS";
 			case "enquiryAdditionalDetails" : return "ENQUIRY_ADDITIONAL_DETAILS";
 			case "enquiryPreferredTeachingType" : return "ENQUIRY_PREFERRED_TEACHING_TYPE";
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
-			case "enquiryEmail" : return "ENQUIRY_EMAIL";
-			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
@@ -588,6 +591,23 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "demoNegotiatedOverrideRateWithTutor" : return "DEMO_NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR";
 			case "demoAdminFinalizingRemarks" : return "DEMO_ADMIN_FINALIZING_REMARKS";
 			case "createdMillis" : return "CREATED_MILLIS";
+			case "startDateMillis" : return "START_DATE_MILLIS";
+			case "packageBillingType" : return "PACKAGE_BILLING_TYPE";
+			case "finalizedRate" : return "FINALIZED_RATE";
+			case "endDateMillis" : return "END_DATE_MILLIS";
+			case "customerHappinessIndex" : return "CUSTOMER_HAPPINESS_INDEX";
+			case "isCustomerGrieved" : return "IS_CUSTOMER_GRIEVED";
+			case "customerRemarks" : return "CUSTOMER_REMARKS";
+			case "isTutorGrieved" : return "IS_TUTOR_GRIEVED";
+			case "tutorHappinessIndex" : return "TUTOR_HAPPINESS_INDEX";
+			case "tutorRemarks" : return "TUTOR_REMARKS";
+			case "adminRemarks" : return "ADMIN_REMARKS";
+			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
+			case "whoActed" : return "WHO_ACTED";
+			case "whoActedName" : return "WHO_ACTED_NAME";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+			case "updatedByName" : return "UPDATED_BY_NAME";
 		}
 		return EMPTY_STRING;
 	}

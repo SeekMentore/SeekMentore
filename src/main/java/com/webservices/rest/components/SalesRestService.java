@@ -63,6 +63,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
+	private SubscriptionPackage subscriptionPackageObject;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -1091,6 +1092,58 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD)
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public String updateSubscriptionPackageRecord (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD;
+		createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		try {
+			this.parentId = Long.parseLong(parentId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.subscriptionPackageObject.setSubscriptionPackageId(Long.parseLong(parentId));
+			getSubscriptionPackageService().updateSubscriptionPackageRecord(this.subscriptionPackageObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnSubscriptionPackage (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getSubscriptionPackageService().takeActionOnSubscriptionPackage(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1206,6 +1259,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST : 
 			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST : {
 				handleSelectedSubscriptionSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD : {
+				handleParentId();
+				handleSubscriptionPackageSecurity();
 				break;
 			}
 		}
@@ -1926,4 +1984,147 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.securityPassed = false;
 		}
 	} 
+	
+	private void createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.subscriptionPackageObject = new SubscriptionPackage();
+			this.subscriptionPackageObject.setPackageBillingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "packageBillingType", String.class));
+			this.subscriptionPackageObject.setFinalizedRate(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "finalizedRate", Integer.class));
+			this.subscriptionPackageObject.setIsCustomerGrieved(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isCustomerGrieved", String.class));
+			this.subscriptionPackageObject.setCustomerHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerHappinessIndex", String.class));
+			this.subscriptionPackageObject.setCustomerRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerRemarks", String.class));
+			this.subscriptionPackageObject.setIsTutorGrieved(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isTutorGrieved", String.class));
+			this.subscriptionPackageObject.setTutorHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorHappinessIndex", String.class));
+			this.subscriptionPackageObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
+			this.subscriptionPackageObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+		}
+	}
+	
+	private void handleSubscriptionPackageSecurity() throws Exception {
+		this.securityPassed = true;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "packageBillingType" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getPackageBillingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_BILLING_TYPE),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "finalizedRate" : {
+						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRate(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "isCustomerGrieved" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getIsCustomerGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.subscriptionPackageObject.getIsCustomerGrieved()))) {
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getCustomerRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "customerHappinessIndex" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "isTutorGrieved" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getIsTutorGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.subscriptionPackageObject.getIsTutorGrieved()))) {
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getTutorRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "tutorHappinessIndex" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "adminRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdminRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
 }

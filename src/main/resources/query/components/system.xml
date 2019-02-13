@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="system">
+	<query type="select" id="selectLookupData">
+		SELECT LT.* FROM SELECT_LOOKUP_TABLE_NAME LT
+	</query>
+	<query type="filter" id="lookupDataNonHiddenValues">
+		WHERE LT.HIDDEN IS NULL
+	</query>
+	<query type="sorter" id="lookupDataDefaultOrder">
+		ORDER BY LT.ORDER_OF_CATEGORY, LT.ORDER_IN_CATEGORY
+	</query>
+</queryMapper>

@@ -13,6 +13,7 @@ import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.components.commons.SelectLookup;
 import com.model.rowmappers.SelectLookupRowMapper;
+import com.service.QueryMapperService;
 import com.utils.QueryUtils;
 import com.utils.ValidationUtils;
 
@@ -39,9 +40,14 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	private List<SelectLookup> enquiryMatchStatusLookupData;
 	private List<SelectLookup> tutorMappingStatusLookupData;
 	private List<SelectLookup> demoStatusLookupData;
+	private List<SelectLookup> happinessIndexLookupData;
+	private List<SelectLookup> packageBillingTypeLookupData;
 	
 	@Autowired
 	private transient ApplicationDao applicationDao;
+	
+	@Autowired
+	private QueryMapperService queryMapperService;
 	
 	@PostConstruct
 	public void init() throws Exception {
@@ -49,9 +55,9 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 	}
 	
 	public void refreshAllSelectLookups() throws Exception {
-		final String baseQuery = "SELECT LT.* FROM SELECT_LOOKUP_TABLE_NAME LT";
-		final String existingFilterQueryString = "WHERE LT.HIDDEN IS NULL";
-		final String existingSorterQueryString = "ORDER BY LT.ORDER_OF_CATEGORY, LT.ORDER_IN_CATEGORY";
+		final String baseQuery = queryMapperService.getQuerySQL("system", "selectLookupData");
+		final String existingFilterQueryString = queryMapperService.getQuerySQL("system", "lookupDataNonHiddenValues");
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("system", "lookupDataDefaultOrder");
 		this.yesNoLookupData = new LinkedList<SelectLookup>();
 		yesNoLookupData.add(new SelectLookup(YES, YES_TEXT));
 		yesNoLookupData.add(new SelectLookup(NO, NO_TEXT));
@@ -74,6 +80,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 		this.enquiryMatchStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.tutorMappingStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 		this.demoStatusLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.happinessIndexLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
+		this.packageBillingTypeLookupData = applicationDao.findAllWithoutParams(QueryUtils.createQueryWithFilterAndSorter(baseQuery.replaceAll(SELECT_LOOKUP_TABLE_NAME, SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP), existingFilterQueryString, existingSorterQueryString, null, null), new SelectLookupRowMapper());
 	}
 	
 	public List<SelectLookup> getSelectLookupList(final String selectLookUpTable) {
@@ -98,6 +106,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return this.enquiryMatchStatusLookupData;
 			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return this.tutorMappingStatusLookupData;
 			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return this.demoStatusLookupData;
+			case SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP : return this.happinessIndexLookupData;
+			case SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP : return this.packageBillingTypeLookupData;
 		}
 		return null;
 	}
@@ -124,6 +134,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return getSelectLookupItem(this.enquiryMatchStatusLookupData, value);
 			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return getSelectLookupItem(this.tutorMappingStatusLookupData, value);
 			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return getSelectLookupItem(this.demoStatusLookupData, value);
+			case SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP : return getSelectLookupItem(this.happinessIndexLookupData, value);
+			case SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP : return getSelectLookupItem(this.packageBillingTypeLookupData, value);
 		}
 		return null;
 	}
@@ -159,6 +171,8 @@ public class ApplicationLookupDataService implements SelectLookupConstants {
 			case SELECT_LOOKUP_TABLE_ENQUIRY_MATCH_STATUS_LOOKUP : return getSelectLookupItemList(this.enquiryMatchStatusLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_TUTOR_MAPPING_STATUS_LOOKUP : return getSelectLookupItemList(this.tutorMappingStatusLookupData, multivalue, delimiter);
 			case SELECT_LOOKUP_TABLE_DEMO_STATUS_LOOKUP : return getSelectLookupItemList(this.demoStatusLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP : return getSelectLookupItemList(this.happinessIndexLookupData, multivalue, delimiter);
+			case SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP : return getSelectLookupItemList(this.packageBillingTypeLookupData, multivalue, delimiter);
 		}
 		return null;
 	}
