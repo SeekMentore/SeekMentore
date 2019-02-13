@@ -31,6 +31,7 @@ import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.model.components.Demo;
 import com.model.components.Enquiry;
+import com.model.components.PackageAssignment;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscriptionPackage;
 import com.model.components.TutorMapper;
@@ -47,6 +48,7 @@ import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
+import com.utils.localization.Message;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -57,6 +59,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
+	private Long subscriptionPackageId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
@@ -1030,6 +1033,64 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
+	@Path(REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String selectedSubscriptionPackageCurrentAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		this.subscriptionPackageId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getSelectedSubscriptionPackageAssignmentList(REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String selectedSubscriptionPackageHistoryAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		this.subscriptionPackageId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getSelectedSubscriptionPackageAssignmentList(REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1140,6 +1201,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_UPDATE_DEMO_RECORD : {
 				handleParentId();
 				handleDemoSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST : 
+			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST : {
+				handleSelectedSubscriptionSecurity();
 				break;
 			}
 		}
@@ -1845,6 +1911,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					TutorConstants.VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
+	
+	private void handleSelectedSubscriptionSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkObjectAvailability(this.subscriptionPackageId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_PACKAGE_ID_MISSING),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

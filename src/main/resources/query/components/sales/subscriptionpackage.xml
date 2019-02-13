@@ -128,4 +128,22 @@
 		INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON S.CUSTOMER_ID = SCE.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y'
         INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON S.CUSTOMER_ID = SCC.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y'
 	</query>
+	<query type="filter" id="packageAssignmentSubscriptionPackageIdFilter">
+		WHERE P.SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId
+	</query>
+	<query type="filter" id="packageAssignmentCurrentAssignmentFilter">
+		WHERE P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="filter" id="packageAssignmentHistoryAssignmentFilter">
+		WHERE P.END_DATE_MILLIS IS NOT NULL
+	</query>
+	<query type="filter" id="packageAssignmentCurrentAssignmentAdditionalFilter">
+		AND P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="filter" id="packageAssignmentHistoryAssignmentAdditionalFilter">
+		AND P.END_DATE_MILLIS IS NOT NULL
+	</query>
+	<query type="sorter" id="packageAssignmentCreatedDateStartDateSorter">
+		ORDER BY CREATED_MILLIS ASC, START_DATE_MILLIS ASC
+	</query>
 </queryMapper>

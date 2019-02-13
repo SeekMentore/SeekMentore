@@ -13,11 +13,14 @@ import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
+import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
+import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
+import com.utils.JSONUtils;
 
 @Service(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE)
 public class SubscriptionPackageService implements SubscriptionPackageConstants {
@@ -84,5 +87,24 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			}
 		}
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscriptionPackageRowMapper());
+	}
+	
+	public List<PackageAssignment> getSelectedSubscriptionPackageAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentSubscriptionPackageIdFilter");
+		paramsMap.put("subscriptionPackageId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class));
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentCreatedDateStartDateSorter");
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentCurrentAssignmentAdditionalFilter");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentHistoryAssignmentAdditionalFilter");
+				break;
+			}
+		}
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new PackageAssignmentRowMapper());
 	}
 }

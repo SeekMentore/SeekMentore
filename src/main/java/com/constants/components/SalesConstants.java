@@ -11,4 +11,8 @@ public interface SalesConstants extends ResponseMapConstants {
 	String BUTTON_ACTION_CANCEL = "cancel";
 	
 	String VELOCITY_EMAIL_TEMPLATES_SALES_PATH = VelocityConstants.VELOCITY_EMAIL_TEMPLATES_FOLDER_PATH + "/sales";
+	
+	String MESG_PROPERTY_FILE_NAME = "spring.components.sales";
+	
+	String SUBSCRIPTION_PACKAGE_ID_MISSING = "SUBSCRIPTION_PACKAGE_ID_MISSING";
 }

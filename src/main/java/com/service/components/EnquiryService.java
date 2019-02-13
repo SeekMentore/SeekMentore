@@ -50,56 +50,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	@PostConstruct
 	public void init() {}
 	
-	/*public Map<String, Object> displayAllEligibleTutors(final Long enquiryId, final String delimiter) throws DataAccessException, InstantiationException, IllegalAccessException {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("enquiryId", enquiryId);
-		final List<RegisteredTutor> eligibleTutorList =  applicationDao.findAll("SELECT * FROM REGISTERED_TUTOR R WHERE R.INTERESTED_SUBJECTS LIKE CONCAT('%', (SELECT SUBJECT FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.INTERESTED_STUDENT_GRADES LIKE CONCAT('%', (SELECT GRADE FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId) ,'%') AND R.TUTOR_ID NOT IN (SELECT DISTINCT TUTOR_ID FROM TUTOR_MAPPER WHERE ENQUIRY_ID = :enquiryId)", paramsMap, new RegisteredTutorRowMapper());
-		final Enquiry enquiryObject = applicationDao.find("SELECT * FROM ENQUIRIES E WHERE E.ENQUIRY_ID = :enquiryId", paramsMap, new EnquiryRowMapper());
-		final List<RegisteredTutor> eligibleTutorListWithSubjectGrade = new ArrayList<RegisteredTutor>();
-		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocation = new ArrayList<RegisteredTutor>();
-		final List<RegisteredTutor> eligibleTutorListWithSubjectGradeLocationTeachingType = new ArrayList<RegisteredTutor>();
-		for (final RegisteredTutor eligibleTutorObject : eligibleTutorList) {
-			Boolean locationMatch = false;
-			Boolean teachingTypeMatch = false;
-			if (ValidationUtils.validatePlainNotNullAndEmptyTextString(enquiryObject.getLocationDetails())) {
-				final String[] locations = enquiryObject.getLocationDetails().split(SEMICOLON);
-				for (final String location : locations) {
-					if (eligibleTutorObject.getComfortableLocations().indexOf(location) != -1) {
-						locationMatch = true;
-						break;
-					}
-				}
-			}
-			if (locationMatch) {
-				if (ValidationUtils.validatePlainNotNullAndEmptyTextString(enquiryObject.getPreferredTeachingType())) {
-					final String[] teachingTypes = enquiryObject.getPreferredTeachingType().split(SEMICOLON);
-					for (final String teachingType : teachingTypes) {
-						if (eligibleTutorObject.getPreferredTeachingType().indexOf(teachingType) != -1) {
-							teachingTypeMatch = true;
-							break;
-						}
-					}
-				}
-			}
-			tutorService.replacePlaceHolderAndIdsFromRegisteredTutorObject(eligibleTutorObject, delimiter);
-			tutorService.removeUltraSensitiveInformationFromRegisteredTutorObject(eligibleTutorObject);
-			if (teachingTypeMatch) {
-				eligibleTutorListWithSubjectGradeLocationTeachingType.add(eligibleTutorObject);
-			} else if (locationMatch) {
-				eligibleTutorListWithSubjectGradeLocation.add(eligibleTutorObject);
-			} else {
-				eligibleTutorListWithSubjectGrade.add(eligibleTutorObject);
-			}
-		}
-		final Map<String, Object> response = new HashMap<String, Object>();
-		response.put("eligibleTutorListWithSubjectGrade", eligibleTutorListWithSubjectGrade);
-		response.put("eligibleTutorListWithSubjectGradeLocation", eligibleTutorListWithSubjectGradeLocation);
-		response.put("eligibleTutorListWithSubjectGradeLocationTeachingType", eligibleTutorListWithSubjectGradeLocationTeachingType);
-		return response;
-	}*/
-	
-	/**
-	 * @throws Exception ************************************************************************************************************/
 	public List<Enquiry> getEnquiryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
