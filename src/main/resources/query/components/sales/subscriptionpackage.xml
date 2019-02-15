@@ -50,6 +50,12 @@
 		INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON S.CUSTOMER_ID = SCE.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y'
         INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON S.CUSTOMER_ID = SCC.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y'
 	</query>
+	<query type="filter" id="subscriptionPackageSubscriptionPackageIdFilter">
+		WHERE S.SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId
+	</query>
+	<query type="filter" id="subscriptionPackageSubscriptionPackageIdListFilter">
+		WHERE S.SUBSCRIPTION_PACKAGE_ID IN (:subscriptionPackageIdList)
+	</query>
 	<query type="filter" id="subscriptionPackageTutorIdFilter">
 		WHERE S.TUTOR_ID = :tutorId
 	</query>
@@ -76,6 +82,26 @@
 			(CUSTOMER_ID, TUTOR_ID, ENQUIRY_ID, TUTOR_MAPPER_ID, DEMO_ID, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES
 			(:customerId, :tutorId, :enquiryId, :tutorMapperId, :demoId, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+	<query type="update" id="activateSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
+		UPDATE SUBSCRIPTION_PACKAGE SET
+			START_DATE_MILLIS = :startDateMillis,
+			ADMIN_REMARKS = :adminRemarks,
+			ACTION_DATE_MILLIS = :actionDateMillis,
+			WHO_ACTED = :whoActed,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	</query>
+	<query type="update" id="terminateSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
+		UPDATE SUBSCRIPTION_PACKAGE SET
+			END_DATE_MILLIS = :endDateMillis,
+			ADMIN_REMARKS = :adminRemarks,
+			ACTION_DATE_MILLIS = :actionDateMillis,
+			WHO_ACTED = :whoActed,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
 	</query>
 	<query type="select" id="selectPackageAssignment">
 		SELECT
@@ -145,5 +171,31 @@
 	</query>
 	<query type="sorter" id="packageAssignmentCreatedDateStartDateSorter">
 		ORDER BY CREATED_MILLIS ASC, START_DATE_MILLIS ASC
+	</query>
+	<query type="select" id="countPackageAssignmentForSubscriptionPackage">
+		SELECT
+			COUNT(1) TOTAL_ASSIGNMENTS,
+		FROM PACKAGE_ASSIGNMENT P
+		WHERE P.SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId
+	</query>
+	<query type="select" id="countActivePackageAssignmentForSubscriptionPackage">
+		SELECT
+			COUNT(1) TOTAL_CURRENT_ASSIGNMENTS,
+		FROM PACKAGE_ASSIGNMENT P
+		WHERE P.SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId
+		AND P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="select" id="countHistoryPackageAssignmentForSubscriptionPackage">
+		SELECT
+			COUNT(1) TOTAL_HISTORY_ASSIGNMENTS,
+		FROM PACKAGE_ASSIGNMENT P
+		WHERE P.SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId
+		AND P.END_DATE_MILLIS IS NOT NULL
+	</query>
+	<query type="insert" id="insertPackageAssignment" paramClass="com.model.components.PackageAssignment">
+		INSERT INTO PACKAGE_ASSIGNMENT
+			(SUBSCRIPTION_PACKAGE_ID, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES
+			(:subscriptionPackageId, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 </queryMapper>

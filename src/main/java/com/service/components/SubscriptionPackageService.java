@@ -15,19 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.components.SalesConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
-import com.model.components.Demo;
 import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
 import com.service.QueryMapperService;
+import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
+import com.utils.localization.Message;
 
 @Service(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE)
 public class SubscriptionPackageService implements SubscriptionPackageConstants {
@@ -186,32 +188,122 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	
 	@Transactional
 	public void takeActionOnSubscriptionPackage(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
+		final StringBuilder message = new StringBuilder(EMPTY_STRING);
 		final Date currentTimestamp = new Date();
-		String demoStatus = EMPTY_STRING;
+		final Map<String, Object> paramsMap = new HashMap<String, Object>(); 
+		paramsMap.put("subscriptionPackageIdList", idList);
+		final List<SubscriptionPackage> subscriptionPackageDbRecordList = applicationDao.findAll(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage")
+																								+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageSubscriptionPackageIdListFilter"), paramsMap, new SubscriptionPackageRowMapper());
+		final List<SubscriptionPackage> subscriptionPackageParamObjectList = new LinkedList<SubscriptionPackage>();
+		final List<PackageAssignment> packageAssignmentParamObjectList = new LinkedList<PackageAssignment>();
+		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageDbRecordList) {
+			subscriptionPackage.setAdminRemarks(ApplicationUtils.formatRemarksAndComments(subscriptionPackage.getAdminRemarks()) + NEW_LINE + LINE_BREAK + ApplicationUtils.formatRemarksAndComments(comments));
+			subscriptionPackage.setActionDateMillis(currentTimestamp.getTime());
+			subscriptionPackage.setWhoActed(activeUser.getUserId());
+			subscriptionPackage.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			subscriptionPackage.setUpdatedBy(activeUser.getUserId());
+			Boolean canTakeAction = true;
+			switch(button) {
+				case BUTTON_ACTIVATE_SUBSCRIPTION : {
+					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis())) {
+						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					} else if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis())) {
+						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					}
+					if (canTakeAction) {
+						subscriptionPackage.setStartDateMillis(currentTimestamp.getTime());
+					}
+					break;
+				}
+				case BUTTON_END_SUBSCRIPTION : {
+					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis())) {
+						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					}
+					if (canTakeAction) {
+						subscriptionPackage.setEndDateMillis(currentTimestamp.getTime());
+					}
+					break;
+				}
+				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
+					if (!ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis())) {
+						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					} else {
+						paramsMap.put("subscriptionPackageId", subscriptionPackage.getSubscriptionPackageId());
+						Integer activePackageAssignment = 0;
+						final Map<String, Object> countActivePackageAssignment = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "countActivePackageAssignmentForSubscriptionPackage"), paramsMap);
+						if (ValidationUtils.checkObjectAvailability(countActivePackageAssignment) && ValidationUtils.checkObjectAvailability(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS"))) {
+							activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
+						}
+						if (activePackageAssignment > 1) {
+							message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
+							canTakeAction = false;
+						}
+					}
+					if (canTakeAction) {
+						final PackageAssignment packageAssignment = new PackageAssignment();
+						packageAssignment.setSubscriptionPackageId(subscriptionPackage.getSubscriptionPackageId());
+						packageAssignment.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+						packageAssignment.setUpdatedBy(activeUser.getUserId());
+						packageAssignmentParamObjectList.add(packageAssignment);
+					}
+					break;
+				}
+			}
+			if (canTakeAction) {
+				switch(button) {
+					case BUTTON_ACTIVATE_SUBSCRIPTION : 
+					case BUTTON_END_SUBSCRIPTION : {
+						subscriptionPackageParamObjectList.add(subscriptionPackage);
+						break;
+					}
+				}
+			}
+		}
 		switch(button) {
-			case BUTTON_ACTION_CANCEL : {
-				demoStatus = DEMO_STATUS_CANCELED;
+			case BUTTON_ACTIVATE_SUBSCRIPTION : {
+				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "activateSubscriptionPackage", subscriptionPackageParamObjectList);
+				break;
+			}
+			case BUTTON_END_SUBSCRIPTION : {
+				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "terminateSubscriptionPackage", subscriptionPackageParamObjectList);
+				break;
+			}
+			case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
+				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertPackageAssignment", packageAssignmentParamObjectList);
 				break;
 			}
 		}
-		final List<Demo> paramObjectList = new LinkedList<Demo>();
-		for (final String demoTrackerId : idList) {
-			final Demo demo = new Demo();
-			demo.setWhoActed(activeUser.getUserId());
-			demo.setAdminFinalizingRemarks(comments);
-			demo.setDemoStatus(demoStatus);
-			demo.setAdminActionDateMillis(currentTimestamp.getTime());
-			demo.setDemoTrackerId(Long.valueOf(demoTrackerId));
-			paramObjectList.add(demo);
-		}
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoStatus", paramObjectList);
 		if (sendEmails) {
 			switch(button) {
-				case BUTTON_ACTION_CANCEL : {
-					sendDemoCanceledNotificationEmails(idList);
+				case BUTTON_ACTIVATE_SUBSCRIPTION : {
+					sendNotificationEmailsForSubscriptionPackageActivation();
+					break;
+				}
+				case BUTTON_END_SUBSCRIPTION : {
+					sendNotificationEmailsForSubscriptionPackageTermination();
+					break;
+				}
+				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
+					sendNotificationEmailsForSubscriptionPackageAssignmentCreation();
 					break;
 				}
 			}
 		}
+	}
+	
+	private void sendNotificationEmailsForSubscriptionPackageActivation() {
+		
+	}
+	
+	private void sendNotificationEmailsForSubscriptionPackageTermination() {
+		
+	}
+	
+	private void sendNotificationEmailsForSubscriptionPackageAssignmentCreation() {
+		
 	}
 }
