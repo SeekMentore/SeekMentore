@@ -187,8 +187,10 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	}
 	
 	@Transactional
-	public void takeActionOnSubscriptionPackage(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
-		final StringBuilder message = new StringBuilder(EMPTY_STRING);
+	public String takeActionOnSubscriptionPackage(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
+		StringBuilder message = new StringBuilder(EMPTY_STRING);
+		Integer successCount = 0;
+		Integer failureCount = 0;
 		final Date currentTimestamp = new Date();
 		final Map<String, Object> paramsMap = new HashMap<String, Object>(); 
 		paramsMap.put("subscriptionPackageIdList", idList);
@@ -203,13 +205,14 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			subscriptionPackage.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			subscriptionPackage.setUpdatedBy(activeUser.getUserId());
 			Boolean canTakeAction = true;
+			final StringBuilder messageDesc = new StringBuilder(EMPTY_STRING);
 			switch(button) {
 				case BUTTON_ACTIVATE_SUBSCRIPTION : {
-					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis())) {
-						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis()) && subscriptionPackage.getStartDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
-					} else if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis())) {
-						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+					} else if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis()) & subscriptionPackage.getEndDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					}
 					if (canTakeAction) {
@@ -218,8 +221,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					break;
 				}
 				case BUTTON_END_SUBSCRIPTION : {
-					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis())) {
-						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis()) && subscriptionPackage.getEndDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					}
 					if (canTakeAction) {
@@ -228,8 +231,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					break;
 				}
 				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
-					if (!ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis())) {
-						message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+					if (!ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis()) || subscriptionPackage.getStartDateMillis() == 0) {
+						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					} else {
 						paramsMap.put("subscriptionPackageId", subscriptionPackage.getSubscriptionPackageId());
@@ -239,7 +242,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 							activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
 						}
 						if (activePackageAssignment > 1) {
-							message.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
+							messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
 							canTakeAction = false;
 						}
 					}
@@ -261,49 +264,73 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						break;
 					}
 				}
+				successCount++;
+			} else {
+				message.append("SubscriptionPackageId : '").append(subscriptionPackage.getSubscriptionPackageId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
+				failureCount++;
 			}
 		}
 		switch(button) {
 			case BUTTON_ACTIVATE_SUBSCRIPTION : {
-				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "activateSubscriptionPackage", subscriptionPackageParamObjectList);
+				if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "activateSubscriptionPackage", subscriptionPackageParamObjectList);
+				}
 				break;
 			}
 			case BUTTON_END_SUBSCRIPTION : {
-				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "terminateSubscriptionPackage", subscriptionPackageParamObjectList);
+				if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "terminateSubscriptionPackage", subscriptionPackageParamObjectList);
+				}
 				break;
 			}
 			case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
-				applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertPackageAssignment", packageAssignmentParamObjectList);
+				if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertPackageAssignment", packageAssignmentParamObjectList);
+				}
 				break;
 			}
 		}
 		if (sendEmails) {
 			switch(button) {
 				case BUTTON_ACTIVATE_SUBSCRIPTION : {
-					sendNotificationEmailsForSubscriptionPackageActivation();
+					if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+						sendNotificationEmailsForSubscriptionPackageActivation(subscriptionPackageParamObjectList);
+					}
 					break;
 				}
 				case BUTTON_END_SUBSCRIPTION : {
-					sendNotificationEmailsForSubscriptionPackageTermination();
+					if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+						sendNotificationEmailsForSubscriptionPackageTermination(subscriptionPackageParamObjectList);
+					}
 					break;
 				}
 				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
-					sendNotificationEmailsForSubscriptionPackageAssignmentCreation();
+					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+						sendNotificationEmailsForSubscriptionPackageAssignmentCreation(packageAssignmentParamObjectList);
+					}
 					break;
 				}
 			}
 		}
+		if (!EMPTY_STRING.equals(message.toString())) {
+			final String errorMessage = message.toString();
+			message = new StringBuilder("'"+ failureCount +"' SubscriptionPackageId failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
+		}
+		return message.toString();
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageActivation() {
-		
+	private void sendNotificationEmailsForSubscriptionPackageActivation(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
+		// Customer Email
+		// Tutor Email
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageTermination() {
-		
+	private void sendNotificationEmailsForSubscriptionPackageTermination(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
+		// Customer Email
+		// Tutor Email
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageAssignmentCreation() {
-		
+	private void sendNotificationEmailsForSubscriptionPackageAssignmentCreation(final List<PackageAssignment> packageAssignmentParamObjectList) {
+		// Customer Email
+		// Tutor Email
 	}
 }

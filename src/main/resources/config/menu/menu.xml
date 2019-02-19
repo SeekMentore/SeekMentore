@@ -108,6 +108,7 @@
 			<webservice id="selectedSubscriptionPackageCurrentAssignmentList" url="/selectedSubscriptionPackageCurrentAssignmentList"></webservice>
 			<webservice id="selectedSubscriptionPackageHistoryAssignmentList" url="/selectedSubscriptionPackageHistoryAssignmentList"></webservice>
 			<webservice id="updateSubscriptionPackageRecord" url="/updateSubscriptionPackageRecord"></webservice>
+			<webservice id="takeActionOnSubscriptionPackage" url="/takeActionOnSubscriptionPackage"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

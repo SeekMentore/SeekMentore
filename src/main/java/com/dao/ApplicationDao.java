@@ -148,6 +148,8 @@ public class ApplicationDao implements ApplicationConstants {
 	}
 	
 	private SqlParameterSource[] getSqlParameterSourceBatch(final List<Map<String, Object>> paramsList) {
+		if (!ValidationUtils.checkNonEmptyList(paramsList))
+			throw new ApplicationException("Parameters cannot be NULL when using Paramterized Query.");
 		final List<SqlParameterSource> parameterList = new LinkedList<SqlParameterSource>();
 		for (final Map<String, Object> params : paramsList) {
 			final SqlParameterSource parameters = getSqlParameterSource(params);

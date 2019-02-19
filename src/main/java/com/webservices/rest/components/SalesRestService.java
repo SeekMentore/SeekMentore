@@ -28,6 +28,7 @@ import com.constants.components.CustomerConstants;
 import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
+import com.constants.components.SubscriptionPackageConstants;
 import com.constants.components.TutorConstants;
 import com.model.components.Demo;
 import com.model.components.Enquiry;
@@ -1136,9 +1137,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getSubscriptionPackageService().takeActionOnSubscriptionPackage(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			final String errorMessage = getSubscriptionPackageService().takeActionOnSubscriptionPackage(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
+			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			} else {
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
+			}
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1228,7 +1234,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			}
 			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR : 
-			case REST_METHOD_NAME_TAKE_ACTION_ON_DEMO : {
+			case REST_METHOD_NAME_TAKE_ACTION_ON_DEMO : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE : {
 				handleTakeAction();
 				break;
 			}
@@ -1276,12 +1283,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			switch(button) {
 				case BUTTON_ACTION_TO_BE_MAPPED : 
-				case BUTTON_ACTION_DEMO_READY : {
+				case BUTTON_ACTION_DEMO_READY : 
+				case SubscriptionPackageConstants.BUTTON_ACTIVATE_SUBSCRIPTION : 
+				case SubscriptionPackageConstants.BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
 					break;
 				}
 				case BUTTON_ACTION_ABORTED : 
 				case BUTTON_ACTION_PENDING : 
-				case BUTTON_ACTION_CANCEL : {
+				case BUTTON_ACTION_CANCEL : 
+				case SubscriptionPackageConstants.BUTTON_END_SUBSCRIPTION : {
 					handleComments();
 					break;
 				}
