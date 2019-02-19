@@ -241,7 +241,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						if (ValidationUtils.checkObjectAvailability(countActivePackageAssignment) && ValidationUtils.checkObjectAvailability(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS"))) {
 							activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
 						}
-						if (activePackageAssignment > 1) {
+						if (activePackageAssignment > 0) {
 							messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
 							canTakeAction = false;
 						}
