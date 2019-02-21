@@ -86,7 +86,7 @@
 	<query type="update" id="activateSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
 		UPDATE SUBSCRIPTION_PACKAGE SET
 			START_DATE_MILLIS = :startDateMillis,
-			ADMIN_REMARKS = :adminRemarks,
+			ACTIVATING_REMARKS = :activatingRemarks,
 			ACTION_DATE_MILLIS = :actionDateMillis,
 			WHO_ACTED = :whoActed,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
@@ -96,7 +96,7 @@
 	<query type="update" id="terminateSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
 		UPDATE SUBSCRIPTION_PACKAGE SET
 			END_DATE_MILLIS = :endDateMillis,
-			ADMIN_REMARKS = :adminRemarks,
+			TERMINATING_REMARKS = :terminatingRemarks,
 			ACTION_DATE_MILLIS = :actionDateMillis,
 			WHO_ACTED = :whoActed,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,

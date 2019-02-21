@@ -52,7 +52,8 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String demoAdminFinalizingRemarks;
 	private Long createdMillis;
 	private Long startDateMillis;
-	private Integer finalizedRate;
+	private Integer finalizedRateForClient;
+	private Integer finalizedRateForTutor;
 	private String packageBillingType;
 	private Long endDateMillis;
 	private String isCustomerGrieved;
@@ -62,12 +63,17 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String tutorHappinessIndex;
 	private String tutorRemarks;
 	private String adminRemarks;
+	private String additionalDetailsClient;
+	private String additionalDetailsTutor;
+	private String activatingRemarks;
+	private String terminatingRemarks;
 	private Long actionDateMillis;
 	private String whoActed;
 	private String whoActedName;
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private String fsKey;
 	
 	public SubscriptionPackage() {}
 
@@ -527,12 +533,68 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.packageBillingType = packageBillingType;
 	}
 
-	public Integer getFinalizedRate() {
-		return finalizedRate;
+	public Integer getFinalizedRateForClient() {
+		return finalizedRateForClient;
 	}
 
-	public void setFinalizedRate(Integer finalizedRate) {
-		this.finalizedRate = finalizedRate;
+	public void setFinalizedRateForClient(Integer finalizedRateForClient) {
+		this.finalizedRateForClient = finalizedRateForClient;
+	}
+	
+	public Integer getFinalizedRateForTutor() {
+		return finalizedRateForTutor;
+	}
+
+	public void setFinalizedRateForTutor(Integer finalizedRateForTutor) {
+		this.finalizedRateForTutor = finalizedRateForTutor;
+	}
+
+	public String getAdditionalDetailsClient() {
+		return additionalDetailsClient;
+	}
+
+	public void setAdditionalDetailsClient(String additionalDetailsClient) {
+		this.additionalDetailsClient = additionalDetailsClient;
+	}
+
+	public String getActivatingRemarks() {
+		return activatingRemarks;
+	}
+
+	public void setActivatingRemarks(String activatingRemarks) {
+		this.activatingRemarks = activatingRemarks;
+	}
+
+	public String getTerminatingRemarks() {
+		return terminatingRemarks;
+	}
+
+	public void setTerminatingRemarks(String terminatingRemarks) {
+		this.terminatingRemarks = terminatingRemarks;
+	}
+	
+	public String getAdditionalDetailsTutor() {
+		return additionalDetailsTutor;
+	}
+
+	public void setAdditionalDetailsTutor(String additionalDetailsTutor) {
+		this.additionalDetailsTutor = additionalDetailsTutor;
+	}
+	
+	public String getFsKey() {
+		return fsKey;
+	}
+
+	public void setFsKey(String fsKey) {
+		this.fsKey = fsKey;
+	}
+	
+	public boolean isEnquiryAndCustomerWithDifferentContactNumber() {
+		return !this.customerContactNumber.equals(this.enquiryContactNumber);
+	}
+	
+	public boolean isEnquiryAndCustomerWithDifferentEmail() {
+		return !this.customerEmail.equals(this.enquiryEmail);
 	}
 
 	@Override
@@ -593,7 +655,8 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "createdMillis" : return "CREATED_MILLIS";
 			case "startDateMillis" : return "START_DATE_MILLIS";
 			case "packageBillingType" : return "PACKAGE_BILLING_TYPE";
-			case "finalizedRate" : return "FINALIZED_RATE";
+			case "finalizedRateForClient" : return "FINALIZED_RATE_CLIENT";
+			case "finalizedRateForTutor" : return "FINALIZED_RATE_TUTOR";
 			case "endDateMillis" : return "END_DATE_MILLIS";
 			case "customerHappinessIndex" : return "CUSTOMER_HAPPINESS_INDEX";
 			case "isCustomerGrieved" : return "IS_CUSTOMER_GRIEVED";
@@ -602,6 +665,10 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "tutorHappinessIndex" : return "TUTOR_HAPPINESS_INDEX";
 			case "tutorRemarks" : return "TUTOR_REMARKS";
 			case "adminRemarks" : return "ADMIN_REMARKS";
+			case "additionalDetailsClient" : return "ADDITIONAL_DETAILS_CLIENT";
+			case "additionalDetailsTutor" : return "ADDITIONAL_DETAILS_TUTOR";
+			case "activatingRemarks" : return "ACTIVATING_REMARKS";
+			case "terminatingRemarks" : return "TERMINATING_REMARKS";
 			case "actionDateMillis" : return "ACTION_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";

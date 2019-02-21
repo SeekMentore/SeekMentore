@@ -21,7 +21,10 @@ import com.model.mail.ApplicationMail;
 import com.model.mail.MailAttachment;
 import com.model.rowmappers.ApplicationMailRowMapper;
 import com.model.rowmappers.MailAttachmentRowMapper;
+import com.utils.ExceptionUtils;
+import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
+import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_MAIl_SERVICE)
@@ -52,7 +55,11 @@ public class MailService implements MailConstants {
 			for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
 				mailAttachment.setMailId(mailId);
 				mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-				applicationDao.executeUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachment);
+				String attachmentInsertQuery = "insertMailAttachment";
+				if (mailAttachment.getIsFileStoredInFileSystem()) {
+					attachmentInsertQuery = "insertMailAttachmentWithFSKey";
+				}
+				applicationDao.executeUpdateWithQueryMapper("mail", attachmentInsertQuery, mailAttachment);
 			}
 		}
 	}
@@ -79,7 +86,11 @@ public class MailService implements MailConstants {
 					for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
 						mailAttachment.setMailId(mailId);
 						mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-						applicationDao.executeUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachment);
+						String attachmentInsertQuery = "insertMailAttachment";
+						if (mailAttachment.getIsFileStoredInFileSystem()) {
+							attachmentInsertQuery = "insertMailAttachmentWithFSKey";
+						}
+						applicationDao.executeUpdateWithQueryMapper("mail", attachmentInsertQuery, mailAttachment);
 					}
 				}
 			}
@@ -111,9 +122,18 @@ public class MailService implements MailConstants {
 																				+ queryMapperService.getQuerySQL("mail", "mailAttachmentMailIdFilter"), paramsMap, new MailAttachmentRowMapper());
 		final List<MailAttachment> mailAttachmentList = new LinkedList<MailAttachment>();
 		if (ValidationUtils.checkNonEmptyList(dbMailAttachmentList)) {
-			// Converting DB attachment list in JMailSender Attachment list
 			for (final MailAttachment mailAttachment : dbMailAttachmentList) {
-				mailAttachmentList.add(new MailAttachment(mailAttachment.getFilename(), mailAttachment.getContent(), mailAttachment.getApplicationType()));
+				try {
+					if (mailAttachment.getIsFileStoredInFileSystem()) {
+						mailAttachment.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(mailAttachment.getFsKey()));
+					}
+					// Converting DB attachment list in JMailSender Attachment list
+					mailAttachment.createMimeAttachment();
+					mailAttachmentList.add(mailAttachment);
+				} catch (Exception e) {
+					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
+					LoggerUtils.logOnConsole("Exception occurred while fetching Document (attachmentId) " + mailAttachment.getAttachmentId());
+				}
 			}
 		}
 		return ValidationUtils.checkNonEmptyList(mailAttachmentList) ? mailAttachmentList : null;

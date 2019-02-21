@@ -12,6 +12,12 @@
 		VALUES
 			(:mailId, :content, :filename, :applicationType)
 	</query>
+	<query type="insert" id="insertMailAttachmentWithFSKey" paramClass="com.model.mail.MailAttachment">
+		INSERT INTO MAIL_ATTACHMENTS
+			(MAIL_ID, IS_FS_STORED, FS_KEY, FILENAME, APPLICATION_TYPE) 
+		VALUES
+			(:mailId, :isFSStored, :fsKey, :filename, :applicationType)
+	</query>
 	<query type="select" id="selectApplicationMail">
 		SELECT MQ.* FROM MAIL_QUEUE MQ
 	</query>

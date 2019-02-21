@@ -1,0 +1,71 @@
+Hello $subscriptionPackage.customerName,
+<p>Greetings from "Seek Mentore".</p>
+<p>Your requested Subscription Package has now been activated. Please find the details below.</p>
+<p><strong><ins>Enquiry Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Subject</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('SUBJECTS_LOOKUP', $subscriptionPackage.enquirySubject)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('STUDENT_GRADE_LOOKUP', $subscriptionPackage.enquiryGrade)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Location</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('LOCATIONS_LOOKUP', $subscriptionPackage.enquiryLocation)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Address</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($subscriptionPackage.enquiryAddressDetails)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($subscriptionPackage.enquiryAdditionalDetails)</td>
+		</tr>
+	</table>
+</p>
+<p><strong><ins>Tutor Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.tutorName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.tutorContactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.tutorEmail</td>
+		</tr>
+	</table>
+</p>
+<p><strong><ins>Package Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Activated Date</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscriptionPackage.startDateMillis)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Package Billing Type</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('PACKAGE_BILLING_TYPE_LOOKUP', $subscriptionPackage.packageBillingType)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($subscriptionPackage.additionalDetailsClient)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Finalized Rate</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.finalizedRateForClient</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Activating Remarks</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($subscriptionPackage.activatingRemarks)</td>
+		</tr>
+	</table>
+</p>
+<p>Please also find attached "Contract" detailing out the Subscription Package.</p>

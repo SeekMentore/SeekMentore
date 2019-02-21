@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -45,6 +46,7 @@ import com.service.components.EnquiryService;
 import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
+import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -1150,6 +1152,24 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_SUBSCRIPTION_PACKAGE_CONTRACT_PDF)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadSubscriptionPackageContractPdf (
+    		@FormParam("subscriptionPackageId") final String subscriptionPackageId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_SUBSCRIPTION_PACKAGE_CONTRACT_PDF;
+		try {
+			this.subscriptionPackageId = Long.valueOf(subscriptionPackageId);
+		} catch(NumberFormatException e) {}
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Contract" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(Long.valueOf(subscriptionPackageId)));
+		}
+    }
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1264,7 +1284,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST : 
-			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST : {
+			case REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_SUBSCRIPTION_PACKAGE_CONTRACT_PDF : {
 				handleSelectedSubscriptionSecurity();
 				break;
 			}
@@ -1999,7 +2020,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscriptionPackageObject = new SubscriptionPackage();
 			this.subscriptionPackageObject.setPackageBillingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "packageBillingType", String.class));
-			this.subscriptionPackageObject.setFinalizedRate(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "finalizedRate", Integer.class));
+			this.subscriptionPackageObject.setFinalizedRateForClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "finalizedRateForClient", Integer.class));
+			this.subscriptionPackageObject.setFinalizedRateForTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "finalizedRateForTutor", Integer.class));
 			this.subscriptionPackageObject.setIsCustomerGrieved(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isCustomerGrieved", String.class));
 			this.subscriptionPackageObject.setCustomerHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerHappinessIndex", String.class));
 			this.subscriptionPackageObject.setCustomerRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerRemarks", String.class));
@@ -2007,6 +2029,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.subscriptionPackageObject.setTutorHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorHappinessIndex", String.class));
 			this.subscriptionPackageObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
 			this.subscriptionPackageObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+			this.subscriptionPackageObject.setAdditionalDetailsClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetailsClient", String.class));
+			this.subscriptionPackageObject.setAdditionalDetailsTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetailsTutor", String.class));
+			this.subscriptionPackageObject.setActivatingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "activatingRemarks", String.class));
+			this.subscriptionPackageObject.setTerminatingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "terminatingRemarks", String.class));
 		}
 	}
 	
@@ -2025,11 +2051,21 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						}
 						break;
 					}
-					case "finalizedRate" : {
-						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRate(), false, 0, false, 0)) {
+					case "finalizedRateForClient" : {
+						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRateForClient(), false, 0, false, 0)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE),
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_CLIENT),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "finalizedRateForTutor" : {
+						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRateForTutor(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_TUTOR),
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						}
@@ -2114,6 +2150,46 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetailsClient" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdditionalDetailsClient())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_CLIENT),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "additionalDetailsTutor" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdditionalDetailsTutor())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_TUTOR),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "activatingRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getActivatingRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ACTIVATING_REMARKS),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "terminatingRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getTerminatingRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TERMINATING_REMARKS),
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						}

@@ -22,6 +22,8 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 	private String filename;
 	private byte[] content;
 	private String applicationType;
+	private String isFSStored;
+	private String fsKey;
 	private ByteArrayDataSource datasource;
 	private ByteArrayInputStream inputStream;
 	private DataHandler dataHandler;
@@ -29,10 +31,20 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 	
 	public MailAttachment() {}
 	
-	public MailAttachment(String filename, byte[] content, String applicationType) throws IOException, MessagingException {
+	public MailAttachment(final String filename, final byte[] content, final String applicationType) {
 		this.filename = filename;
 		this.content = content;
 		this.applicationType = applicationType;
+	}
+	
+	public MailAttachment(final String filename, final String fsKey, final String applicationType) {
+		this.filename = filename;
+		this.fsKey = fsKey;
+		this.isFSStored = YES;
+		this.applicationType = applicationType;
+	}
+	
+	public void createMimeAttachment() throws IOException, MessagingException {
 		this.inputStream = new ByteArrayInputStream(this.content);
 		this.datasource = new ByteArrayDataSource(this.inputStream, this.applicationType); 
 		this.dataHandler = new DataHandler(this.datasource);
@@ -105,6 +117,26 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 		this.mailId = mailId;
 	}
 
+	public Boolean getIsFileStoredInFileSystem() {
+		return ValidationUtils.checkStringAvailability(this.isFSStored) && YES.equals(this.isFSStored);
+	}
+
+	public String getIsFSStored() {
+		return isFSStored;
+	}
+
+	public void setIsFSStored(String isFSStored) {
+		this.isFSStored = isFSStored;
+	}
+
+	public String getFsKey() {
+		return fsKey;
+	}
+
+	public void setFsKey(String fsKey) {
+		this.fsKey = fsKey;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -125,6 +157,8 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 			case "content" : return "CONTENT";
 			case "filename" : return "FILENAME";
 			case "applicationType" : return "APPLICATION_TYPE";
+			case "isFSStored" : return "IS_FS_STORED";
+			case "fsKey" : return "FS_KEY";
 		}
 		return EMPTY_STRING;
 	}

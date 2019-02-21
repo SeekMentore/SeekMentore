@@ -1,0 +1,92 @@
+<p style="font-size: 1.5em;" align="center">
+	<strong><ins>Contract</ins></strong>
+</p>
+<p style="font-size: 1.5em;">
+	<strong><ins>Basic Customer &#38; Enquiry Details</ins></strong>
+</p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Customer Name</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscriptionPackage.customerName)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscriptionPackage.enquiryContactNumber)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscriptionPackage.enquiryEmail)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Customer Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscriptionPackage.customerContactNumber)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Customer Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscriptionPackage.customerEmail)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Subject</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('SUBJECTS_LOOKUP', $subscriptionPackage.enquirySubject))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('STUDENT_GRADE_LOOKUP', $subscriptionPackage.enquiryGrade))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Location</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('LOCATIONS_LOOKUP', $subscriptionPackage.enquiryLocation))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Address</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscriptionPackage.enquiryAddressDetails))</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.formatRemarksAndComments($subscriptionPackage.enquiryAdditionalDetails))</td>
+		</tr>
+	</table>
+</p>
+<p style="font-size: 1.5em;">
+	<strong><ins>Subscription Package Details</ins></strong>
+</p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Activated Date</strong></td>
+			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscriptionPackage.startDateMillis)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Package Billing Type</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('PACKAGE_BILLING_TYPE_LOOKUP', $subscriptionPackage.packageBillingType)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Additional Details</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.formatRemarksAndComments($subscriptionPackage.additionalDetailsClient)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Finalized Rate</strong></td>
+			<td style="$CoreTableTDStyling">INR $subscriptionPackage.finalizedRateForClient</td>
+		</tr>
+	</table>
+</p>
+<p style="font-size: 1em;" align="center">
+	<strong><ins>Declaration Section</ins></strong>
+</p>
+<p>'Seek Mentore' hereby certify that all the information provided above are true to our known extent and no facts are hidden. 
+No extra charges shall be imposed other than the charges that are mentioned as part of this document. This is an electronic signed e-document no sign required.</p>
+<p>
+	<table style="border-collapse: collapse; width: 100%;">
+		<tr>
+			<td style="width:10%;" align="left"><strong>Date</strong></td>
+			<td style="width:20%;" align="left">$DateUtils.parseSystemDateInSpecifiedFormatAfterConvertingToIndianTimeZone('dd-MMM-yyyy')</td>
+			<td style="width:70%;" align="right">
+				<img src="$imageServerURL/images/company-seal.png" 
+					 id="company-seal" 
+					 alt="Seek Mentore Seal" 
+					 style="width: 100px; height: 100px;"/>
+			</td>			
+		</tr>		
+	</table>
+</p>

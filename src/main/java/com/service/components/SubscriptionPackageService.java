@@ -1,5 +1,6 @@
 package com.service.components;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,27 +9,34 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
+import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
-import com.constants.components.SalesConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
+import com.model.mail.MailAttachment;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
+import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
+import com.utils.MailUtils;
+import com.utils.PDFUtils;
 import com.utils.ValidationUtils;
+import com.utils.VelocityUtils;
 import com.utils.localization.Message;
 
 @Service(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE)
@@ -131,9 +139,14 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						paramsMap.put("packageBillingType", subscriptionPackageObject.getPackageBillingType());
 						break;
 					}
-					case "finalizedRate" : {
-						updateAttributesQuery.add("FINALIZED_RATE = :finalizedRate");
-						paramsMap.put("finalizedRate", subscriptionPackageObject.getFinalizedRate());
+					case "finalizedRateForClient" : {
+						updateAttributesQuery.add("FINALIZED_RATE_CLIENT = :finalizedRateForClient");
+						paramsMap.put("finalizedRateForClient", subscriptionPackageObject.getFinalizedRateForClient());
+						break;
+					}
+					case "finalizedRateForTutor" : {
+						updateAttributesQuery.add("FINALIZED_RATE_TUTOR = :finalizedRateForTutor");
+						paramsMap.put("finalizedRateForTutor", subscriptionPackageObject.getFinalizedRateForTutor());
 						break;
 					}
 					case "isCustomerGrieved" : {
@@ -171,6 +184,26 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						paramsMap.put("adminRemarks", subscriptionPackageObject.getAdminRemarks());
 						break;
 					}
+					case "additionalDetailsClient" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS_CLIENT = :additionalDetailsClient");
+						paramsMap.put("additionalDetailsClient", subscriptionPackageObject.getAdditionalDetailsClient());
+						break;
+					}
+					case "additionalDetailsTutor" : {
+						updateAttributesQuery.add("ADDITIONAL_DETAILS_TUTOR = :additionalDetailsTutor");
+						paramsMap.put("additionalDetailsTutor", subscriptionPackageObject.getAdditionalDetailsTutor());
+						break;
+					}
+					case "activatingRemarks" : {
+						updateAttributesQuery.add("ACTIVATING_REMARKS = :activatingRemarks");
+						paramsMap.put("activatingRemarks", subscriptionPackageObject.getActivatingRemarks());
+						break;
+					}
+					case "terminatingRemarks" : {
+						updateAttributesQuery.add("TERMINATING_REMARKS = :terminatingRemarks");
+						paramsMap.put("terminatingRemarks", subscriptionPackageObject.getTerminatingRemarks());
+						break;
+					}
 				}
 			}
 		}
@@ -199,7 +232,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		final List<SubscriptionPackage> subscriptionPackageParamObjectList = new LinkedList<SubscriptionPackage>();
 		final List<PackageAssignment> packageAssignmentParamObjectList = new LinkedList<PackageAssignment>();
 		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageDbRecordList) {
-			subscriptionPackage.setAdminRemarks(ApplicationUtils.formatRemarksAndComments(subscriptionPackage.getAdminRemarks()) + NEW_LINE + LINE_BREAK + ApplicationUtils.formatRemarksAndComments(comments));
 			subscriptionPackage.setActionDateMillis(currentTimestamp.getTime());
 			subscriptionPackage.setWhoActed(activeUser.getUserId());
 			subscriptionPackage.setRecordLastUpdatedMillis(currentTimestamp.getTime());
@@ -209,30 +241,32 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			switch(button) {
 				case BUTTON_ACTIVATE_SUBSCRIPTION : {
 					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis()) && subscriptionPackage.getStartDateMillis() > 0) {
-						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					} else if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis()) & subscriptionPackage.getEndDateMillis() > 0) {
-						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					}
 					if (canTakeAction) {
 						subscriptionPackage.setStartDateMillis(currentTimestamp.getTime());
+						subscriptionPackage.setActivatingRemarks(ApplicationUtils.formatRemarksAndComments(comments));
 					}
 					break;
 				}
 				case BUTTON_END_SUBSCRIPTION : {
 					if (ValidationUtils.checkObjectAvailability(subscriptionPackage.getEndDateMillis()) && subscriptionPackage.getEndDateMillis() > 0) {
-						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_ALREADY_TERMINATED)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					}
 					if (canTakeAction) {
 						subscriptionPackage.setEndDateMillis(currentTimestamp.getTime());
+						subscriptionPackage.setTerminatingRemarks(ApplicationUtils.formatRemarksAndComments(comments));
 					}
 					break;
 				}
 				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
 					if (!ValidationUtils.checkObjectAvailability(subscriptionPackage.getStartDateMillis()) || subscriptionPackage.getStartDateMillis() == 0) {
-						messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					} else {
 						paramsMap.put("subscriptionPackageId", subscriptionPackage.getSubscriptionPackageId());
@@ -242,7 +276,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 							activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
 						}
 						if (activePackageAssignment > 0) {
-							messageDesc.append(Message.getMessageFromFile(SalesConstants.MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
+							messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
 							canTakeAction = false;
 						}
 					}
@@ -294,6 +328,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			switch(button) {
 				case BUTTON_ACTIVATE_SUBSCRIPTION : {
 					if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+						createContractsForSubscriptionPackages(subscriptionPackageParamObjectList);
 						sendNotificationEmailsForSubscriptionPackageActivation(subscriptionPackageParamObjectList);
 					}
 					break;
@@ -319,9 +354,46 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return message.toString();
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageActivation(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
-		// Customer Email
-		// Tutor Email
+	private void createContractsForSubscriptionPackages(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
+		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageList) {
+			subscriptionPackage.setFsKey(FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(
+																getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageId().toString()), "Contract.pdf", createSubscriptionPackageContractPdf(subscriptionPackage)));
+		}
+	}
+	
+	private String getFolderPathToUploadContracts(final String subscriptionPackageId) {
+		return "secured/contracts/customer/subscriptionpackage/" + subscriptionPackageId;
+	}
+	
+	private void sendNotificationEmailsForSubscriptionPackageActivation(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("subscriptionPackage", subscriptionPackage);
+			List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			// Client Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, subscriptionPackage.getEnquiryEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_CC, subscriptionPackage.isEnquiryAndCustomerWithDifferentEmail() ? subscriptionPackage.getCustomerEmail() : null);
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your requested Subscription Package has been activated");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH, attributes));
+			attachments.add(new MailAttachment("Contract.pdf", subscriptionPackage.getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			attachments.add(new MailAttachment("Terms_and_Conditions.pdf", "public_access/termsandconditions/customer/v1/Terms_and_Conditions.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+			mailParamList.add(mailParams);
+			mailParams = new HashMap<String, Object>();
+			attachments = new ArrayList<MailAttachment>();
+			// Tutor Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, subscriptionPackage.getTutorEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New Subscription Package has been activated for you");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_TUTOR_EMAIL_PATH, attributes));
+			attachments.add(new MailAttachment("Terms_and_Conditions.pdf", "public_access/termsandconditions/tutor/v1/Terms_and_Conditions.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+			mailParamList.add(mailParams);
+			
+			MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+		}
 	}
 	
 	private void sendNotificationEmailsForSubscriptionPackageTermination(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
@@ -332,5 +404,22 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	private void sendNotificationEmailsForSubscriptionPackageAssignmentCreation(final List<PackageAssignment> packageAssignmentParamObjectList) {
 		// Customer Email
 		// Tutor Email
+	}
+	
+	public byte[] downloadSubscriptionPackageContractPdf(final Long subscriptionPackageId) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("subscriptionPackageId", subscriptionPackageId);
+		final SubscriptionPackage subscriptionPackage = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage")
+																			+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageSubscriptionPackageIdFilter"), paramsMap, new SubscriptionPackageRowMapper());
+		if (ValidationUtils.checkObjectAvailability(subscriptionPackage)) {
+			return FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageId().toString())+"/Contract.pdf");
+		}
+		return null;
+	}
+	
+	private byte[] createSubscriptionPackageContractPdf(final SubscriptionPackage subscriptionPackage) throws JAXBException, URISyntaxException, Exception {
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("subscriptionPackage", subscriptionPackage);
+		return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIPTION_PACKAGE_CONTRACT_PDF_PATH, attributes));
 	}
 }

@@ -59,7 +59,8 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setCreatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("createdMillis"), Long.class));
 		subscriptionPackage.setStartDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("startDateMillis"), Long.class));
 		subscriptionPackage.setPackageBillingType(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("packageBillingType"), String.class));
-		subscriptionPackage.setFinalizedRate(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("finalizedRate"), Integer.class));
+		subscriptionPackage.setFinalizedRateForClient(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("finalizedRateForClient"), Integer.class));
+		subscriptionPackage.setFinalizedRateForTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("finalizedRateForTutor"), Integer.class));
 		subscriptionPackage.setEndDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("endDateMillis"), Long.class));
 		subscriptionPackage.setIsCustomerGrieved(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("isCustomerGrieved"), String.class));
 		subscriptionPackage.setCustomerHappinessIndex(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerHappinessIndex"), String.class));
@@ -68,6 +69,10 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setTutorHappinessIndex(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorHappinessIndex"), String.class));
 		subscriptionPackage.setTutorRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorRemarks"), String.class));
 		subscriptionPackage.setAdminRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("adminRemarks"), String.class));
+		subscriptionPackage.setAdditionalDetailsClient(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("additionalDetailsClient"), String.class));
+		subscriptionPackage.setAdditionalDetailsTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("additionalDetailsTutor"), String.class));
+		subscriptionPackage.setActivatingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("activatingRemarks"), String.class));
+		subscriptionPackage.setTerminatingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("terminatingRemarks"), String.class));
 		subscriptionPackage.setActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("actionDateMillis"), Long.class));
 		subscriptionPackage.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("whoActed"), String.class));
 		subscriptionPackage.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("whoActedName"), String.class));

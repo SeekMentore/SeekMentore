@@ -21,6 +21,8 @@ public class MailAttachmentRowMapper implements RowMapper<MailAttachment> {
 		mailAttachmentObject.setContent(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("content"), byte[].class));
 		mailAttachmentObject.setFilename(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("filename"), String.class));
 		mailAttachmentObject.setApplicationType(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("applicationType"), String.class));
+		mailAttachmentObject.setIsFSStored(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("isFSStored"), String.class));
+		mailAttachmentObject.setFsKey(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("fsKey"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(mailAttachmentObject, row, rowNum);
 		return mailAttachmentObject;
 	}

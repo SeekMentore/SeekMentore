@@ -1,6 +1,6 @@
 package com.constants.components;
 
-public interface SubscriptionPackageConstants extends ResponseMapConstants {
+public interface SubscriptionPackageConstants extends SalesConstants {
 	
 	String BUTTON_ACTIVATE_SUBSCRIPTION = "activateSubscription";
 	String BUTTON_END_SUBSCRIPTION = "endSubscription";
@@ -10,4 +10,12 @@ public interface SubscriptionPackageConstants extends ResponseMapConstants {
 	String SUBSCRIPTION_ALREADY_TERMINATED = "SUBSCRIPTION_ALREADY_TERMINATED";
 	String SUBSCRIPTION_NOT_ACTIVE = "SUBSCRIPTION_NOT_ACTIVE";
 	String SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT = "SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT";
+	
+	String VELOCITY_EMAIL_TEMPLATES_SUBSCRIPTION_PATH = VELOCITY_EMAIL_TEMPLATES_SALES_FOLDER_PATH + "/subscriptionpackage";
+	String VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH = VELOCITY_EMAIL_TEMPLATES_SUBSCRIPTION_PATH + "/subscription-package-activated-client-email.vm";
+	String VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_TUTOR_EMAIL_PATH = VELOCITY_EMAIL_TEMPLATES_SUBSCRIPTION_PATH + "/subscription-package-activated-tutor-email.vm";
+	
+	// Contract
+	String VELOCITY_PDF_TEMPLATES_SUBSCRIPTION_PACKAGE_PATH = VELOCITY_PDF_TEMPLATES_SALES_FOLDER_PATH + "/subscriptionpackage";
+	String SUBSCRIPTION_PACKAGE_CONTRACT_PDF_PATH = VELOCITY_PDF_TEMPLATES_SUBSCRIPTION_PACKAGE_PATH + "/subscription-package-contract.vm";
 }

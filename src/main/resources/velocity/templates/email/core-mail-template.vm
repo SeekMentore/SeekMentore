@@ -20,7 +20,8 @@
 				</p>
 			</div>
 			<div id="signature-div" style="padding: 5px;">
-				Kind Regards
+				<p>Thank you for choosing "Seek Mentore" as your tutoring partner. We are always happy to help.</p>
+				<p>Kind Regards</p>
 				<p id="signature-section">
 					$mailSignature
 				</p>

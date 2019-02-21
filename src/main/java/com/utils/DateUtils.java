@@ -82,6 +82,13 @@ public class DateUtils implements DateConstants {
 		return parseDateInFormat(convertToIndianTimeZone(localDateTimeMillis), format);
 	}
 	
+	public static String parseSystemDateInSpecifiedFormatAfterConvertingToIndianTimeZone(final String format) {
+		final Long localDateTimeMillis = new Date().getTime();
+		if (!isValid(localDateTimeMillis))
+			return null;
+		return parseDateInFormat(convertToIndianTimeZone(localDateTimeMillis), format);
+	}
+	
 	private static boolean isValid(final Date date) {
 		return (null != date);
 	}
