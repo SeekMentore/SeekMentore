@@ -53,7 +53,7 @@ Hello Team,
 			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
 			<td style="$CoreTableTDStyling">$demo.enquiryContactNumber</td>
 		</tr>
-		#if( $demo.isEnquiryAndCustomerWithDifferentContactNumber() )
+		#if( !$ApplicationUtils.verifySameObjectWithNullCheck($demo.customerContactNumber, $demo.enquiryContactNumber) )
 		  	<tr>
 				<td style="$CoreTableTDStyling width:20%;"><strong>Alt. Contact Number</strong></td>
 				<td style="$CoreTableTDStyling">$demo.customerContactNumber</td>
@@ -63,7 +63,7 @@ Hello Team,
 			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
 			<td style="$CoreTableTDStyling">$demo.enquiryEmail</td>
 		</tr>
-		#if( $demo.isEnquiryAndCustomerWithDifferentEmail() )
+		#if( !$ApplicationUtils.verifySameObjectWithNullCheck($demo.customerEmail, $demo.enquiryEmail) )
 		  	<tr>
 				<td style="$CoreTableTDStyling width:20%;"><strong>Alt. Email Id</strong></td>
 				<td style="$CoreTableTDStyling">$demo.customerEmail</td>

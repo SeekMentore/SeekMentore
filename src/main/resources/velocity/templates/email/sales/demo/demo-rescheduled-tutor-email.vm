@@ -37,7 +37,7 @@ Hello $newDemo.tutorName,
 			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
 			<td style="$CoreTableTDStyling">$newDemo.enquiryContactNumber</td>
 		</tr>
-		#if( $newDemo.isEnquiryAndCustomerWithDifferentContactNumber() )
+		#if( !$ApplicationUtils.verifySameObjectWithNullCheck($newDemo.customerContactNumber, $newDemo.enquiryContactNumber) )
 		  	<tr>
 				<td style="$CoreTableTDStyling width:20%;"><strong>Alt. Contact Number</strong></td>
 				<td style="$CoreTableTDStyling">$newDemo.customerContactNumber</td>
@@ -47,7 +47,7 @@ Hello $newDemo.tutorName,
 			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
 			<td style="$CoreTableTDStyling">$newDemo.enquiryEmail</td>
 		</tr>
-		#if( $newDemo.isEnquiryAndCustomerWithDifferentEmail() )
+		#if( !$ApplicationUtils.verifySameObjectWithNullCheck($newDemo.customerEmail, $newDemo.enquiryEmail) )
 		  	<tr>
 				<td style="$CoreTableTDStyling width:20%;"><strong>Alt. Email Id</strong></td>
 				<td style="$CoreTableTDStyling">$newDemo.customerEmail</td>

@@ -261,6 +261,33 @@ public class ApplicationUtils implements ApplicationConstants {
     	return EMPTY_STRING;
     }
     
+    public static Boolean verifySameObjectWithNullCheck(final Object firstObject, final Object secondObject) {
+    	final Boolean firstObjectNotNull = ValidationUtils.checkObjectAvailability(firstObject);
+    	final Boolean secondObjectNotNull = ValidationUtils.checkObjectAvailability(secondObject);
+    	if (XNOR(firstObjectNotNull, secondObjectNotNull)) {
+    		if (!firstObjectNotNull) {
+    			// Both objects NULL
+    			return true;
+    		}
+    		final Class<?> firstObjectClass = firstObject.getClass();
+    		final Class<?> secondObjectClass = secondObject.getClass();
+    		if (firstObjectClass.equals(secondObjectClass)) {
+    			if (firstObject.equals(secondObject)) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    }
+    
+    public static Boolean XOR(final Boolean inputA, final Boolean inputB) {
+    	return ((inputA && !inputB) || (!inputA && inputB));
+    }
+    
+    public static Boolean XNOR(final Boolean inputA, final Boolean inputB) {
+    	return ((!inputA && !inputB) || (inputA && inputB));
+    }
+    
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
 	}

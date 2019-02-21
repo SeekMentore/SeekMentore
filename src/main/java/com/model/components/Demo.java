@@ -490,14 +490,6 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 		this.enquiryContactNumber = enquiryContactNumber;
 	}
 	
-	public boolean isEnquiryAndCustomerWithDifferentContactNumber() {
-		return !this.customerContactNumber.equals(this.enquiryContactNumber);
-	}
-	
-	public boolean isEnquiryAndCustomerWithDifferentEmail() {
-		return !this.customerEmail.equals(this.enquiryEmail);
-	}
-
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;

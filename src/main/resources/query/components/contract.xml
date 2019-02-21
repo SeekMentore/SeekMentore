@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queryMapper namespace="contract">
+	<query type="insert" id="insertContract" paramClass="com.model.components.Contract">
+		INSERT INTO CONTRACT
+			(CONTRACT_SERIAL_ID, CONTRACT_TYPE, INITIATED_DATE_MILLIS, IS_ACTIVE, FS_KEY, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES
+			(:contractSerialId, :contractType, :initiatedDateMillis, :isActive, :fsKey, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+</queryMapper>

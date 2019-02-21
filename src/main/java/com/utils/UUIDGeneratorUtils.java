@@ -13,4 +13,8 @@ public class UUIDGeneratorUtils implements ApplicationConstants {
 	public static String generateRandomGUID() {
 		return String.valueOf(UUID.randomUUID());
 	}
+	
+	public static String generateSerialGUID() {
+		return String.valueOf(UUID.randomUUID()).toUpperCase();
+	}
 }

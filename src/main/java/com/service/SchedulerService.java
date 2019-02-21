@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.constants.SchedulerConstants;
 import com.constants.components.EnquiryConstants;
@@ -36,6 +37,7 @@ import com.model.components.publicaccess.BecomeTutor;
 import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.mail.ApplicationMail;
+import com.model.mail.MailAttachment;
 import com.model.rowmappers.SubscribedCustomerRowMapper;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
@@ -48,6 +50,7 @@ import com.utils.LoggerUtils;
 import com.utils.MailUtils;
 import com.utils.PasswordUtils;
 import com.utils.SecurityUtil;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
@@ -342,9 +345,12 @@ public class SchedulerService implements SchedulerConstants {
 						final Map<String, Object> attributes = new HashMap<String, Object>();
 						attributes.put("submitQueryObj", submitQueryObj);
 						final Map<String, Object> mailParams = new HashMap<String, Object>();
+						final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 						mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryObj.getEmailId());
 						mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Response from \"Seek Mentore\" for your query");
 						mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(PublicAccessConstants.SUBMIT_QUERY_RESPONSE_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
+						attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+						mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 						mailParamList.add(mailParams);
 						submitQueryObj.setIsMailSent(YES);
 						submitQueryObj.setMailSentMillis(currentTimestamp.getTime());
@@ -373,6 +379,7 @@ public class SchedulerService implements SchedulerConstants {
 					final List<Enquiry> enquiryList = new ArrayList<Enquiry>();
 					for (final Demo demo : demoList) {
 						final SubscriptionPackage subscriptionPackage = new SubscriptionPackage();
+						subscriptionPackage.setSubscriptionPackageSerialId(UUIDGeneratorUtils.generateSerialGUID());
 						subscriptionPackage.setDemoId(demo.getDemoTrackerId());
 						subscriptionPackage.setTutorMapperId(demo.getTutorMapperId());
 						subscriptionPackage.setEnquiryId(demo.getEnquiryId());

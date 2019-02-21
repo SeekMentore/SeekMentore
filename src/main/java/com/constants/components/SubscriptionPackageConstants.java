@@ -18,4 +18,6 @@ public interface SubscriptionPackageConstants extends SalesConstants {
 	// Contract
 	String VELOCITY_PDF_TEMPLATES_SUBSCRIPTION_PACKAGE_PATH = VELOCITY_PDF_TEMPLATES_SALES_FOLDER_PATH + "/subscriptionpackage";
 	String SUBSCRIPTION_PACKAGE_CONTRACT_PDF_PATH = VELOCITY_PDF_TEMPLATES_SUBSCRIPTION_PACKAGE_PATH + "/subscription-package-contract.vm";
+	
+	String CUSTOMER_SUBSCRIPTION_PACKAGE_CONTRACT = "01";
 }

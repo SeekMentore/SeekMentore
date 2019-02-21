@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
@@ -26,6 +27,7 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.PublicApplication;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.components.publicaccess.SubscribeWithUs;
+import com.model.mail.MailAttachment;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
@@ -183,10 +185,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(BECOME_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
+		List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, becomeTutorApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_NEW_TUTOR_REGISTRATION_CONFIRMATION);
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(BECOME_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -204,10 +209,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(FIND_TUTOR_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
+		List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, findTutorApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_TUTOR_ENQUIRY_REGISTRATION_CONFIRMATION);
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(FIND_TUTOR_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -225,10 +233,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBSCRIBE_WITH_US_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
+		List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, subscribeWithUsApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION);
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBSCRIBE_WITH_US_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
@@ -245,10 +256,13 @@ public class PublicAccessService implements PublicAccessConstants {
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBMIT_QUERY_REGISTRATION_NOTIFICATION_VELOCITY_TEMPLATE_PATH, attributes));
 		mailParamList.add(mailParams);
 		mailParams = new HashMap<String, Object>();
+		List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 		// Send Registration confirmation message to Tutor on his provided email Id
 		mailParams.put(MailConstants.MAIL_PARAM_TO, submitQueryApplication.getEmailId());
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, SUBJECT_SUBMIT_QUERY_REGISTRATION_CONFIRMATION);
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(SUBMIT_QUERY_REGISTRATION_CONFIRMATION_VELOCITY_TEMPLATE_PATH, attributes));
+		attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 		mailParamList.add(mailParams);
 		
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);

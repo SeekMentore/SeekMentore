@@ -16,7 +16,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 	public SubscriptionPackage mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscriptionPackage subscriptionPackage = new SubscriptionPackage();
-		subscriptionPackage.setSubscriptionPackageId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("subscriptionPackageId"), Long.class));
+		subscriptionPackage.setSubscriptionPackageSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("subscriptionPackageSerialId"), String.class));
 		subscriptionPackage.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerId"), Long.class));
 		subscriptionPackage.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerName"), String.class));
 		subscriptionPackage.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerEmail"), String.class));
@@ -79,6 +79,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		subscriptionPackage.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("updatedBy"), String.class));
 		subscriptionPackage.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("updatedByName"), String.class));
+		subscriptionPackage.setContractSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("contractSerialId"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscriptionPackage, row, rowNum);
 		return subscriptionPackage;
 	}

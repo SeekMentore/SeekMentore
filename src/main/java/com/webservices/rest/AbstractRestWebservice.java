@@ -33,6 +33,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected User activeUser;
 	protected List<String> changedAttributes = new ArrayList<String>();
 	protected Long parentId;
+	protected String parentSerialId;
 	protected String allIdsList;
 	protected String comments;
 	protected String button;
@@ -123,6 +124,17 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected void handleParentId() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	protected void handleParentSerialId() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.parentSerialId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,

@@ -25,6 +25,7 @@ import com.model.gridcomponent.GridComponent;
 import com.model.rowmappers.DemoRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
+import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
 import com.utils.MailUtils;
@@ -140,7 +141,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Client Email
 		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
-		mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(demo.getCustomerEmail(), demo.getEnquiryEmail()) ? demo.getCustomerEmail() : null);
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been scheduled for your enquiry");
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SCHEDULED_CLIENT_EMAIL_PATH, attributes));
 		mailParamList.add(mailParams);
@@ -187,7 +188,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Client Email
 		mailParams.put(MailConstants.MAIL_PARAM_TO, newDemo.getEnquiryEmail());
-		mailParams.put(MailConstants.MAIL_PARAM_CC, newDemo.isEnquiryAndCustomerWithDifferentEmail() ? newDemo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(newDemo.getCustomerEmail(), newDemo.getEnquiryEmail()) ? newDemo.getCustomerEmail() : null);
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been re-scheduled for your enquiry");
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_RESCHEDULED_CLIENT_EMAIL_PATH, attributes));
 		mailParamList.add(mailParams);
@@ -243,7 +244,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 					Map<String, Object> mailParams = new HashMap<String, Object>();
 					// Client Email
 					mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
-					mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+					mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(demo.getCustomerEmail(), demo.getEnquiryEmail()) ? demo.getCustomerEmail() : null);
 					mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo has been cenceled for your enquiry");
 					mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_CANCEL_CLIENT_EMAIL_PATH, attributes));
 					mailParamList.add(mailParams);
@@ -267,7 +268,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Client Email
 		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
-		mailParams.put(MailConstants.MAIL_PARAM_CC, demo.isEnquiryAndCustomerWithDifferentEmail() ? demo.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(demo.getCustomerEmail(), demo.getEnquiryEmail()) ? demo.getCustomerEmail() : null);
 		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo was successful for your enquiry");
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes));
 		mailParamList.add(mailParams);

@@ -1,6 +1,15 @@
 <p style="font-size: 1.5em;" align="center">
 	<strong><ins>Contract</ins></strong>
 </p>
+<p>
+	<table style="border-collapse: collapse; width: 100%;">
+		<tr>
+			<td style="width:100%;" align="right">
+				<strong><ins>Contract Id</ins> : <span style="color:blue;">$subscriptionPackage.contractSerialId</span></strong>
+			</td>			
+		</tr>		
+	</table>
+</p>
 <p style="font-size: 1.5em;">
 	<strong><ins>Basic Customer &#38; Enquiry Details</ins></strong>
 </p>
@@ -53,6 +62,10 @@
 </p>
 <p>
 	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Package Id</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.subscriptionPackageSerialId</td>
+		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Activated Date</strong></td>
 			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscriptionPackage.startDateMillis)</td>

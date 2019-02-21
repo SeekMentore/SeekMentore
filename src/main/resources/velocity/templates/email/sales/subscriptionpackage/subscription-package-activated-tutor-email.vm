@@ -47,6 +47,10 @@ Hello $subscriptionPackage.tutorName,
 <p>
 	<table style="$CoreTableStyling">
 		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Package Id</strong></td>
+			<td style="$CoreTableTDStyling">$subscriptionPackage.subscriptionPackageSerialId</td>
+		</tr>
+		<tr>
 			<td style="$CoreTableTDStyling width:20%;"><strong>Activated Date</strong></td>
 			<td style="$CoreTableTDStyling">$DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($subscriptionPackage.startDateMillis)</td>
 		</tr>

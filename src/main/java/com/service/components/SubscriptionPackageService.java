@@ -22,6 +22,7 @@ import com.constants.RestMethodConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
+import com.model.components.Contract;
 import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
@@ -35,6 +36,7 @@ import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.localization.Message;
@@ -109,8 +111,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	public List<PackageAssignment> getSelectedSubscriptionPackageAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentSubscriptionPackageIdFilter");
-		paramsMap.put("subscriptionPackageId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class));
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentSubscriptionPackageSerialIdFilter");
+		paramsMap.put("subscriptionPackageSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageSerialId", String.class));
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentCreatedDateStartDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST : {
@@ -129,7 +131,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	public void updateSubscriptionPackageRecord(final SubscriptionPackage subscriptionPackageObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE SUBSCRIPTION_PACKAGE SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE SUBSCRIPTION_PACKAGE_ID = :subscriptionPackageId";
+		final String existingFilterQueryString = "WHERE SUBSCRIPTION_PACKAGE_SERIAL_ID = :subscriptionPackageSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -207,7 +209,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				}
 			}
 		}
-		paramsMap.put("subscriptionPackageId", subscriptionPackageObject.getSubscriptionPackageId());
+		paramsMap.put("subscriptionPackageSerialId", subscriptionPackageObject.getSubscriptionPackageSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
@@ -226,11 +228,12 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		Integer failureCount = 0;
 		final Date currentTimestamp = new Date();
 		final Map<String, Object> paramsMap = new HashMap<String, Object>(); 
-		paramsMap.put("subscriptionPackageIdList", idList);
+		paramsMap.put("subscriptionPackageSerialIdList", idList);
 		final List<SubscriptionPackage> subscriptionPackageDbRecordList = applicationDao.findAll(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage")
 																								+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageSubscriptionPackageIdListFilter"), paramsMap, new SubscriptionPackageRowMapper());
 		final List<SubscriptionPackage> subscriptionPackageParamObjectList = new LinkedList<SubscriptionPackage>();
 		final List<PackageAssignment> packageAssignmentParamObjectList = new LinkedList<PackageAssignment>();
+		final List<Contract> contractParamObjectList = new LinkedList<Contract>();
 		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageDbRecordList) {
 			subscriptionPackage.setActionDateMillis(currentTimestamp.getTime());
 			subscriptionPackage.setWhoActed(activeUser.getUserId());
@@ -250,6 +253,17 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					if (canTakeAction) {
 						subscriptionPackage.setStartDateMillis(currentTimestamp.getTime());
 						subscriptionPackage.setActivatingRemarks(ApplicationUtils.formatRemarksAndComments(comments));
+						final Contract contract = new Contract();
+						contract.setContractSerialId(UUIDGeneratorUtils.generateSerialGUID());
+						contract.setInitiatedDateMillis(currentTimestamp.getTime());
+						contract.setContractType(CUSTOMER_SUBSCRIPTION_PACKAGE_CONTRACT);
+						contract.setIsActive(YES);
+						contract.setFsKey(getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageSerialId())+"/Contract.pdf");
+						contract.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+						contract.setUpdatedBy(activeUser.getUserId());
+						subscriptionPackage.setContract(contract);
+						subscriptionPackage.setContractSerialId(contract.getContractSerialId());
+						contractParamObjectList.add(contract);
 					}
 					break;
 				}
@@ -269,7 +283,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					} else {
-						paramsMap.put("subscriptionPackageId", subscriptionPackage.getSubscriptionPackageId());
+						paramsMap.put("subscriptionPackageSerialId", subscriptionPackage.getSubscriptionPackageSerialId());
 						Integer activePackageAssignment = 0;
 						final Map<String, Object> countActivePackageAssignment = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "countActivePackageAssignmentForSubscriptionPackage"), paramsMap);
 						if (ValidationUtils.checkObjectAvailability(countActivePackageAssignment) && ValidationUtils.checkObjectAvailability(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS"))) {
@@ -282,7 +296,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					}
 					if (canTakeAction) {
 						final PackageAssignment packageAssignment = new PackageAssignment();
-						packageAssignment.setSubscriptionPackageId(subscriptionPackage.getSubscriptionPackageId());
+						packageAssignment.setPackageAssignmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+						packageAssignment.setSubscriptionPackageSerialId(subscriptionPackage.getSubscriptionPackageSerialId());
+						packageAssignment.setCreatedMillis(currentTimestamp.getTime());
 						packageAssignment.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 						packageAssignment.setUpdatedBy(activeUser.getUserId());
 						packageAssignmentParamObjectList.add(packageAssignment);
@@ -300,14 +316,18 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				}
 				successCount++;
 			} else {
-				message.append("SubscriptionPackageId : '").append(subscriptionPackage.getSubscriptionPackageId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
+				message.append("SubscriptionPackageId : '").append(subscriptionPackage.getSubscriptionPackageSerialId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
 				failureCount++;
 			}
 		}
 		switch(button) {
 			case BUTTON_ACTIVATE_SUBSCRIPTION : {
 				if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
+					if (ValidationUtils.checkNonEmptyList(contractParamObjectList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("contract", "insertContract", contractParamObjectList);
+					}
 					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "activateSubscriptionPackage", subscriptionPackageParamObjectList);
+					saveContractPDFInFileSystem(subscriptionPackageParamObjectList);
 				}
 				break;
 			}
@@ -328,7 +348,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			switch(button) {
 				case BUTTON_ACTIVATE_SUBSCRIPTION : {
 					if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
-						createContractsForSubscriptionPackages(subscriptionPackageParamObjectList);
 						sendNotificationEmailsForSubscriptionPackageActivation(subscriptionPackageParamObjectList);
 					}
 					break;
@@ -336,12 +355,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				case BUTTON_END_SUBSCRIPTION : {
 					if (ValidationUtils.checkNonEmptyList(subscriptionPackageParamObjectList)) {
 						sendNotificationEmailsForSubscriptionPackageTermination(subscriptionPackageParamObjectList);
-					}
-					break;
-				}
-				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
-					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
-						sendNotificationEmailsForSubscriptionPackageAssignmentCreation(packageAssignmentParamObjectList);
 					}
 					break;
 				}
@@ -354,15 +367,15 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return message.toString();
 	}
 	
-	private void createContractsForSubscriptionPackages(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
+	private void saveContractPDFInFileSystem(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
 		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageList) {
-			subscriptionPackage.setFsKey(FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(
-																getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageId().toString()), "Contract.pdf", createSubscriptionPackageContractPdf(subscriptionPackage)));
+			FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(
+					getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageSerialId()), "Contract.pdf", createSubscriptionPackageContractPdf(subscriptionPackage));
 		}
 	}
 	
-	private String getFolderPathToUploadContracts(final String subscriptionPackageId) {
-		return "secured/contracts/customer/subscriptionpackage/" + subscriptionPackageId;
+	private String getFolderPathToUploadContracts(final String subscriptionPackageSerialId) {
+		return "secured/contracts/customer/subscriptionpackage/" + subscriptionPackageSerialId;
 	}
 	
 	private void sendNotificationEmailsForSubscriptionPackageActivation(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
@@ -374,10 +387,10 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			Map<String, Object> mailParams = new HashMap<String, Object>();
 			// Client Email
 			mailParams.put(MailConstants.MAIL_PARAM_TO, subscriptionPackage.getEnquiryEmail());
-			mailParams.put(MailConstants.MAIL_PARAM_CC, subscriptionPackage.isEnquiryAndCustomerWithDifferentEmail() ? subscriptionPackage.getCustomerEmail() : null);
+			mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(subscriptionPackage.getCustomerEmail(), subscriptionPackage.getEnquiryEmail()) ? subscriptionPackage.getCustomerEmail() : null);
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your requested Subscription Package has been activated");
 			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH, attributes));
-			attachments.add(new MailAttachment("Contract.pdf", subscriptionPackage.getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			attachments.add(new MailAttachment("Contract.pdf", subscriptionPackage.getContract().getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			attachments.add(new MailAttachment("Terms_and_Conditions.pdf", "public_access/termsandconditions/customer/v1/Terms_and_Conditions.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
@@ -401,20 +414,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		// Tutor Email
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageAssignmentCreation(final List<PackageAssignment> packageAssignmentParamObjectList) {
-		// Customer Email
-		// Tutor Email
-	}
-	
-	public byte[] downloadSubscriptionPackageContractPdf(final Long subscriptionPackageId) throws JAXBException, URISyntaxException, Exception {
-		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("subscriptionPackageId", subscriptionPackageId);
-		final SubscriptionPackage subscriptionPackage = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage")
-																			+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageSubscriptionPackageIdFilter"), paramsMap, new SubscriptionPackageRowMapper());
-		if (ValidationUtils.checkObjectAvailability(subscriptionPackage)) {
-			return FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(getFolderPathToUploadContracts(subscriptionPackage.getSubscriptionPackageId().toString())+"/Contract.pdf");
-		}
-		return null;
+	public byte[] downloadSubscriptionPackageContractPdf(final String subscriptionPackageSerialId) throws JAXBException, URISyntaxException, Exception {
+		return FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(getFolderPathToUploadContracts(subscriptionPackageSerialId)+"/Contract.pdf");
 	}
 	
 	private byte[] createSubscriptionPackageContractPdf(final SubscriptionPackage subscriptionPackage) throws JAXBException, URISyntaxException, Exception {

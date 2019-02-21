@@ -10,7 +10,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 
 	private static final long serialVersionUID = -171799632331459916L;
 	
-	private Long subscriptionPackageId;
+	private String subscriptionPackageSerialId;
 	private Long customerId;
 	private String customerName;
 	private String customerEmail;
@@ -73,17 +73,10 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
-	private String fsKey;
+	private String contractSerialId;
+	private Contract contract;
 	
 	public SubscriptionPackage() {}
-
-	public Long getSubscriptionPackageId() {
-		return subscriptionPackageId;
-	}
-
-	public void setSubscriptionPackageId(Long subscriptionPackageId) {
-		this.subscriptionPackageId = subscriptionPackageId;
-	}
 
 	public String getCustomerName() {
 		return customerName;
@@ -581,20 +574,28 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.additionalDetailsTutor = additionalDetailsTutor;
 	}
 	
-	public String getFsKey() {
-		return fsKey;
+	public String getSubscriptionPackageSerialId() {
+		return subscriptionPackageSerialId;
 	}
 
-	public void setFsKey(String fsKey) {
-		this.fsKey = fsKey;
+	public void setSubscriptionPackageSerialId(String subscriptionPackageSerialId) {
+		this.subscriptionPackageSerialId = subscriptionPackageSerialId;
 	}
 	
-	public boolean isEnquiryAndCustomerWithDifferentContactNumber() {
-		return !this.customerContactNumber.equals(this.enquiryContactNumber);
+	public String getContractSerialId() {
+		return contractSerialId;
 	}
-	
-	public boolean isEnquiryAndCustomerWithDifferentEmail() {
-		return !this.customerEmail.equals(this.enquiryEmail);
+
+	public void setContractSerialId(String contractSerialId) {
+		this.contractSerialId = contractSerialId;
+	}
+
+	public Contract getContract() {
+		return contract;
+	}
+
+	public void setContract(Contract contract) {
+		this.contract = contract;
 	}
 
 	@Override
@@ -612,7 +613,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "subscriptionPackageId" : return "SUBSCRIPTION_PACKAGE_ID";
+			case "subscriptionPackageSerialId" : return "SUBSCRIPTION_PACKAGE_SERIAL_ID";
 			case "customerId" : return "CUSTOMER_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
@@ -675,6 +676,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "contractSerialId" : return "CONTRACT_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

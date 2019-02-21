@@ -62,7 +62,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
-	private Long subscriptionPackageId;
+	private String subscriptionPackageSerialId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
@@ -1051,7 +1051,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_CURRENT_ASSIGNMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
-		this.subscriptionPackageId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class);
+		this.subscriptionPackageSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1080,7 +1080,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTION_PACKAGE_HISTORY_ASSIGNMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
-		this.subscriptionPackageId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageId", Long.class);
+		this.subscriptionPackageSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "subscriptionPackageSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1106,13 +1106,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD;
 		createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.subscriptionPackageObject.setSubscriptionPackageId(Long.parseLong(parentId));
+			this.subscriptionPackageObject.setSubscriptionPackageSerialId(parentId);
 			getSubscriptionPackageService().updateSubscriptionPackageRecord(this.subscriptionPackageObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1157,17 +1155,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadSubscriptionPackageContractPdf (
-    		@FormParam("subscriptionPackageId") final String subscriptionPackageId,
+    		@FormParam("subscriptionPackageSerialId") final String subscriptionPackageSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_SUBSCRIPTION_PACKAGE_CONTRACT_PDF;
-		try {
-			this.subscriptionPackageId = Long.valueOf(subscriptionPackageId);
-		} catch(NumberFormatException e) {}
+		this.subscriptionPackageSerialId = subscriptionPackageSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Contract" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(Long.valueOf(subscriptionPackageId)));
+			FileUtils.writeFileToResponse(response, "Contract" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(subscriptionPackageSerialId));
 		}
     }
 
@@ -1290,7 +1286,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleSubscriptionPackageSecurity();
 				break;
 			}
@@ -2007,7 +2003,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	private void handleSelectedSubscriptionSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.subscriptionPackageId)) {
+		if (!ValidationUtils.checkStringAvailability(this.subscriptionPackageSerialId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_PACKAGE_ID_MISSING),
