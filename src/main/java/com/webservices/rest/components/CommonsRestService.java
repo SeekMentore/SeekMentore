@@ -64,6 +64,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	private List<MailAttachment> attachments;
 	
 	@Path(REST_METHOD_NAME_TO_GET_SERVER_INFO)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getServerInfo (
 			@Context final HttpServletRequest request,

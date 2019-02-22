@@ -26,7 +26,7 @@ function encodeObjectAsJSON(object) {
 function decodeObjectFromJSON(json) {
 	return null != json ? JSON.parse(json) : null;
 }
-
+// 'application/json'
 function callWebservice(url, data, success, failure, method, contentType) {
 	// Show Pop up loader 
 	showLoader();
@@ -34,7 +34,7 @@ function callWebservice(url, data, success, failure, method, contentType) {
         url			: ctxPath + url,
         type		: ((null != method) ? method : 'POST'),
         data		: data,
-        contentType	: ((null != contentType) ? contentType : 'application/json'),
+        contentType	: ((null != contentType) ? contentType : 'application/x-www-form-urlencoded'),
         cache		: false,
         dataType	: 'json',
         success		: function(data) {
