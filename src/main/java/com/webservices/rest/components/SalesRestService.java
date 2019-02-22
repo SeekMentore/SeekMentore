@@ -1166,6 +1166,20 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			FileUtils.writeFileToResponse(response, "Contract" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(subscriptionPackageSerialId));
 		}
     }
+	
+	@Path("/subscriptionPackageAssignmentCheckDataAccess")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String subscriptionPackageAssignmentCheckDataAccess (
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		Map<String, Object> restresponse = new HashMap<String, Object>();
+		restresponse.put("success", true);
+		restresponse.put("subscriptionPackageAssignmentDataModificationAccess", true);
+		restresponse.put("message", "");
+		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
