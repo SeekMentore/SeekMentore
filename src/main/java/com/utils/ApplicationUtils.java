@@ -280,6 +280,10 @@ public class ApplicationUtils implements ApplicationConstants {
     	return false;
     }
     
+    public static String appendRemarksAndComments(final String currentRemarksAndComments, final String newRemarksAndComments) {
+    	return formatRemarksAndComments((ValidationUtils.checkStringAvailability(currentRemarksAndComments) ? (currentRemarksAndComments.trim() + LINE_BREAK + NEW_LINE) : EMPTY_STRING) + formatRemarksAndComments(newRemarksAndComments.trim()));
+    }
+    
     public static Boolean XOR(final Boolean inputA, final Boolean inputB) {
     	return ((inputA && !inputB) || (!inputA && inputB));
     }

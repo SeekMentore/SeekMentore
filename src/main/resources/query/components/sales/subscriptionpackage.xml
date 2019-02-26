@@ -115,6 +115,12 @@
 	<query type="filter" id="packageAssignmentSubscriptionPackageSerialIdFilter">
 		WHERE P.SUBSCRIPTION_PACKAGE_SERIAL_ID = :subscriptionPackageSerialId
 	</query>
+	<query type="filter" id="packageAssignmentPackageAssignmentSerialIdFilter">
+		WHERE S.PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
+	</query>
+	<query type="filter" id="packageAssignmentPackageAssignmentSerialIdListFilter">
+		WHERE S.PACKAGE_ASSIGNMENT_SERIAL_ID IN (:packageAssignmentSerialIdList)
+	</query>
 	<query type="filter" id="packageAssignmentCurrentAssignmentFilter">
 		WHERE P.END_DATE_MILLIS IS NULL
 	</query>
@@ -155,5 +161,25 @@
 			(PACKAGE_ASSIGNMENT_SERIAL_ID, SUBSCRIPTION_PACKAGE_SERIAL_ID, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES
 			(:packageAssignmentSerialId, :subscriptionPackageSerialId, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
+	</query>
+	<query type="update" id="startPackageAssignment" paramClass="com.model.components.PackageAssignment">
+		UPDATE PACKAGE_ASSIGNMENT SET
+			START_DATE_MILLIS = :startDateMillis,
+			ADMIN_REMARKS = :adminRemarks,
+			ACTION_DATE_MILLIS = :actionDateMillis,
+			WHO_ACTED = :whoActed,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
+	</query>
+	<query type="update" id="endPackageAssignment" paramClass="com.model.components.PackageAssignment">
+		UPDATE PACKAGE_ASSIGNMENT SET
+			END_DATE_MILLIS = :endDateMillis,
+			ADMIN_REMARKS = :adminRemarks,
+			ACTION_DATE_MILLIS = :actionDateMillis,
+			WHO_ACTED = :whoActed,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
 	</query>
 </queryMapper>

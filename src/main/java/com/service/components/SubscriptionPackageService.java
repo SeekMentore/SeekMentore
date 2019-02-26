@@ -392,7 +392,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH, attributes));
 			attachments.add(new MailAttachment("Contract.pdf", subscriptionPackage.getContract().getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			attachments.add(new MailAttachment("Terms_and_Conditions.pdf", "public_access/termsandconditions/customer/v1/Terms_and_Conditions.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
-			attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 			mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
 			mailParamList.add(mailParams);
 			mailParams = new HashMap<String, Object>();
@@ -422,5 +421,193 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("subscriptionPackage", subscriptionPackage);
 		return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIPTION_PACKAGE_CONTRACT_PDF_PATH, attributes));
+	}
+	
+	@Transactional
+	public void updateSubscriptionPackageAssignmentRecord(final PackageAssignment packageAssignmentObject, final List<String> changedAttributes, final User activeUser) {
+		final String baseQuery = "UPDATE PACKAGE_ASSIGNMENT SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId";
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "totalHours" : {
+						updateAttributesQuery.add("TOTAL_HOURS = :totalHours");
+						paramsMap.put("totalHours", packageAssignmentObject.getTotalHours());
+						break;
+					}
+					case "isCustomerGrieved" : {
+						updateAttributesQuery.add("IS_CUSTOMER_GRIEVED = :isCustomerGrieved");
+						paramsMap.put("isCustomerGrieved", packageAssignmentObject.getIsCustomerGrieved());
+						break;
+					}
+					case "customerHappinessIndex" : {
+						updateAttributesQuery.add("CUSTOMER_HAPPINESS_INDEX = :customerHappinessIndex");
+						paramsMap.put("customerHappinessIndex", packageAssignmentObject.getCustomerHappinessIndex());
+						break;
+					}
+					case "customerRemarks" : {
+						updateAttributesQuery.add("CUSTOMER_REMARKS = :customerRemarks");
+						paramsMap.put("customerRemarks", packageAssignmentObject.getCustomerRemarks());
+						break;
+					}
+					case "isTutorGrieved" : {
+						updateAttributesQuery.add("IS_TUTOR_GRIEVED = :isTutorGrieved");
+						paramsMap.put("isTutorGrieved", packageAssignmentObject.getIsTutorGrieved());
+						break;
+					}
+					case "tutorHappinessIndex" : {
+						updateAttributesQuery.add("TUTOR_HAPPINESS_INDEX = :tutorHappinessIndex");
+						paramsMap.put("tutorHappinessIndex", packageAssignmentObject.getTutorHappinessIndex());
+						break;
+					}
+					case "tutorRemarks" : {
+						updateAttributesQuery.add("TUTOR_REMARKS = :tutorRemarks");
+						paramsMap.put("tutorRemarks", packageAssignmentObject.getTutorRemarks());
+						break;
+					}
+					case "adminRemarks" : {
+						updateAttributesQuery.add("ADMIN_REMARKS = :adminRemarks");
+						paramsMap.put("adminRemarks", packageAssignmentObject.getAdminRemarks());
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("packageAssignmentSerialId", packageAssignmentObject.getPackageAssignmentSerialId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			updateAttributesQuery.add("ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("WHO_ACTED = :userId");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("userId", activeUser.getUserId());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+		}
+	}
+	
+	@Transactional
+	public String takeActionOnSubscriptionPackageAssignment(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
+		StringBuilder message = new StringBuilder(EMPTY_STRING);
+		Integer successCount = 0;
+		Integer failureCount = 0;
+		final Date currentTimestamp = new Date();
+		final Map<String, Object> paramsMap = new HashMap<String, Object>(); 
+		paramsMap.put("packageAssignmentSerialIdList", idList);
+		final List<PackageAssignment> packageAssignmentDbRecordList = applicationDao.findAll(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment")
+																								+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentPackageAssignmentSerialIdListFilter"), paramsMap, new PackageAssignmentRowMapper());
+		final List<PackageAssignment> packageAssignmentParamObjectList = new LinkedList<PackageAssignment>();
+		for (final PackageAssignment packageAssignment : packageAssignmentDbRecordList) {
+			packageAssignment.setActionDateMillis(currentTimestamp.getTime());
+			packageAssignment.setWhoActed(activeUser.getUserId());
+			packageAssignment.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			packageAssignment.setUpdatedBy(activeUser.getUserId());
+			Boolean canTakeAction = true;
+			final StringBuilder messageDesc = new StringBuilder(EMPTY_STRING);
+			switch(button) {
+				case BUTTON_START_ASSIGNMENT : {
+					if (ValidationUtils.checkObjectAvailability(packageAssignment.getStartDateMillis()) && packageAssignment.getStartDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ALREADY_RUNNING)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					} else if (ValidationUtils.checkObjectAvailability(packageAssignment.getEndDateMillis()) & packageAssignment.getEndDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ALREADY_COMPLETED)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					}
+					if (canTakeAction) {
+						packageAssignment.setStartDateMillis(currentTimestamp.getTime());
+						packageAssignment.setAdminRemarks(ApplicationUtils.appendRemarksAndComments(packageAssignment.getAdminRemarks(), comments));
+					}
+					break;
+				}
+				case BUTTON_END_ASSIGNMENT : {
+					if (ValidationUtils.checkObjectAvailability(packageAssignment.getEndDateMillis()) && packageAssignment.getEndDateMillis() > 0) {
+						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ALREADY_COMPLETED)).append(NEW_LINE).append(LINE_BREAK);
+						canTakeAction = false;
+					}
+					if (canTakeAction) {
+						packageAssignment.setEndDateMillis(currentTimestamp.getTime());
+						packageAssignment.setAdminRemarks(ApplicationUtils.appendRemarksAndComments(packageAssignment.getAdminRemarks(), comments));
+					}
+					break;
+				}
+			}
+			if (canTakeAction) {
+				switch(button) {
+					case BUTTON_START_ASSIGNMENT : 
+					case BUTTON_END_ASSIGNMENT : {
+						packageAssignmentParamObjectList.add(packageAssignment);
+						break;
+					}
+				}
+				successCount++;
+			} else {
+				message.append("PackageAssignmentSerialId : '").append(packageAssignment.getPackageAssignmentSerialId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
+				failureCount++;
+			}
+		}
+		switch(button) {
+			case BUTTON_START_ASSIGNMENT : {
+				if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "startPackageAssignment", packageAssignmentParamObjectList);
+				}
+				break;
+			}
+			case BUTTON_END_ASSIGNMENT : {
+				if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+					applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "endPackageAssignment", packageAssignmentParamObjectList);
+				}
+				break;
+			}
+		}
+		if (sendEmails) {
+			switch(button) {
+				case BUTTON_ACTIVATE_SUBSCRIPTION : {
+					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+						sendNotificationEmailsForStartOfPackageAssignment(packageAssignmentParamObjectList);
+					}
+					break;
+				}
+				case BUTTON_END_SUBSCRIPTION : {
+					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
+						sendNotificationEmailsForEndOfPackageAssignment(packageAssignmentParamObjectList);
+					}
+					break;
+				}
+			}
+		}
+		if (!EMPTY_STRING.equals(message.toString())) {
+			final String errorMessage = message.toString();
+			message = new StringBuilder("'"+ failureCount +"' SubscriptionPackageId failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
+		}
+		return message.toString();
+	}
+	
+	private void sendNotificationEmailsForStartOfPackageAssignment(final List<PackageAssignment> packageAssignmentList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final PackageAssignment packageAssignment : packageAssignmentList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("packageAssignment", packageAssignment);
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			// Client Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getEnquiryEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(packageAssignment.getCustomerEmail(), packageAssignment.getEnquiryEmail()) ? packageAssignment.getCustomerEmail() : null);
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - ");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			mailParams = new HashMap<String, Object>();
+			// Tutor Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getTutorEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New Subscription Package has been activated for you");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_TUTOR_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			
+			MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+		}
+	}
+	
+	private void sendNotificationEmailsForEndOfPackageAssignment(final List<PackageAssignment> packageAssignmentList) {
+		// Customer Email
+		// Tutor Email
 	}
 }

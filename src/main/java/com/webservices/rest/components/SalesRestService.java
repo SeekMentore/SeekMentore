@@ -67,6 +67,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
 	private SubscriptionPackage subscriptionPackageObject;
+	private PackageAssignment packageAssignmentObject;
 	
 	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -1180,6 +1181,62 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
+	
+	@Path(REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_ASSIGNMENT_RECORD)
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public String updateSubscriptionPackageAssignmentRecord (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_ASSIGNMENT_RECORD;
+		createSubscriptionPackageAssignmentObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		this.parentSerialId = parentId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			this.packageAssignmentObject.setPackageAssignmentSerialId(parentId);
+			getSubscriptionPackageService().updateSubscriptionPackageAssignmentRecord(this.packageAssignmentObject, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE_ASSIGNMENT)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String takeActionOnSubscriptionPackageAssignment (
+			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
+			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
+			@FormParam(REQUEST_PARAM_BUTTON) final String button,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE_ASSIGNMENT;
+		this.allIdsList = allIdsList;
+		this.comments = comments;
+		this.button = button;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final String errorMessage = getSubscriptionPackageService().takeActionOnSubscriptionPackageAssignment(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
+			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			} else {
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
+			}
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1302,6 +1359,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD : {
 				handleParentSerialId();
 				handleSubscriptionPackageSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_ASSIGNMENT_RECORD : {
+				handleParentSerialId();
+				handleSubscriptionPackageAssignmentSecurity();
 				break;
 			}
 		}
@@ -2200,6 +2262,138 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TERMINATING_REMARKS),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					default : {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+						break;
+					}
+				}
+			}
+		} else {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	private void createSubscriptionPackageAssignmentObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
+			this.packageAssignmentObject = new PackageAssignment();
+			this.packageAssignmentObject.setTotalHours(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "totalHours", Integer.class));
+			this.packageAssignmentObject.setIsCustomerGrieved(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isCustomerGrieved", String.class));
+			this.packageAssignmentObject.setCustomerHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerHappinessIndex", String.class));
+			this.packageAssignmentObject.setCustomerRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "customerRemarks", String.class));
+			this.packageAssignmentObject.setIsTutorGrieved(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isTutorGrieved", String.class));
+			this.packageAssignmentObject.setTutorHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorHappinessIndex", String.class));
+			this.packageAssignmentObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
+			this.packageAssignmentObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+		}
+	}
+	
+	private void handleSubscriptionPackageAssignmentSecurity() throws Exception {
+		this.securityPassed = true;
+		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+			for (final String attributeName : this.changedAttributes) {
+				switch(attributeName) {
+					case "totalHours" : {
+						if (!ValidationUtils.validateNumber(this.packageAssignmentObject.getTotalHours(), false, 0, false, 0)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TOTAL_HOURS),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "isCustomerGrieved" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getIsCustomerGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.packageAssignmentObject.getIsCustomerGrieved()))) {
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getCustomerRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "customerHappinessIndex" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "isTutorGrieved" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getIsTutorGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						} else {
+							if (YES.equals((this.packageAssignmentObject.getIsTutorGrieved()))) {
+								if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getTutorRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+						}
+						break;
+					}
+					case "tutorHappinessIndex" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+						}
+						break;
+					}
+					case "adminRemarks" : {
+						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getAdminRemarks())) {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS),
 									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 							this.securityPassed = false;
 						}
