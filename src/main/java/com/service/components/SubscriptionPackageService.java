@@ -610,4 +610,29 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		// Customer Email
 		// Tutor Email
 	}
+	
+	public List<PackageAssignment> getAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
+		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment");
+		String existingFilterQueryString = EMPTY_STRING;
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentCreatedDateStartDateSorter");
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_NEW_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentNewAssignmentFilter");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentStartedAssignmentFilter");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentHoursCompletedAssignmentFilter");
+				break;
+			}
+			case RestMethodConstants.REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST : {
+				existingFilterQueryString += queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentReviewedAssignmentFilter");
+				break;
+			}
+		}
+		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new PackageAssignmentRowMapper());
+	}
 }

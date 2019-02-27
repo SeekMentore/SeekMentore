@@ -113,6 +113,11 @@
 			<webservice id="subscriptionPackageAssignmentCheckDataAccess" url="/subscriptionPackageAssignmentCheckDataAccess"></webservice>
 			<webservice id="updateSubscriptionPackageAssignmentRecord" url="/updateSubscriptionPackageAssignmentRecord"></webservice>
 			<webservice id="takeActionOnSubscriptionPackageAssignment" url="/takeActionOnSubscriptionPackageAssignment"></webservice>
+			<webservice id="newAssignmentList" url="/newAssignmentList"></webservice>
+			<webservice id="startedAssignmentList" url="/startedAssignmentList"></webservice>
+			<webservice id="hoursCompletedAssignmentList" url="/hoursCompletedAssignmentList"></webservice>
+			<webservice id="reviewedAssignmentList" url="/reviewedAssignmentList"></webservice>
+			<webservice id="assignmentAttendanceMarkingAccess" url="/assignmentAttendanceMarkingAccess"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

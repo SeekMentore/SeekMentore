@@ -153,6 +153,18 @@
 	<query type="filter" id="packageAssignmentHistoryAssignmentAdditionalFilter">
 		AND P.END_DATE_MILLIS IS NOT NULL
 	</query>
+	<query type="filter" id="packageAssignmentNewAssignmentFilter">
+		WHERE P.START_DATE_MILLIS IS NULL AND P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="filter" id="packageAssignmentStartedAssignmentFilter">
+		WHERE P.START_DATE_MILLIS IS NOT NULL AND P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="filter" id="packageAssignmentHoursCompletedAssignmentFilter">
+		WHERE P.TOTAL_HOURS = P.COMPLETED_HOURS AND P.END_DATE_MILLIS IS NULL
+	</query>
+	<query type="filter" id="packageAssignmentReviewedAssignmentFilter">
+		WHERE P.END_DATE_MILLIS IS NOT NULL
+	</query>
 	<query type="sorter" id="packageAssignmentCreatedDateStartDateSorter">
 		ORDER BY CREATED_MILLIS ASC, START_DATE_MILLIS ASC
 	</query>

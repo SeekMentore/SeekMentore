@@ -1237,6 +1237,132 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_NEW_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String newAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_NEW_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentList(REST_METHOD_NAME_NEW_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String startedAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentList(REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String hoursCompletedAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentList(REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String reviewedAssignmentList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, PackageAssignment.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<PackageAssignment> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentList(REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path("/assignmentAttendanceMarkingAccess")
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String assignmentAttendanceMarkingAccess (
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		Map<String, Object> restresponse = new HashMap<String, Object>();
+		restresponse.put("success", true);
+		restresponse.put("assignmentAttendanceMarkingAccess", true);
+		restresponse.put("message", "");
+		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1286,7 +1412,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_CANCELED_DEMO_LIST : 
 			case REST_METHOD_NAME_ENQUIRY_CLOSED_DEMO_LIST : 
 			case REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : 
-			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : {
+			case REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST : 
+			case REST_METHOD_NAME_NEW_ASSIGNMENT_LIST : 
+			case REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST : 
+			case REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST : 
+			case REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST : {
 				this.securityPassed = true;
 				break;
 			}

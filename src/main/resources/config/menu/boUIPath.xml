@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	pageAccessType values 
-		public										-
-		user                                        - 
-		common										-
+		public										- Can be accessed without Login token
+		user                                        - Login token (of any User Type) is required
+		common										- 
 		employee                                    - 
 		admin                                       - 
 		sales                                       - 
@@ -25,11 +25,12 @@
                 <uipage id="subscribedcustomer" url="/subscribedcustomer" urlActive="true" itemHeader="Subscribed Customer" order="2"></uipage>
             </menuitem>
             <menuitem id="sales" url="/sales" pageAccessType="sales" itemHeader="Sales" order="3" faClass="">
-                <uipage id="allenquiries" url="/allenquiries" urlActive="true" itemHeader="Enquiries" order="1"></uipage>
-                <uipage id="maptutortoenquiry" url="/maptutortoenquiry" urlActive="true" itemHeader="Map Tutor to Enquiry" order="2"></uipage>
-                <uipage id="scheduledemo" url="/scheduledemo" urlActive="true" itemHeader="Schedule Demo" order="3"></uipage>
-                <uipage id="demotracker" url="/demotracker" urlActive="true" itemHeader="Demo Tracker" order="4"></uipage>
+                <uipage id="allenquiries" url="/allenquiries" urlActive="true" itemHeader="Enquiry Manager" order="1"></uipage>
+                <uipage id="maptutortoenquiry" url="/maptutortoenquiry" urlActive="true" itemHeader="Tutor Mapping" order="2"></uipage>
+                <uipage id="scheduledemo" url="/scheduledemo" urlActive="true" itemHeader="Demo Scheduler" order="3"></uipage>
+                <uipage id="demotracker" url="/demotracker" urlActive="true" itemHeader="Demo Manager" order="4"></uipage>
                 <uipage id="subscriptionpackages" url="/subscriptionpackages" urlActive="true" itemHeader="Subscription Packages" order="5"></uipage>
+                <uipage id="assignmentattendance" url="/assignmentattendance" urlActive="true" itemHeader="Assignment Attendance" order="6"></uipage>
             </menuitem>
             <menuitem id="support" url="/support" pageAccessType="support" itemHeader="Support" order="4" faClass="">
                 <uipage id="tutorregistration" url="/tutorregistration" urlActive="true" itemHeader="Become Tutor" order="1"></uipage>
