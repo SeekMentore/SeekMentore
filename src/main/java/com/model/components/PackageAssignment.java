@@ -31,6 +31,19 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private Long customerId;
+	private String customerName;
+	private String customerEmail;
+	private String customerContactNumber;
+	private Long tutorId;
+	private String tutorName;
+	private String tutorEmail;
+	private String tutorContactNumber;
+	private Long enquiryId;
+	private String enquirySubject;
+	private String enquiryGrade;
+	private String enquiryEmail;
+	private String enquiryContactNumber;
 	
 	public PackageAssignment() {}
 	
@@ -202,6 +215,110 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 		this.totalHours = totalHours;
 	}
 
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerEmail() {
+		return customerEmail;
+	}
+
+	public void setCustomerEmail(String customerEmail) {
+		this.customerEmail = customerEmail;
+	}
+
+	public String getCustomerContactNumber() {
+		return customerContactNumber;
+	}
+
+	public void setCustomerContactNumber(String customerContactNumber) {
+		this.customerContactNumber = customerContactNumber;
+	}
+
+	public Long getTutorId() {
+		return tutorId;
+	}
+
+	public void setTutorId(Long tutorId) {
+		this.tutorId = tutorId;
+	}
+
+	public String getTutorName() {
+		return tutorName;
+	}
+
+	public void setTutorName(String tutorName) {
+		this.tutorName = tutorName;
+	}
+
+	public String getTutorEmail() {
+		return tutorEmail;
+	}
+
+	public void setTutorEmail(String tutorEmail) {
+		this.tutorEmail = tutorEmail;
+	}
+
+	public String getTutorContactNumber() {
+		return tutorContactNumber;
+	}
+
+	public void setTutorContactNumber(String tutorContactNumber) {
+		this.tutorContactNumber = tutorContactNumber;
+	}
+
+	public Long getEnquiryId() {
+		return enquiryId;
+	}
+
+	public void setEnquiryId(Long enquiryId) {
+		this.enquiryId = enquiryId;
+	}
+
+	public String getEnquirySubject() {
+		return enquirySubject;
+	}
+
+	public void setEnquirySubject(String enquirySubject) {
+		this.enquirySubject = enquirySubject;
+	}
+
+	public String getEnquiryGrade() {
+		return enquiryGrade;
+	}
+
+	public void setEnquiryGrade(String enquiryGrade) {
+		this.enquiryGrade = enquiryGrade;
+	}
+
+	public String getEnquiryEmail() {
+		return enquiryEmail;
+	}
+
+	public void setEnquiryEmail(String enquiryEmail) {
+		this.enquiryEmail = enquiryEmail;
+	}
+
+	public String getEnquiryContactNumber() {
+		return enquiryContactNumber;
+	}
+
+	public void setEnquiryContactNumber(String enquiryContactNumber) {
+		this.enquiryContactNumber = enquiryContactNumber;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -238,6 +355,19 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "customerId" : return "CUSTOMER_ID";
+			case "customerName" : return "CUSTOMER_NAME";
+			case "customerEmail" : return "CUSTOMER_EMAIL";
+			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
+			case "tutorId" : return "TUTOR_ID";
+			case "tutorName" : return "TUTOR_NAME";
+			case "tutorEmail" : return "TUTOR_EMAIL";
+			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
+			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySubject" : return "ENQUIRY_SUBJECT";
+			case "enquiryGrade" : return "ENQUIRY_GRADE";
+			case "enquiryEmail" : return "ENQUIRY_EMAIL";
+			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
 		}
 		return EMPTY_STRING;
 	}

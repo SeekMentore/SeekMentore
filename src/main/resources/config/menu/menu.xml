@@ -112,6 +112,7 @@
 			<webservice id="downloadSubscriptionPackageContractPdf" url="/downloadSubscriptionPackageContractPdf"></webservice>
 			<webservice id="subscriptionPackageAssignmentCheckDataAccess" url="/subscriptionPackageAssignmentCheckDataAccess"></webservice>
 			<webservice id="updateSubscriptionPackageAssignmentRecord" url="/updateSubscriptionPackageAssignmentRecord"></webservice>
+			<webservice id="takeActionOnSubscriptionPackageAssignment" url="/takeActionOnSubscriptionPackageAssignment"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

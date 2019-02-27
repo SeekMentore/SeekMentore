@@ -1322,7 +1322,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_MAPPED_TUTOR : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_DEMO : 
-			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE : {
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION_PACKAGE_ASSIGNMENT : {
 				handleTakeAction();
 				break;
 			}
@@ -1378,13 +1379,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				case BUTTON_ACTION_TO_BE_MAPPED : 
 				case BUTTON_ACTION_DEMO_READY : 
 				case SubscriptionPackageConstants.BUTTON_ACTIVATE_SUBSCRIPTION : 
-				case SubscriptionPackageConstants.BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : {
+				case SubscriptionPackageConstants.BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : 
+				case SubscriptionPackageConstants.BUTTON_START_ASSIGNMENT : {
 					break;
 				}
 				case BUTTON_ACTION_ABORTED : 
 				case BUTTON_ACTION_PENDING : 
 				case BUTTON_ACTION_CANCEL : 
-				case SubscriptionPackageConstants.BUTTON_END_SUBSCRIPTION : {
+				case SubscriptionPackageConstants.BUTTON_END_SUBSCRIPTION : 
+				case SubscriptionPackageConstants.BUTTON_END_ASSIGNMENT : {
 					handleComments();
 					break;
 				}

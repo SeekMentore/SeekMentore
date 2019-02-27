@@ -316,7 +316,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				}
 				successCount++;
 			} else {
-				message.append("SubscriptionPackageId : '").append(subscriptionPackage.getSubscriptionPackageSerialId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
+				message.append("SubscriptionPackageSerialId : '").append(subscriptionPackage.getSubscriptionPackageSerialId()).append("' Failed. Reason - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
 				failureCount++;
 			}
 		}
@@ -362,7 +362,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		if (!EMPTY_STRING.equals(message.toString())) {
 			final String errorMessage = message.toString();
-			message = new StringBuilder("'"+ failureCount +"' SubscriptionPackageId failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
+			message = new StringBuilder("'"+ failureCount +"' Subscription Packages failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
 		}
 		return message.toString();
 	}
@@ -542,7 +542,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				}
 				successCount++;
 			} else {
-				message.append("PackageAssignmentSerialId : '").append(packageAssignment.getPackageAssignmentSerialId()).append("' Failed - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
+				message.append("PackageAssignmentSerialId : '").append(packageAssignment.getPackageAssignmentSerialId()).append("' Failed. Reason - ").append(messageDesc.toString()).append(NEW_LINE).append(LINE_BREAK);
 				failureCount++;
 			}
 		}
@@ -562,13 +562,13 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		if (sendEmails) {
 			switch(button) {
-				case BUTTON_ACTIVATE_SUBSCRIPTION : {
+				case BUTTON_START_ASSIGNMENT : {
 					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
 						sendNotificationEmailsForStartOfPackageAssignment(packageAssignmentParamObjectList);
 					}
 					break;
 				}
-				case BUTTON_END_SUBSCRIPTION : {
+				case BUTTON_END_ASSIGNMENT : {
 					if (ValidationUtils.checkNonEmptyList(packageAssignmentParamObjectList)) {
 						sendNotificationEmailsForEndOfPackageAssignment(packageAssignmentParamObjectList);
 					}
@@ -578,7 +578,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		if (!EMPTY_STRING.equals(message.toString())) {
 			final String errorMessage = message.toString();
-			message = new StringBuilder("'"+ failureCount +"' SubscriptionPackageId failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
+			message = new StringBuilder("'"+ failureCount +"' Package Assignments failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
 		}
 		return message.toString();
 	}
@@ -592,14 +592,14 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			// Client Email
 			mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getEnquiryEmail());
 			mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(packageAssignment.getCustomerEmail(), packageAssignment.getEnquiryEmail()) ? packageAssignment.getCustomerEmail() : null);
-			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - ");
-			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_CLIENT_EMAIL_PATH, attributes));
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_STARTED_CLIENT_EMAIL_PATH, attributes));
 			mailParamList.add(mailParams);
 			mailParams = new HashMap<String, Object>();
 			// Tutor Email
 			mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getTutorEmail());
-			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New Subscription Package has been activated for you");
-			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_ACTIVATED_TUTOR_EMAIL_PATH, attributes));
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_STARTED_TUTOR_EMAIL_PATH, attributes));
 			mailParamList.add(mailParams);
 			
 			MailUtils.sendMultipleMimeMessageEmail(mailParamList);
