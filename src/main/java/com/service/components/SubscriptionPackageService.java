@@ -22,6 +22,7 @@ import com.constants.RestMethodConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
+import com.model.components.AssignmentAttendance;
 import com.model.components.Contract;
 import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
@@ -487,6 +488,13 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 	}
 	
+	public PackageAssignment getPackageAssignment(final String packageAssignmentSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("packageAssignmentSerialId", packageAssignmentSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment")
+												+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "packageAssignmentPackageAssignmentSerialIdFilter"), paramsMap, new PackageAssignmentRowMapper());
+	}
+	
 	@Transactional
 	public String takeActionOnSubscriptionPackageAssignment(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
 		StringBuilder message = new StringBuilder(EMPTY_STRING);
@@ -634,5 +642,29 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			}
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new PackageAssignmentRowMapper());
+	}
+
+	public void insertAssignmentAttendance(final AssignmentAttendance assignmentAttendanceObject, final PackageAssignment packageAssignmentObject, final User activeUser) throws Exception {
+		Integer newCompletedHours = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedHours()) ? packageAssignmentObject.getCompletedHours() : 0)
+									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendanceObject.getDurationHours()) ? assignmentAttendanceObject.getDurationHours() : 0);
+		Integer newCompletedMinutes = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedMinutes()) ? packageAssignmentObject.getCompletedMinutes() : 0)
+									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendanceObject.getDurationMinutes()) ? assignmentAttendanceObject.getDurationMinutes() : 0);
+		if (newCompletedMinutes > 59) {
+			newCompletedHours++;
+			newCompletedMinutes -= 60;
+		}
+		packageAssignmentObject.setCompletedHours(newCompletedHours);
+		packageAssignmentObject.setCompletedMinutes(newCompletedMinutes);
+		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendanceObject);
+		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignmentObject);
+		applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", assignmentAttendanceObject.getDocuments());
+		if (newCompletedHours == packageAssignmentObject.getTotalHours()) {
+			sendNotificationEmailsForHoursCompletionPackageAssignment();
+		}
+	}
+	
+	private void sendNotificationEmailsForHoursCompletionPackageAssignment() {
+		// Customer Email
+		// Tutor Email
 	}
 }

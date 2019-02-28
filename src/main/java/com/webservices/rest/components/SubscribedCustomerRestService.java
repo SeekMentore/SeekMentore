@@ -144,7 +144,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			this.subscribedCustomerObject.setCustomerId(Long.parseLong(parentId));
 			getCustomerService().updateCustomerRecord(this.subscribedCustomerObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Updated record");
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);

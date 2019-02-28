@@ -22,6 +22,15 @@ public class ValidationUtils implements ValidationConstants {
 	    return false;
 	}
 	
+	public static Boolean checkNonNegativeNumberAvailability(final Integer object) {
+		if (checkObjectAvailability(object)) {
+			if (object >= 0) {
+				return true;
+			}
+		}
+	    return false;
+	}
+	
 	public static Boolean checkStringAvailability(final String stringObject) {
 	    if (checkObjectAvailability(stringObject)) {
 	      if (!EMPTY_STRING.equals(stringObject.trim())) {

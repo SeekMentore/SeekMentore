@@ -96,6 +96,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_STARTED_ASSIGNMENT_LIST = "/startedAssignmentList";
 	String REST_METHOD_NAME_HOURS_COMPLETED_ASSIGNMENT_LIST = "/hoursCompletedAssignmentList";
 	String REST_METHOD_NAME_REVIEWED_ASSIGNMENT_LIST = "/reviewedAssignmentList";
+	String REST_METHOD_NAME_INSERT_ASSIGNMENT_ATTENDANCE = "/insertAssignmentAttendance";
 	// Support REST methods
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST = "/downloadAdminReportBecomeTutorList";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF = "/downloadAdminBecomeTutorProfilePdf";

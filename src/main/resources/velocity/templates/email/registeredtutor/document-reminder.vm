@@ -6,7 +6,7 @@ Hello $addressName,
 	  #foreach( $document in $tutorDocuments )
 	    <tr>
 	    	<td style="$CoreTableTDStyling width: 10%;">$velocityCount</td>
-	    	<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
+	    	<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TUTOR_DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
 		</tr>
 	  #end
 	</table>

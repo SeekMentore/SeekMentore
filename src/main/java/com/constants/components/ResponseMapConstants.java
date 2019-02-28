@@ -9,5 +9,6 @@ public interface ResponseMapConstants extends ApplicationConstants {
 	String RESPONSE_MAP_ATTRIBUTE_SUCCESS = "success";
 	String RESPONSE_MAP_ATTRIBUTE_REDIRECT_TO = "redirectTo";
 	
-	String MESSAGE_UPDATED_RECORD = "Updated record";
+	String MESSAGE_UPDATED_RECORD = "Record Updated";
+	String MESSAGE_INSERTED_RECORD = "Record Inserted";
 }

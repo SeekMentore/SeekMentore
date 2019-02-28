@@ -89,7 +89,7 @@ public class TutorService implements TutorConstants {
 			registeredTutor.setHasProfilePicture(false);
 			if (ValidationUtils.checkNonEmptyList(registeredTutor.getDocuments())) {
 				for (final TutorDocument tutorDocument : registeredTutor.getDocuments()) {
-					if ("Profile Photo".equals(ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_DOCUMENT_TYPE_LOOKUP, tutorDocument.getDocumentType()))) {
+					if ("Profile Photo".equals(ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_TUTOR_DOCUMENT_TYPE_LOOKUP, tutorDocument.getDocumentType()))) {
 						registeredTutor.setHasProfilePicture(true);
 						registeredTutor.setProfilePicturePath("/images/profile/registeredtutor/"+tutorId+"/"+tutorDocument.getFilename());
 					}

@@ -184,7 +184,7 @@
 			#if( $ValidationUtils.checkNonEmptyList($registeredTutor.getDocuments()) )
 				#foreach( $document in $registeredTutor.getDocuments() )
 					<tr>
-						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('DOCUMENT_TYPE_LOOKUP', $document.documentType))</td>
+						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('TUTOR_DOCUMENT_TYPE_LOOKUP', $document.documentType))</td>
 						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($document.filename)</td>
 						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('YES_NO_LOOKUP', $document.isApproved))</td>
 						<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($document.whoActedName)</td>
