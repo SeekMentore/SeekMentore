@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.model.ApplicationWorkbookObject;
+import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.utils.ValidationUtils;
 
 public class WorkbookSheet implements Serializable {
@@ -191,7 +192,11 @@ public class WorkbookSheet implements Serializable {
 		if (!ValidationUtils.checkNonEmptyList(this.headers)) {
 			this.headers = new LinkedList<WorkbookHeader>();
 		}
-		this.headers.add(new WorkbookHeader(this.getRecordObjectType().newInstance().getReportHeaders(this.getObjectReportSwitch())));
+		final List<WorkbookCell> headerCells = new LinkedList<WorkbookCell>();
+		for (final Object value : this.getRecordObjectType().newInstance().getReportHeaders(this.getObjectReportSwitch())) {
+			headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
+		}
+		this.headers.add(new WorkbookHeader(headerCells));
 	}
 	
 	private void computeWorkbookRecordsFromObjectTypeRecords() {
@@ -199,11 +204,11 @@ public class WorkbookSheet implements Serializable {
 			this.records = new LinkedList<WorkbookRecord>();
 		}
 		for(final ApplicationWorkbookObject workbookObject : this.getObjectTypeRecords()) {
-			final List<WorkbookCell> record = new LinkedList<WorkbookCell>();
+			final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
 			for (final Object value : workbookObject.getReportRecords(this.getObjectReportSwitch())) {
-				record.add(new WorkbookCell(value));
+				recordCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.SOLID_FOREGROUND_GOLD));
 			}
-			this.records.add(new WorkbookRecord(record));
+			this.records.add(new WorkbookRecord(recordCells));
 		}
 	}
 }

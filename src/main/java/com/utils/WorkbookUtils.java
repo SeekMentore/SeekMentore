@@ -19,9 +19,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.constants.WorkbookConstants;
 import com.model.workbook.WorkbookCell;
+import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.model.workbook.WorkbookHeader;
 import com.model.workbook.WorkbookRecord;
-import com.model.workbook.WorkbookRecord.TypeOfStyleEnum;
 import com.model.workbook.WorkbookReport;
 import com.model.workbook.WorkbookSheet;
 
@@ -64,78 +64,48 @@ public class WorkbookUtils implements WorkbookConstants {
 	    }
 	}
 	
-	private static XSSFCellStyle getHeaderCellStyle(final XSSFWorkbook workbook) {
-		final XSSFCellStyle headerCellStyle = workbook.createCellStyle();
-		// Set Color Black
-		final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
-		// Set Border Color
-		headerCellStyle.setBottomBorderColor(headerCellBorderColor);
-		headerCellStyle.setTopBorderColor(headerCellBorderColor);
-		headerCellStyle.setLeftBorderColor(headerCellBorderColor);
-		headerCellStyle.setRightBorderColor(headerCellBorderColor);
-		// Set Border Style
-		headerCellStyle.setBorderTop(BorderStyle.THIN);
-		headerCellStyle.setBorderBottom(BorderStyle.THIN);
-		headerCellStyle.setBorderLeft(BorderStyle.THIN);
-		headerCellStyle.setBorderRight(BorderStyle.THIN);
-		// Set Data Alignment
-		headerCellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-		headerCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-		return headerCellStyle;
-	}
-	
 	private static XSSFCellStyle getTypeStyleCellStyle(final XSSFWorkbook workbook, final TypeOfStyleEnum typeOfStyleEnum) {
-		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
+		final XSSFCellStyle cellStyle = workbook.createCellStyle();
 		switch(typeOfStyleEnum) {
+			case DEFAULT_HEADER_CELL: {
+				// Set Color Black
+				final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
+				// Set Border Color
+				cellStyle.setBottomBorderColor(headerCellBorderColor);
+				cellStyle.setTopBorderColor(headerCellBorderColor);
+				cellStyle.setLeftBorderColor(headerCellBorderColor);
+				cellStyle.setRightBorderColor(headerCellBorderColor);
+				// Set Border Style
+				cellStyle.setBorderTop(BorderStyle.THIN);
+				cellStyle.setBorderBottom(BorderStyle.THIN);
+				cellStyle.setBorderLeft(BorderStyle.THIN);
+				cellStyle.setBorderRight(BorderStyle.THIN);
+				// Set Data Alignment
+				cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+				cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+				break;
+			}
 			case SOLID_FOREGROUND_YELLOW : {
-				mismatchCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				cellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 				break;
 			}
 			case SOLID_FOREGROUND_GOLD : {
-				mismatchCellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
-				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				cellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
+				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 				break;
 			}
 			case SOLID_FOREGROUND_LAVENDER : {
-				mismatchCellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
-				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				cellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
+				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 				break;
 			}
 		}
-		return mismatchCellStyle;
-	}
-	
-	private static XSSFCellStyle getYellowCellStyle(final XSSFWorkbook workbook) {
-		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
-		// Set Cell as YELLOW
-		mismatchCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-		mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-		return mismatchCellStyle;
-	}
-	
-	private static XSSFCellStyle getGoldCellStyle(final XSSFWorkbook workbook) {
-		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
-		// Set Cell as YELLOW
-		mismatchCellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
-		mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-		return mismatchCellStyle;
-	}
-	
-	private static XSSFCellStyle getLavenderCellStyle(final XSSFWorkbook workbook) {
-		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
-		// Set Cell as YELLOW
-		mismatchCellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
-		mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-		return mismatchCellStyle;
+		return cellStyle;
 	}
 	
 	public static byte[] createWorkbook(WorkbookReport workbookReport) throws IOException {
 		final XSSFWorkbook workbook = new XSSFWorkbook();
-		final XSSFCellStyle headerCellStyle = getHeaderCellStyle(workbook);
-		final XSSFCellStyle mismatchCellStyle = getMismatchCellStyle(workbook);
-		final XSSFCellStyle extraCellStyle = getExtraCellStyle(workbook);
-		final XSSFCellStyle missingCellStyle = getMissingCellStyle(workbook);
 		LoggerUtils.logOnConsole("Total Sheets = "+workbookReport.getSheets().size());
 		for (WorkbookSheet sheet : workbookReport.getSheets()) {
 			final XSSFSheet spreadsheet = workbook.createSheet(sheet.getSheetName());
@@ -161,12 +131,19 @@ public class WorkbookUtils implements WorkbookConstants {
 					cell.setCellValue(EMPTY_STRING);
 					cellid += 1;
 				}
-				for (Object value : header.getHeader()) {
+				for (WorkbookCell headerCell : header.getHeaderCells()) {
+					Object value = headerCell.getValue();
 					final XSSFCell cell = row.createCell(cellid);
 					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
-					cell.setCellStyle(headerCellStyle);
+					XSSFCellStyle cellStyle = null;
+					Boolean applyAnyCellStyle = false;
+					if (headerCell.getIsCellStyled()) {
+						cellStyle = getTypeStyleCellStyle(workbook, headerCell.getTypeOfStyleEnum());
+						applyAnyCellStyle = true;
+						cell.setCellStyle(cellStyle);
+					}
 					if (header.getHowManyCellsPerColumn() > 1) {
-						setCellMerge(spreadsheet, rowid, rowid, cellid, cellid + (header.getHowManyCellsPerColumn() - 1), headerCellStyle, true);
+						setCellMerge(spreadsheet, rowid, rowid, cellid, cellid + (header.getHowManyCellsPerColumn() - 1), cellStyle, applyAnyCellStyle);
 						cellid += (header.getHowManyCellsPerColumn() - 1);
 					}
 					cellid += 1;
@@ -193,21 +170,17 @@ public class WorkbookUtils implements WorkbookConstants {
 					cell.setCellValue(EMPTY_STRING);
 					cellid += 1;
 				}
-				for (WorkbookCell cellValue : record.getRecord()) {
-					Object value = cellValue.getValue();
+				for (WorkbookCell recordCell : record.getRecordCells()) {
+					Object value = recordCell.getValue();
 					final XSSFCell cell = row.createCell(cellid);
 					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
-					if (record.getIsMismatch()) {
-						cell.setCellStyle(mismatchCellStyle);
-					} else if (record.getIsExtra()) {
-						cell.setCellStyle(extraCellStyle);
-					} else if (record.getIsMissing()) {
-						cell.setCellStyle(missingCellStyle);
+					if (recordCell.getIsCellStyled()) {
+						cell.setCellStyle(getTypeStyleCellStyle(workbook, recordCell.getTypeOfStyleEnum()));
 					}
 					cellid += 1;
 					// GC value after it is done
 					value = null;
-					cellValue = null;
+					recordCell = null;
 				}
 				if (maxColumnsEncountered < cellid) {
 					maxColumnsEncountered = cellid;
