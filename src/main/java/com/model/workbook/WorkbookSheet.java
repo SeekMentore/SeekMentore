@@ -199,7 +199,11 @@ public class WorkbookSheet implements Serializable {
 			this.records = new LinkedList<WorkbookRecord>();
 		}
 		for(final ApplicationWorkbookObject workbookObject : this.getObjectTypeRecords()) {
-			this.records.add(new WorkbookRecord(workbookObject.getReportRecords(this.getObjectReportSwitch())));
+			final List<WorkbookCell> record = new LinkedList<WorkbookCell>();
+			for (final Object value : workbookObject.getReportRecords(this.getObjectReportSwitch())) {
+				record.add(new WorkbookCell(value));
+			}
+			this.records.add(new WorkbookRecord(record));
 		}
 	}
 }

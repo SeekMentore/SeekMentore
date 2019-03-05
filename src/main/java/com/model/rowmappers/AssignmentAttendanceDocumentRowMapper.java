@@ -27,6 +27,7 @@ public class AssignmentAttendanceDocumentRowMapper implements RowMapper<Assignme
 		assignmentAttendanceDocument.setRecordLastUpdatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, assignmentAttendanceDocument.resolveColumnNameForMapping("recordLastUpdatedMillis"), Long.class));
 		assignmentAttendanceDocument.setUpdatedBy(ExceptionUtils.exceptionHandlerForRowMapper(row, assignmentAttendanceDocument.resolveColumnNameForMapping("updatedBy"), String.class));
 		assignmentAttendanceDocument.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, assignmentAttendanceDocument.resolveColumnNameForMapping("updatedByName"), String.class));
+		assignmentAttendanceDocument.setUpdatedByUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, assignmentAttendanceDocument.resolveColumnNameForMapping("updatedByUserType"), String.class));
 		GridComponentUtils.mapGridPseudoColumnsForRecords(assignmentAttendanceDocument, row, rowNum);
 		return assignmentAttendanceDocument;
 	}

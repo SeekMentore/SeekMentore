@@ -18,8 +18,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.constants.WorkbookConstants;
+import com.model.workbook.WorkbookCell;
 import com.model.workbook.WorkbookHeader;
 import com.model.workbook.WorkbookRecord;
+import com.model.workbook.WorkbookRecord.TypeOfStyleEnum;
 import com.model.workbook.WorkbookReport;
 import com.model.workbook.WorkbookSheet;
 
@@ -82,7 +84,29 @@ public class WorkbookUtils implements WorkbookConstants {
 		return headerCellStyle;
 	}
 	
-	private static XSSFCellStyle getMismatchCellStyle(final XSSFWorkbook workbook) {
+	private static XSSFCellStyle getTypeStyleCellStyle(final XSSFWorkbook workbook, final TypeOfStyleEnum typeOfStyleEnum) {
+		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
+		switch(typeOfStyleEnum) {
+			case SOLID_FOREGROUND_YELLOW : {
+				mismatchCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				break;
+			}
+			case SOLID_FOREGROUND_GOLD : {
+				mismatchCellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
+				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				break;
+			}
+			case SOLID_FOREGROUND_LAVENDER : {
+				mismatchCellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
+				mismatchCellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				break;
+			}
+		}
+		return mismatchCellStyle;
+	}
+	
+	private static XSSFCellStyle getYellowCellStyle(final XSSFWorkbook workbook) {
 		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
 		// Set Cell as YELLOW
 		mismatchCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
@@ -90,7 +114,7 @@ public class WorkbookUtils implements WorkbookConstants {
 		return mismatchCellStyle;
 	}
 	
-	private static XSSFCellStyle getExtraCellStyle(final XSSFWorkbook workbook) {
+	private static XSSFCellStyle getGoldCellStyle(final XSSFWorkbook workbook) {
 		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
 		// Set Cell as YELLOW
 		mismatchCellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
@@ -98,7 +122,7 @@ public class WorkbookUtils implements WorkbookConstants {
 		return mismatchCellStyle;
 	}
 	
-	private static XSSFCellStyle getMissingCellStyle(final XSSFWorkbook workbook) {
+	private static XSSFCellStyle getLavenderCellStyle(final XSSFWorkbook workbook) {
 		final XSSFCellStyle mismatchCellStyle = workbook.createCellStyle();
 		// Set Cell as YELLOW
 		mismatchCellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
@@ -169,7 +193,8 @@ public class WorkbookUtils implements WorkbookConstants {
 					cell.setCellValue(EMPTY_STRING);
 					cellid += 1;
 				}
-				for (Object value : record.getRecord()) {
+				for (WorkbookCell cellValue : record.getRecord()) {
+					Object value = cellValue.getValue();
 					final XSSFCell cell = row.createCell(cellid);
 					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
 					if (record.getIsMismatch()) {
@@ -182,6 +207,7 @@ public class WorkbookUtils implements WorkbookConstants {
 					cellid += 1;
 					// GC value after it is done
 					value = null;
+					cellValue = null;
 				}
 				if (maxColumnsEncountered < cellid) {
 					maxColumnsEncountered = cellid;

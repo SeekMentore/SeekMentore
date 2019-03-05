@@ -3,8 +3,11 @@ package com.model.components;
 import java.io.Serializable;
 import java.util.List;
 
+import com.constants.components.SelectLookupConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.ValidationUtils;
 
 public class AssignmentAttendance extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
@@ -32,6 +35,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private String updatedByUserType;
 	private List<AssignmentAttendanceDocument> documents;
 	
 	public AssignmentAttendance() {}
@@ -211,15 +215,102 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 	public void setDocuments(List<AssignmentAttendanceDocument> documents) {
 		this.documents = documents;
 	}
+	
+	public String getUpdatedByUserType() {
+		return updatedByUserType;
+	}
+
+	public void setUpdatedByUserType(String updatedByUserType) {
+		this.updatedByUserType = updatedByUserType;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
-		return null;
+		switch (reportSwitch) {
+			case "SALES_REPORT_TEST" : {
+				return new Object[] {
+						"ENTRY_DATE",
+						"ENTRY_TIME",
+						"EXIT_DATE",
+						"EXIT_TIME",
+						"DURATION_HOURS",
+						"DURATION_MINUTES",
+						"TOPICS_TAUGHT",
+						"CLASSWORK_PROVIDED",
+						"HOMEWORK_PROVIDED",
+						"TEST_PROVIDED",
+						"TUTOR_REMARKS",
+						"TUTOR_PUNCTUALITY_INDEX",
+						"PUNCTUALITY_REMARKS",
+						"TUTOR_EXPERTISE_INDEX",
+						"EXPERTISE_REMARKS",
+						"TUTOR_KNOWLEDGE_INDEX",
+						"KNOWLEDGE_REMARKS",
+						"STUDENT_REMARKS",
+						"RECORD_LAST_UPDATED",
+						"UPDATED_BY",
+						"UPDATED_BY_USER_TYPE"
+					};
+			}
+		}
+		return new Object[] {};
 	}
 
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
-		return null;
+		switch (reportSwitch) {
+			case "SALES_REPORT_TEST" : {
+				return new Object[] {
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "dd-MMM-yyyy"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "dd-MMM-yyyy"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
+						this.durationHours,
+						this.durationMinutes,
+						this.topicsTaught,
+						this.isClassworkProvided,
+						this.isHomeworkProvided,
+						this.isTestProvided,
+						this.tutorRemarks,
+						this.tutorPunctualityIndex,
+						this.punctualityRemarks,
+						this.tutorExpertiseIndex,
+						this.expertiseRemarks,
+						this.tutorKnowledgeIndex,
+						this.knowledgeRemarks,
+						this.studentRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName,
+						this.updatedByUserType
+					};
+			}
+			case "SALES_REPORT" : {
+				return new Object[] {
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "dd-MMM-yyyy"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "dd-MMM-yyyy"),
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
+						this.durationHours,
+						this.durationMinutes,
+						this.topicsTaught,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isClassworkProvided),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isHomeworkProvided),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.isTestProvided),
+						this.tutorRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorPunctualityIndex),
+						this.punctualityRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorExpertiseIndex),
+						this.expertiseRemarks,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorKnowledgeIndex),
+						this.knowledgeRemarks,
+						this.studentRemarks,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
+						this.updatedByName,
+						this.updatedByUserType
+					};
+			}
+		}
+		return new Object[] {};
 	}
 
 	@Override
@@ -248,6 +339,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "updatedByUserType" : return "UPDATED_BY_USER_TYPE";
 		}
 		return EMPTY_STRING;
 	}

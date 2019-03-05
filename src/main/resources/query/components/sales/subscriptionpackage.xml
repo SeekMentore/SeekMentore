@@ -214,4 +214,43 @@
 			UPDATED_BY = :updatedBy
 		WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
 	</query>
+	<query type="update" id="updateHoursTaughtInPackageAssignment" paramClass="com.model.components.PackageAssignment">
+		UPDATE PACKAGE_ASSIGNMENT SET
+			COMPLETED_HOURS = :completedHours,
+			COMPLETED_MINUTES = :completedMinutes,
+			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
+			UPDATED_BY = :updatedBy
+		WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
+	</query>
+	<query type="select" id="selectAssignmentAttendance">
+		SELECT
+			A.*,
+			CASE
+			    WHEN UPDATED_BY_USER_TYPE = 'Employee' THEN IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = A.UPDATED_BY), A.UPDATED_BY)
+			    WHEN UPDATED_BY_USER_TYPE = 'Tutor' THEN IFNULL((SELECT NAME FROM REGISTERED_TUTOR R WHERE R.USER_ID = A.UPDATED_BY), A.UPDATED_BY)
+			    WHEN UPDATED_BY_USER_TYPE = 'Customer' THEN IFNULL((SELECT NAME FROM SUBSCRIBED_CUSTOMER S WHERE S.USER_ID = A.UPDATED_BY), A.UPDATED_BY)
+			    ELSE A.UPDATED_BY
+			END AS UPDATED_BY_NAME
+		FROM ASSIGNMENT_ATTENDANCE A
+	</query>
+	<query type="filter" id="assignmentAttendancePackageAssignmentSerialIdFilter">
+		WHERE A.PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId
+	</query>
+	<query type="sorter" id="assignmentAttendanceEntryDateSorter">
+		ORDER BY ENTRY_DATE_TIME_MILLIS ASC
+	</query>
+	<query type="insert" id="insertAssignmentAttendance" paramClass="com.model.components.AssignmentAttendance">
+		INSERT INTO ASSIGNMENT_ATTENDANCE
+			(ASSIGNMENT_ATTENDANCE_SERIAL_ID, PACKAGE_ASSIGNMENT_SERIAL_ID, ENTRY_DATE_TIME_MILLIS, EXIT_DATE_TIME_MILLIS, DURATION_HOURS, 
+			DURATION_MINUTES, TOPICS_TAUGHT, CLASSWORK_PROVIDED, HOMEWORK_PROVIDED, TEST_PROVIDED, TUTOR_REMARKS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, UPDATED_BY_USER_TYPE) 
+		VALUES
+			(:assignmentAttendanceSerialId, :packageAssignmentSerialId, :entryDateTimeMillis, :exitDateTimeMillis, :durationHours, :durationMinutes, :topicsTaught, 
+			:isClassworkProvided, :isHomeworkProvided, :isTestProvided, :tutorRemarks, :recordLastUpdatedMillis, :updatedBy, :updatedByUserType)
+	</query>
+	<query type="insert" id="insertAssignmentAttendanceDocument" paramClass="com.model.components.AssignmentAttendanceDocument">
+		INSERT INTO ASSIGNMENT_ATTENDANCE_DOCUMENT
+			(ASSIGNMENT_ATTENDANCE_DOCUMENT_SERIAL_ID, ASSIGNMENT_ATTENDANCE_SERIAL_ID, DOCUMENT_TYPE, FILENAME, FS_KEY, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, UPDATED_BY_USER_TYPE) 
+		VALUES
+			(:assignmentAttendanceDocumentSerialId, :assignmentAttendanceSerialId, :documentType, :filename, :fsKey, :recordLastUpdatedMillis, :updatedBy, :updatedByUserType)
+	</query>
 </queryMapper>

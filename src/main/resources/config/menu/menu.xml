@@ -119,6 +119,8 @@
 			<webservice id="reviewedAssignmentList" url="/reviewedAssignmentList"></webservice>
 			<webservice id="assignmentAttendanceMarkingAccess" url="/assignmentAttendanceMarkingAccess"></webservice>
 			<webservice id="insertAssignmentAttendance" url="/insertAssignmentAttendance"></webservice>
+			<webservice id="assignmentAttendanceList" url="/assignmentAttendanceList"></webservice>
+			<webservice id="downloadAttendanceSheet" url="/downloadAttendanceSheet"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

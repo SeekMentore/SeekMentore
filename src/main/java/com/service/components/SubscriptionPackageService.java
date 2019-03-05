@@ -19,17 +19,21 @@ import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
+import com.constants.components.SelectLookupConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.AssignmentAttendance;
+import com.model.components.AssignmentAttendanceDocument;
 import com.model.components.Contract;
 import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
 import com.model.mail.MailAttachment;
+import com.model.rowmappers.AssignmentAttendanceRowMapper;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
+import com.model.workbook.WorkbookReport;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
 import com.utils.FileSystemUtils;
@@ -40,6 +44,7 @@ import com.utils.PDFUtils;
 import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
+import com.utils.WorkbookUtils;
 import com.utils.localization.Message;
 
 @Service(BeanConstants.BEAN_NAME_SUBSCRIPTION_PACKAGE_SERVICE)
@@ -643,22 +648,63 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new PackageAssignmentRowMapper());
 	}
+	
+	private String getFolderPathToUploadAttendanceDocuments (
+			final String subscriptionPackageSerialId, 
+			final String packageAssignmentSerialId, 
+			final String assignmentAttendanceSerialId, 
+			final String documentTypeLabel
+	) {
+		return "secured/attendance/subscriptionpackage/" + subscriptionPackageSerialId + "/" + packageAssignmentSerialId + "/" + assignmentAttendanceSerialId + DASH + "Documents/" + documentTypeLabel;
+	}
+	
+	private String getUniqueFilenameForAttendanceDocument(final String filename) {
+		return UUIDGeneratorUtils.generateFilenameAppendedUID() + DASH + filename;
+	}
 
-	public void insertAssignmentAttendance(final AssignmentAttendance assignmentAttendanceObject, final PackageAssignment packageAssignmentObject, final User activeUser) throws Exception {
-		Integer newCompletedHours = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedHours()) ? packageAssignmentObject.getCompletedHours() : 0)
-									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendanceObject.getDurationHours()) ? assignmentAttendanceObject.getDurationHours() : 0);
-		Integer newCompletedMinutes = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedMinutes()) ? packageAssignmentObject.getCompletedMinutes() : 0)
-									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendanceObject.getDurationMinutes()) ? assignmentAttendanceObject.getDurationMinutes() : 0);
+	@Transactional
+	public void insertAssignmentAttendance(final AssignmentAttendance assignmentAttendance, final PackageAssignment packageAssignment, final User activeUser) throws Exception {
+		final Date currentTimestamp = new Date();
+		Integer newCompletedHours = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignment.getCompletedHours()) ? packageAssignment.getCompletedHours() : 0)
+									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendance.getDurationHours()) ? assignmentAttendance.getDurationHours() : 0);
+		Integer newCompletedMinutes = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignment.getCompletedMinutes()) ? packageAssignment.getCompletedMinutes() : 0)
+									+ (ValidationUtils.checkNonNegativeNumberAvailability(assignmentAttendance.getDurationMinutes()) ? assignmentAttendance.getDurationMinutes() : 0);
 		if (newCompletedMinutes > 59) {
 			newCompletedHours++;
 			newCompletedMinutes -= 60;
 		}
-		packageAssignmentObject.setCompletedHours(newCompletedHours);
-		packageAssignmentObject.setCompletedMinutes(newCompletedMinutes);
-		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendanceObject);
-		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignmentObject);
-		applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", assignmentAttendanceObject.getDocuments());
-		if (newCompletedHours == packageAssignmentObject.getTotalHours()) {
+		packageAssignment.setCompletedHours(newCompletedHours);
+		packageAssignment.setCompletedMinutes(newCompletedMinutes);
+		packageAssignment.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		packageAssignment.setUpdatedBy("SYSTEM");
+		assignmentAttendance.setAssignmentAttendanceSerialId(UUIDGeneratorUtils.generateSerialGUID());
+		assignmentAttendance.setPackageAssignmentSerialId(packageAssignment.getPackageAssignmentSerialId());
+		assignmentAttendance.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+		assignmentAttendance.setUpdatedBy(activeUser.getUserId());
+		assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
+		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendance);
+		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignment);
+		if (ValidationUtils.checkNonEmptyList(assignmentAttendance.getDocuments())) {
+			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : assignmentAttendance.getDocuments()) {
+				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(assignmentAttendance.getAssignmentAttendanceSerialId());
+				assignmentAttendanceDocument.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+				assignmentAttendanceDocument.setUpdatedBy(activeUser.getUserId());
+				assignmentAttendanceDocument.setUpdatedByUserType(activeUser.getUserType());
+				final String fsKey = getFolderPathToUploadAttendanceDocuments(
+						packageAssignment.getSubscriptionPackageSerialId(), 
+						packageAssignment.getPackageAssignmentSerialId(), 
+						assignmentAttendance.getAssignmentAttendanceSerialId(),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType())) 
+						+ "/" + getUniqueFilenameForAttendanceDocument(assignmentAttendanceDocument.getFilename());
+				assignmentAttendanceDocument.setFsKey(fsKey);
+			}
+			applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", assignmentAttendance.getDocuments());
+			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : assignmentAttendance.getDocuments()) {
+				FileSystemUtils.createFileInsideFolderOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey(), assignmentAttendanceDocument.getContent());
+			}
+		}
+		if (newCompletedHours == packageAssignment.getTotalHours()) {
 			sendNotificationEmailsForHoursCompletionPackageAssignment();
 		}
 	}
@@ -666,5 +712,20 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	private void sendNotificationEmailsForHoursCompletionPackageAssignment() {
 		// Customer Email
 		// Tutor Email
+	}
+	
+	public List<AssignmentAttendance> getAssignmentAttendanceList(final GridComponent gridComponent) throws Exception {
+		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendance");
+		final String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendancePackageAssignmentSerialIdFilter");
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("packageAssignmentSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "packageAssignmentSerialId", String.class));
+		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendanceEntryDateSorter");
+		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new AssignmentAttendanceRowMapper());
+	}
+	
+	public byte[] downloadAttendanceSheet(final GridComponent gridComponent) throws Exception {
+		final WorkbookReport workbookReport = new WorkbookReport();
+		workbookReport.createSheet("Attendance", getAssignmentAttendanceList(gridComponent), AssignmentAttendance.class, "SALES_REPORT");
+		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 }

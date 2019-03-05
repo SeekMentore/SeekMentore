@@ -56,7 +56,6 @@ import com.utils.ApplicationUtils;
 import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
-import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 import com.utils.localization.Message;
@@ -65,12 +64,13 @@ import com.webservices.rest.AbstractRestWebservice;
 @Component
 @Scope(ScopeConstants.SCOPE_NAME_PROTOTYPE) 
 @Path(RestPathConstants.REST_SERVICE_PATH_SALES) 
-public class SalesRestService extends AbstractRestWebservice implements SalesConstants, RestMethodConstants {
+public class SalesRestService extends AbstractRestWebservice implements SalesConstants, SubscriptionPackageConstants, RestMethodConstants {
 	
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
 	private String subscriptionPackageSerialId;
+	private String packageAssignmentSerialId;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
@@ -1396,37 +1396,25 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (null != uploadedInputStreamFileClasswork) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileClasswork);
 			if (fileBytes.length > 0) {
-				final AssignmentAttendanceDocument assignmentAttendanceDocument = new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK, uploadedFileDetailFileClasswork.getFileName(), fileBytes);
-				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(this.assignmentAttendanceObject.getAssignmentAttendanceSerialId());
-				assignmentAttendanceDocuments.add(assignmentAttendanceDocument);
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK, uploadedFileDetailFileClasswork.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileHomework) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileHomework);
 			if (fileBytes.length > 0) {
-				final AssignmentAttendanceDocument assignmentAttendanceDocument = new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK, uploadedFileDetailFileHomework.getFileName(), fileBytes);
-				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(this.assignmentAttendanceObject.getAssignmentAttendanceSerialId());
-				assignmentAttendanceDocuments.add(assignmentAttendanceDocument);
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK, uploadedFileDetailFileHomework.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileTest) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileTest);
 			if (fileBytes.length > 0) {
-				final AssignmentAttendanceDocument assignmentAttendanceDocument = new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST, uploadedFileDetailFileTest.getFileName(), fileBytes);
-				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(this.assignmentAttendanceObject.getAssignmentAttendanceSerialId());
-				assignmentAttendanceDocuments.add(assignmentAttendanceDocument);
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST, uploadedFileDetailFileTest.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileOther) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileOther);
 			if (fileBytes.length > 0) {
-				final AssignmentAttendanceDocument assignmentAttendanceDocument = new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER, uploadedFileDetailFileOther.getFileName(), fileBytes);
-				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(this.assignmentAttendanceObject.getAssignmentAttendanceSerialId());
-				assignmentAttendanceDocuments.add(assignmentAttendanceDocument);
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER, uploadedFileDetailFileOther.getFileName(), fileBytes));
 			}
 		}
 		if (ValidationUtils.checkNonEmptyList(assignmentAttendanceDocuments)) {
@@ -1434,10 +1422,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.changedAttributes.add("documents");
 		}
 		this.parentSerialId = parentId;
+		this.packageAssignmentSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.assignmentAttendanceObject.setPackageAssignmentSerialId(this.parentSerialId);
 			getSubscriptionPackageService().insertAssignmentAttendance(this.assignmentAttendanceObject, this.packageAssignmentObject, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_INSERTED_RECORD);
@@ -1446,6 +1434,56 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String assignmentAttendanceList (
+			@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, AssignmentAttendance.class);
+		this.packageAssignmentSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "packageAssignmentSerialId", String.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final List<AssignmentAttendance> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentAttendanceList(gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAttendanceSheet (
+    		@FormParam(GRID_COMPONENT_START) final String start,
+			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
+			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
+			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
+			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET;
+		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, AssignmentAttendance.class);
+		this.packageAssignmentSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "packageAssignmentSerialId", String.class);
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			FileUtils.writeFileToResponse(response, "Attendance_Sheet" + this.packageAssignmentSerialId + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadAttendanceSheet(gridComponent));
+		}
+    }
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1582,6 +1620,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			}
 			case REST_METHOD_NAME_INSERT_ASSIGNMENT_ATTENDANCE : {
 				handleAssignmentAttendanceSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST : 
+			case REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET : {
+				handleSelectedAssignmentSecurity();
 				break;
 			}
 		}
@@ -2308,6 +2351,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	} 
 	
+	private void handleSelectedAssignmentSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.packageAssignmentSerialId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ID_MISSING),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
+	
 	private void createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscriptionPackageObject = new SubscriptionPackage();
@@ -2641,7 +2695,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private void createAssignmentAttendanceObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.assignmentAttendanceObject = new AssignmentAttendance();
-			this.assignmentAttendanceObject.setAssignmentAttendanceSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
 			final Long entryDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "entryDateMillis", Long.class);
 			final Long entryTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "entryTimeMillis", Long.class);
@@ -2679,7 +2732,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
-			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.assignmentAttendanceObject.getPackageAssignmentSerialId());
+			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
 			if (!ValidationUtils.checkObjectAvailability(this.packageAssignmentObject)) {
 				ApplicationUtils.appendMessageInMapAttribute(
 						this.securityFailureResponse, 
@@ -2707,6 +2760,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					this.securityPassed = false;
 				}
 			}
+		}
+		if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.NULL_TOPICS_TAUGHT),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
 		}
 		if (ValidationUtils.checkNonEmptyList(this.assignmentAttendanceObject.getDocuments())) {
 			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : this.assignmentAttendanceObject.getDocuments()) {

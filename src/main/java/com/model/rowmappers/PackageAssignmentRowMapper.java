@@ -17,7 +17,7 @@ public class PackageAssignmentRowMapper implements RowMapper<PackageAssignment> 
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final PackageAssignment packageAssignment = new PackageAssignment();
 		packageAssignment.setPackageAssignmentSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("packageAssignmentSerialId"), String.class));
-		packageAssignment.setSubscriptionPackageSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("packageAssignmentSerialId"), String.class));
+		packageAssignment.setSubscriptionPackageSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("subscriptionPackageSerialId"), String.class));
 		packageAssignment.setTotalHours(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("totalHours"), Integer.class));
 		packageAssignment.setStartDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("startDateMillis"), Long.class));
 		packageAssignment.setCompletedHours(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("completedHours"), Integer.class));

@@ -43,6 +43,12 @@ public class FileSystemUtils implements FileConstants {
 		return AWSS3HelperUtils.createFileInsideFolderAndReturnKey(folderNameWithPathFromRootFolder, filename, bytes, false);
 	}
 	
+	public static void createFileInsideFolderOnApplicationFileSystemUsingKey(final String fsKey, final byte[] bytes) {
+		final String folderNameWithPathFromRootFolder = fsKey.substring(0, fsKey.lastIndexOf(FORWARD_SLASH));
+		final String filename = fsKey.substring(fsKey.lastIndexOf(FORWARD_SLASH) + 1);
+		AWSS3HelperUtils.createFileInsideFolderAndReturnKey(folderNameWithPathFromRootFolder, filename, bytes, false);
+	}
+	
 	public static List<String> getAllFileNamesFromFolderOnApplicationFileSystem(final String folderNameWithPathFromRootFolder) {
 		return AWSS3HelperUtils.getAllFileNamesFromFolder(folderNameWithPathFromRootFolder);
 	}

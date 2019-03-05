@@ -21,6 +21,7 @@ public class AssignmentAttendanceDocument extends GridComponentObject implements
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
+	private String updatedByUserType;
 	private byte[] content;
 	
 	public AssignmentAttendanceDocument() {}
@@ -126,6 +127,14 @@ public class AssignmentAttendanceDocument extends GridComponentObject implements
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
+	
+	public String getUpdatedByUserType() {
+		return updatedByUserType;
+	}
+
+	public void setUpdatedByUserType(String updatedByUserType) {
+		this.updatedByUserType = updatedByUserType;
+	}
 
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
@@ -153,6 +162,7 @@ public class AssignmentAttendanceDocument extends GridComponentObject implements
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "updatedByUserType" : return "UPDATED_BY_USER_TYPE";
 		}
 		return EMPTY_STRING;
 	}

@@ -1,58 +1,49 @@
 package com.model.workbook;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class WorkbookRecord implements Serializable {
 
 	private static final long serialVersionUID = -8681265564543881119L;
 	
-	private Object[] record;
-	private Boolean isMismatch = false;
-	private Boolean isExtra = false;
-	private Boolean isMissing = false;
+	private List<WorkbookCell> record;
+	private Boolean isRecordStyled = false;
+	private TypeOfStyleEnum typeOfStyleEnum;
 	
-	public enum TypeOfMismatchEnum {
-		DATA_MISMATCH,
-		EXTRA_RECORD,
-		MISSING_RECORD;
+	public enum TypeOfStyleEnum {
+		SOLID_FOREGROUND_YELLOW,
+		SOLID_FOREGROUND_GOLD,
+		SOLID_FOREGROUND_LAVENDER;
 	}
 	
-	public WorkbookRecord(final Object[] record, Boolean typeOfMismatch, TypeOfMismatchEnum typeOfMismatchEnum) {
+	public WorkbookRecord(final List<WorkbookCell> record, final TypeOfStyleEnum typeOfStyleEnum) {
 		this.record = record;
-		switch (typeOfMismatchEnum) {
-			case DATA_MISMATCH : {
-				this.isMismatch = typeOfMismatch;
-				break;
-			}
-			case EXTRA_RECORD : {
-				this.isExtra = typeOfMismatch;
-				break;
-			}
-			case MISSING_RECORD : {
-				this.isMissing = typeOfMismatch;
-				break;
-			}
-		}
+		this.setIsRecordStyled(true);
+		this.setTypeOfStyleEnum(typeOfStyleEnum);
 	}
 	
-	public WorkbookRecord(final Object[] record) {
+	public WorkbookRecord(final List<WorkbookCell> record) {
 		this.record = record;
-		this.isMismatch = false;
 	}
 
-	public Object[] getRecord() {
+	public List<WorkbookCell> getRecord() {
 		return record;
 	}
 
-	public Boolean getIsMismatch() {
-		return isMismatch;
+	public Boolean getIsRecordStyled() {
+		return isRecordStyled;
 	}
 
-	public Boolean getIsMissing() {
-		return isMissing;
+	public void setIsRecordStyled(Boolean isRecordStyled) {
+		this.isRecordStyled = isRecordStyled;
 	}
 
-	public Boolean getIsExtra() {
-		return isExtra;
+	public TypeOfStyleEnum getTypeOfStyleEnum() {
+		return typeOfStyleEnum;
+	}
+
+	public void setTypeOfStyleEnum(TypeOfStyleEnum typeOfStyleEnum) {
+		this.typeOfStyleEnum = typeOfStyleEnum;
 	}
 }
