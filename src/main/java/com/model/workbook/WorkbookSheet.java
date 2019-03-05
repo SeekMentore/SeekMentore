@@ -18,49 +18,7 @@ public class WorkbookSheet implements Serializable {
 	private String objectReportSwitch;
 	private Integer rowPadding = 1;
 	private Integer columnPadding = 1;
-	private Integer columnWidth = 7000; // Default value
-	private List<WorkbookHeader> headers;
-	private List<WorkbookRecord> records;
-	
-	<T extends ApplicationWorkbookObject> WorkbookSheet (
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType, 
-		final String objectReportSwitch, 
-		final Integer rowPadding, 
-		final Integer columnPadding
-	) throws InstantiationException, IllegalAccessException {
-		this.sheetName = sheetName;
-		this.objectTypeRecords = objectTypeRecords;
-		this.recordObjectType = recordObjectType;
-		this.objectReportSwitch = objectReportSwitch;
-		this.rowPadding = rowPadding;
-		this.columnPadding = columnPadding;
-		computeWorkbookHeaderFromRecordObjectType();
-		computeWorkbookRecordsFromObjectTypeRecords();
-		this.objectTypeRecords = null; // GC the object after Header & Record are computed
-	}
-	
-	<T extends ApplicationWorkbookObject> WorkbookSheet (
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType, 
-		final String objectReportSwitch, 
-		final Integer rowPadding, 
-		final Integer columnPadding,
-		final Integer columnWidth
-	) throws InstantiationException, IllegalAccessException {
-		this.sheetName = sheetName;
-		this.objectTypeRecords = objectTypeRecords;
-		this.recordObjectType = recordObjectType;
-		this.objectReportSwitch = objectReportSwitch;
-		this.rowPadding = rowPadding;
-		this.columnPadding = columnPadding;
-		this.columnWidth = columnWidth;
-		computeWorkbookHeaderFromRecordObjectType();
-		computeWorkbookRecordsFromObjectTypeRecords();
-		this.objectTypeRecords = null; // GC the object after Header & Record are computed
-	}
+	private List<WorkbookRecord> workbookRecords;
 	
 	<T extends ApplicationWorkbookObject> WorkbookSheet (
 		final String sheetName, 
@@ -68,88 +26,22 @@ public class WorkbookSheet implements Serializable {
 		final Class<T> recordObjectType,
 		final String objectReportSwitch 
 	) throws InstantiationException, IllegalAccessException {
-		// No padding
 		this.sheetName = sheetName;
 		this.objectTypeRecords = objectTypeRecords;
 		this.recordObjectType = recordObjectType;
 		this.objectReportSwitch = objectReportSwitch;
-		computeWorkbookHeaderFromRecordObjectType();
-		computeWorkbookRecordsFromObjectTypeRecords();
-		this.objectTypeRecords = null; // GC the object after Header & Record are computed
-	}
-	
-	<T extends ApplicationWorkbookObject> WorkbookSheet (
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType,
-		final String objectReportSwitch,
-		final Integer columnWidth
-	) throws InstantiationException, IllegalAccessException {
-		// No padding
-		this.sheetName = sheetName;
-		this.objectTypeRecords = objectTypeRecords;
-		this.recordObjectType = recordObjectType;
-		this.objectReportSwitch = objectReportSwitch;
-		this.columnWidth = columnWidth;
-		computeWorkbookHeaderFromRecordObjectType();
-		computeWorkbookRecordsFromObjectTypeRecords();
+		computeWorkbookRowsFromRecordObjectTypeRecords();
 		this.objectTypeRecords = null; // GC the object after Header & Record are computed
 	}
 	
 	public WorkbookSheet (
 		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records, 
-		final Integer rowPadding, 
-		final Integer columnPadding
+		final List<WorkbookRecord> workbookRecords
 	) {
 		this.sheetName = sheetName;
-		this.headers = headers;
-		this.records = records;
-		this.rowPadding = rowPadding;
-		this.columnPadding = columnPadding;
+		this.workbookRecords = workbookRecords;
 	}
 	
-	public WorkbookSheet (
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records, 
-		final Integer rowPadding, 
-		final Integer columnPadding,
-		final Integer columnWidth
-	) {
-		this.sheetName = sheetName;
-		this.headers = headers;
-		this.records = records;
-		this.rowPadding = rowPadding;
-		this.columnPadding = columnPadding;
-		this.columnWidth = columnWidth;
-	}
-	
-	public WorkbookSheet (
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records
-	) {
-		// No padding
-		this.sheetName = sheetName;
-		this.headers = headers;
-		this.records = records;
-	}
-	
-	public WorkbookSheet (
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records,
-		final Integer columnWidth
-	) {
-		// No padding
-		this.sheetName = sheetName;
-		this.headers = headers;
-		this.records = records;
-		this.columnWidth = columnWidth;
-	}
-
 	@SuppressWarnings("unchecked")
 	private <T extends ApplicationWorkbookObject> List<T> getObjectTypeRecords() {
 		return (List<T>) objectTypeRecords;
@@ -164,14 +56,6 @@ public class WorkbookSheet implements Serializable {
 		return sheetName;
 	}
 
-	public List<WorkbookRecord> getRecords() {
-		return records;
-	}
-
-	public List<WorkbookHeader> getHeaders() {
-		return headers;
-	}
-
 	public Integer getRowPadding() {
 		return rowPadding;
 	}
@@ -180,35 +64,45 @@ public class WorkbookSheet implements Serializable {
 		return columnPadding;
 	}
 	
-	public String getObjectReportSwitch() {
-		return objectReportSwitch;
-	}
-	
-	public Integer getColumnWidth() {
-		return columnWidth;
+	public void setRowPadding(Integer rowPadding) {
+		this.rowPadding = rowPadding;
 	}
 
-	private void computeWorkbookHeaderFromRecordObjectType() throws InstantiationException, IllegalAccessException {
-		if (!ValidationUtils.checkNonEmptyList(this.headers)) {
-			this.headers = new LinkedList<WorkbookHeader>();
-		}
-		final List<WorkbookCell> headerCells = new LinkedList<WorkbookCell>();
-		for (final Object value : this.getRecordObjectType().newInstance().getReportHeaders(this.getObjectReportSwitch())) {
-			headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
-		}
-		this.headers.add(new WorkbookHeader(headerCells));
+	public void setColumnPadding(Integer columnPadding) {
+		this.columnPadding = columnPadding;
 	}
 	
-	private void computeWorkbookRecordsFromObjectTypeRecords() {
-		if (!ValidationUtils.checkNonEmptyList(this.records)) {
-			this.records = new LinkedList<WorkbookRecord>();
+	public List<WorkbookRecord> getWorkbookRecords() {
+		return workbookRecords;
+	}
+
+	private void computeWorkbookRowsFromRecordObjectTypeRecords() throws InstantiationException, IllegalAccessException {
+		if (!ValidationUtils.checkNonEmptyList(this.workbookRecords)) {
+			this.workbookRecords = new LinkedList<WorkbookRecord>();
+		}
+		final List<WorkbookCell> headerCells1 = new LinkedList<WorkbookCell>();
+		for (final Object value : this.getRecordObjectType().newInstance().getReportHeaders(this.objectReportSwitch)) {
+			headerCells1.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 2));
+		}
+		this.workbookRecords.add(new WorkbookRecord(headerCells1));
+		final List<WorkbookCell> headerCells = new LinkedList<WorkbookCell>();
+		for (final Object value : this.getRecordObjectType().newInstance().getReportHeaders(this.objectReportSwitch)) {
+			headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
+		}
+		this.workbookRecords.add(new WorkbookRecord(headerCells));
+		for(final ApplicationWorkbookObject workbookObject : this.getObjectTypeRecords()) {
+			final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
+			for (final Object value : workbookObject.getReportRecords(this.objectReportSwitch)) {
+				recordCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.SOLID_FOREGROUND_GOLD));
+			}
+			this.workbookRecords.add(new WorkbookRecord(recordCells));
 		}
 		for(final ApplicationWorkbookObject workbookObject : this.getObjectTypeRecords()) {
 			final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
-			for (final Object value : workbookObject.getReportRecords(this.getObjectReportSwitch())) {
-				recordCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.SOLID_FOREGROUND_GOLD));
+			for (final Object value : workbookObject.getReportRecords(this.objectReportSwitch)) {
+				recordCells.add(new WorkbookCell(value, true, 2, 3));
 			}
-			this.records.add(new WorkbookRecord(recordCells));
+			this.workbookRecords.add(new WorkbookRecord(recordCells));
 		}
 	}
 }

@@ -2,6 +2,8 @@ package com.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +22,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.constants.WorkbookConstants;
 import com.model.workbook.WorkbookCell;
 import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
-import com.model.workbook.WorkbookHeader;
 import com.model.workbook.WorkbookRecord;
 import com.model.workbook.WorkbookReport;
 import com.model.workbook.WorkbookSheet;
@@ -34,10 +35,12 @@ public class WorkbookUtils implements WorkbookConstants {
 			final Integer numCol, 
 			final Integer untilCol, 
 			final XSSFCellStyle cellStyle, 
-			final Boolean applyAnyCellStyle
+			final Boolean applyAnyCellStyle,
+			final List<Integer> alreadyCreatedRowIds,
+			final List<Integer> alreadyCreatedCellIds
 	) {
 	    final CellRangeAddress cellMergeRegion = new CellRangeAddress(numRow, untilRow, numCol, untilCol);
-	    cleanBeforeMergeOnValidCells(sheet, cellMergeRegion, cellStyle, applyAnyCellStyle);
+	    cleanBeforeMergeOnValidCells(sheet, cellMergeRegion, cellStyle, applyAnyCellStyle, alreadyCreatedRowIds, alreadyCreatedCellIds);
 	    sheet.addMergedRegion(cellMergeRegion);
 	}
 	
@@ -45,18 +48,14 @@ public class WorkbookUtils implements WorkbookConstants {
 			final XSSFSheet sheet, 
 			final CellRangeAddress region, 
 			final XSSFCellStyle cellStyle, 
-			final Boolean applyAnyCellStyle
+			final Boolean applyAnyCellStyle, 
+			final List<Integer> alreadyCreatedRowIds,
+			final List<Integer> alreadyCreatedCellIds
 	) {
-	    for(int rowNum = region.getFirstRow(); rowNum<=region.getLastRow(); rowNum++){
-	        final XSSFRow row= sheet.getRow(rowNum);
-	        if(null == row){
-	            sheet.createRow(rowNum);
-	        }
-	        for(int colNum = region.getFirstColumn(); colNum<=region.getLastColumn(); colNum++) {
-	           XSSFCell currentCell = row.getCell(colNum); 
-	           if(null == currentCell){
-	               currentCell = row.createCell(colNum);
-	           }    
+	    for(Integer rowNum = region.getFirstRow(); rowNum <= region.getLastRow(); rowNum++) {
+	        final XSSFRow row = getXSSFRowWithRowId(sheet, alreadyCreatedRowIds, rowNum);
+	        for(Integer colNum = region.getFirstColumn(); colNum <= region.getLastColumn(); colNum++) {
+	           final XSSFCell currentCell = getXSSFCellWithCellId(row, alreadyCreatedCellIds, colNum); 
 	           if (applyAnyCellStyle) {
 	        	   currentCell.setCellStyle(cellStyle);
 	           }
@@ -104,7 +103,39 @@ public class WorkbookUtils implements WorkbookConstants {
 		return cellStyle;
 	}
 	
+	private static XSSFRow getXSSFRowWithRowId(final XSSFSheet spreadsheet, final List<Integer> alreadyCreatedRowIds, final Integer rowid) {
+		if (ValidationUtils.checkNonEmptyList(alreadyCreatedRowIds)) {
+			if (alreadyCreatedRowIds.contains(rowid)) {
+				return spreadsheet.getRow(rowid);
+			}
+		}
+		alreadyCreatedRowIds.add(rowid);
+		return spreadsheet.createRow(rowid);
+	}
+	
+	private static XSSFCell getXSSFCellWithCellId(final XSSFRow row, final List<Integer> alreadyCreatedCellIds, final Integer cellid) {
+		if (ValidationUtils.checkNonEmptyList(alreadyCreatedCellIds)) {
+			if (alreadyCreatedCellIds.contains(cellid)) {
+				return row.getCell(cellid);
+			}
+		}
+		alreadyCreatedCellIds.add(cellid);
+		return row.createCell(cellid);
+	}
+	
+	private static Integer returnIncrementedRowId(final WorkbookRecord record, final List<Integer> alreadyCreatedRowIds, final Integer rowid) {
+		if (record.getIsContinuedRecordInMergedRow()) {
+			// TODO code
+		}
+		Integer tempId = rowid + 1;
+		while (alreadyCreatedRowIds.contains(tempId)) {
+			tempId += 1;
+		}
+		return tempId;
+	}
+	
 	public static byte[] createWorkbook(WorkbookReport workbookReport) throws IOException {
+		final List<Integer> alreadyCreatedRowIds = new LinkedList<Integer>();
 		final XSSFWorkbook workbook = new XSSFWorkbook();
 		LoggerUtils.logOnConsole("Total Sheets = "+workbookReport.getSheets().size());
 		for (WorkbookSheet sheet : workbookReport.getSheets()) {
@@ -114,37 +145,48 @@ public class WorkbookUtils implements WorkbookConstants {
 			Integer rowid = 0;
 			// Row Padding With One Blank Cell
 			for (int i = 0; i < sheet.getRowPadding(); i++) {
-				final XSSFRow row = spreadsheet.createRow(rowid);
-				final XSSFCell cell = row.createCell(0);
+				final List<Integer> alreadyCreatedCellIds = new LinkedList<Integer>();
+				final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowIds, rowid);
+				final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedCellIds, 0);
 				cell.setCellValue(EMPTY_STRING);
 				rowid += 1;
 			}
-			// Generate Headers
-			LoggerUtils.logOnConsole("Total Headers = "+sheet.getHeaders().size());
-			Integer countHeaders = 0;
-			for (WorkbookHeader header : sheet.getHeaders()) {
-				final XSSFRow row = spreadsheet.createRow(rowid);
+			LoggerUtils.logOnConsole("Total Workbook Records = "+sheet.getWorkbookRecords().size());
+			Integer countWorkbookRecords = 0;
+			for (WorkbookRecord record : sheet.getWorkbookRecords()) {
+				final List<Integer> alreadyCreatedCellIds = new LinkedList<Integer>();
+				final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowIds, rowid);
 				Integer cellid = 0;
 				// Column Padding With One Blank Cell
 				for (int i = 0; i < sheet.getColumnPadding(); i++) {
-					final XSSFCell cell = row.createCell(cellid);
+					final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedCellIds, cellid);
 					cell.setCellValue(EMPTY_STRING);
 					cellid += 1;
 				}
-				for (WorkbookCell headerCell : header.getHeaderCells()) {
-					Object value = headerCell.getValue();
-					final XSSFCell cell = row.createCell(cellid);
+				for (WorkbookCell workbookCell : record.getRecordCells()) {
+					Object value = workbookCell.getValue();
+					final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedCellIds, cellid);
 					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
 					XSSFCellStyle cellStyle = null;
 					Boolean applyAnyCellStyle = false;
-					if (headerCell.getIsCellStyled()) {
-						cellStyle = getTypeStyleCellStyle(workbook, headerCell.getTypeOfStyleEnum());
+					if (workbookCell.getIsCellStyled()) {
+						cellStyle = getTypeStyleCellStyle(workbook, workbookCell.getTypeOfStyleEnum());
 						applyAnyCellStyle = true;
 						cell.setCellStyle(cellStyle);
 					}
-					if (header.getHowManyCellsPerColumn() > 1) {
-						setCellMerge(spreadsheet, rowid, rowid, cellid, cellid + (header.getHowManyCellsPerColumn() - 1), cellStyle, applyAnyCellStyle);
-						cellid += (header.getHowManyCellsPerColumn() - 1);
+					if (workbookCell.getIsCellMerged()) {
+						setCellMerge(
+									spreadsheet, 
+									rowid, 
+									rowid + (workbookCell.getNumberOfMergedRowsForThisCell() - 1), 
+									cellid, 
+									cellid + (workbookCell.getNumberOfMergedColumnsForThisCell() - 1), 
+									cellStyle, 
+									applyAnyCellStyle, 
+									alreadyCreatedRowIds,
+									alreadyCreatedCellIds
+								);
+						cellid += (workbookCell.getNumberOfMergedColumnsForThisCell() - 1);
 					}
 					cellid += 1;
 					// GC value after it is done
@@ -153,45 +195,14 @@ public class WorkbookUtils implements WorkbookConstants {
 				if (maxColumnsEncountered < cellid) {
 					maxColumnsEncountered = cellid;
 				}
-				rowid += 1;
-				// GC header after it is done
-				header = null;
-				countHeaders++;
-			}
-			// Generate Records
-			LoggerUtils.logOnConsole("Total Records = "+sheet.getRecords().size());
-			Integer countRecords = 0;
-			for(WorkbookRecord record : sheet.getRecords()) {
-				final XSSFRow row = spreadsheet.createRow(rowid);
-				Integer cellid = 0;
-				// Column Padding With One Blank Cell
-				for (int i = 0; i < sheet.getColumnPadding(); i++) {
-					final XSSFCell cell = row.createCell(cellid);
-					cell.setCellValue(EMPTY_STRING);
-					cellid += 1;
-				}
-				for (WorkbookCell recordCell : record.getRecordCells()) {
-					Object value = recordCell.getValue();
-					final XSSFCell cell = row.createCell(cellid);
-					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
-					if (recordCell.getIsCellStyled()) {
-						cell.setCellStyle(getTypeStyleCellStyle(workbook, recordCell.getTypeOfStyleEnum()));
-					}
-					cellid += 1;
-					// GC value after it is done
-					value = null;
-					recordCell = null;
-				}
-				if (maxColumnsEncountered < cellid) {
-					maxColumnsEncountered = cellid;
-				}
+				//rowid = returnIncrementedRowId(record, alreadyCreatedRowIds, rowid);
 				rowid += 1;
 				// GC header after it is done
 				record = null;
-				countRecords++;
+				countWorkbookRecords++;
 			}
 			for (int i = 1; i < maxColumnsEncountered; i++) {
-				spreadsheet.setColumnWidth(i, sheet.getColumnWidth());
+				spreadsheet.setColumnWidth(i, workbookReport.getDefaultCellWidth());
 			}
 			// GC sheet after it is done
 			sheet = null;

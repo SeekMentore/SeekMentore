@@ -13,34 +13,10 @@ public class WorkbookReport implements Serializable {
 	private static final long serialVersionUID = -9215359627401277574L;
 	
 	private List<WorkbookSheet> sheets;
+	private Integer defaultCellWidth = 7000; // Default value
 	
 	public WorkbookReport() {
 		this.sheets = new LinkedList<WorkbookSheet>();
-	}
-	
-	@SuppressWarnings("hiding")
-	public <T extends ApplicationWorkbookObject> void createSheet(
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType, 
-		final String objectReportSwitch, 
-		final Integer rowPadding, 
-		final Integer columnPadding
-	) throws InstantiationException, IllegalAccessException {
-		sheets.add(new WorkbookSheet(sheetName, objectTypeRecords, recordObjectType, objectReportSwitch, rowPadding, columnPadding));
-	}
-	
-	@SuppressWarnings("hiding")
-	public <T extends ApplicationWorkbookObject> void createSheet(
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType, 
-		final String objectReportSwitch, 
-		final Integer rowPadding, 
-		final Integer columnPadding,
-		final Integer columnWidth
-	) throws InstantiationException, IllegalAccessException {
-		sheets.add(new WorkbookSheet(sheetName, objectTypeRecords, recordObjectType, objectReportSwitch, rowPadding, columnPadding, columnWidth));
 	}
 	
 	@SuppressWarnings("hiding")
@@ -53,56 +29,18 @@ public class WorkbookReport implements Serializable {
 		sheets.add(new WorkbookSheet(sheetName, objectTypeRecords, recordObjectType, objectReportSwitch));
 	}
 	
-	@SuppressWarnings("hiding")
-	public <T extends ApplicationWorkbookObject> void createSheet(
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType,
-		final String objectReportSwitch,
-		final Integer columnWidth
-	) throws InstantiationException, IllegalAccessException {
-		sheets.add(new WorkbookSheet(sheetName, objectTypeRecords, recordObjectType, objectReportSwitch, columnWidth));
-	}
-	
 	public void createSheet(
 		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records, 
-		final Integer rowPadding, 
-		final Integer columnPadding
+		final List<WorkbookRecord> workbookRecords
 	) {
-		sheets.add(new WorkbookSheet(sheetName, headers, records, rowPadding, columnPadding));
-	}
-	
-	public void createSheet(
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records, 
-		final Integer rowPadding, 
-		final Integer columnPadding,
-		final Integer columnWidth
-	) {
-		sheets.add(new WorkbookSheet(sheetName, headers, records, rowPadding, columnPadding, columnWidth));
-	}
-	
-	public void createSheet(
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records
-	) {
-		sheets.add(new WorkbookSheet(sheetName, headers, records));
-	}
-	
-	public void createSheet(
-		final String sheetName, 
-		final List<WorkbookHeader> headers, 
-		final List<WorkbookRecord> records,
-		final Integer columnWidth
-	) {
-		sheets.add(new WorkbookSheet(sheetName, headers, records, columnWidth));
+		sheets.add(new WorkbookSheet(sheetName, workbookRecords));
 	}
 	
 	public List<WorkbookSheet> getSheets() {
 		return sheets;
+	}
+
+	public Integer getDefaultCellWidth() {
+		return defaultCellWidth;
 	}
 }
