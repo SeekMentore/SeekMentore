@@ -124,7 +124,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	public byte[] downloadReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT);
+		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
@@ -456,7 +456,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet(getFindTutorReportSheetName(grid), getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT);
+		workbookReport.createSheet(getFindTutorReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
@@ -750,7 +750,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet(getSubscribeWithUsReportSheetName(grid), getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, SUPPORT_TEAM_REPORT);
+		workbookReport.createSheet(getSubscribeWithUsReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, SUPPORT_TEAM_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
@@ -1016,7 +1016,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet(getSubmitQueryReportSheetName(grid), getSubmitQueryList(grid, gridComponent), SubmitQuery.class, SUPPORT_TEAM_REPORT);
+		workbookReport.createSheet(getSubmitQueryReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubmitQueryList(grid, gridComponent), SubmitQuery.class, SUPPORT_TEAM_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	

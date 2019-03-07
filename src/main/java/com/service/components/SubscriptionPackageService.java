@@ -725,7 +725,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	
 	public byte[] downloadAttendanceSheet(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet("Attendance", getAssignmentAttendanceList(gridComponent), AssignmentAttendance.class, "SALES_REPORT");
+		workbookReport.createSheet("Attendance", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getAssignmentAttendanceList(gridComponent), AssignmentAttendance.class, "SALES_REPORT"));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 }

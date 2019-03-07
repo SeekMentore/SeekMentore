@@ -230,7 +230,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 			case "SALES_REPORT_TEST" : {
 				return new Object[] {
 						"ENTRY_DATE",
-						"ENTRY_TIME"/*,
+						"ENTRY_TIME",
 						"EXIT_DATE",
 						"EXIT_TIME",
 						"DURATION_HOURS",
@@ -249,7 +249,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						"STUDENT_REMARKS",
 						"RECORD_LAST_UPDATED",
 						"UPDATED_BY",
-						"UPDATED_BY_USER_TYPE"*/
+						"UPDATED_BY_USER_TYPE"
 					};
 			}
 			case "SALES_REPORT" : {
@@ -287,7 +287,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 			case "SALES_REPORT_TEST" : {
 				return new Object[] {
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "dd-MMM-yyyy"),
-						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a")/*,
+						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a"),
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "dd-MMM-yyyy"),
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
 						this.durationHours,
@@ -306,7 +306,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						this.studentRemarks,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
 						this.updatedByName,
-						this.updatedByUserType*/
+						this.updatedByUserType
 					};
 			}
 			case "SALES_REPORT" : {

@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.poi.ss.formula.functions.T;
-
-import com.model.ApplicationWorkbookObject;
-
 public class WorkbookReport implements Serializable {
 	
 	private static final long serialVersionUID = -9215359627401277574L;
@@ -17,16 +13,6 @@ public class WorkbookReport implements Serializable {
 	
 	public WorkbookReport() {
 		this.sheets = new LinkedList<WorkbookSheet>();
-	}
-	
-	@SuppressWarnings("hiding")
-	public <T extends ApplicationWorkbookObject> void createSheet(
-		final String sheetName, 
-		final List<T> objectTypeRecords, 
-		final Class<T> recordObjectType,
-		final String objectReportSwitch 
-	) throws InstantiationException, IllegalAccessException {
-		sheets.add(new WorkbookSheet(sheetName, objectTypeRecords, recordObjectType, objectReportSwitch));
 	}
 	
 	public void createSheet(
@@ -42,5 +28,9 @@ public class WorkbookReport implements Serializable {
 
 	public Integer getDefaultCellWidth() {
 		return defaultCellWidth;
+	}
+	
+	public void setDefaultCellWidth(Integer defaultCellWidth) {
+		this.defaultCellWidth = defaultCellWidth;
 	}
 }

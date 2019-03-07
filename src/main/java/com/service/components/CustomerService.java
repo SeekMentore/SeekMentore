@@ -57,7 +57,7 @@ import com.utils.WorkbookUtils;
 	
 	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT);
+		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	

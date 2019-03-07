@@ -71,7 +71,7 @@ public class TutorService implements TutorConstants {
 	
 	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet("REGISTERED_TUTORS", getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT);
+		workbookReport.createSheet("REGISTERED_TUTORS", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT));
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
