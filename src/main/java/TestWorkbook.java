@@ -31,10 +31,10 @@ public class TestWorkbook {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		//workbookReport.createSheet("Attendance", list, AssignmentAttendance.class, "SALES_REPORT_TEST");
 		workbookReport.createSheet("Attendance", getWorkbookRecords());
-		workbookReport.setDefaultCellWidth(3000);
+		workbookReport.setDefaultCellWidth(4500);
 		byte[] content =  WorkbookUtils.createWorkbook(workbookReport);
-		//FileUtils.generateArbitraryFile(content, "C:\\Users\\shantanu\\Desktop\\attendance.xlsx");
-		FileUtils.generateArbitraryFile(content, "C:\\Users\\smukherjee\\Desktop\\src\\attendance.xlsx");
+		FileUtils.generateArbitraryFile(content, "C:\\Users\\shantanu\\Desktop\\attendance.xlsx");
+		//FileUtils.generateArbitraryFile(content, "C:\\Users\\smukherjee\\Desktop\\src\\attendance.xlsx");
 	}
 	
 	public static List<WorkbookRecord> getWorkbookRecords() throws InstantiationException, IllegalAccessException {
@@ -48,7 +48,7 @@ public class TestWorkbook {
 		workbookRecords.add(workbookRecord);
 		
 		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Tutor Invoice and Attendance", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 11, 1);
+		workbookCell = new WorkbookCell("Tutor Invoice and Attendance", true, TypeOfStyleEnum.SOLID_FOREGROUND_GREY, true, 11, 1);
 		workbookCells.add(workbookCell);
 		workbookRecord = new WorkbookRecord(workbookCells);
 		workbookRecords.add(workbookRecord);
@@ -106,7 +106,7 @@ public class TestWorkbook {
 		workbookRecords.add(workbookRecord);
 		
 		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 6, 1);
+		workbookCell = new WorkbookCell("", true, TypeOfStyleEnum.SOLID_FOREGROUND_GREY, true, 6, 1);
 		workbookCells.add(workbookCell);
 		workbookCell = new WorkbookCell("Start date", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
 		workbookCells.add(workbookCell);
@@ -195,7 +195,67 @@ public class TestWorkbook {
 		assignmentAttendance.setUpdatedByUserType("Employee");
 		final List<AssignmentAttendance> list =  new ArrayList<AssignmentAttendance>();
 		list.add(assignmentAttendance);
-		workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(list, AssignmentAttendance.class, "SALES_REPORT_TEST"));
+		workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(list, AssignmentAttendance.class, "ATTENDANCE_TRACKER_SHEET"));
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("1. Payout will be made on every Wednesday, Cut-off day for 'Wednesday-payouts' will be preceding Sunday", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("2. Academic Quality, Punctuality and Overall rating columns need to be filled by parent ", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("3. Invoice need to be signed by parents and its scanned copy  should reach ' tutorpay@helloclass.com' on or before the cutoff days", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("4. Completion of package is mandatory for payout, Helloclass will not be able to process any  partial payments ", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("5. Name of scanned image- should be 'Packageid'", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("6. In order to have hassle free payout , kindly adhere to above instructions", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("7. For timely renewal, kindly get in touch with your assigned relationship manager(3 classes before the completion of package)", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("8. Kindly don’t extend number of sessions or hours, beyond the finalized terms. Helloclass will not be liable to pay for any additional hour", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
 		
 		return workbookRecords;
 	}

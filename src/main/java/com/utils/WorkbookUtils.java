@@ -99,6 +99,11 @@ public class WorkbookUtils implements WorkbookConstants {
 				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 				break;
 			}
+			case SOLID_FOREGROUND_GREY : {
+				cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				break;
+			}
 		}
 		return cellStyle;
 	}
@@ -224,7 +229,8 @@ public class WorkbookUtils implements WorkbookConstants {
 			for (final Object value : recordObjectType.newInstance().getReportHeaders(reportType)) {
 				if (value instanceof WorkbookCell)
 					headerCells.add((WorkbookCell)value);
-				headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
+				else
+					headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
 			}
 			workbookRecords.add(new WorkbookRecord(headerCells));
 		}
@@ -234,7 +240,8 @@ public class WorkbookUtils implements WorkbookConstants {
 				for (final Object value : workbookObject.getReportRecords(reportType)) {
 					if (value instanceof WorkbookCell)
 						recordCells.add((WorkbookCell)value);
-					recordCells.add(new WorkbookCell(value));
+					else
+						recordCells.add(new WorkbookCell(value));
 				}
 				workbookRecords.add(new WorkbookRecord(recordCells));
 			}

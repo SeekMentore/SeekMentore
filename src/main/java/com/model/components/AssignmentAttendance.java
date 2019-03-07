@@ -6,6 +6,8 @@ import java.util.List;
 import com.constants.components.SelectLookupConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
+import com.model.workbook.WorkbookCell;
+import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
 import com.utils.ValidationUtils;
@@ -227,29 +229,16 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		switch (reportSwitch) {
-			case "SALES_REPORT_TEST" : {
+			case "ATTENDANCE_TRACKER_SHEET" : {
 				return new Object[] {
-						"ENTRY_DATE",
-						"ENTRY_TIME",
-						"EXIT_DATE",
-						"EXIT_TIME",
-						"DURATION_HOURS",
-						"DURATION_MINUTES",
-						"TOPICS_TAUGHT",
-						"CLASSWORK_PROVIDED",
-						"HOMEWORK_PROVIDED",
-						"TEST_PROVIDED",
-						"TUTOR_REMARKS",
-						"TUTOR_PUNCTUALITY_INDEX",
-						"PUNCTUALITY_REMARKS",
-						"TUTOR_EXPERTISE_INDEX",
-						"EXPERTISE_REMARKS",
-						"TUTOR_KNOWLEDGE_INDEX",
-						"KNOWLEDGE_REMARKS",
-						"STUDENT_REMARKS",
-						"RECORD_LAST_UPDATED",
-						"UPDATED_BY",
-						"UPDATED_BY_USER_TYPE"
+						"Date",
+						"Start Time",
+						"End Time",
+						"Duration",
+						new WorkbookCell("Topics Taught", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 4, 1),
+						"Punctuality (1 - 5)",
+						"Expertise (1 - 5)",
+						"Knowledge (1 - 5)"
 					};
 			}
 			case "SALES_REPORT" : {
@@ -284,29 +273,16 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 	@Override
 	public Object[] getReportRecords(String reportSwitch) {
 		switch (reportSwitch) {
-			case "SALES_REPORT_TEST" : {
+			case "ATTENDANCE_TRACKER_SHEET" : {
 				return new Object[] {
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "dd-MMM-yyyy"),
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a"),
-						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "dd-MMM-yyyy"),
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
-						this.durationHours,
-						this.durationMinutes,
-						this.topicsTaught,
-						this.isClassworkProvided,
-						this.isHomeworkProvided,
-						this.isTestProvided,
-						this.tutorRemarks,
+						this.durationHours + " h   " + this.durationMinutes + " m",
+						new WorkbookCell(this.topicsTaught, true, 4, 1),
 						this.tutorPunctualityIndex,
-						this.punctualityRemarks,
 						this.tutorExpertiseIndex,
-						this.expertiseRemarks,
-						this.tutorKnowledgeIndex,
-						this.knowledgeRemarks,
-						this.studentRemarks,
-						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.recordLastUpdatedMillis),
-						this.updatedByName,
-						this.updatedByUserType
+						this.tutorKnowledgeIndex
 					};
 			}
 			case "SALES_REPORT" : {
