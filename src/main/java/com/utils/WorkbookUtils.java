@@ -2,6 +2,8 @@ package com.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,11 +13,17 @@ import java.util.Set;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -63,46 +71,115 @@ public class WorkbookUtils implements WorkbookConstants {
 	    }
 	}
 	
-	private static XSSFCellStyle getTypeStyleCellStyle(final XSSFWorkbook workbook, final TypeOfStyleEnum typeOfStyleEnum) {
+	private static XSSFCellStyle getTypeStyleCellStyle(final XSSFWorkbook workbook, final TypeOfStyleEnum[] typeOfStyleEnums) {
 		final XSSFCellStyle cellStyle = workbook.createCellStyle();
-		switch(typeOfStyleEnum) {
-			case DEFAULT_HEADER_CELL: {
-				// Set Color Black
-				final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
-				// Set Border Color
-				cellStyle.setBottomBorderColor(headerCellBorderColor);
-				cellStyle.setTopBorderColor(headerCellBorderColor);
-				cellStyle.setLeftBorderColor(headerCellBorderColor);
-				cellStyle.setRightBorderColor(headerCellBorderColor);
-				// Set Border Style
-				cellStyle.setBorderTop(BorderStyle.THIN);
-				cellStyle.setBorderBottom(BorderStyle.THIN);
-				cellStyle.setBorderLeft(BorderStyle.THIN);
-				cellStyle.setBorderRight(BorderStyle.THIN);
-				// Set Data Alignment
-				cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-				cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-				break;
-			}
-			case SOLID_FOREGROUND_YELLOW : {
-				cellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-				break;
-			}
-			case SOLID_FOREGROUND_GOLD : {
-				cellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
-				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-				break;
-			}
-			case SOLID_FOREGROUND_LAVENDER : {
-				cellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
-				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-				break;
-			}
-			case SOLID_FOREGROUND_GREY : {
-				cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-				cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-				break;
+		final XSSFFont cellFont = workbook.createFont();
+		for (final TypeOfStyleEnum typeOfStyleEnum : typeOfStyleEnums) {
+			switch(typeOfStyleEnum) {
+				case DEFAULT_HEADER_CELL: {
+					final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
+					cellStyle.setBottomBorderColor(headerCellBorderColor);
+					cellStyle.setTopBorderColor(headerCellBorderColor);
+					cellStyle.setLeftBorderColor(headerCellBorderColor);
+					cellStyle.setRightBorderColor(headerCellBorderColor);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+					cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+					break;
+				}
+				case BOLD_HEADER_CELL: {
+					final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
+					cellStyle.setBottomBorderColor(headerCellBorderColor);
+					cellStyle.setTopBorderColor(headerCellBorderColor);
+					cellStyle.setLeftBorderColor(headerCellBorderColor);
+					cellStyle.setRightBorderColor(headerCellBorderColor);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+					cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+					cellFont.setBold(true);
+					cellStyle.setFont(cellFont);
+					break;
+				}
+				case BORDER_THIN_BLACK : {
+					final XSSFColor headerCellBorderColor = new XSSFColor(new java.awt.Color(0, 0, 0));
+					cellStyle.setBottomBorderColor(headerCellBorderColor);
+					cellStyle.setTopBorderColor(headerCellBorderColor);
+					cellStyle.setLeftBorderColor(headerCellBorderColor);
+					cellStyle.setRightBorderColor(headerCellBorderColor);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					break;
+				}
+				case BORDER_THIN_DARK_BLUE : {
+					final XSSFFont tempcellFont = workbook.createFont();
+					tempcellFont.setColor(IndexedColors.DARK_BLUE.getIndex());
+					final XSSFColor headerCellBorderColor = tempcellFont.getXSSFColor();
+					cellStyle.setBottomBorderColor(headerCellBorderColor);
+					cellStyle.setTopBorderColor(headerCellBorderColor);
+					cellStyle.setLeftBorderColor(headerCellBorderColor);
+					cellStyle.setRightBorderColor(headerCellBorderColor);
+					cellStyle.setBorderTop(BorderStyle.THIN);
+					cellStyle.setBorderBottom(BorderStyle.THIN);
+					cellStyle.setBorderLeft(BorderStyle.THIN);
+					cellStyle.setBorderRight(BorderStyle.THIN);
+					break;
+				}
+				case CONTENT_VERTICAL_CENTER : {
+					cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+					break;
+				}
+				case CONTENT_HORIZONTAL_CENTER : {
+					cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+					break;
+				}
+				case SOLID_FOREGROUND_YELLOW : {
+					cellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+					break;
+				}
+				case SOLID_FOREGROUND_GOLD : {
+					cellStyle.setFillForegroundColor(IndexedColors.GOLD.getIndex());
+					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+					break;
+				}
+				case SOLID_FOREGROUND_LAVENDER : {
+					cellStyle.setFillForegroundColor(IndexedColors.LAVENDER.getIndex());
+					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+					break;
+				}
+				case SOLID_FOREGROUND_LIGHT_GREY : {
+					cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+					break;
+				}
+				case SOLID_FOREGROUND_DARK_BLUE : {
+					cellStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+					break;
+				}
+				case FONT_COLOR_RED : {
+					cellFont.setColor(IndexedColors.RED.getIndex());
+					cellStyle.setFont(cellFont);
+					break;
+				}
+				case FONT_COLOR_GREEN : {
+					cellFont.setColor(IndexedColors.GREEN.getIndex());
+					cellStyle.setFont(cellFont);
+					break;
+				}
+				case FONT_COLOR_WHITE : {
+					cellFont.setColor(IndexedColors.WHITE.getIndex());
+					cellStyle.setFont(cellFont);
+					break;
+				}
 			}
 		}
 		return cellStyle;
@@ -174,7 +251,7 @@ public class WorkbookUtils implements WorkbookConstants {
 					XSSFCellStyle cellStyle = null;
 					Boolean applyAnyCellStyle = false;
 					if (workbookCell.getIsCellStyled()) {
-						cellStyle = getTypeStyleCellStyle(workbook, workbookCell.getTypeOfStyleEnum());
+						cellStyle = getTypeStyleCellStyle(workbook, workbookCell.getTypeOfStyleEnums());
 						applyAnyCellStyle = true;
 						cell.setCellStyle(cellStyle);
 					}
@@ -189,6 +266,11 @@ public class WorkbookUtils implements WorkbookConstants {
 									applyAnyCellStyle, 
 									alreadyCreatedRowAndCellIds
 								);
+					}
+					if (workbookCell.getHasImage()) {
+						setImageInXSSFCell(workbookCell, workbook, spreadsheet, rowid, cellid);
+					}
+					if (workbookCell.getIsCellMerged()) {
 						cellid += (workbookCell.getNumberOfMergedColumnsForThisCell() - 1);
 					}
 					cellid += 1;
@@ -218,6 +300,39 @@ public class WorkbookUtils implements WorkbookConstants {
 		return workbookOutputStream.toByteArray();
 	}
 	
+	private static void setImageInXSSFCell (
+			final WorkbookCell workbookCell, 
+			final XSSFWorkbook workbook, 
+			final XSSFSheet spreadsheet,
+			final Integer rowid,
+			final Integer cellid
+			
+	) throws IOException {
+		byte[] imageBytes = null;
+		if (!workbookCell.getIsImageLocatedInSecuredServer()) {
+			imageBytes = captureImageContentFromOpenServer(workbookCell.getImageURL());
+		}
+		if (ValidationUtils.checkObjectAvailability(imageBytes)) {
+			final Integer pictureIdx = workbook.addPicture(imageBytes, XSSFWorkbook.PICTURE_TYPE_PNG);
+			final CreationHelper helper = workbook.getCreationHelper();
+			final Drawing drawing = spreadsheet.createDrawingPatriarch();
+			final ClientAnchor anchor = helper.createClientAnchor();
+			anchor.setCol1(cellid + workbookCell.getColumnsToLeaveFromCellColumnStart());
+			anchor.setRow1(rowid + workbookCell.getRowsToLeaveFromCellRowStart());
+			anchor.setCol2(cellid + workbookCell.getColumnsToLeaveFromCellColumnStart() + workbookCell.getTotalColumnsToCaptureInCell());
+			anchor.setRow2(rowid + workbookCell.getRowsToLeaveFromCellRowStart() + workbookCell.getTotalRowsToCaptureInCell());
+			@SuppressWarnings("unused")
+			final Picture pict = drawing.createPicture(anchor, pictureIdx);
+		}
+	}
+	
+	private static byte[] captureImageContentFromOpenServer(final String imageServerPath) throws IOException {
+		final InputStream inputStream = new URL(imageServerPath).openConnection().getInputStream();
+		final byte[] bytes = IOUtils.toByteArray(inputStream);
+		inputStream.close();
+		return bytes;
+	}
+	
 	public static List<WorkbookRecord> computeHeaderAndRecordsForApplicationWorkbookObjectList(
 			final List<? extends ApplicationWorkbookObject> objectTypeRecords, 
 			final Class<? extends ApplicationWorkbookObject> recordObjectType, 
@@ -230,7 +345,7 @@ public class WorkbookUtils implements WorkbookConstants {
 				if (value instanceof WorkbookCell)
 					headerCells.add((WorkbookCell)value);
 				else
-					headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL));
+					headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.BOLD_HEADER_CELL));
 			}
 			workbookRecords.add(new WorkbookRecord(headerCells));
 		}

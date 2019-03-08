@@ -1,0 +1,20 @@
+2019-03-07 15:37:58 ERROR LoggerUtils:86 - com.exception.ApplicationException: Cannot place Image in WokbookCell, the Cell range is smaller than Image capture range
+	<br>at com.model.workbook.WorkbookCell.setImage(WorkbookCell.java:152)
+	<br>at TestWorkbook.getWorkbookRecords(TestWorkbook.java:58)
+	<br>at TestWorkbook.main(TestWorkbook.java:33)
+
+2019-03-07 15:38:19 ERROR LoggerUtils:86 - com.exception.ApplicationException: Cannot place Image in WokbookCell, the Cell range is smaller than Image capture range
+	<br>at com.model.workbook.WorkbookCell.setImage(WorkbookCell.java:152)
+	<br>at TestWorkbook.getWorkbookRecords(TestWorkbook.java:58)
+	<br>at TestWorkbook.main(TestWorkbook.java:33)
+
+2019-03-07 15:38:53 ERROR LoggerUtils:86 - com.exception.ApplicationException: Cannot place Image in WokbookCell, the Cell range is smaller than Image capture range
+	<br>at com.model.workbook.WorkbookCell.setImage(WorkbookCell.java:152)
+	<br>at TestWorkbook.getWorkbookRecords(TestWorkbook.java:58)
+	<br>at TestWorkbook.main(TestWorkbook.java:33)
+
+2019-03-07 15:39:02 ERROR LoggerUtils:86 - com.exception.ApplicationException: Cannot place Image in WokbookCell, the Cell range is smaller than Image capture range
+	<br>at com.model.workbook.WorkbookCell.setImage(WorkbookCell.java:152)
+	<br>at TestWorkbook.getWorkbookRecords(TestWorkbook.java:58)
+	<br>at TestWorkbook.main(TestWorkbook.java:33)
+

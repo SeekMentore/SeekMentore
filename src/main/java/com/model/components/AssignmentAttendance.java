@@ -235,7 +235,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						"Start Time",
 						"End Time",
 						"Duration",
-						new WorkbookCell("Topics Taught", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 4, 1),
+						new WorkbookCell("Topics Taught", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 5, 1),
 						"Punctuality (1 - 5)",
 						"Expertise (1 - 5)",
 						"Knowledge (1 - 5)"
@@ -279,7 +279,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.entryDateTimeMillis, "hh:mm a"),
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
 						this.durationHours + " h   " + this.durationMinutes + " m",
-						new WorkbookCell(this.topicsTaught, true, 4, 1),
+						new WorkbookCell(this.topicsTaught, true, 5, 1),
 						this.tutorPunctualityIndex,
 						this.tutorExpertiseIndex,
 						this.tutorKnowledgeIndex

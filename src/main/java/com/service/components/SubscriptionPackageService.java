@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.constants.BeanConstants;
 import com.constants.FileConstants;
 import com.constants.MailConstants;
+import com.constants.MessageConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SubscriptionPackageConstants;
@@ -33,9 +34,13 @@ import com.model.mail.MailAttachment;
 import com.model.rowmappers.AssignmentAttendanceRowMapper;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
+import com.model.workbook.WorkbookCell;
+import com.model.workbook.WorkbookRecord;
 import com.model.workbook.WorkbookReport;
+import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
+import com.utils.DateUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
@@ -727,5 +732,215 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("Attendance", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getAssignmentAttendanceList(gridComponent), AssignmentAttendance.class, "SALES_REPORT"));
 		return WorkbookUtils.createWorkbook(workbookReport);
+	}
+	
+	public List<WorkbookRecord> createAttendanceTracker(final PackageAssignment packageAssignment, final List<AssignmentAttendance> assignmentAttendanceList) throws InstantiationException, IllegalAccessException {
+		final String imageServerURL = Message.getMessage(MessageConstants.IMAGE_SERVER_URL);
+		final String logoImageURL = imageServerURL + "/images/company-logo-complete.png";
+		final String tagLine = "One Stop Solution to All Tutoring Problems";
+		final String reportDesc = "Tutor Invoice and Attendance Tracker";
+		final String customerId = packageAssignment.getCustomerId().toString();                                                                         
+		final String customerName = packageAssignment.getCustomerName();
+		final String customerContactNumber = packageAssignment.getCustomerContactNumber();
+		final String customerEmail = packageAssignment.getCustomerEmail();
+		final String tutorId = packageAssignment.getTutorId().toString();                                                                         
+		final String tutorName = packageAssignment.getTutorName();
+		final String tutorContactNumber = packageAssignment.getTutorContactNumber();
+		final String tutorEmail = packageAssignment.getTutorEmail();
+		final String packageId = packageAssignment.getSubscriptionPackageSerialId();
+		final String enquiryGrade = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, packageAssignment.getEnquiryGrade());
+		final String enquirySubject = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, packageAssignment.getEnquirySubject());
+		final String assignmentId = packageAssignment.getPackageAssignmentSerialId();
+		final String startDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getStartDateMillis(), "dd-MMM-yyyy");
+		final String endDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getEndDateMillis(), "dd-MMM-yyyy");
+		final String totalDuration = packageAssignment.getTotalHours().toString() + WHITESPACE + "h";
+		final String completedDuration = packageAssignment.getCompletedHours().toString() + WHITESPACE + "h" + WHITESPACE + WHITESPACE + packageAssignment.getCompletedMinutes().toString() + WHITESPACE + "m";
+		
+		final List<WorkbookRecord> workbookRecords = new LinkedList<WorkbookRecord>();
+		
+		List<WorkbookCell> workbookCells = new LinkedList<WorkbookCell>();
+		WorkbookCell workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
+		workbookCell.setImage(logoImageURL, null, null, null, 5, 4, null);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell(tagLine, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.FONT_COLOR_WHITE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
+		workbookCells.add(workbookCell);
+		WorkbookRecord workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell(reportDesc, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Customer Id - " + customerId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Package Id - " + packageId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell(customerName, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Grade", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell(subscriptionPackage.getEnquiryGrade(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell(subscriptionPackage.getCustomerContactNumber(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Subject", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Science", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Email Id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell(subscriptionPackage.getCustomerEmail(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Assignment Id - AUBGH-56368-12345-YUGHT", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Tutor ID - AUBGH-56368-12345-YUGHT", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Start date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("06-Mar-2019", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("End date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("06-Mar-2019", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Mr Shantanu", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Total Duration", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("25 h", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("9739936482", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Completed Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("15 h  45 m", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("Email id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("mukherjeeshantanu797@gmail.com", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("Remaining Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookCell = new WorkbookCell("9 h  15 m", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(assignmentAttendanceList, AssignmentAttendance.class, "ATTENDANCE_TRACKER_SHEET"));
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("", true, 11, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("1. Payout will be made on every Wednesday, Cut-off day for 'Wednesday-payouts' will be preceding Sunday", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("2. Academic Quality, Punctuality and Overall rating columns need to be filled by parent ", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("3. Invoice need to be signed by parents and its scanned copy  should reach ' tutorpay@helloclass.com' on or before the cutoff days", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("4. Completion of package is mandatory for payout, Helloclass will not be able to process any  partial payments ", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("5. Name of scanned image- should be 'Packageid'", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("6. In order to have hassle free payout , kindly adhere to above instructions", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("7. For timely renewal, kindly get in touch with your assigned relationship manager(3 classes before the completion of package)", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		workbookCells = new LinkedList<WorkbookCell>();
+		workbookCell = new WorkbookCell("8. Kindly don’t extend number of sessions or hours, beyond the finalized terms. Helloclass will not be liable to pay for any additional hour", true, 12, 1);
+		workbookCells.add(workbookCell);
+		workbookRecord = new WorkbookRecord(workbookCells);
+		workbookRecords.add(workbookRecord);
+		
+		return workbookRecords;
 	}
 }
