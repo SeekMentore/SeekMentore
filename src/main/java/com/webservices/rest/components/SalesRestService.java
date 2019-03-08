@@ -1464,24 +1464,19 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET)
+	@Path(REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-    public void downloadAttendanceSheet (
-    		@FormParam(GRID_COMPONENT_START) final String start,
-			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
-			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
-			@FormParam(GRID_COMPONENT_FILTERS) final String filters,
-			@FormParam(GRID_COMPONENT_SORTERS) final String sorters,
+    public void downloadAttendanceTrackerSheet (
+    		@FormParam("packageAssignmentSerialId") final String packageAssignmentSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET;
-		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, AssignmentAttendance.class);
-		this.packageAssignmentSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "packageAssignmentSerialId", String.class);
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET;
+		this.packageAssignmentSerialId = packageAssignmentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Attendance_Sheet" + this.packageAssignmentSerialId + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadAttendanceSheet(gridComponent));
+			FileUtils.writeFileToResponse(response, "Attendance_Sheet" + this.packageAssignmentSerialId + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId));
 		}
     }
 
@@ -1623,7 +1618,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST : 
-			case REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_SHEET : {
+			case REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET : {
 				handleSelectedAssignmentSecurity();
 				break;
 			}

@@ -1,5 +1,9 @@
 package com.model.workbook;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.exception.ApplicationException;
 import com.utils.ValidationUtils;
 
@@ -31,6 +35,7 @@ public class WorkbookCell {
 		SOLID_FOREGROUND_LAVENDER,
 		SOLID_FOREGROUND_DARK_BLUE,
 		SOLID_FOREGROUND_LIGHT_GREY,
+		FONT_SIZE_BOLD,
 		FONT_COLOR_RED,
 		FONT_COLOR_GREEN,
 		FONT_COLOR_WHITE;
@@ -38,7 +43,6 @@ public class WorkbookCell {
 	
 	public WorkbookCell(final Object value) {
 		this.value = value;
-		this.isCellStyled = false;
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellStyled, final TypeOfStyleEnum typeOfStyleEnum) {
@@ -165,6 +169,19 @@ public class WorkbookCell {
 			if (ValidationUtils.checkObjectAvailability(isImageLocatedInSecuredServer)) {
 				this.isImageLocatedInSecuredServer = isImageLocatedInSecuredServer;
 			}
+		}
+	}
+	
+	public void addStyleEnumsToExistingStyles(final TypeOfStyleEnum[] typeOfStyleEnumsAdditional) {
+		if (ValidationUtils.checkNonEmptyArray(typeOfStyleEnumsAdditional)) {
+			TypeOfStyleEnum[] typeOfStyleEnumsCurrentArray = new TypeOfStyleEnum[0];
+			if (this.isCellStyled) {
+				typeOfStyleEnumsCurrentArray =  this.typeOfStyleEnums;
+			}
+			this.isCellStyled = true;
+			final List<TypeOfStyleEnum> styleList = new LinkedList<TypeOfStyleEnum>(Arrays.asList(typeOfStyleEnumsCurrentArray));
+			styleList.addAll(Arrays.asList(typeOfStyleEnumsAdditional));
+			this.typeOfStyleEnums = styleList.toArray(new TypeOfStyleEnum[0]);
 		}
 	}
 

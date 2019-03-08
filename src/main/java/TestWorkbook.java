@@ -171,7 +171,7 @@ public class TestWorkbook {
 		assignmentAttendance.setUpdatedByName("Shantanu Mukherjee");
 		assignmentAttendance.setUpdatedByUserType("Employee");
 		final List<AssignmentAttendance> list =  new ArrayList<AssignmentAttendance>();
-		list.add(assignmentAttendance);
+		//list.add(assignmentAttendance);
 		workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(list, AssignmentAttendance.class, "ATTENDANCE_TRACKER_SHEET"));
 		
 		workbookCells = new LinkedList<WorkbookCell>();

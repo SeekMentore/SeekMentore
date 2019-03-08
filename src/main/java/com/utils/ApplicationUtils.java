@@ -292,6 +292,77 @@ public class ApplicationUtils implements ApplicationConstants {
     	return ((!inputA && !inputB) || (inputA && inputB));
     }
     
+    public static Map<String, Object> calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds (
+	    Integer totalHours,
+	    Integer totalMinutes,
+	    Integer totalSeconds,
+	    Integer completedHours,
+	    Integer completedMinutes,
+	    Integer completedSeconds
+	) {
+	    if (!ValidationUtils.checkObjectAvailability(totalHours) || totalHours < 1) {
+	      totalHours = 0;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(totalMinutes) || totalMinutes < 1) {
+	      totalMinutes = 0;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(totalSeconds) || totalSeconds < 1) {
+	      totalSeconds = 0;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(completedHours) || completedHours < 1) {
+	      completedHours = 0;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(completedMinutes) || completedMinutes < 1) {
+	      completedMinutes = 0;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(completedSeconds) || completedSeconds < 1) {
+	      completedSeconds = 0;
+	    }
+	    Integer calculateTotalDurationInSeconds = (totalHours * 60 * 60) + (totalMinutes * 60) + totalSeconds;
+	    Integer calculateCompletedDurationInSeconds = (completedHours * 60 * 60) + (completedMinutes * 60) + completedSeconds;
+	    return calculateGapInTime(calculateTotalDurationInSeconds, calculateCompletedDurationInSeconds);
+    }
+    
+    public static Map<String, Object> calculateIntervalHoursMinutesSecondsFromStartMillisecondsAndEndMilliseconds(
+	    Long startMillis,
+	    Long endMillis
+	) {
+	    if (!ValidationUtils.checkObjectAvailability(startMillis) || startMillis < 1) {
+	      startMillis = 0L;
+	    }
+	    if (!ValidationUtils.checkObjectAvailability(endMillis) || endMillis < 1) {
+	      endMillis = 0L;
+	    }
+	    Integer calculateTotalDurationInSeconds = (int) Math.ceil(endMillis / 1000);
+	    Integer calculateCompletedDurationInSeconds = (int) Math.ceil(startMillis / 1000);
+	    return calculateGapInTime(calculateTotalDurationInSeconds, calculateCompletedDurationInSeconds);
+    }
+    
+    private static Map<String, Object> calculateGapInTime(Integer totalDurationInSeconds, Integer completedDurationInSeconds) {
+    	final Map<String, Object> remainingTime = new HashMap<String, Object>();
+    	remainingTime.put("remainingHours", 0);
+    	remainingTime.put("remainingMinutes", 0);
+    	remainingTime.put("remainingSeconds", 0);
+    	remainingTime.put("overdueHours", 0);
+    	remainingTime.put("overdueMinutes", 0);
+    	remainingTime.put("overdueSeconds", 0);
+    	remainingTime.put("isOverdue", (completedDurationInSeconds > totalDurationInSeconds));
+    	Integer calculateGapDurationInSeconds = (Boolean)remainingTime.get("isOverdue") ? (completedDurationInSeconds - totalDurationInSeconds) : (totalDurationInSeconds - completedDurationInSeconds);
+    	Integer gapInHours = (int) Math.floor(calculateGapDurationInSeconds / 3600);
+    	Integer gapInMinutes = (int) Math.floor((calculateGapDurationInSeconds - (gapInHours * 3600)) / 60);
+    	Integer gapInSeconds = calculateGapDurationInSeconds - ((gapInHours * 3600) + (gapInMinutes * 60));
+        if ((Boolean)remainingTime.get("isOverdue")) {
+	    	remainingTime.put("overdueHours", gapInHours);
+	    	remainingTime.put("overdueMinutes", gapInMinutes);
+	    	remainingTime.put("overdueSeconds", gapInSeconds);
+        } else {
+        	remainingTime.put("remainingHours", gapInHours);
+        	remainingTime.put("remainingMinutes", gapInMinutes);
+        	remainingTime.put("remainingSeconds", gapInSeconds);
+        }
+        return remainingTime;
+    }
+    
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
 	}

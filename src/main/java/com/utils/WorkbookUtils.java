@@ -165,6 +165,11 @@ public class WorkbookUtils implements WorkbookConstants {
 					cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 					break;
 				}
+				case FONT_SIZE_BOLD : {
+					cellFont.setBold(true);
+					cellStyle.setFont(cellFont);
+					break;
+				}
 				case FONT_COLOR_RED : {
 					cellFont.setColor(IndexedColors.RED.getIndex());
 					cellStyle.setFont(cellFont);
@@ -221,76 +226,82 @@ public class WorkbookUtils implements WorkbookConstants {
 		final Map<Integer, List<Integer>> alreadyCreatedRowAndCellIds = new HashMap<Integer, List<Integer>>();
 		final XSSFWorkbook workbook = new XSSFWorkbook();
 		LoggerUtils.logOnConsole("Total Sheets = "+workbookReport.getSheets().size());
-		for (WorkbookSheet sheet : workbookReport.getSheets()) {
-			final XSSFSheet spreadsheet = workbook.createSheet(sheet.getSheetName());
-			LoggerUtils.logOnConsole("Sheet - "+sheet.getSheetName());
-			Integer maxColumnsEncountered = 0;
-			Integer rowid = 0;
-			// Row Padding With One Blank Cell
-			for (int i = 0; i < sheet.getRowPadding(); i++) {
-				final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowAndCellIds, rowid);
-				final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, 0);
-				cell.setCellValue(EMPTY_STRING);
-				rowid += 1;
-			}
-			LoggerUtils.logOnConsole("Total Workbook Records = "+sheet.getWorkbookRecords().size());
-			Integer countWorkbookRecords = 0;
-			for (WorkbookRecord record : sheet.getWorkbookRecords()) {
-				final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowAndCellIds, rowid);
-				Integer cellid = 0;
-				// Column Padding With One Blank Cell
-				for (int i = 0; i < sheet.getColumnPadding(); i++) {
-					final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, cellid);
+		if (ValidationUtils.checkNonEmptyList(workbookReport.getSheets())) {
+			for (WorkbookSheet sheet : workbookReport.getSheets()) {
+				final XSSFSheet spreadsheet = workbook.createSheet(sheet.getSheetName());
+				LoggerUtils.logOnConsole("Sheet - "+sheet.getSheetName());
+				Integer maxColumnsEncountered = 0;
+				Integer rowid = 0;
+				// Row Padding With One Blank Cell
+				for (int i = 0; i < sheet.getRowPadding(); i++) {
+					final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowAndCellIds, rowid);
+					final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, 0);
 					cell.setCellValue(EMPTY_STRING);
-					cellid += 1;
+					rowid += 1;
 				}
-				for (WorkbookCell workbookCell : record.getRecordCells()) {
-					Object value = workbookCell.getValue();
-					final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, cellid);
-					cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
-					XSSFCellStyle cellStyle = null;
-					Boolean applyAnyCellStyle = false;
-					if (workbookCell.getIsCellStyled()) {
-						cellStyle = getTypeStyleCellStyle(workbook, workbookCell.getTypeOfStyleEnums());
-						applyAnyCellStyle = true;
-						cell.setCellStyle(cellStyle);
+				LoggerUtils.logOnConsole("Total Workbook Records = "+sheet.getWorkbookRecords().size());
+				Integer countWorkbookRecords = 0;
+				if (ValidationUtils.checkNonEmptyList(sheet.getWorkbookRecords())) {
+					for (WorkbookRecord record : sheet.getWorkbookRecords()) {
+						final XSSFRow row = getXSSFRowWithRowId(spreadsheet, alreadyCreatedRowAndCellIds, rowid);
+						Integer cellid = 0;
+						// Column Padding With One Blank Cell
+						for (int i = 0; i < sheet.getColumnPadding(); i++) {
+							final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, cellid);
+							cell.setCellValue(EMPTY_STRING);
+							cellid += 1;
+						}
+						if (ValidationUtils.checkNonEmptyList(record.getRecordCells())) {
+							for (WorkbookCell workbookCell : record.getRecordCells()) {
+								Object value = workbookCell.getValue();
+								final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, cellid);
+								cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
+								XSSFCellStyle cellStyle = null;
+								Boolean applyAnyCellStyle = false;
+								if (workbookCell.getIsCellStyled()) {
+									cellStyle = getTypeStyleCellStyle(workbook, workbookCell.getTypeOfStyleEnums());
+									applyAnyCellStyle = true;
+									cell.setCellStyle(cellStyle);
+								}
+								if (workbookCell.getIsCellMerged()) {
+									setCellMerge(
+											spreadsheet, 
+											rowid, 
+											rowid + (workbookCell.getNumberOfMergedRowsForThisCell() - 1), 
+											cellid, 
+											cellid + (workbookCell.getNumberOfMergedColumnsForThisCell() - 1), 
+											cellStyle, 
+											applyAnyCellStyle, 
+											alreadyCreatedRowAndCellIds
+											);
+								}
+								if (workbookCell.getHasImage()) {
+									setImageInXSSFCell(workbookCell, workbook, spreadsheet, rowid, cellid);
+								}
+								if (workbookCell.getIsCellMerged()) {
+									cellid += (workbookCell.getNumberOfMergedColumnsForThisCell() - 1);
+								}
+								cellid += 1;
+								// GC value after it is done
+								value = null;
+							}
+						}
+						if (maxColumnsEncountered < cellid) {
+							maxColumnsEncountered = cellid;
+						}
+						rowid = returnIncrementedRowId(record, alreadyCreatedRowAndCellIds, rowid);
+						//rowid += 1;
+						// GC header after it is done
+						record = null;
+						countWorkbookRecords++;
 					}
-					if (workbookCell.getIsCellMerged()) {
-						setCellMerge(
-									spreadsheet, 
-									rowid, 
-									rowid + (workbookCell.getNumberOfMergedRowsForThisCell() - 1), 
-									cellid, 
-									cellid + (workbookCell.getNumberOfMergedColumnsForThisCell() - 1), 
-									cellStyle, 
-									applyAnyCellStyle, 
-									alreadyCreatedRowAndCellIds
-								);
-					}
-					if (workbookCell.getHasImage()) {
-						setImageInXSSFCell(workbookCell, workbook, spreadsheet, rowid, cellid);
-					}
-					if (workbookCell.getIsCellMerged()) {
-						cellid += (workbookCell.getNumberOfMergedColumnsForThisCell() - 1);
-					}
-					cellid += 1;
-					// GC value after it is done
-					value = null;
 				}
-				if (maxColumnsEncountered < cellid) {
-					maxColumnsEncountered = cellid;
+				for (int i = 1; i < maxColumnsEncountered; i++) {
+					spreadsheet.setColumnWidth(i, workbookReport.getDefaultCellWidth());
 				}
-				rowid = returnIncrementedRowId(record, alreadyCreatedRowAndCellIds, rowid);
-				//rowid += 1;
-				// GC header after it is done
-				record = null;
-				countWorkbookRecords++;
+				// GC sheet after it is done
+				sheet = null;
 			}
-			for (int i = 1; i < maxColumnsEncountered; i++) {
-				spreadsheet.setColumnWidth(i, workbookReport.getDefaultCellWidth());
-			}
-			// GC sheet after it is done
-			sheet = null;
 		}
 		// GC workbookReport after it is done
 		workbookReport = null;
@@ -333,32 +344,53 @@ public class WorkbookUtils implements WorkbookConstants {
 		return bytes;
 	}
 	
-	public static List<WorkbookRecord> computeHeaderAndRecordsForApplicationWorkbookObjectList(
+	public static List<WorkbookRecord> computeHeaderAndRecordsForApplicationWorkbookObjectList (
 			final List<? extends ApplicationWorkbookObject> objectTypeRecords, 
 			final Class<? extends ApplicationWorkbookObject> recordObjectType, 
 			final String reportType
 	) throws InstantiationException, IllegalAccessException {
 		final List<WorkbookRecord> workbookRecords = new LinkedList<WorkbookRecord>();
+		Integer numberOfHeaderCells = null;
 		{
 			final List<WorkbookCell> headerCells = new LinkedList<WorkbookCell>();
-			for (final Object value : recordObjectType.newInstance().getReportHeaders(reportType)) {
-				if (value instanceof WorkbookCell)
-					headerCells.add((WorkbookCell)value);
-				else
-					headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.BOLD_HEADER_CELL));
+			if (ValidationUtils.checkNonEmptyArray(recordObjectType.newInstance().getReportHeaders(reportType))) {
+				numberOfHeaderCells = 0;
+				for (final Object value : recordObjectType.newInstance().getReportHeaders(reportType)) {
+					if (value instanceof WorkbookCell) {
+						final WorkbookCell workbookCell = (WorkbookCell)value;
+						workbookCell.addStyleEnumsToExistingStyles(new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL});
+						headerCells.add(workbookCell);
+						numberOfHeaderCells += workbookCell.getNumberOfMergedColumnsForThisCell();
+					} else {
+						headerCells.add(new WorkbookCell(value, true, TypeOfStyleEnum.BOLD_HEADER_CELL));
+						numberOfHeaderCells += 1;
+					}
+				}
 			}
 			workbookRecords.add(new WorkbookRecord(headerCells));
 		}
 		{
-			for(final ApplicationWorkbookObject workbookObject : objectTypeRecords) {
-				final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
-				for (final Object value : workbookObject.getReportRecords(reportType)) {
-					if (value instanceof WorkbookCell)
-						recordCells.add((WorkbookCell)value);
-					else
-						recordCells.add(new WorkbookCell(value));
+			if (ValidationUtils.checkNonEmptyList(objectTypeRecords)) {
+				for(final ApplicationWorkbookObject workbookObject : objectTypeRecords) {
+					final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
+					if (ValidationUtils.checkNonEmptyArray(workbookObject.getReportRecords(reportType))) {
+						for (final Object value : workbookObject.getReportRecords(reportType)) {
+							if (value instanceof WorkbookCell) {
+								recordCells.add((WorkbookCell)value);
+							} else {
+								recordCells.add(new WorkbookCell(value));
+							}
+						}
+					}
+					workbookRecords.add(new WorkbookRecord(recordCells));
 				}
-				workbookRecords.add(new WorkbookRecord(recordCells));
+			} else {
+				if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(numberOfHeaderCells)) {
+					final List<WorkbookCell> recordCells = new LinkedList<WorkbookCell>();
+					final WorkbookCell workbookCell = new WorkbookCell("No Records Found", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.CONTENT_VERTICAL_CENTER, TypeOfStyleEnum.FONT_SIZE_BOLD}, true, numberOfHeaderCells, 3);
+					recordCells.add(workbookCell);
+					workbookRecords.add(new WorkbookRecord(recordCells));
+				}
 			}
 		}
 		return workbookRecords;

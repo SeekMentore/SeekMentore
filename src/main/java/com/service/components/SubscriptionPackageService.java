@@ -420,8 +420,10 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	}
 	
 	private void sendNotificationEmailsForSubscriptionPackageTermination(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
+		// TODO
 		// Customer Email
 		// Tutor Email
+		// Sales Team
 	}
 	
 	public byte[] downloadSubscriptionPackageContractPdf(final String subscriptionPackageSerialId) throws JAXBException, URISyntaxException, Exception {
@@ -625,8 +627,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	}
 	
 	private void sendNotificationEmailsForEndOfPackageAssignment(final List<PackageAssignment> packageAssignmentList) {
-		// Customer Email
-		// Tutor Email
+		// TODO
+		// Sales Team Email
 	}
 	
 	public List<PackageAssignment> getAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
@@ -710,13 +712,19 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			}
 		}
 		if (newCompletedHours == packageAssignment.getTotalHours()) {
-			sendNotificationEmailsForHoursCompletionPackageAssignment();
+			sendNotificationEmailsForPackageAssignmentHoursCompletion();
 		}
 	}
 	
-	private void sendNotificationEmailsForHoursCompletionPackageAssignment() {
+	private void sendNotificationEmailsForPackageAssignmentHoursCompletion() {
 		// Customer Email
 		// Tutor Email
+		// Sales Team
+	}
+	
+	private void sendPackageAssignmentRenewReminderEmails() {
+		// Customer Email
+		// Sales Team Email 
 	}
 	
 	public List<AssignmentAttendance> getAssignmentAttendanceList(final GridComponent gridComponent) throws Exception {
@@ -728,219 +736,222 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new AssignmentAttendanceRowMapper());
 	}
 	
-	public byte[] downloadAttendanceSheet(final GridComponent gridComponent) throws Exception {
+	public List<AssignmentAttendance> getAssignmentAttendanceList(final String packageAssignmentSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("packageAssignmentSerialId", packageAssignmentSerialId);
+		return applicationDao.findAll(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendance")
+												+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendancePackageAssignmentSerialIdFilter"), paramsMap, new AssignmentAttendanceRowMapper());
+	}
+	
+	public byte[] downloadAttendanceTrackerSheet(final String packageAssignmentSerialId) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
-		workbookReport.createSheet("Attendance", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getAssignmentAttendanceList(gridComponent), AssignmentAttendance.class, "SALES_REPORT"));
+		workbookReport.createSheet("Attendance", createAttendanceTracker(packageAssignmentSerialId));
+		workbookReport.setDefaultCellWidth(4500);
 		return WorkbookUtils.createWorkbook(workbookReport);
 	}
 	
-	public List<WorkbookRecord> createAttendanceTracker(final PackageAssignment packageAssignment, final List<AssignmentAttendance> assignmentAttendanceList) throws InstantiationException, IllegalAccessException {
-		final String imageServerURL = Message.getMessage(MessageConstants.IMAGE_SERVER_URL);
-		final String logoImageURL = imageServerURL + "/images/company-logo-complete.png";
-		final String tagLine = "One Stop Solution to All Tutoring Problems";
-		final String reportDesc = "Tutor Invoice and Attendance Tracker";
-		final String customerId = packageAssignment.getCustomerId().toString();                                                                         
-		final String customerName = packageAssignment.getCustomerName();
-		final String customerContactNumber = packageAssignment.getCustomerContactNumber();
-		final String customerEmail = packageAssignment.getCustomerEmail();
-		final String tutorId = packageAssignment.getTutorId().toString();                                                                         
-		final String tutorName = packageAssignment.getTutorName();
-		final String tutorContactNumber = packageAssignment.getTutorContactNumber();
-		final String tutorEmail = packageAssignment.getTutorEmail();
-		final String packageId = packageAssignment.getSubscriptionPackageSerialId();
-		final String enquiryGrade = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, packageAssignment.getEnquiryGrade());
-		final String enquirySubject = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, packageAssignment.getEnquirySubject());
-		final String assignmentId = packageAssignment.getPackageAssignmentSerialId();
-		final String startDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getStartDateMillis(), "dd-MMM-yyyy");
-		final String endDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getEndDateMillis(), "dd-MMM-yyyy");
-		final String totalDuration = packageAssignment.getTotalHours().toString() + WHITESPACE + "h";
-		final String completedDuration = packageAssignment.getCompletedHours().toString() + WHITESPACE + "h" + WHITESPACE + WHITESPACE + packageAssignment.getCompletedMinutes().toString() + WHITESPACE + "m";
-		
+	public List<WorkbookRecord> createAttendanceTracker(final String packageAssignmentSerialId) throws Exception {
 		final List<WorkbookRecord> workbookRecords = new LinkedList<WorkbookRecord>();
-		
-		List<WorkbookCell> workbookCells = new LinkedList<WorkbookCell>();
-		WorkbookCell workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
-		workbookCell.setImage(logoImageURL, null, null, null, 5, 4, null);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell(tagLine, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.FONT_COLOR_WHITE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
-		workbookCells.add(workbookCell);
-		WorkbookRecord workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell(reportDesc, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Customer Id - " + customerId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Package Id - " + packageId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell(customerName, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Grade", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell(subscriptionPackage.getEnquiryGrade(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell(subscriptionPackage.getCustomerContactNumber(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Subject", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Science", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Email Id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell(subscriptionPackage.getCustomerEmail(), true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Assignment Id - AUBGH-56368-12345-YUGHT", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Tutor ID - AUBGH-56368-12345-YUGHT", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Start date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("06-Mar-2019", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("End date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("06-Mar-2019", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Mr Shantanu", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Total Duration", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("25 h", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("9739936482", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Completed Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("15 h  45 m", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("Email id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("mukherjeeshantanu797@gmail.com", true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("Remaining Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookCell = new WorkbookCell("9 h  15 m", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(assignmentAttendanceList, AssignmentAttendance.class, "ATTENDANCE_TRACKER_SHEET"));
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("", true, 11, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("1. Payout will be made on every Wednesday, Cut-off day for 'Wednesday-payouts' will be preceding Sunday", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("2. Academic Quality, Punctuality and Overall rating columns need to be filled by parent ", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("3. Invoice need to be signed by parents and its scanned copy  should reach ' tutorpay@helloclass.com' on or before the cutoff days", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("4. Completion of package is mandatory for payout, Helloclass will not be able to process any  partial payments ", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("5. Name of scanned image- should be 'Packageid'", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("6. In order to have hassle free payout , kindly adhere to above instructions", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("7. For timely renewal, kindly get in touch with your assigned relationship manager(3 classes before the completion of package)", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
-		workbookCells = new LinkedList<WorkbookCell>();
-		workbookCell = new WorkbookCell("8. Kindly don’t extend number of sessions or hours, beyond the finalized terms. Helloclass will not be liable to pay for any additional hour", true, 12, 1);
-		workbookCells.add(workbookCell);
-		workbookRecord = new WorkbookRecord(workbookCells);
-		workbookRecords.add(workbookRecord);
-		
+		if (ValidationUtils.checkStringAvailability(packageAssignmentSerialId)) {
+			final PackageAssignment packageAssignment = getPackageAssignment(packageAssignmentSerialId);
+			if (ValidationUtils.checkObjectAvailability(packageAssignment)) {
+				final String imageServerURL = Message.getMessage(MessageConstants.IMAGE_SERVER_URL);
+				final String logoImageURL = imageServerURL + "/images/company-logo-complete.png";
+				final String tagLine = "One Stop Solution to All Tutoring Problems";
+				final String reportDesc = "Tutor Invoice and Attendance Tracker";
+				final String customerId = "Customer Id - " + packageAssignment.getCustomerId().toString();                                                                         
+				final String customerName = packageAssignment.getCustomerName();
+				final String customerContactNumber = packageAssignment.getCustomerContactNumber();
+				final String customerEmail = packageAssignment.getCustomerEmail();
+				final String tutorId = "Tutor ID - " + packageAssignment.getTutorId().toString();                                                                         
+				final String tutorName = packageAssignment.getTutorName();
+				final String tutorContactNumber = packageAssignment.getTutorContactNumber();
+				final String tutorEmail = packageAssignment.getTutorEmail();
+				final String packageId = "Package Id - " + packageAssignment.getSubscriptionPackageSerialId();
+				final String enquiryGrade = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, packageAssignment.getEnquiryGrade());
+				final String enquirySubject = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, packageAssignment.getEnquirySubject());
+				final String assignmentId = "Assignment Id - " + packageAssignment.getPackageAssignmentSerialId();
+				final String startDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getStartDateMillis(), "dd-MMM-yyyy");
+				final String endDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getEndDateMillis(), "dd-MMM-yyyy");
+				final String totalDuration = packageAssignment.getTotalHours().toString() + WHITESPACE + "h";
+				final String completedDuration = packageAssignment.getCompletedHours().toString() + WHITESPACE + "h" + WHITESPACE + WHITESPACE + packageAssignment.getCompletedMinutes().toString() + WHITESPACE + "m";
+				final Map<String, Object> remainingTime = ApplicationUtils.calculateRemainingHoursMinutesSecondsFromTotalAndCompletedHoursMinutesSeconds(packageAssignment.getTotalHours(), 0, 0, packageAssignment.getCompletedHours(), packageAssignment.getCompletedMinutes(), 0);
+				final String remainingDuration = remainingTime.get("remainingHours").toString() + WHITESPACE + "h" + WHITESPACE + WHITESPACE + remainingTime.get("remainingMinutes").toString() + WHITESPACE + "m";
+				final String attendanceTrackerInformationLine1 = "1. Payout will be made on every Wednesday, Cut-off day for 'Wednesday-payouts' will be preceding Sunday";
+				final String attendanceTrackerInformationLine2 = "2. Academic Quality, Punctuality and Overall rating columns are filled by parent";
+				final String attendanceTrackerInformationLine3 = "3. Completion of package is mandatory for payout, SeekMentore will not be able to process any partial payments";
+				final String attendanceTrackerInformationLine4 = "4. In order to have hassle free payout , kindly adhere to above instructions";
+				final String attendanceTrackerInformationLine5 = "5. Kindly don’t extend number of sessions or hours, beyond the finalized terms. SeekMentore will not be liable to pay for any additional hour";
+				
+				List<WorkbookCell> workbookCells = null;
+				WorkbookRecord workbookRecord = null;
+				// 1st Row - Image Banner
+				workbookCells = new LinkedList<WorkbookCell>();
+				WorkbookCell workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
+				workbookCell.setImage(logoImageURL, null, null, null, 5, 4, null);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(tagLine, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_DARK_BLUE, TypeOfStyleEnum.FONT_COLOR_WHITE, TypeOfStyleEnum.BORDER_THIN_DARK_BLUE}, true, 6, 4);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 2nd Row - Sheet Description
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(reportDesc, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 3rd Row - Customer Id & Package Id
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(customerId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(packageId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 4th Row - Customer Name & Enquiry Grade
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(customerName, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Grade", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(enquiryGrade, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 5th Row - Customer Contact Number & Enquiry Subject
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(customerContactNumber, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Subject", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(enquirySubject, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 6th Row - Customer Email
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Email Id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(customerEmail, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 7th Row - Assignment Id
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(assignmentId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 8th Row - Tutor Id, Assignment Start Date & End Date
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(tutorId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Start date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(startDate, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("End date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(endDate, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 2, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 9th Row - Tutor Name & Assignment Total Duration
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Name", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(tutorName, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Total Duration", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(totalDuration, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 10th Row - Tutor Contact Number & Assignment Completed Duration
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Contact No", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(tutorContactNumber, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Completed Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(completedDuration, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_GREEN, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 11th Row - Tutor Email & Assignment Remaining Duration
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell("Email id", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(tutorEmail, true, TypeOfStyleEnum.DEFAULT_HEADER_CELL, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell("Remaining Duration", true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookCell = new WorkbookCell(remainingDuration, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.FONT_COLOR_RED, TypeOfStyleEnum.BOLD_HEADER_CELL}, true, 3, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 12th Row - Separator
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 13th Row - All Attendance Record Headers + Values
+				workbookRecords.addAll(WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getAssignmentAttendanceList(packageAssignmentSerialId), AssignmentAttendance.class, "ATTENDANCE_TRACKER_SHEET"));
+				// 14th Row - Separator
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.BOLD_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// 15th Row - Gap
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(EMPTY_STRING, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// Attendance Tracker Information Lines - Line 1
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(attendanceTrackerInformationLine1, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// Attendance Tracker Information Lines - Line 2
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(attendanceTrackerInformationLine2, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// Attendance Tracker Information Lines - Line 3
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(attendanceTrackerInformationLine3, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// Attendance Tracker Information Lines - Line 4
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(attendanceTrackerInformationLine4, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+				// Attendance Tracker Information Lines - Line 5
+				workbookCells = new LinkedList<WorkbookCell>();
+				workbookCell = new WorkbookCell(attendanceTrackerInformationLine5, true, 12, 1);
+				workbookCells.add(workbookCell);
+				workbookRecord = new WorkbookRecord(workbookCells);
+				workbookRecords.add(workbookRecord);
+			}
+		}
 		return workbookRecords;
 	}
 }

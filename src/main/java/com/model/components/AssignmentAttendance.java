@@ -7,7 +7,6 @@ import com.constants.components.SelectLookupConstants;
 import com.model.ApplicationWorkbookObject;
 import com.model.GridComponentObject;
 import com.model.workbook.WorkbookCell;
-import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
 import com.utils.ValidationUtils;
@@ -235,7 +234,7 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						"Start Time",
 						"End Time",
 						"Duration",
-						new WorkbookCell("Topics Taught", true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 5, 1),
+						new WorkbookCell("Topics Taught", true, 5, 1),
 						"Punctuality (1 - 5)",
 						"Expertise (1 - 5)",
 						"Knowledge (1 - 5)"
