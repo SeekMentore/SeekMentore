@@ -35,9 +35,10 @@ import com.model.rowmappers.AssignmentAttendanceRowMapper;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
 import com.model.workbook.WorkbookCell;
+import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.model.workbook.WorkbookRecord;
 import com.model.workbook.WorkbookReport;
-import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
+import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;
 import com.utils.DateUtils;
@@ -60,6 +61,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	
 	@Autowired
 	private QueryMapperService queryMapperService;
+	
+	@Autowired
+	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@PostConstruct
 	public void init() {}
@@ -419,11 +423,35 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 	}
 	
-	private void sendNotificationEmailsForSubscriptionPackageTermination(final List<SubscriptionPackage> subscriptionPackageParamObjectList) {
-		// TODO
-		// Customer Email
-		// Tutor Email
-		// Sales Team
+	private void sendNotificationEmailsForSubscriptionPackageTermination(final List<SubscriptionPackage> subscriptionPackageParamObjectList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final SubscriptionPackage subscriptionPackage : subscriptionPackageParamObjectList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("subscriptionPackage", subscriptionPackage);
+			List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			// Client Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, subscriptionPackage.getEnquiryEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(subscriptionPackage.getCustomerEmail(), subscriptionPackage.getEnquiryEmail()) ? subscriptionPackage.getCustomerEmail() : null);
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your Subscription Package has been terminated");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_TERMINATED_CLIENT_EMAIL_PATH, attributes));
+			attachments.add(new MailAttachment("Brochure.pdf", "public_access/media/brochures/v1/Brochure.pdf", FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+			mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+			mailParamList.add(mailParams);
+			// Tutor Email
+			mailParams = new HashMap<String, Object>();
+			mailParams.put(MailConstants.MAIL_PARAM_TO, subscriptionPackage.getTutorEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Subscription Package terminated");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_TERMINATED_TUTOR_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			// Sales Team
+			mailParams = new HashMap<String, Object>();
+			mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Subscription Package terminated");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_SUBSCRIPTION_TERMINATED_SALES_TEAM_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+		}
 	}
 	
 	public byte[] downloadSubscriptionPackageContractPdf(final String subscriptionPackageSerialId) throws JAXBException, URISyntaxException, Exception {
@@ -615,8 +643,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
 			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_STARTED_CLIENT_EMAIL_PATH, attributes));
 			mailParamList.add(mailParams);
-			mailParams = new HashMap<String, Object>();
 			// Tutor Email
+			mailParams = new HashMap<String, Object>();
 			mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getTutorEmail());
 			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "New assignment has been started for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
 			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_STARTED_TUTOR_EMAIL_PATH, attributes));
@@ -626,9 +654,20 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 	}
 	
-	private void sendNotificationEmailsForEndOfPackageAssignment(final List<PackageAssignment> packageAssignmentList) {
-		// TODO
-		// Sales Team Email
+	private void sendNotificationEmailsForEndOfPackageAssignment(final List<PackageAssignment> packageAssignmentList) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final PackageAssignment packageAssignment : packageAssignmentList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("packageAssignment", packageAssignment);
+			// Sales Email
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			mailParams = new HashMap<String, Object>();
+			mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Package Assignment for Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId() +" ended");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_END_SALES_TEAM_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			MailUtils.sendMultipleMimeMessageEmail(mailParamList);
+		}
 	}
 	
 	public List<PackageAssignment> getAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
@@ -712,19 +751,58 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			}
 		}
 		if (newCompletedHours == packageAssignment.getTotalHours()) {
-			sendNotificationEmailsForPackageAssignmentHoursCompletion();
+			sendNotificationEmailsForPackageAssignmentHoursCompletion(packageAssignment);
+		} else {
+			if (packageAssignment.getTotalHours() - newCompletedHours <= 3) {
+				sendPackageAssignmentRenewReminderEmails(packageAssignment);
+			}
 		}
 	}
 	
-	private void sendNotificationEmailsForPackageAssignmentHoursCompletion() {
-		// Customer Email
+	private void sendNotificationEmailsForPackageAssignmentHoursCompletion(final PackageAssignment packageAssignment) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("packageAssignment", packageAssignment);
+		List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+		attachments.add(new MailAttachment("Attendance Tracker.xlsx", downloadAttendanceTrackerSheet(packageAssignment.getPackageAssignmentSerialId()), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+		Map<String, Object> mailParams = new HashMap<String, Object>();
+		// Client Email
+		mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getEnquiryEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(packageAssignment.getCustomerEmail(), packageAssignment.getEnquiryEmail()) ? packageAssignment.getCustomerEmail() : null);
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours have been completed for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_HOURS_COMPLETED_CLIENT_EMAIL_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+		mailParamList.add(mailParams);
 		// Tutor Email
-		// Sales Team
+		mailParams = new HashMap<String, Object>();
+		mailParams.put(MailConstants.MAIL_PARAM_TO, packageAssignment.getTutorEmail());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours have been completed for your Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_HOURS_COMPLETED_TUTOR_EMAIL_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+		mailParamList.add(mailParams);
+		// Sales Email
+		mailParams = new HashMap<String, Object>();
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours have been completed for Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_HOURS_COMPLETED_SALES_TEAM_EMAIL_PATH, attributes));
+		mailParams.put(MailConstants.MAIL_PARAM_ATTACHMENTS, attachments);
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
-	private void sendPackageAssignmentRenewReminderEmails() {
-		// Customer Email
+	private void sendPackageAssignmentRenewReminderEmails(final PackageAssignment packageAssignment) throws Exception {
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		final Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("packageAssignment", packageAssignment);
+		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Sales Team Email 
+		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours have been completed for Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_RENEWAL_NOTIFICATION_SALES_TEAM_EMAIL_PATH, attributes));
+		mailParamList.add(mailParams);
+		
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
 	public List<AssignmentAttendance> getAssignmentAttendanceList(final GridComponent gridComponent) throws Exception {

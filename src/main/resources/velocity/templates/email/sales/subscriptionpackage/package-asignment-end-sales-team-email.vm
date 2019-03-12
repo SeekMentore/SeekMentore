@@ -1,0 +1,62 @@
+Hello Sales Team,
+<p>Assignment has been ended for Subscription Package - $packageAssignment.subscriptionPackageSerialId . Please find the details below.</p>
+<p><strong><ins>Enquiry Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Subject</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('SUBJECTS_LOOKUP', $packageAssignment.enquirySubject)</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Grade</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('STUDENT_GRADE_LOOKUP', $packageAssignment.enquiryGrade)</td>
+		</tr>
+	</table>
+</p>
+<p><strong><ins>Customer Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.customerName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.customerContactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.customerEmail</td>
+		</tr>
+	</table>
+</p>
+<p><strong><ins>Tutor Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Name</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.tutorName</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Contact Number</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.tutorContactNumber</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Email Id</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.tutorEmail</td>
+		</tr>
+	</table>
+</p>
+<p><strong><ins>Assignment Details</ins></strong></p>
+<p>
+	<table style="$CoreTableStyling">
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Assignment Id</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.packageAssignmentSerialId</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Total Hours</strong></td>
+			<td style="$CoreTableTDStyling">$packageAssignment.totalHours</td>
+		</tr>
+	</table>
+</p>

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.constants.ApplicationConstants;
 import com.exception.ApplicationException;
 import com.utils.ValidationUtils;
 
@@ -42,11 +43,11 @@ public class WorkbookCell {
 	}
 	
 	public WorkbookCell(final Object value) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellStyled, final TypeOfStyleEnum typeOfStyleEnum) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 		this.isCellStyled = isCellStyled;
 		if (ValidationUtils.checkObjectAvailability(typeOfStyleEnum)) {
 			this.typeOfStyleEnums = new TypeOfStyleEnum[] {typeOfStyleEnum};
@@ -57,7 +58,7 @@ public class WorkbookCell {
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellStyled, final TypeOfStyleEnum[] typeOfStyleEnums) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 		this.isCellStyled = isCellStyled;
 		this.typeOfStyleEnums = typeOfStyleEnums;
 		if (this.isCellStyled && !ValidationUtils.checkNonEmptyArray(this.typeOfStyleEnums)) {
@@ -66,7 +67,7 @@ public class WorkbookCell {
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellMerged, final Integer numberOfMergedColumnsForThisCell, final Integer numberOfMergedRowsForThisCell) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 		this.isCellMerged = isCellMerged;
 		this.numberOfMergedColumnsForThisCell = ValidationUtils.checkNonNegativeNumberAvailability(numberOfMergedColumnsForThisCell) ? numberOfMergedColumnsForThisCell : 1;
 		this.numberOfMergedRowsForThisCell = ValidationUtils.checkNonNegativeNumberAvailability(numberOfMergedRowsForThisCell) ? numberOfMergedRowsForThisCell : 1;
@@ -76,7 +77,7 @@ public class WorkbookCell {
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellStyled, final TypeOfStyleEnum typeOfStyleEnum, final Boolean isCellMerged, final Integer numberOfMergedColumnsForThisCell, final Integer numberOfMergedRowsForThisCell) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 		this.isCellStyled = isCellStyled;
 		if (ValidationUtils.checkObjectAvailability(typeOfStyleEnum)) {
 			this.typeOfStyleEnums = new TypeOfStyleEnum[] {typeOfStyleEnum};
@@ -93,7 +94,7 @@ public class WorkbookCell {
 	}
 	
 	public WorkbookCell(final Object value, final Boolean isCellStyled, final TypeOfStyleEnum[] typeOfStyleEnums, final Boolean isCellMerged, final Integer numberOfMergedColumnsForThisCell, final Integer numberOfMergedRowsForThisCell) {
-		this.value = value;
+		this.value = null != value ? String.valueOf(value) : ApplicationConstants.EMPTY_STRING;
 		this.isCellStyled = isCellStyled;
 		this.typeOfStyleEnums = typeOfStyleEnums;
 		if (this.isCellStyled && !ValidationUtils.checkNonEmptyArray(this.typeOfStyleEnums)) {

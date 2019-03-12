@@ -255,7 +255,7 @@ public class WorkbookUtils implements WorkbookConstants {
 							for (WorkbookCell workbookCell : record.getRecordCells()) {
 								Object value = workbookCell.getValue();
 								final XSSFCell cell = getXSSFCellWithCellId(row, alreadyCreatedRowAndCellIds, cellid);
-								cell.setCellValue(null != value ? String.valueOf(value) : EMPTY_STRING);
+								cell.setCellValue(String.valueOf(value));
 								XSSFCellStyle cellStyle = null;
 								Boolean applyAnyCellStyle = false;
 								if (workbookCell.getIsCellStyled()) {
