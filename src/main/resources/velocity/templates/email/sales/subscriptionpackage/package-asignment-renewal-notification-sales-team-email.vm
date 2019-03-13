@@ -58,6 +58,14 @@ Hello Sales Team,
 			<td style="$CoreTableTDStyling width:20%;"><strong>Total Hours</strong></td>
 			<td style="$CoreTableTDStyling">$packageAssignment.totalHours</td>
 		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Completed Duration</strong></td>
+			<td style="$CoreTableTDStyling">$completedDuration</td>
+		</tr>
+		<tr>
+			<td style="$CoreTableTDStyling width:20%;"><strong>Remaining Duration</strong></td>
+			<td style="$CoreTableTDStyling">$remainingDuration</td>
+		</tr>
 	</table>
 </p>
 <p>Please speak to client and get it renewed.</p>

@@ -20,7 +20,7 @@ public class DNSLookup {
 			DirContext dirContext = new InitialDirContext(env);
 			Attributes attrs = dirContext.getAttributes("schneider.com", new String[] { "TXT" });
 			Attribute txt = attrs.get("TXT");
-			NamingEnumeration e = txt.getAll();
+			NamingEnumeration<?> e = txt.getAll();
 			while (e.hasMore()) {
 				System.out.println(e.next());
 			}
