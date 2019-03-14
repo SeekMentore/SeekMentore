@@ -10,15 +10,15 @@ import javax.naming.directory.InitialDirContext;
 public class DNSLookup {
 
 	public static void main(String[] args) throws NamingException {
-		//final String domains[] = {"schneider.com","seekmentore.com"};
-		final String domains[] = {"seekmentore.com"};
+		final String domains[] = {"schneider.com","sndrvrtest.com","oovendortest.com","schneidertech.com","fmdrvrtest.com"};
+		//final String domains[] = {"sndrvrtest.com"};
 		for (String domain : domains) {
 			System.out.println(domain);
 			Hashtable<String, String> env = new Hashtable<String, String>();
 			env.put("java.naming.factory.initial",
 					"com.sun.jndi.dns.DnsContextFactory");
 			DirContext dirContext = new InitialDirContext(env);
-			Attributes attrs = dirContext.getAttributes("schneider.com", new String[] { "TXT" });
+			Attributes attrs = dirContext.getAttributes(domain, new String[] { "TXT" });
 			Attribute txt = attrs.get("TXT");
 			NamingEnumeration<?> e = txt.getAll();
 			while (e.hasMore()) {
