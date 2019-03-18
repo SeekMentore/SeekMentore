@@ -313,6 +313,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						final PackageAssignment packageAssignment = new PackageAssignment();
 						packageAssignment.setPackageAssignmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
 						packageAssignment.setSubscriptionPackageSerialId(subscriptionPackage.getSubscriptionPackageSerialId());
+						packageAssignment.setCompletedHours(0);
+						packageAssignment.setCompletedMinutes(0);
 						packageAssignment.setCreatedMillis(currentTimestamp.getTime());
 						packageAssignment.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 						packageAssignment.setUpdatedBy(activeUser.getUserId());

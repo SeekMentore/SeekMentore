@@ -157,7 +157,7 @@
 		WHERE P.START_DATE_MILLIS IS NULL AND P.END_DATE_MILLIS IS NULL
 	</query>
 	<query type="filter" id="packageAssignmentStartedAssignmentFilter">
-		WHERE P.START_DATE_MILLIS IS NOT NULL AND P.END_DATE_MILLIS IS NULL
+		WHERE P.START_DATE_MILLIS IS NOT NULL AND P.END_DATE_MILLIS IS NULL AND P.COMPLETED_HOURS &lt; P.TOTAL_HOURS
 	</query>
 	<query type="filter" id="packageAssignmentHoursCompletedAssignmentFilter">
 		WHERE P.TOTAL_HOURS = P.COMPLETED_HOURS AND P.END_DATE_MILLIS IS NULL
@@ -190,9 +190,9 @@
 	</query>
 	<query type="insert" id="insertPackageAssignment" paramClass="com.model.components.PackageAssignment">
 		INSERT INTO PACKAGE_ASSIGNMENT
-			(PACKAGE_ASSIGNMENT_SERIAL_ID, SUBSCRIPTION_PACKAGE_SERIAL_ID, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+			(PACKAGE_ASSIGNMENT_SERIAL_ID, SUBSCRIPTION_PACKAGE_SERIAL_ID, COMPLETED_HOURS, COMPLETED_MINUTES, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES
-			(:packageAssignmentSerialId, :subscriptionPackageSerialId, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
+			(:packageAssignmentSerialId, :subscriptionPackageSerialId, :completedHours, :completedMinutes, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 	<query type="update" id="startPackageAssignment" paramClass="com.model.components.PackageAssignment">
 		UPDATE PACKAGE_ASSIGNMENT SET
