@@ -120,6 +120,7 @@
 			<webservice id="assignmentAttendanceMarkingAccess" url="/assignmentAttendanceMarkingAccess"></webservice>
 			<webservice id="insertAssignmentAttendance" url="/insertAssignmentAttendance"></webservice>
 			<webservice id="assignmentAttendanceList" url="/assignmentAttendanceList"></webservice>
+			<webservice id="updateAssignmentAttendance" url="/updateAssignmentAttendance"></webservice>
 			<webservice id="downloadAttendanceTrackerSheet" url="/downloadAttendanceTrackerSheet"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">

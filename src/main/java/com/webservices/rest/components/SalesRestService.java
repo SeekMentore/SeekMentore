@@ -71,6 +71,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long tutorId;
 	private String subscriptionPackageSerialId;
 	private String packageAssignmentSerialId;
+	private String assignmentAttendanceSerialId;
+	private Integer additionalHoursTaught;
+	private Integer additionalMinutesTaught;
 	private Enquiry enquiryObject;
 	private TutorMapper tutorMapperObject;
 	private Demo demoObject;
@@ -1396,25 +1399,25 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (null != uploadedInputStreamFileClasswork) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileClasswork);
 			if (fileBytes.length > 0) {
-				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK, uploadedFileDetailFileClasswork.getFileName(), fileBytes));
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK, uploadedFileDetailFileClasswork.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileHomework) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileHomework);
 			if (fileBytes.length > 0) {
-				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK, uploadedFileDetailFileHomework.getFileName(), fileBytes));
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK, uploadedFileDetailFileHomework.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileTest) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileTest);
 			if (fileBytes.length > 0) {
-				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST, uploadedFileDetailFileTest.getFileName(), fileBytes));
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST, uploadedFileDetailFileTest.getFileName(), fileBytes));
 			}
 		}
 		if (null != uploadedInputStreamFileOther) {
 			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileOther);
 			if (fileBytes.length > 0) {
-				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(SubscriptionPackageConstants.ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER, uploadedFileDetailFileOther.getFileName(), fileBytes));
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER, uploadedFileDetailFileOther.getFileName(), fileBytes));
 			}
 		}
 		if (ValidationUtils.checkNonEmptyList(assignmentAttendanceDocuments)) {
@@ -1456,6 +1459,92 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final List<AssignmentAttendance> subscriptionPackagesList = getSubscriptionPackageService().getAssignmentAttendanceList(gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_UPDATE_ASSIGNMENT_ATTENDANCE)
+	@Consumes({MediaType.MULTIPART_FORM_DATA})
+	@POST
+	public String updateAssignmentAttendance (
+			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam("inputFileClasswork") final InputStream uploadedInputStreamFileClasswork,
+			@FormDataParam("inputFileClasswork") final FormDataContentDisposition uploadedFileDetailFileClasswork,
+			@FormDataParam("inputFileHomework") final InputStream uploadedInputStreamFileHomework,
+			@FormDataParam("inputFileHomework") final FormDataContentDisposition uploadedFileDetailFileHomework,
+			@FormDataParam("inputFileTest") final InputStream uploadedInputStreamFileTest,
+			@FormDataParam("inputFileTest") final FormDataContentDisposition uploadedFileDetailFileTest,
+			@FormDataParam("inputFileOther") final InputStream uploadedInputStreamFileOther,
+			@FormDataParam("inputFileOther") final FormDataContentDisposition uploadedFileDetailFileOther,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_UPDATE_ASSIGNMENT_ATTENDANCE;
+		this.parentSerialId = parentId;
+		this.assignmentAttendanceSerialId = parentId;
+		createAssignmentAttendanceObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		final List<AssignmentAttendanceDocument> assignmentAttendanceDocuments = new ArrayList<AssignmentAttendanceDocument>();
+		if (null != uploadedInputStreamFileClasswork) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileClasswork);
+			if (fileBytes.length > 0) {
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK, uploadedFileDetailFileClasswork.getFileName(), fileBytes));
+			}
+		}
+		if (null != uploadedInputStreamFileHomework) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileHomework);
+			if (fileBytes.length > 0) {
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK, uploadedFileDetailFileHomework.getFileName(), fileBytes));
+			}
+		}
+		if (null != uploadedInputStreamFileTest) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileTest);
+			if (fileBytes.length > 0) {
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST, uploadedFileDetailFileTest.getFileName(), fileBytes));
+			}
+		}
+		if (null != uploadedInputStreamFileOther) {
+			byte[] fileBytes = IOUtils.toByteArray(uploadedInputStreamFileOther);
+			if (fileBytes.length > 0) {
+				assignmentAttendanceDocuments.add(new AssignmentAttendanceDocument(ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER, uploadedFileDetailFileOther.getFileName(), fileBytes));
+			}
+		}
+		if (ValidationUtils.checkNonEmptyList(assignmentAttendanceDocuments)) {
+			this.assignmentAttendanceObject.setDocuments(assignmentAttendanceDocuments);
+			this.changedAttributes.add("documents");
+		}
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getSubscriptionPackageService().updateAssignmentAttendance(this.assignmentAttendanceObject, this.packageAssignmentObject, 
+																		this.additionalHoursTaught, this.additionalMinutesTaught, this.changedAttributes, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_INSERTED_RECORD);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getPackageAssignment (
+			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST;
+		this.parentSerialId = parentId;
+		this.packageAssignmentSerialId = parentId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			restresponse.put(RECORD_OBJECT, getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1614,12 +1703,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_INSERT_ASSIGNMENT_ATTENDANCE : {
-				handleAssignmentAttendanceSecurity();
+				handleAssignmentAttendanceInsertSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST : 
 			case REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET : {
 				handleSelectedAssignmentSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_UPDATE_ASSIGNMENT_ATTENDANCE : {
+				handleAssignmentAttendanceUpdateSecurity();
 				break;
 			}
 		}
@@ -1633,16 +1726,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			switch(button) {
 				case BUTTON_ACTION_TO_BE_MAPPED : 
 				case BUTTON_ACTION_DEMO_READY : 
-				case SubscriptionPackageConstants.BUTTON_ACTIVATE_SUBSCRIPTION : 
-				case SubscriptionPackageConstants.BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : 
-				case SubscriptionPackageConstants.BUTTON_START_ASSIGNMENT : {
+				case BUTTON_ACTIVATE_SUBSCRIPTION : 
+				case BUTTON_CREATE_ASSIGNMENT_SUBSCRIPTION : 
+				case BUTTON_START_ASSIGNMENT : {
 					break;
 				}
 				case BUTTON_ACTION_ABORTED : 
 				case BUTTON_ACTION_PENDING : 
 				case BUTTON_ACTION_CANCEL : 
-				case SubscriptionPackageConstants.BUTTON_END_SUBSCRIPTION : 
-				case SubscriptionPackageConstants.BUTTON_END_ASSIGNMENT : {
+				case BUTTON_END_SUBSCRIPTION : 
+				case BUTTON_END_ASSIGNMENT : {
 					handleComments();
 					break;
 				}
@@ -2690,6 +2783,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private void createAssignmentAttendanceObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.assignmentAttendanceObject = new AssignmentAttendance();
+			if (ValidationUtils.checkStringAvailability(this.assignmentAttendanceSerialId)) {
+				this.assignmentAttendanceObject.setAssignmentAttendanceSerialId(this.assignmentAttendanceSerialId);
+				this.packageAssignmentSerialId = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "packageAssignmentSerialId", String.class);
+			}
 			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
 			final Long entryDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "entryDateMillis", Long.class);
 			final Long entryTimeMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "entryTimeMillis", Long.class);
@@ -2701,8 +2798,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			if (ValidationUtils.checkObjectAvailability(exitDateMillis) && ValidationUtils.checkObjectAvailability(exitTimeMillis) && ValidationUtils.checkObjectAvailability(localTimezoneOffsetInMilliseconds)) {
 				this.assignmentAttendanceObject.setExitDateTimeMillis(exitDateMillis + exitTimeMillis + localTimezoneOffsetInMilliseconds);
 			}
-			this.assignmentAttendanceObject.setDurationHours(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "durationHours", Integer.class));
-			this.assignmentAttendanceObject.setDurationMinutes(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "durationMinutes", Integer.class));
 			this.assignmentAttendanceObject.setTopicsTaught(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "topicsTaught", String.class));
 			this.assignmentAttendanceObject.setIsClassworkProvided(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isClassworkProvided", String.class));
 			this.assignmentAttendanceObject.setIsHomeworkProvided(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "isHomeworkProvided", String.class));
@@ -2715,15 +2810,37 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.assignmentAttendanceObject.setTutorKnowledgeIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorKnowledgeIndex", String.class));
 			this.assignmentAttendanceObject.setKnowledgeRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "knowledgeRemarks", String.class));
 			this.assignmentAttendanceObject.setStudentRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentRemarks", String.class));
+			computeAndSetDurationAndAdditionalHours(jsonObject);
 		}
 	}
 	
-	private void handleAssignmentAttendanceSecurity() throws Exception {
+	private void computeAndSetDurationAndAdditionalHours(final JsonObject jsonObject) {
+	    if (ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getEntryDateTimeMillis()) && ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getExitDateTimeMillis())) {
+	    	final Map<String, Object> intervalTime = ApplicationUtils.calculateIntervalHoursMinutesSecondsFromStartMillisecondsAndEndMilliseconds(this.assignmentAttendanceObject.getEntryDateTimeMillis(), this.assignmentAttendanceObject.getExitDateTimeMillis());
+	    	if (ValidationUtils.checkObjectAvailability(intervalTime) && ValidationUtils.checkObjectAvailability(intervalTime.get("remainingHours")) && ValidationUtils.checkObjectAvailability(intervalTime.get("remainingMinutes"))) {
+	    		this.assignmentAttendanceObject.setDurationHours((Integer)intervalTime.get("remainingHours"));
+	    		this.assignmentAttendanceObject.setDurationMinutes((Integer)intervalTime.get("remainingMinutes"));
+	    		if (ValidationUtils.checkStringAvailability(this.assignmentAttendanceSerialId)) {
+	    			final Long oldEntryDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "oldEntryDateTimeMillis", Long.class);
+	    			final Long oldExitDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "oldExitDateTimeMillis", Long.class);
+	    			if (ValidationUtils.checkNonNegativeNumberAvailability(oldEntryDateMillis) && ValidationUtils.checkNonNegativeNumberAvailability(oldExitDateMillis)) {
+	    				final Map<String, Object> oldIntervalTime = ApplicationUtils.calculateIntervalHoursMinutesSecondsFromStartMillisecondsAndEndMilliseconds(oldEntryDateMillis, oldExitDateMillis);
+	    				if (ValidationUtils.checkObjectAvailability(oldIntervalTime) && ValidationUtils.checkObjectAvailability(oldIntervalTime.get("remainingHours")) && ValidationUtils.checkObjectAvailability(oldIntervalTime.get("remainingMinutes"))) {
+	    					this.additionalHoursTaught = this.assignmentAttendanceObject.getDurationHours() - (Integer)oldIntervalTime.get("remainingHours");
+	    					this.additionalMinutesTaught = this.assignmentAttendanceObject.getDurationMinutes() - (Integer)oldIntervalTime.get("remainingMinutes");
+	    				}
+	    			}
+	    		}
+	    	}
+	    }
+	}
+	
+	private void handleAssignmentAttendanceInsertSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.ZERO_HOURS_TAUGHT),
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		} else {
@@ -2731,7 +2848,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			if (!ValidationUtils.checkObjectAvailability(this.packageAssignmentObject)) {
 				ApplicationUtils.appendMessageInMapAttribute(
 						this.securityFailureResponse, 
-						Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID),
+						Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID),
 						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 				this.securityPassed = false;
 			} else {
@@ -2743,14 +2860,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				if ((completedHours + hoursTaught) > totalHours) {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.EXTRA_HOURS_TAUGHT),
+							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
 							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 				}
 				if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.EXTRA_HOURS_TAUGHT),
+							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
 							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 				}
@@ -2759,7 +2876,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SubscriptionPackageConstants.NULL_TOPICS_TAUGHT),
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2781,6 +2898,204 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					this.securityPassed = false;
 					break;
 				}
+			}
+		}
+	}
+	
+	private void handleAssignmentAttendanceUpdateSecurity() throws Exception {
+		this.securityPassed = true;
+		if (this.changedAttributes.contains("entryDateMillis") || this.changedAttributes.contains("entryTimeMillis") 
+				|| this.changedAttributes.contains("exitDateMillis") || this.changedAttributes.contains("exitTimeMillis")
+				|| this.changedAttributes.contains("documents")) {
+			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
+			if (!ValidationUtils.checkObjectAvailability(this.packageAssignmentObject)) {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID),
+						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+				this.securityPassed = false;
+			} 
+			if (this.changedAttributes.contains("entryDateMillis") || this.changedAttributes.contains("entryTimeMillis") 
+					|| this.changedAttributes.contains("exitDateMillis") || this.changedAttributes.contains("exitTimeMillis")) {
+				if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+				} else if (!ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) && !ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught)) {
+					ApplicationUtils.appendMessageInMapAttribute(
+							this.securityFailureResponse, 
+							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
+							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+					this.securityPassed = false;
+				} else {
+					final Integer totalHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getTotalHours()) ? this.packageAssignmentObject.getTotalHours() : 0;
+					final Integer completedHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedHours()) ? this.packageAssignmentObject.getCompletedHours() : 0;
+					final Integer completedMinutes = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedMinutes()) ? this.packageAssignmentObject.getCompletedMinutes() : 0;
+					final Integer hoursTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) ? this.additionalHoursTaught : 0;
+					final Integer minutesTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught) ? this.additionalMinutesTaught : 0;
+					if ((completedHours + hoursTaught) > totalHours) {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+					}
+					if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
+						ApplicationUtils.appendMessageInMapAttribute(
+								this.securityFailureResponse, 
+								Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
+								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+						this.securityPassed = false;
+					}
+				}
+			}
+		}
+		if (this.securityPassed) {
+			if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
+				for (final String attributeName : this.changedAttributes) {
+					switch(attributeName) {
+						case "packageAssignmentSerialId" : 
+						case "oldEntryDateTimeMillis" : 
+						case "oldExitDateTimeMillis" : 
+						case "localTimezoneOffsetInMilliseconds" : 
+						case "entryDateMillis" :
+						case "entryTimeMillis" :
+						case "exitDateMillis" :
+						case "exitTimeMillis" : {
+							break;
+						}
+						case "topicsTaught" : {
+							if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						case "isClassworkProvided" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsClassworkProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CLASSWORK_PROVIDED),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						case "isHomeworkProvided" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsHomeworkProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_HOMEWORK_PROVIDED),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						case "isTestProvided" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsTestProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TEST_PROVIDED),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						case "tutorRemarks" : {
+							if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTutorRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_TUTOR_REMARKS),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						case "tutorPunctualityIndex" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorPunctualityIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PUNCTUALITY_INDEX),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							} else {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getPunctualityRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_PUNCTUALITY_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+							break;
+						}
+						case "tutorExpertiseIndex" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorExpertiseIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_EXPERTISE_INDEX),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							} else {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getExpertiseRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_EXPERTISE_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+							break;
+						}
+						case "tutorKnowledgeIndex" : {
+							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorKnowledgeIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_KNOWLEDGE_INDEX),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							} else {
+								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getKnowledgeRemarks())) {
+									ApplicationUtils.appendMessageInMapAttribute(
+											this.securityFailureResponse, 
+											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_KNOWLEDGE_REMARKS),
+											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+									this.securityPassed = false;
+								}
+							}
+							break;
+						}
+						case "studentRemarks" : {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getStudentRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_STUDENT_REMARKS),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
+							break;
+						}
+						default : {
+							ApplicationUtils.appendMessageInMapAttribute(
+									this.securityFailureResponse, 
+									AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+							this.securityPassed = false;
+							break;
+						}
+					}
+				}
+			} else {
+				ApplicationUtils.appendMessageInMapAttribute(
+						this.securityFailureResponse, 
+						AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+				this.securityPassed = false;
 			}
 		}
 	}

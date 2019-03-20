@@ -698,12 +698,10 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	}
 	
 	private String getFolderPathToUploadAttendanceDocuments (
-			final String subscriptionPackageSerialId, 
-			final String packageAssignmentSerialId, 
-			final String assignmentAttendanceSerialId, 
+			final String fsKeyPrefix, 
 			final String documentTypeLabel
 	) {
-		return "secured/attendance/subscriptionpackage/" + subscriptionPackageSerialId + "/" + packageAssignmentSerialId + "/" + assignmentAttendanceSerialId + DASH + "Documents/" + documentTypeLabel;
+		return "secured/attendance/subscriptionpackage/" + fsKeyPrefix + DASH + "Documents/" + documentTypeLabel;
 	}
 	
 	private String getUniqueFilenameForAttendanceDocument(final String filename) {
@@ -732,31 +730,184 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
 		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendance);
 		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignment);
-		if (ValidationUtils.checkNonEmptyList(assignmentAttendance.getDocuments())) {
-			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : assignmentAttendance.getDocuments()) {
-				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(assignmentAttendance.getAssignmentAttendanceSerialId());
-				assignmentAttendanceDocument.setRecordLastUpdatedMillis(currentTimestamp.getTime());
-				assignmentAttendanceDocument.setUpdatedBy(activeUser.getUserId());
-				assignmentAttendanceDocument.setUpdatedByUserType(activeUser.getUserType());
-				final String fsKey = getFolderPathToUploadAttendanceDocuments(
-						packageAssignment.getSubscriptionPackageSerialId(), 
-						packageAssignment.getPackageAssignmentSerialId(), 
-						assignmentAttendance.getAssignmentAttendanceSerialId(),
-						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType())) 
-						+ "/" + getUniqueFilenameForAttendanceDocument(assignmentAttendanceDocument.getFilename());
-				assignmentAttendanceDocument.setFsKey(fsKey);
-			}
-			applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", assignmentAttendance.getDocuments());
-			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : assignmentAttendance.getDocuments()) {
-				FileSystemUtils.createFileInsideFolderOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey(), assignmentAttendanceDocument.getContent());
-			}
-		}
+		final String fsKeyPrefix = packageAssignment.getSubscriptionPackageSerialId() + "/" + packageAssignment.getPackageAssignmentSerialId() + "/" + assignmentAttendance.getAssignmentAttendanceSerialId();
+		insertAssignmentAttendanceDocuments(assignmentAttendance.getDocuments(), assignmentAttendance.getAssignmentAttendanceSerialId(), fsKeyPrefix, activeUser);
 		if (newCompletedHours == packageAssignment.getTotalHours()) {
 			sendNotificationEmailsForPackageAssignmentHoursCompletion(packageAssignment);
 		} else {
 			if (packageAssignment.getTotalHours() - newCompletedHours <= 3) {
 				sendPackageAssignmentRenewReminderEmails(packageAssignment);
+			}
+		}
+	}
+	
+	private void insertAssignmentAttendanceDocuments (
+			final List<AssignmentAttendanceDocument> documents, 
+			final String assignmentAttendanceSerialId, 
+			final String fsKeyPrefix, 
+			final User activeUser 
+	) throws Exception {
+		final Date currentTimestamp = new Date();
+		if (ValidationUtils.checkNonEmptyList(documents)) {
+			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : documents) {
+				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(assignmentAttendanceSerialId);
+				assignmentAttendanceDocument.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+				assignmentAttendanceDocument.setUpdatedBy(activeUser.getUserId());
+				assignmentAttendanceDocument.setUpdatedByUserType(activeUser.getUserType());
+				final String fsKey = getFolderPathToUploadAttendanceDocuments(
+						fsKeyPrefix,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType())) 
+						+ "/" + getUniqueFilenameForAttendanceDocument(assignmentAttendanceDocument.getFilename());
+				assignmentAttendanceDocument.setFsKey(fsKey);
+			}
+			applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", documents);
+			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : documents) {
+				FileSystemUtils.createFileInsideFolderOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey(), assignmentAttendanceDocument.getContent());
+			}
+		}
+	}
+	
+	@Transactional
+	public void updateAssignmentAttendance (
+			final AssignmentAttendance assignmentAttendance, 
+			final PackageAssignment packageAssignmentObject, 
+			final Integer additionalHoursTaught,
+			final Integer additionalMinutesTaught,
+			final List<String> changedAttributes, 
+			final User activeUser
+	) throws Exception {
+		final Date currentTimestamp = new Date();
+		final String baseQuery = "UPDATE ASSIGNMENT_ATTENDANCE SET";
+		final List<String> updateAttributesQuery = new ArrayList<String>();
+		final String existingFilterQueryString = "WHERE ASSIGNMENT_ATTENDANCE_SERIAL_ID = :assignmentAttendanceSerialId";
+		Boolean timeNotUpdated =  true;
+		Boolean isTimeModified = false;
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
+			for (final String attributeName : changedAttributes) {
+				switch(attributeName) {
+					case "entryDateMillis" :
+					case "entryTimeMillis" :
+					case "exitDateMillis" :
+					case "exitTimeMillis" : {
+						if (timeNotUpdated) {
+							updateAttributesQuery.add("ENTRY_DATE_TIME_MILLIS = :entryDateTimeMillis");
+							updateAttributesQuery.add("EXIT_DATE_TIME_MILLIS = :exitDateTimeMillis");
+							updateAttributesQuery.add("DURATION_HOURS = :durationHours");
+							updateAttributesQuery.add("DURATION_MINUTES = :durationMinutes");
+							paramsMap.put("entryDateTimeMillis", assignmentAttendance.getEntryDateTimeMillis());
+							paramsMap.put("exitDateTimeMillis", assignmentAttendance.getExitDateTimeMillis());
+							paramsMap.put("durationHours", assignmentAttendance.getDurationHours());
+							paramsMap.put("durationMinutes", assignmentAttendance.getDurationMinutes());
+							isTimeModified = true;
+							timeNotUpdated = false;
+						}
+						break;
+					}
+					case "topicsTaught" : {
+						updateAttributesQuery.add("TOPICS_TAUGHT = :topicsTaught");
+						paramsMap.put("topicsTaught", assignmentAttendance.getTopicsTaught());
+						break;
+					}
+					case "isClassworkProvided" : {
+						updateAttributesQuery.add("CLASSWORK_PROVIDED = :isClassworkProvided");
+						paramsMap.put("isClassworkProvided", assignmentAttendance.getIsClassworkProvided());
+						break;
+					}
+					case "isHomeworkProvided" : {
+						updateAttributesQuery.add("HOMEWORK_PROVIDED = :isHomeworkProvided");
+						paramsMap.put("isHomeworkProvided", assignmentAttendance.getIsHomeworkProvided());
+						break;
+					}
+					case "isTestProvided" : {
+						updateAttributesQuery.add("TEST_PROVIDED = :isTestProvided");
+						paramsMap.put("isTestProvided", assignmentAttendance.getIsTestProvided());
+						break;
+					}
+					case "tutorRemarks" : {
+						updateAttributesQuery.add("TUTOR_REMARKS = :tutorRemarks");
+						paramsMap.put("tutorRemarks", assignmentAttendance.getTutorRemarks());
+						break;
+					}
+					case "tutorPunctualityIndex" : {
+						updateAttributesQuery.add("TUTOR_REMARKS = :tutorPunctualityIndex");
+						paramsMap.put("tutorPunctualityIndex", assignmentAttendance.getTutorPunctualityIndex());
+						break;
+					}
+					case "punctualityRemarks" : {
+						updateAttributesQuery.add("PUNCTUALITY_REMARKS = :punctualityRemarks");
+						paramsMap.put("punctualityRemarks", assignmentAttendance.getPunctualityRemarks());
+						break;
+					}
+					case "tutorExpertiseIndex" : {
+						updateAttributesQuery.add("TUTOR_EXPERTISE_INDEX = :tutorExpertiseIndex");
+						paramsMap.put("tutorExpertiseIndex", assignmentAttendance.getTutorExpertiseIndex());
+						break;
+					}
+					case "expertiseRemarks" : {
+						updateAttributesQuery.add("EXPERTISE_REMARKS = :expertiseRemarks");
+						paramsMap.put("expertiseRemarks", assignmentAttendance.getExpertiseRemarks());
+						break;
+					}
+					case "tutorKnowledgeIndex" : {
+						updateAttributesQuery.add("TUTOR_KNOWLEDGE_INDEX = :tutorKnowledgeIndex");
+						paramsMap.put("tutorKnowledgeIndex", assignmentAttendance.getTutorKnowledgeIndex());
+						break;
+					}
+					case "knowledgeRemarks" : {
+						updateAttributesQuery.add("KNOWLEDGE_REMARKS = :knowledgeRemarks");
+						paramsMap.put("knowledgeRemarks", assignmentAttendance.getKnowledgeRemarks());
+						break;
+					}
+					case "studentRemarks" : {
+						updateAttributesQuery.add("STUDENT_REMARKS = :studentRemarks");
+						paramsMap.put("studentRemarks", assignmentAttendance.getStudentRemarks());
+						break;
+					}
+					case "documents" : {
+						final String fsKeyPrefix = packageAssignmentObject.getSubscriptionPackageSerialId() + "/" + packageAssignmentObject.getPackageAssignmentSerialId() + "/" + assignmentAttendance.getAssignmentAttendanceSerialId();
+						insertAssignmentAttendanceDocuments(assignmentAttendance.getDocuments(), assignmentAttendance.getAssignmentAttendanceSerialId(), fsKeyPrefix, activeUser);
+						break;
+					}
+				}
+			}
+		}
+		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendance.getAssignmentAttendanceSerialId());
+		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
+			assignmentAttendance.setPackageAssignmentSerialId(packageAssignmentObject.getPackageAssignmentSerialId());
+			assignmentAttendance.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+			assignmentAttendance.setUpdatedBy(activeUser.getUserId());
+			assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
+			updateAttributesQuery.add("UPDATED_BY = :updatedBy");
+			updateAttributesQuery.add("UPDATED_BY_USER_TYPE = :updatedByUserType");
+			paramsMap.put("recordLastUpdatedMillis", assignmentAttendance.getRecordLastUpdatedMillis());
+			paramsMap.put("updatedBy", assignmentAttendance.getUpdatedBy());
+			paramsMap.put("updatedByUserType", assignmentAttendance.getUpdatedByUserType());
+			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
+			applicationDao.executeUpdate(completeQuery, paramsMap);
+			if (isTimeModified) {
+				Integer newCompletedHours = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedHours()) ? packageAssignmentObject.getCompletedHours() : 0)
+						+ (ValidationUtils.checkNonNegativeNumberAvailability(additionalHoursTaught) ? additionalHoursTaught : 0);
+				Integer newCompletedMinutes = (ValidationUtils.checkNonNegativeNumberAvailability(packageAssignmentObject.getCompletedMinutes()) ? packageAssignmentObject.getCompletedMinutes() : 0)
+						+ (ValidationUtils.checkNonNegativeNumberAvailability(additionalMinutesTaught) ? additionalMinutesTaught : 0);
+				if (newCompletedMinutes > 59) {
+					newCompletedHours++;
+					newCompletedMinutes -= 60;
+				}
+				packageAssignmentObject.setCompletedHours(newCompletedHours);
+				packageAssignmentObject.setCompletedMinutes(newCompletedMinutes);
+				packageAssignmentObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
+				packageAssignmentObject.setUpdatedBy("SYSTEM");
+				applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignmentObject);
+				if (newCompletedHours == packageAssignmentObject.getTotalHours()) {
+					sendNotificationEmailsForPackageAssignmentHoursCompletion(packageAssignmentObject);
+				} else {
+					if (packageAssignmentObject.getTotalHours() - newCompletedHours <= 3) {
+						sendPackageAssignmentRenewReminderEmails(packageAssignmentObject);
+					}
+				}
 			}
 		}
 	}
