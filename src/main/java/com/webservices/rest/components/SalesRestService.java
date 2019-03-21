@@ -1530,21 +1530,23 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST)
+	@Path(REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String getPackageAssignment (
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+	public String getPackageAssignmentRecord (
+			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_ASSIGNMENT_ATTENDANCE_LIST;
+		this.methodName = REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD;
 		this.parentSerialId = parentId;
 		this.packageAssignmentSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			restresponse.put(RECORD_OBJECT, getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId));
+			final PackageAssignment packageAssignment = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
+			restresponse.put(RECORD_OBJECT, packageAssignment);
+			restresponse.put("formEditMandatoryDisbaled", getSubscriptionPackageService().getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1715,6 +1717,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				handleAssignmentAttendanceUpdateSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD : {
+				handleParentSerialId();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
@@ -1723,7 +1729,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.securityPassed = true;
 		super.handleTakeAction();
 		if (this.securityPassed) {
-			switch(button) {
+			switch(this.button) {
 				case BUTTON_ACTION_TO_BE_MAPPED : 
 				case BUTTON_ACTION_DEMO_READY : 
 				case BUTTON_ACTIVATE_SUBSCRIPTION : 
@@ -1742,7 +1748,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				default : {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
-							AdminConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN,
+							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN, new Object[] {this.button}),
 							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 					break;
@@ -1858,7 +1864,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -1868,7 +1874,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2055,7 +2061,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2065,7 +2071,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2379,7 +2385,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2389,7 +2395,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2632,7 +2638,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2642,7 +2648,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2764,7 +2770,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2774,7 +2780,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2811,6 +2817,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.assignmentAttendanceObject.setKnowledgeRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "knowledgeRemarks", String.class));
 			this.assignmentAttendanceObject.setStudentRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentRemarks", String.class));
 			computeAndSetDurationAndAdditionalHours(jsonObject);
+			this.omittableAttributesList = Arrays.asList(new String[]{"packageAssignmentSerialId", "oldEntryDateTimeMillis", "oldExitDateTimeMillis", "localTimezoneOffsetInMilliseconds",
+																		"entryDateMillis", "entryTimeMillis", "exitDateMillis", "exitTimeMillis", "punctualityRemarks", "expertiseRemarks", 
+																		"knowledgeRemarks", "studentRemarks"});
 		}
 	}
 	
@@ -2956,16 +2965,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
 				for (final String attributeName : this.changedAttributes) {
 					switch(attributeName) {
-						case "packageAssignmentSerialId" : 
-						case "oldEntryDateTimeMillis" : 
-						case "oldExitDateTimeMillis" : 
-						case "localTimezoneOffsetInMilliseconds" : 
-						case "entryDateMillis" :
-						case "entryTimeMillis" :
-						case "exitDateMillis" :
-						case "exitTimeMillis" : {
-							break;
-						}
 						case "topicsTaught" : {
 							if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
 								ApplicationUtils.appendMessageInMapAttribute(
@@ -3081,11 +3080,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 							break;
 						}
 						default : {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							if (!(ValidationUtils.checkNonEmptyList(this.omittableAttributesList) && this.omittableAttributesList.contains(attributeName))) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
+							}
 							break;
 						}
 					}
@@ -3093,7 +3094,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			} else {
 				ApplicationUtils.appendMessageInMapAttribute(
 						this.securityFailureResponse, 
-						AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+						Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 				this.securityPassed = false;
 			}

@@ -23,7 +23,7 @@ import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.constants.components.AdminConstants;
+import com.constants.components.CommonsConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.publicaccess.FindTutorConstants;
@@ -38,6 +38,7 @@ import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
+import com.utils.localization.Message;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -306,7 +307,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -316,7 +317,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

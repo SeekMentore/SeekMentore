@@ -27,6 +27,7 @@ import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
+import com.constants.components.CommonsConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SupportConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
@@ -50,6 +51,7 @@ import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
+import com.utils.localization.Message;
 import com.webservices.rest.AbstractRestWebservice;
 
 @Component
@@ -1637,7 +1639,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.securityPassed = true;
 		super.handleTakeAction();
 		if (this.securityPassed) {
-			switch(button) {
+			switch(this.button) {
 				case BUTTON_ACTION_CONTACTED : 
 				case BUTTON_ACTION_VERIFY:
 				case BUTTON_ACTION_REVERIFY : 
@@ -1656,7 +1658,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				default : {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
-							AdminConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN,
+							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN, new Object[] {this.button}),
 							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 					this.securityPassed = false;
 					break;
@@ -1890,7 +1892,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -1900,7 +1902,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2044,7 +2046,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2054,7 +2056,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -2209,7 +2211,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 					default : {
 						ApplicationUtils.appendMessageInMapAttribute(
 								this.securityFailureResponse, 
-								AdminConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY,
+								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
 								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 						this.securityPassed = false;
 						break;
@@ -2219,7 +2221,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		} else {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

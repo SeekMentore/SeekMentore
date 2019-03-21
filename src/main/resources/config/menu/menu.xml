@@ -117,6 +117,7 @@
 			<webservice id="startedAssignmentList" url="/startedAssignmentList"></webservice>
 			<webservice id="hoursCompletedAssignmentList" url="/hoursCompletedAssignmentList"></webservice>
 			<webservice id="reviewedAssignmentList" url="/reviewedAssignmentList"></webservice>
+			<webservice id="getPackageAssignmentRecord" url="/getPackageAssignmentRecord"></webservice>
 			<webservice id="assignmentAttendanceMarkingAccess" url="/assignmentAttendanceMarkingAccess"></webservice>
 			<webservice id="insertAssignmentAttendance" url="/insertAssignmentAttendance"></webservice>
 			<webservice id="assignmentAttendanceList" url="/assignmentAttendanceList"></webservice>

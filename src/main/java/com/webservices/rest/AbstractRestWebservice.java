@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.constants.ValidationConstants;
-import com.constants.components.AdminConstants;
 import com.constants.components.CommonsConstants;
 import com.constants.components.ResponseMapConstants;
 import com.model.User;
@@ -32,6 +31,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected Boolean securityPassed = false;
 	protected User activeUser;
 	protected List<String> changedAttributes = new ArrayList<String>();
+	protected List<String> omittableAttributesList = new ArrayList<String>();
 	protected Long parentId;
 	protected String parentSerialId;
 	protected String allIdsList;
@@ -126,7 +126,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkObjectAvailability(this.parentId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -137,7 +137,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkStringAvailability(this.parentSerialId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_PARENT_ID_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -149,7 +149,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkStringAvailability(this.button)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_BUTTON_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -160,7 +160,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkStringAvailability(this.allIdsList) || !ValidationUtils.checkNonEmptyList(Arrays.asList(this.allIdsList.split(SEMICOLON)))) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_ID_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_ID_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -171,7 +171,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkStringAvailability(this.comments)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_COMMENTS_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_COMMENTS_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
@@ -182,7 +182,7 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		if (!ValidationUtils.checkStringAvailability(this.grid)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_GRID_ABSENT,
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_GRID_ABSENT),
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}

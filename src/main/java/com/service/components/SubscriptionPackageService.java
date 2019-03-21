@@ -1192,4 +1192,13 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		return workbookRecords;
 	}
+
+	public Boolean getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(final PackageAssignment packageAssignment) {
+		if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getStartDateMillis()) 
+				&& !ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getEndDateMillis())
+				&& packageAssignment.getCompletedHours() < packageAssignment.getTotalHours()) {
+			return false;
+		}
+		return true;
+	}
 }
