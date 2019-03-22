@@ -23,6 +23,7 @@ import com.constants.RestMethodConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.dao.ApplicationDao;
+import com.model.ApplicationFile;
 import com.model.User;
 import com.model.components.AssignmentAttendance;
 import com.model.components.AssignmentAttendanceDocument;
@@ -31,7 +32,9 @@ import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
 import com.model.mail.MailAttachment;
+import com.model.rowmappers.AssignmentAttendanceDocumentRowMapper;
 import com.model.rowmappers.AssignmentAttendanceRowMapper;
+import com.model.rowmappers.MapRowMapper;
 import com.model.rowmappers.PackageAssignmentRowMapper;
 import com.model.rowmappers.SubscriptionPackageRowMapper;
 import com.model.workbook.WorkbookCell;
@@ -831,7 +834,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						break;
 					}
 					case "tutorPunctualityIndex" : {
-						updateAttributesQuery.add("TUTOR_REMARKS = :tutorPunctualityIndex");
+						updateAttributesQuery.add("TUTOR_PUNCTUALITY_INDEX = :tutorPunctualityIndex");
 						paramsMap.put("tutorPunctualityIndex", assignmentAttendance.getTutorPunctualityIndex());
 						break;
 					}
@@ -875,7 +878,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendance.getAssignmentAttendanceSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			assignmentAttendance.setPackageAssignmentSerialId(packageAssignmentObject.getPackageAssignmentSerialId());
 			assignmentAttendance.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			assignmentAttendance.setUpdatedBy(activeUser.getUserId());
 			assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
@@ -980,8 +982,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 												+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendanceEntryDateSorter"), paramsMap, new AssignmentAttendanceRowMapper());
 	}
 	
-	public byte[] downloadAttendanceTrackerSheet(final String packageAssignmentSerialId) throws Exception {
-		return createWorkbookReportForAttendanceTracker(getPackageAssignment(packageAssignmentSerialId));
+	public ApplicationFile downloadAttendanceTrackerSheet(final String packageAssignmentSerialId) throws Exception {
+		return new ApplicationFile("Attendance_Sheet_" + packageAssignmentSerialId + PERIOD + FileConstants.EXTENSION_XLSX, createWorkbookReportForAttendanceTracker(getPackageAssignment(packageAssignmentSerialId)));
 	}
 	
 	private byte[] createWorkbookReportForAttendanceTracker(final PackageAssignment packageAssignment) throws Exception {
@@ -1200,5 +1202,71 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			return false;
 		}
 		return true;
+	}
+	
+	public Map<String, Object> getAssignmentAttendanceUploadedDocumentCountAndExistence(final String assignmentAttendanceSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendanceSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendanceUploadedDocumentCountAndExistence"), paramsMap, new MapRowMapper());
+	}
+	
+	public ApplicationFile downloadAssignmentAttendanceDocumentFile(final String assignmentAttendanceSerialId, final String documentType) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendanceSerialId);
+		switch(documentType) {
+			case "classwork" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK);
+				break;
+			}
+			case "homework" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK);
+				break;
+			}
+			case "test" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST);
+				break;
+			}
+			case "other" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER);
+				break;
+			}
+		}
+		final AssignmentAttendanceDocument assignmentAttendanceDocument = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendanceDocument")
+																							+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendanceDocumentAssignmentSerialIdAndDocumentTypeFilter"), paramsMap, new AssignmentAttendanceDocumentRowMapper());
+		if (ValidationUtils.checkObjectAvailability(assignmentAttendanceDocument)) {
+			return new ApplicationFile(assignmentAttendanceDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey()));
+		}
+		return null;
+	}
+	
+	@Transactional
+	public void removeAssignmentAttendanceDocumentFile(final String assignmentAttendanceSerialId, final String documentType, final User activeUser) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendanceSerialId);
+		switch(documentType) {
+			case "classwork" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_CLASSWORK);
+				break;
+			}
+			case "homework" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_HOMEWORK);
+				break;
+			}
+			case "test" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_TEST);
+				break;
+			}
+			case "other" : {
+				paramsMap.put("documentType", ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_OTHER);
+				break;
+			}
+		}
+		final AssignmentAttendanceDocument assignmentAttendanceDocument = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendanceDocument")
+																							+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendanceDocumentAssignmentSerialIdAndDocumentTypeFilter"), paramsMap, new AssignmentAttendanceDocumentRowMapper());
+		if (ValidationUtils.checkObjectAvailability(assignmentAttendanceDocument)) {
+			paramsMap.put("assignmentAttendanceDocumentSerialId", assignmentAttendanceDocument.getAssignmentAttendanceDocumentSerialId());
+			applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-subscriptionpackage", "deleteAssignmentAttendanceDocumentByDocumentSerialIdFilter"), paramsMap);
+			FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey(), activeUser);
+		}
 	}
 }

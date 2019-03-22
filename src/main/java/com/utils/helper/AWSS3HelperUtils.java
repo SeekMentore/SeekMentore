@@ -191,7 +191,7 @@ public class AWSS3HelperUtils implements AWSConstants {
 				throw new ApplicationException("Cannot recycle key = " + key);
 			}
 		} else {
-			throw new ApplicationException("Deleteion in File System could only be performed if you are a valid user");
+			throw new ApplicationException("Deletion in File System could only be performed if you are a valid and authorized user");
 		}
 	}
 	

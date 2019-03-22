@@ -36,6 +36,7 @@ import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.constants.components.TutorConstants;
+import com.model.ApplicationFile;
 import com.model.components.AssignmentAttendance;
 import com.model.components.AssignmentAttendanceDocument;
 import com.model.components.Demo;
@@ -72,6 +73,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private String subscriptionPackageSerialId;
 	private String packageAssignmentSerialId;
 	private String assignmentAttendanceSerialId;
+	private String documentType;
 	private Integer additionalHoursTaught;
 	private Integer additionalMinutesTaught;
 	private Enquiry enquiryObject;
@@ -1523,7 +1525,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			getSubscriptionPackageService().updateAssignmentAttendance(this.assignmentAttendanceObject, this.packageAssignmentObject, 
 																		this.additionalHoursTaught, this.additionalMinutesTaught, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_INSERTED_RECORD);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1555,6 +1557,28 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_GET_ASSIGNMENT_ATTENDANCE_UPLOADED_DOCUMENT_COUNT_AND_EXISTENCE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getAssignmentAttendanceUploadedDocumentCountAndExistence (
+			@FormParam("assignmentAttendanceSerialId") final String assignmentAttendanceSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_ASSIGNMENT_ATTENDANCE_UPLOADED_DOCUMENT_COUNT_AND_EXISTENCE;
+		this.assignmentAttendanceSerialId = assignmentAttendanceSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			restresponse.put(RECORD_OBJECT, getSubscriptionPackageService().getAssignmentAttendanceUploadedDocumentCountAndExistence(this.assignmentAttendanceSerialId));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1567,9 +1591,54 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.packageAssignmentSerialId = packageAssignmentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Attendance_Sheet" + this.packageAssignmentSerialId + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId));
+			final ApplicationFile applicationFile = getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId);
+			FileUtils.writeFileToResponse(response, applicationFile.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, applicationFile.getContent());
 		}
     }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAssignmentAttendanceDocumentFile (
+    		@FormParam("assignmentAttendanceSerialId") final String assignmentAttendanceSerialId,
+    		@FormParam("documentType") final String documentType,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE;
+		this.assignmentAttendanceSerialId = assignmentAttendanceSerialId;
+		this.documentType = documentType;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final ApplicationFile applicationFile = getSubscriptionPackageService().downloadAssignmentAttendanceDocumentFile(this.assignmentAttendanceSerialId, this.documentType);
+			FileUtils.writeFileToResponse(response, applicationFile.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, applicationFile.getContent());
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_REMOVE_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String removeAssignmentAttendanceDocumentFile (
+			@FormParam("assignmentAttendanceSerialId") final String assignmentAttendanceSerialId,
+    		@FormParam("documentType") final String documentType,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_REMOVE_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE;
+		this.assignmentAttendanceSerialId = assignmentAttendanceSerialId;
+		this.documentType = documentType;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getSubscriptionPackageService().removeAssignmentAttendanceDocumentFile(this.assignmentAttendanceSerialId, this.documentType, getActiveUser(request));
+			restresponse.put("removedDocumentType", documentType);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1719,6 +1788,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			}
 			case REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD : {
 				handleParentSerialId();
+				break;
+			}
+			case REST_METHOD_NAME_GET_ASSIGNMENT_ATTENDANCE_UPLOADED_DOCUMENT_COUNT_AND_EXISTENCE : {
+				handleSelectedAssignmentAttendanceSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE : 
+			case REST_METHOD_NAME_REMOVE_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE : {
+				handleSelectedAssignmentAttendanceSecurity();
+				handleSelectedDocumentTypeSecurity();
 				break;
 			}
 		}
@@ -2454,6 +2533,28 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
+	}
+	
+	private void handleSelectedAssignmentAttendanceSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceSerialId)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ASSIGNMENT_ATTENDANCE_ID_MISSING),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	} 
+	
+	private void handleSelectedDocumentTypeSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.documentType)) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DOCUMENT_TYPE_MISSING),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
 	} 
 	
 	private void createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
@@ -2792,6 +2893,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			if (ValidationUtils.checkStringAvailability(this.assignmentAttendanceSerialId)) {
 				this.assignmentAttendanceObject.setAssignmentAttendanceSerialId(this.assignmentAttendanceSerialId);
 				this.packageAssignmentSerialId = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "packageAssignmentSerialId", String.class);
+				this.assignmentAttendanceObject.setPackageAssignmentSerialId(this.packageAssignmentSerialId);
 			}
 			final Long localTimezoneOffsetInMilliseconds = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "localTimezoneOffsetInMilliseconds", Long.class);
 			final Long entryDateMillis = getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "entryDateMillis", Long.class);
@@ -2818,8 +2920,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.assignmentAttendanceObject.setStudentRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "studentRemarks", String.class));
 			computeAndSetDurationAndAdditionalHours(jsonObject);
 			this.omittableAttributesList = Arrays.asList(new String[]{"packageAssignmentSerialId", "oldEntryDateTimeMillis", "oldExitDateTimeMillis", "localTimezoneOffsetInMilliseconds",
-																		"entryDateMillis", "entryTimeMillis", "exitDateMillis", "exitTimeMillis", "punctualityRemarks", "expertiseRemarks", 
-																		"knowledgeRemarks", "studentRemarks"});
+																		"entryDateMillis", "entryTimeMillis", "exitDateMillis", "exitTimeMillis", "documents"});
 		}
 	}
 	
@@ -3022,14 +3123,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PUNCTUALITY_INDEX),
 										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 								this.securityPassed = false;
-							} else {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getPunctualityRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_PUNCTUALITY_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
-								}
+							}
+							break;
+						}
+						case "punctualityRemarks" : {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getPunctualityRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_PUNCTUALITY_REMARKS),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
 							}
 							break;
 						}
@@ -3040,14 +3143,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_EXPERTISE_INDEX),
 										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 								this.securityPassed = false;
-							} else {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getExpertiseRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_EXPERTISE_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
-								}
+							}
+							break;
+						}
+						case "expertiseRemarks" : {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getExpertiseRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_EXPERTISE_REMARKS),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
 							}
 							break;
 						}
@@ -3058,14 +3163,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_KNOWLEDGE_INDEX),
 										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 								this.securityPassed = false;
-							} else {
-								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getKnowledgeRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_KNOWLEDGE_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
-								}
+							}
+							break;
+						}
+						case "knowledgeRemarks" : {
+							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getKnowledgeRemarks())) {
+								ApplicationUtils.appendMessageInMapAttribute(
+										this.securityFailureResponse, 
+										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_KNOWLEDGE_REMARKS),
+										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+								this.securityPassed = false;
 							}
 							break;
 						}
