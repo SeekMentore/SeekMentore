@@ -132,6 +132,7 @@ public class LoginUtils implements LoginConstants {
 				final UserAccessOptions accessOptions = new UserAccessOptions();
 				accessOptions.setEmailformaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "emailformaccess", Boolean.class));
 				accessOptions.setImpersonationaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "impersonationaccess", Boolean.class));
+				accessOptions.setTechteamaccess(JSONUtils.getValueFromJSONObject(accessOptionsAsJSONObject, "techteamaccess", Boolean.class));
 				user.setAccessOptions(accessOptions);
 			}
 		}

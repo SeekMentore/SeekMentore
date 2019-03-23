@@ -137,6 +137,7 @@ public class LoginService implements LoginConstants {
 				// Compute from database
 				accessOptions.setImpersonationaccess(true);
 				accessOptions.setEmailformaccess(true);
+				accessOptions.setTechteamaccess(true);
 				break;
 			}
 			case USER_TYPE_TUTOR : {

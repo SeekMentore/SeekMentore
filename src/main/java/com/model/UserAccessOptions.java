@@ -8,6 +8,7 @@ public class UserAccessOptions implements Serializable {
 	
 	private Boolean impersonationaccess = false;
 	private Boolean emailformaccess = false;
+	private Boolean techteamaccess = false;
 	
 	public UserAccessOptions() {}
 	
@@ -32,6 +33,14 @@ public class UserAccessOptions implements Serializable {
 	
 	public void setEmailformaccess(Boolean emailformaccess) {
 		this.emailformaccess = emailformaccess;
+	}
+
+	public Boolean getTechteamaccess() {
+		return techteamaccess;
+	}
+
+	public void setTechteamaccess(Boolean techteamaccess) {
+		this.techteamaccess = techteamaccess;
 	}
 
 }
