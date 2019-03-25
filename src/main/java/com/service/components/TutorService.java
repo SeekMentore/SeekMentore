@@ -22,6 +22,7 @@ import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.dao.ApplicationDao;
 import com.exception.ApplicationException;
+import com.model.ApplicationFile;
 import com.model.User;
 import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
@@ -69,13 +70,13 @@ public class TutorService implements TutorConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor"), null, null, gridComponent), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadAdminReportRegisteredTutorList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("REGISTERED_TUTORS", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getRegisteredTutorList(gridComponent), RegisteredTutor.class, AdminConstants.ADMIN_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile("REGISTERED_TUTORS_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public byte[] downloadRegisteredTutorProfilePdf(final Long tutorId, final Boolean isAdminProfile) throws Exception {
+	public ApplicationFile downloadRegisteredTutorProfilePdf(final Long tutorId, final Boolean isAdminProfile) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorId", tutorId);
 		final RegisteredTutor registeredTutor = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
@@ -101,7 +102,7 @@ public class TutorService implements TutorConstants {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("registeredTutor", registeredTutor);
 	        attributes.put("fullAdminProfile", isAdminProfile);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return new ApplicationFile(registeredTutor.getName() + "_PROFILE" + PERIOD + FileConstants.EXTENSION_PDF, PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(REGISTERED_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes)));
 		}
 		return null;
 	}
@@ -152,6 +153,11 @@ public class TutorService implements TutorConstants {
 		final TutorDocument tutorDocument = applicationDao.find(query.toString(), paramsMap, new TutorDocumentRowMapper());
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()));
 		return tutorDocument;
+	}
+	
+	public ApplicationFile downloadTutorDocument(final Long documentId) throws Exception {
+		final TutorDocument tutorDocument = getTutorDocument(documentId);
+		return new ApplicationFile(tutorDocument.getFilename(), tutorDocument.getContent());
 	}
 	
 	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws Exception {

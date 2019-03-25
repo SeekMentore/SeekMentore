@@ -5,6 +5,7 @@ public interface ApplicationConstants {
 	String WHITESPACE = " ";
 	String EMPTY_STRING = "";
 	String DASH = "-";
+	String UNDERSCORE = "_";
 	String COLON = ":";
 	String SEMICOLON = ";";
 	String COMMA = ",";

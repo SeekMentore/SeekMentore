@@ -2,7 +2,9 @@ package com.model;
 
 import java.io.Serializable;
 
-public class ApplicationFile implements Serializable, Cloneable {
+import com.constants.ApplicationConstants;
+
+public class ApplicationFile implements Serializable, Cloneable, ApplicationConstants {
 
 	private static final long serialVersionUID = -6980182144471502902L;
 	
@@ -12,7 +14,7 @@ public class ApplicationFile implements Serializable, Cloneable {
 	public ApplicationFile() {}
 	
 	public ApplicationFile(final String filename, final byte[] content) {
-		this.filename = filename;
+		this.filename = filename.replaceAll(WHITESPACE, UNDERSCORE);
 		this.content = content;
 	}
 	

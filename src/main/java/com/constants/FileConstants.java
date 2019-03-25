@@ -6,17 +6,16 @@ public interface FileConstants extends ApplicationConstants {
 	String ATTACHMENT_FILENAME = "attachment; filename=";
 	String APPLICATION_TYPE_OCTET_STEAM = "application/octet-stream";
 	
-	String EXTENSION_PDF = "pdf";
-	String EXTENSION_PNG = "png";
-	String EXTENSION_TEXT = "txt";
-	String EXTENSION_XLS = "xls";
-	String EXTENSION_XLSX = "xlsx";
-	String EXTENSION_DOC = "doc";
-	String EXTENSION_DOCX = "docx";
-	String EXTENSION_PPT = "ppt";
-	String EXTENSION_PPTX = "pptx";
-	String EXTENSION_JPG = "jpg";
-	String EXTENSION_JPEG = "jpeg";
-	
-	String EXCEPTION_MESSAGE_MISMATCHED_NUMBER_OF_FILE_BYTES_AND_FILE_NAMES = "Mismatched number of File bytes and File names.";
+	String EXTENSION_PDF = "PDF";
+	String EXTENSION_PNG = "PNG";
+	String EXTENSION_TEXT = "TXT";
+	String EXTENSION_XLS = "XLS";
+	String EXTENSION_XLSX = "XLSX";
+	String EXTENSION_DOC = "DOC";
+	String EXTENSION_DOCX = "DOCX";
+	String EXTENSION_PPT = "PPT";
+	String EXTENSION_PPTX = "PPTX";
+	String EXTENSION_JPG = "JPG";
+	String EXTENSION_JPEG = "JPEG";
+	String EXTENSION_ZIP = "ZIP";
 }

@@ -12,6 +12,7 @@ import org.json.JSONException;
 
 import com.constants.BeanConstants;
 import com.constants.ConnectionConstants;
+import com.constants.FileConstants;
 import com.constants.JNDIandControlConfigurationConstants;
 import com.constants.WebServiceConstants;
 import com.constants.components.ResponseMapConstants;
@@ -96,5 +97,21 @@ public class WebServiceUtils implements WebServiceConstants {
 		} catch (IOException | JSONException e) {
 			LoggerUtils.logError(e);
 		}
+	}
+	
+	public static void writeFileToResponse (
+			final HttpServletResponse response,
+			final String fileName, 
+			final String contentType, 
+			final byte[] fileContent
+	) throws IOException {
+		response.setHeader(FileConstants.CONTENT_DISPOSITION, FileConstants.ATTACHMENT_FILENAME + INVERTED_COMMA + fileName + INVERTED_COMMA);
+		if (null != contentType) {
+			response.setContentType(contentType);
+		}
+		response.setContentLength(fileContent.length);
+		response.getOutputStream().write(fileContent);
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 }

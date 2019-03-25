@@ -47,7 +47,6 @@ import com.service.components.CommonsService;
 import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
-import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -108,7 +107,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Registered_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getTutorService().downloadRegisteredTutorProfilePdf(Long.valueOf(tutorId), true));
+			downloadFile(getTutorService().downloadRegisteredTutorProfilePdf(Long.valueOf(tutorId), true), response);
 		}
     }
 	
@@ -127,8 +126,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			final TutorDocument tutorDocument = getTutorService().getTutorDocument(Long.parseLong(documentId));
-			FileUtils.writeFileToResponse(response, tutorDocument.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, tutorDocument.getContent());
+			downloadFile(getTutorService().downloadTutorDocument(Long.parseLong(documentId)), response);
 		}
     }
 	

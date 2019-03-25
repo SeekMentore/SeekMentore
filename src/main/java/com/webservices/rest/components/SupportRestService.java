@@ -22,7 +22,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -46,7 +45,6 @@ import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.utils.ApplicationUtils;
-import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -84,7 +82,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Become_Tutor_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadReportBecomeTutorList(this.grid, gridComponent));
+			downloadFile(getAdminService().downloadReportBecomeTutorList(this.grid, gridComponent), response);
 		}
     }
 	
@@ -102,7 +100,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Become_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadBecomeTutorProfilePdf(Long.valueOf(tentativeTutorId)));
+			downloadFile(getAdminService().downloadBecomeTutorProfilePdf(Long.valueOf(tentativeTutorId)), response);
 		}
     }
 	
@@ -462,7 +460,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Enquiry_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent));
+			downloadFile(getAdminService().downloadAdminReportFindTutorList(this.grid, gridComponent), response);
 		}
     }
 	
@@ -480,7 +478,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Find_Tutor_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadFindTutorProfilePdf(Long.valueOf(enquiryId)));
+			downloadFile(getAdminService().downloadFindTutorProfilePdf(Long.valueOf(enquiryId)), response);
 		}
     }
 	
@@ -812,7 +810,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Subscription_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent));
+			downloadFile(getAdminService().downloadAdminReportSubscribeWithUsList(this.grid, gridComponent), response);
 		}
     }
 	
@@ -1144,7 +1142,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		this.grid = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), EXTRA_PARAM_SELECTED_GRID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Query_Registration_Report" + PERIOD + FileConstants.EXTENSION_XLSX, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getAdminService().downloadAdminReportSubmitQueryList(this.grid, gridComponent));
+			downloadFile(getAdminService().downloadAdminReportSubmitQueryList(this.grid, gridComponent), response);
 		}
     }
 	

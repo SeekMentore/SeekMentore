@@ -104,6 +104,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_DOWNLOAD_ATTENDANCE_TRACKER_SHEET = "/downloadAttendanceTrackerSheet";
 	String REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE = "/downloadAssignmentAttendanceDocumentFile";
 	String REST_METHOD_NAME_REMOVE_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE = "/removeAssignmentAttendanceDocumentFile";
+	String REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_ALL_DOCUMENTS = "/downloadAssignmentAttendanceAllDocuments";
 	// Support REST methods
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST = "/downloadAdminReportBecomeTutorList";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF = "/downloadAdminBecomeTutorProfilePdf";

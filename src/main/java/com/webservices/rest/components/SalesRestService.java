@@ -36,7 +36,6 @@ import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SubscriptionPackageConstants;
 import com.constants.components.TutorConstants;
-import com.model.ApplicationFile;
 import com.model.components.AssignmentAttendance;
 import com.model.components.AssignmentAttendanceDocument;
 import com.model.components.Demo;
@@ -54,7 +53,6 @@ import com.service.components.EnquiryService;
 import com.service.components.SubscriptionPackageService;
 import com.service.components.TutorService;
 import com.utils.ApplicationUtils;
-import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -1178,7 +1176,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.subscriptionPackageSerialId = subscriptionPackageSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Contract" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(subscriptionPackageSerialId));
+			downloadFile(getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId), response);
 		}
     }
 	
@@ -1591,8 +1589,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.packageAssignmentSerialId = packageAssignmentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			final ApplicationFile applicationFile = getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId);
-			FileUtils.writeFileToResponse(response, applicationFile.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, applicationFile.getContent());
+			downloadFile(getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId), response);
 		}
     }
 	
@@ -1610,8 +1607,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.documentType = documentType;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			final ApplicationFile applicationFile = getSubscriptionPackageService().downloadAssignmentAttendanceDocumentFile(this.assignmentAttendanceSerialId, this.documentType);
-			FileUtils.writeFileToResponse(response, applicationFile.getFilename(), FileConstants.APPLICATION_TYPE_OCTET_STEAM, applicationFile.getContent());
+			downloadFile(getSubscriptionPackageService().downloadAssignmentAttendanceDocumentFile(this.assignmentAttendanceSerialId, this.documentType), response);
 		}
     }
 	
@@ -1639,6 +1635,22 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 	}
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_ALL_DOCUMENTS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadAssignmentAttendanceAllDocuments (
+    		@FormParam("assignmentAttendanceSerialId") final String assignmentAttendanceSerialId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_ALL_DOCUMENTS;
+		this.assignmentAttendanceSerialId = assignmentAttendanceSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			downloadZipFile(getSubscriptionPackageService().downloadAssignmentAttendanceAllDocuments(this.assignmentAttendanceSerialId), this.assignmentAttendanceSerialId + "_DOCUMENTS" + PERIOD + FileConstants.EXTENSION_ZIP, response);
+		}
+    }
 
 	public AdminService getAdminService() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_ADMIN_SERVICE, AdminService.class);
@@ -1798,6 +1810,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			case REST_METHOD_NAME_REMOVE_ASSIGNMENT_ATTENDANCE_DOCUMENT_FILE : {
 				handleSelectedAssignmentAttendanceSecurity();
 				handleSelectedDocumentTypeSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_DOWNLOAD_ASSIGNMENT_ATTENDANCE_ALL_DOCUMENTS : {
+				handleSelectedAssignmentAttendanceSecurity();
 				break;
 			}
 		}

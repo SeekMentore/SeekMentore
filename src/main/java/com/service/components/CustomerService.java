@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.MailConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.CustomerConstants;
 import com.dao.ApplicationDao;
+import com.model.ApplicationFile;
 import com.model.User;
 import com.model.components.SubscribedCustomer;
 import com.model.components.publicaccess.FindTutor;
@@ -55,13 +57,13 @@ import com.utils.WorkbookUtils;
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"), null, null, gridComponent), new SubscribedCustomerRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadAdminReportSubscribedCustomerList(final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet("SUBSCRIBED_CUSTOMERS", WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubscribedCustomersList(gridComponent), SubscribedCustomer.class, AdminConstants.ADMIN_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile("SUBSCRIBED_CUSTOMERS_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public byte[] downloadSubscribedCustomerProfilePdf(final Long customerId, final Boolean isAdminProfile) throws Exception {
+	public ApplicationFile downloadSubscribedCustomerProfilePdf(final Long customerId, final Boolean isAdminProfile) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("customerId", customerId);
 		final SubscribedCustomer subscribedCustomer = applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer") 
@@ -74,7 +76,7 @@ import com.utils.WorkbookUtils;
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("subscribedCustomer", subscribedCustomer);
 	        attributes.put("fullAdminProfile", isAdminProfile);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIBED_CUSTOMER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return new ApplicationFile(subscribedCustomer.getName() + "_PROFILE" + PERIOD + FileConstants.EXTENSION_PDF, PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIBED_CUSTOMER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes)));
 		}
 		return null;
 	}

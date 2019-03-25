@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.constants.BeanConstants;
-import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
@@ -33,7 +32,6 @@ import com.model.gridcomponent.GridComponent;
 import com.service.components.CustomerService;
 import com.service.components.SubscriptionPackageService;
 import com.utils.ApplicationUtils;
-import com.utils.FileUtils;
 import com.utils.GridComponentUtils;
 import com.utils.JSONUtils;
 import com.utils.ValidationUtils;
@@ -63,7 +61,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			FileUtils.writeFileToResponse(response, "Subscribed_Customer_Profile" + PERIOD + FileConstants.EXTENSION_PDF, FileConstants.APPLICATION_TYPE_OCTET_STEAM, getCustomerService().downloadSubscribedCustomerProfilePdf(Long.valueOf(customerId), true));
+			downloadFile(getCustomerService().downloadSubscribedCustomerProfilePdf(Long.valueOf(customerId), true), response);
 		}
     }
 	

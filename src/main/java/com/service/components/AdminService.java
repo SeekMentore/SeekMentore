@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
+import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.components.AdminConstants;
 import com.constants.components.SupportConstants;
 import com.constants.components.publicaccess.PublicAccessConstants;
 import com.dao.ApplicationDao;
+import com.model.ApplicationFile;
 import com.model.User;
 import com.model.components.Complaint;
 import com.model.components.publicaccess.BecomeTutor;
@@ -122,13 +124,13 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 								+ queryMapperService.getQuerySQL("public-application", "becomeTutorContactNumberFilter"), paramsMap, new BecomeTutorRowMapper());
 	}
 	
-	public byte[] downloadReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getBecomeTutorReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getBecomeTutorList(grid, gridComponent), BecomeTutor.class, SUPPORT_TEAM_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile(getBecomeTutorReportSheetName(grid) + "_BT_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public byte[] downloadBecomeTutorProfilePdf(final Long tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
+	public ApplicationFile downloadBecomeTutorProfilePdf(final Long tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tentativeTutorId", tentativeTutorId);
 		final BecomeTutor becomeTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
@@ -136,7 +138,8 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		if (ValidationUtils.checkObjectAvailability(becomeTutor)) {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("becomeTutor", becomeTutor);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(BECOME_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return new ApplicationFile(becomeTutor.getFirstName() + "_" + becomeTutor.getLastName() + "_BT_PROFILE" + PERIOD + FileConstants.EXTENSION_PDF, 
+	        							PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(BECOME_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes)));
 		}
 		return null;
 	}	
@@ -454,13 +457,13 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new FindTutorRowMapper());
 	}
 	
-	public byte[] downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getFindTutorReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile(getFindTutorReportSheetName(grid) + "_FT_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public byte[] downloadFindTutorProfilePdf(final Long enquiryId) throws JAXBException, URISyntaxException, Exception {
+	public ApplicationFile downloadFindTutorProfilePdf(final Long enquiryId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("enquiryId", enquiryId);
 		final FindTutor findTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectFindTutor") 
@@ -468,7 +471,8 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		if (ValidationUtils.checkObjectAvailability(findTutor)) {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("findTutor", findTutor);
-	        return PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(FIND_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes));
+	        return new ApplicationFile(findTutor.getName() + "_FT_PROFILE" + PERIOD + FileConstants.EXTENSION_PDF, 
+	        							PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(FIND_TUTOR_PROFILE_VELOCITY_TEMPLATE_PATH, attributes)));
 		}
 		return null;
 	}	
@@ -748,10 +752,10 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscribeWithUsRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getSubscribeWithUsReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubscribeWithUsList(grid, gridComponent), SubscribeWithUs.class, SUPPORT_TEAM_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile(getSubscribeWithUsReportSheetName(grid) + "_SWS_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
 	private String getSubscribeWithUsReportSheetName(final String grid) {
@@ -1014,10 +1018,10 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubmitQueryRowMapper());
 	}
 	
-	public byte[] downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {
+	public ApplicationFile downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getSubmitQueryReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getSubmitQueryList(grid, gridComponent), SubmitQuery.class, SUPPORT_TEAM_REPORT));
-		return WorkbookUtils.createWorkbook(workbookReport);
+		return new ApplicationFile(getSubmitQueryReportSheetName(grid) + "_QUERY_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
 	private String getSubmitQueryReportSheetName(final String grid) {

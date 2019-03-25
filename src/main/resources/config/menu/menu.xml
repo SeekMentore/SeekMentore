@@ -126,6 +126,7 @@
 			<webservice id="downloadAttendanceTrackerSheet" url="/downloadAttendanceTrackerSheet"></webservice>
 			<webservice id="downloadAssignmentAttendanceDocumentFile" url="/downloadAssignmentAttendanceDocumentFile"></webservice>
 			<webservice id="removeAssignmentAttendanceDocumentFile" url="/removeAssignmentAttendanceDocumentFile"></webservice>
+			<webservice id="downloadAssignmentAttendanceAllDocuments" url="/downloadAssignmentAttendanceAllDocuments"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

@@ -279,6 +279,9 @@
 	<query type="filter" id="assignmentAttendanceDocumentSerialIdFilter">
 		WHERE AD.ASSIGNMENT_ATTENDANCE_DOCUMENT_SERIAL_ID = :assignmentAttendanceDocumentSerialId
 	</query>
+	<query type="filter" id="assignmentAttendanceDocumentAssignmentSerialIdFilter">
+		WHERE AD.ASSIGNMENT_ATTENDANCE_SERIAL_ID = :assignmentAttendanceSerialId
+	</query>
 	<query type="filter" id="assignmentAttendanceDocumentAssignmentSerialIdAndDocumentTypeFilter">
 		WHERE AD.ASSIGNMENT_ATTENDANCE_SERIAL_ID = :assignmentAttendanceSerialId
 		AND DOCUMENT_TYPE = :documentType

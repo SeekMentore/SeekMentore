@@ -279,9 +279,9 @@ public class AssignmentAttendance extends GridComponentObject implements Seriali
 						DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(this.exitDateTimeMillis, "hh:mm a"),
 						this.durationHours + " h   " + this.durationMinutes + " m",
 						new WorkbookCell(this.topicsTaught, true, 5, 1),
-						this.tutorPunctualityIndex,
-						this.tutorExpertiseIndex,
-						this.tutorKnowledgeIndex
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorPunctualityIndex),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorExpertiseIndex),
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP, this.tutorKnowledgeIndex)
 					};
 			}
 			case "SALES_REPORT" : {

@@ -459,8 +459,8 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 	}
 	
-	public byte[] downloadSubscriptionPackageContractPdf(final String subscriptionPackageSerialId) throws JAXBException, URISyntaxException, Exception {
-		return FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(getFolderPathToUploadContracts(subscriptionPackageSerialId)+"/Contract.pdf");
+	public ApplicationFile downloadSubscriptionPackageContractPdf(final String subscriptionPackageSerialId) throws JAXBException, URISyntaxException, Exception {
+		return new ApplicationFile("CONTRACT" + PERIOD + FileConstants.EXTENSION_PDF, FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(getFolderPathToUploadContracts(subscriptionPackageSerialId)+"/Contract.pdf"));
 	}
 	
 	private byte[] createSubscriptionPackageContractPdf(final SubscriptionPackage subscriptionPackage) throws JAXBException, URISyntaxException, Exception {
@@ -1268,5 +1268,25 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			applicationDao.executeUpdate(queryMapperService.getQuerySQL("sales-subscriptionpackage", "deleteAssignmentAttendanceDocumentByDocumentSerialIdFilter"), paramsMap);
 			FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey(), activeUser);
 		}
+	}
+
+	public List<ApplicationFile> downloadAssignmentAttendanceAllDocuments(final String assignmentAttendanceSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendanceSerialId);
+		final List<AssignmentAttendanceDocument> assignmentAttendanceDocumentList = applicationDao.findAll(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectAssignmentAttendanceDocument")
+																											+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "assignmentAttendanceDocumentAssignmentSerialIdFilter"), paramsMap, new AssignmentAttendanceDocumentRowMapper());
+		if (ValidationUtils.checkNonEmptyList(assignmentAttendanceDocumentList)) {
+			final List<ApplicationFile> applicationFiles = new LinkedList<ApplicationFile>();
+			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : assignmentAttendanceDocumentList) {
+				applicationFiles.add(new ApplicationFile(getQualifiedFilenameForAssignmentAttendanceDocument(assignmentAttendanceDocument), 
+															FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(assignmentAttendanceDocument.getFsKey())));
+			}
+			return applicationFiles;
+		}
+		return null;
+	}
+	
+	private String getQualifiedFilenameForAssignmentAttendanceDocument(final AssignmentAttendanceDocument assignmentAttendanceDocument) {
+		return ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType()) + "\\" + assignmentAttendanceDocument.getFilename();
 	}
 }

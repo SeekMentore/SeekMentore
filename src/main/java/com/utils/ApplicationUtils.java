@@ -1,6 +1,10 @@
 package com.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -362,6 +366,16 @@ public class ApplicationUtils implements ApplicationConstants {
         }
         return remainingTime;
     }
+    
+    public static String convertClobToString(Clob clob) throws SQLException, IOException {
+		final StringBuilder stringBuilder = new StringBuilder();
+		final Reader reader = clob.getCharacterStream();
+		int character = -1;
+		while((character = reader.read()) != -1) {
+			stringBuilder.append(((char)character));
+		}
+		return stringBuilder.toString();
+	}
     
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
