@@ -110,6 +110,14 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 		return null;
 	}
 	
+	protected void appendError(final String message) {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				message,
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
 	protected void handleActiveUserSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.activeUser)) {
@@ -186,5 +194,47 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 			this.securityPassed = false;
 		}
+	}
+	
+	protected void handleUnkownAttributeError(final String attributeName) {
+		if (!(ValidationUtils.checkNonEmptyList(this.omittableAttributesList) && this.omittableAttributesList.contains(attributeName))) {
+			ApplicationUtils.appendMessageInMapAttribute(
+					this.securityFailureResponse, 
+					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
+					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+			this.securityPassed = false;
+		}
+	}
+	
+	protected void handleNoAttributeChangedError() {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
+	protected void handleUnknownButtonError() {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN, new Object[] {this.button}),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
+	protected void handleUploadingFileSizeError() {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
+	protected void handleUploadingFileExtensionError() {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
 	}
 }

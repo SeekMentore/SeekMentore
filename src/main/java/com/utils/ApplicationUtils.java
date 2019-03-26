@@ -377,6 +377,15 @@ public class ApplicationUtils implements ApplicationConstants {
 		return stringBuilder.toString();
 	}
     
+    public static void copyAllPropertiesOfOneMapIntoAnother(final Map<String, ?> tobeCopiedOverMap, final Map<String, Object> resultantMap) {
+    	if (ValidationUtils.checkObjectAvailability(resultantMap) && ValidationUtils.checkObjectAvailability(tobeCopiedOverMap)) {
+    		for (Map.Entry<String, ?> entry : tobeCopiedOverMap.entrySet()) {
+    			LoggerUtils.logOnConsole("KEY-VALUE Pair = [" + entry.getKey() + " - " + entry.getValue() + "]");
+    			resultantMap.put(entry.getKey(), entry.getValue());
+    		}
+    	}
+    }
+    
     private static BasicDataSource getBasicDataSource() {
 		return AppContext.getBean(BeanConstants.BEAN_NAME_DATA_SOURCE, BasicDataSource.class);
 	}

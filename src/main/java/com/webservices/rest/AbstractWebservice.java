@@ -74,6 +74,9 @@ public abstract class AbstractWebservice implements ApplicationConstants {
 	public void downloadZipFile(final List<ApplicationFile> applicationFiles, final String zipFilename, final HttpServletResponse response) throws IOException {
 		if (ValidationUtils.checkNonEmptyList(applicationFiles)) {
 			if (applicationFiles.size() == 1) {
+				if (applicationFiles.get(0).getFilename().indexOf(BACKWARD_SLASH) != -1) {
+					applicationFiles.get(0).setFilename(applicationFiles.get(0).getFilename().substring(applicationFiles.get(0).getFilename().lastIndexOf(BACKWARD_SLASH) + 1));
+				}
 				downloadFile(applicationFiles.get(0), response);
 			} else {
 				WebServiceUtils.writeFileToResponse(response, zipFilename, FileConstants.APPLICATION_TYPE_OCTET_STEAM, FileUtils.getZippedBytes(applicationFiles));

@@ -1176,7 +1176,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.subscriptionPackageSerialId = subscriptionPackageSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getSubscriptionPackageService().downloadAttendanceTrackerSheet(this.packageAssignmentSerialId), response);
+			downloadFile(getSubscriptionPackageService().downloadSubscriptionPackageContractPdf(this.subscriptionPackageSerialId), response);
 		}
     }
 	
@@ -1546,7 +1546,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final PackageAssignment packageAssignment = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
 			restresponse.put(RECORD_OBJECT, packageAssignment);
-			restresponse.put("formEditMandatoryDisbaled", getSubscriptionPackageService().getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment));
+			restresponse.put("assignmentMarkAndUpdateAttendanceFormEditDisbaled", getSubscriptionPackageService().getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment));
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getPackageAssignmentFormUpdateAndActionStatus(packageAssignment), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1820,6 +1821,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
+	@Override
 	public void handleTakeAction() throws Exception {
 		this.securityPassed = true;
 		super.handleTakeAction();
@@ -1841,11 +1843,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					break;
 				}
 				default : {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN, new Object[] {this.button}),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					handleUnknownButtonError();
 					break;
 				}
 			}
@@ -1957,21 +1955,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2154,21 +2144,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2478,21 +2460,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2532,44 +2506,28 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private void handleSelectedSubscriptionSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkStringAvailability(this.subscriptionPackageSerialId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_PACKAGE_ID_MISSING),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_PACKAGE_ID_MISSING));
 		}
 	} 
 	
 	private void handleSelectedAssignmentSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkStringAvailability(this.packageAssignmentSerialId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ID_MISSING),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PACKAGE_ASSIGNMENT_ID_MISSING));
 		}
 	}
 	
 	private void handleSelectedAssignmentAttendanceSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceSerialId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ASSIGNMENT_ATTENDANCE_ID_MISSING),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ASSIGNMENT_ATTENDANCE_ID_MISSING));
 		}
 	} 
 	
 	private void handleSelectedDocumentTypeSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkStringAvailability(this.documentType)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DOCUMENT_TYPE_MISSING),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DOCUMENT_TYPE_MISSING));
 		}
 	} 
 	
@@ -2600,56 +2558,32 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				switch(attributeName) {
 					case "packageBillingType" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getPackageBillingType(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_PACKAGE_BILLING_TYPE_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_BILLING_TYPE),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_BILLING_TYPE));
 						}
 						break;
 					}
 					case "finalizedRateForClient" : {
 						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRateForClient(), false, 0, false, 0)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_CLIENT),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_CLIENT));
 						}
 						break;
 					}
 					case "finalizedRateForTutor" : {
 						if (!ValidationUtils.validateNumber(this.subscriptionPackageObject.getFinalizedRateForTutor(), false, 0, false, 0)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_TUTOR),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_FINALIZED_RATE_TUTOR));
 						}
 						break;
 					}
 					case "isCustomerGrieved" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getIsCustomerGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED));
 						} else {
 							if (YES.equals((this.subscriptionPackageObject.getIsCustomerGrieved()))) {
 								if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX));
 								}
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getCustomerRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS));
 								}
 							}
 						}
@@ -2657,36 +2591,20 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "customerHappinessIndex" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX));
 						}
 						break;
 					}
 					case "isTutorGrieved" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getIsTutorGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED));
 						} else {
 							if (YES.equals((this.subscriptionPackageObject.getIsTutorGrieved()))) {
 								if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX));
 								}
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getTutorRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS));
 								}
 							}
 						}
@@ -2694,80 +2612,48 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "tutorHappinessIndex" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscriptionPackageObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX));
 						}
 						break;
 					}
 					case "adminRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdminRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS));
 						}
 						break;
 					}
 					case "additionalDetailsClient" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdditionalDetailsClient())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_CLIENT),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_CLIENT));
 						}
 						break;
 					}
 					case "additionalDetailsTutor" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getAdditionalDetailsTutor())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_TUTOR),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADDITIONAL_DETAILS_TUTOR));
 						}
 						break;
 					}
 					case "activatingRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getActivatingRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ACTIVATING_REMARKS),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ACTIVATING_REMARKS));
 						}
 						break;
 					}
 					case "terminatingRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscriptionPackageObject.getTerminatingRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TERMINATING_REMARKS),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TERMINATING_REMARKS));
 						}
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2782,6 +2668,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.packageAssignmentObject.setTutorHappinessIndex(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorHappinessIndex", String.class));
 			this.packageAssignmentObject.setTutorRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorRemarks", String.class));
 			this.packageAssignmentObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
+			this.omittableAttributesList = Arrays.asList(new String[]{"customerRemarks", "tutorRemarks"});
 		}
 	}
 	
@@ -2792,36 +2679,20 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				switch(attributeName) {
 					case "totalHours" : {
 						if (!ValidationUtils.validateNumber(this.packageAssignmentObject.getTotalHours(), false, 0, false, 0)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TOTAL_HOURS),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TOTAL_HOURS));
 						}
 						break;
 					}
 					case "isCustomerGrieved" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getIsCustomerGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_CUSTOMER_GRIEVED));
 						} else {
 							if (YES.equals((this.packageAssignmentObject.getIsCustomerGrieved()))) {
 								if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX));
 								}
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getCustomerRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_REMARKS));
 								}
 							}
 						}
@@ -2829,36 +2700,20 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "customerHappinessIndex" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getCustomerHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_HAPPINESS_INDEX));
 						}
 						break;
 					}
 					case "isTutorGrieved" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getIsTutorGrieved(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_IS_TUTOR_GRIEVED));
 						} else {
 							if (YES.equals((this.packageAssignmentObject.getIsTutorGrieved()))) {
 								if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX));
 								}
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getTutorRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS),
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_REMARKS));
 								}
 							}
 						}
@@ -2866,40 +2721,24 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "tutorHappinessIndex" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.packageAssignmentObject.getTutorHappinessIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_HAPPINESS_INDEX));
 						}
 						break;
 					}
 					case "adminRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.packageAssignmentObject.getAdminRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS),
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_ADMIN_REMARKS));
 						}
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2964,19 +2803,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private void handleAssignmentAttendanceInsertSecurity() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
 		} else {
 			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
 			if (!ValidationUtils.checkObjectAvailability(this.packageAssignmentObject)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID),
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+				appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID));
 			} else {
 				final Integer totalHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getTotalHours()) ? this.packageAssignmentObject.getTotalHours() : 0;
 				final Integer completedHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedHours()) ? this.packageAssignmentObject.getCompletedHours() : 0;
@@ -2984,44 +2815,24 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				final Integer hoursTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) ? this.assignmentAttendanceObject.getDurationHours() : 0;
 				final Integer minutesTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes()) ? this.assignmentAttendanceObject.getDurationMinutes() : 0;
 				if ((completedHours + hoursTaught) > totalHours) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 				}
 				if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 				}
 			}
 		}
 		if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT));
 		}
 		if (ValidationUtils.checkNonEmptyList(this.assignmentAttendanceObject.getDocuments())) {
 			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : this.assignmentAttendanceObject.getDocuments()) {
 				if (!ValidationUtils.validateFileExtension(CommonsConstants.ACCEPTABLE_FILE_EXTENSIONS_ARRAY, assignmentAttendanceDocument.getFilename())) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					handleUploadingFileExtensionError();
 					break;
 				}
 				if (!ValidationUtils.validateFileSizeInMB(assignmentAttendanceDocument.getContent(), CommonsConstants.MAXIMUM_FILE_SIZE_FOR_EMAIL_DOCUMENTS_IN_MB)) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					handleUploadingFileSizeError();
 					break;
 				}
 			}
@@ -3035,26 +2846,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				|| this.changedAttributes.contains("documents")) {
 			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
 			if (!ValidationUtils.checkObjectAvailability(this.packageAssignmentObject)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID),
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+				appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PACKAGE_ASSIGNMENT_SERIAL_ID));
 			} 
 			if (this.changedAttributes.contains("entryDateMillis") || this.changedAttributes.contains("entryTimeMillis") 
 					|| this.changedAttributes.contains("exitDateMillis") || this.changedAttributes.contains("exitTimeMillis")) {
 				if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
 				} else if (!ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) && !ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught)) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
 				} else {
 					final Integer totalHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getTotalHours()) ? this.packageAssignmentObject.getTotalHours() : 0;
 					final Integer completedHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedHours()) ? this.packageAssignmentObject.getCompletedHours() : 0;
@@ -3062,18 +2861,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					final Integer hoursTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) ? this.additionalHoursTaught : 0;
 					final Integer minutesTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught) ? this.additionalMinutesTaught : 0;
 					if ((completedHours + hoursTaught) > totalHours) {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 					}
 					if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 					}
 				}
 			}
@@ -3084,142 +2875,84 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					switch(attributeName) {
 						case "topicsTaught" : {
 							if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTopicsTaught())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, NULL_TOPICS_TAUGHT));
 							}
 							break;
 						}
 						case "isClassworkProvided" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsClassworkProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CLASSWORK_PROVIDED),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CLASSWORK_PROVIDED));
 							}
 							break;
 						}
 						case "isHomeworkProvided" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsHomeworkProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_HOMEWORK_PROVIDED),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_HOMEWORK_PROVIDED));
 							}
 							break;
 						}
 						case "isTestProvided" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getIsTestProvided(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TEST_PROVIDED),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TEST_PROVIDED));
 							}
 							break;
 						}
 						case "tutorRemarks" : {
 							if (!ValidationUtils.checkStringAvailability(this.assignmentAttendanceObject.getTutorRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_TUTOR_REMARKS),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_TUTOR_REMARKS));
 							}
 							break;
 						}
 						case "tutorPunctualityIndex" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorPunctualityIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PUNCTUALITY_INDEX),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_PUNCTUALITY_INDEX));
 							}
 							break;
 						}
 						case "punctualityRemarks" : {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getPunctualityRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_PUNCTUALITY_REMARKS),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_PUNCTUALITY_REMARKS));
 							}
 							break;
 						}
 						case "tutorExpertiseIndex" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorExpertiseIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_EXPERTISE_INDEX),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_EXPERTISE_INDEX));
 							}
 							break;
 						}
 						case "expertiseRemarks" : {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getExpertiseRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_EXPERTISE_REMARKS),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_EXPERTISE_REMARKS));
 							}
 							break;
 						}
 						case "tutorKnowledgeIndex" : {
 							if (!ValidationUtils.validateAgainstSelectLookupValues(this.assignmentAttendanceObject.getTutorKnowledgeIndex(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_HAPPINESS_INDEX_LOOKUP)) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_KNOWLEDGE_INDEX),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_KNOWLEDGE_INDEX));
 							}
 							break;
 						}
 						case "knowledgeRemarks" : {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getKnowledgeRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_KNOWLEDGE_REMARKS),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_KNOWLEDGE_REMARKS));
 							}
 							break;
 						}
 						case "studentRemarks" : {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.assignmentAttendanceObject.getStudentRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_STUDENT_REMARKS),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, BLANK_STUDENT_REMARKS));
 							}
 							break;
 						}
 						default : {
-							if (!(ValidationUtils.checkNonEmptyList(this.omittableAttributesList) && this.omittableAttributesList.contains(attributeName))) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
-							}
+							handleUnkownAttributeError(attributeName);
 							break;
 						}
 					}
 				}
 			} else {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+				handleNoAttributeChangedError();
 			}
 		}
 	}

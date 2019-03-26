@@ -1204,6 +1204,23 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return true;
 	}
 	
+	public Map<String, Boolean> getPackageAssignmentFormUpdateAndActionStatus(final PackageAssignment packageAssignment) {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", true);
+		securityAccess.put("packageAssignmentCanStartAssignment", false);
+		securityAccess.put("packageAssignmentCanReviewCompleteAssignment", false);
+		if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getStartDateMillis())) {
+			if (!ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getEndDateMillis())) {
+				securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", false);
+				securityAccess.put("packageAssignmentCanReviewCompleteAssignment", true);
+			}
+		} else {
+			securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", false);
+			securityAccess.put("packageAssignmentCanStartAssignment", true);
+		}
+		return securityAccess;
+	}
+	
 	public Map<String, Object> getAssignmentAttendanceUploadedDocumentCountAndExistence(final String assignmentAttendanceSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("assignmentAttendanceSerialId", assignmentAttendanceSerialId);
@@ -1287,6 +1304,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	}
 	
 	private String getQualifiedFilenameForAssignmentAttendanceDocument(final AssignmentAttendanceDocument assignmentAttendanceDocument) {
-		return ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType()) + "\\" + assignmentAttendanceDocument.getFilename();
+		return ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType()) + BACKWARD_SLASH + assignmentAttendanceDocument.getFilename();
 	}
 }
