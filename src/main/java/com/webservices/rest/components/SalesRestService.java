@@ -28,9 +28,9 @@ import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.constants.components.AdminConstants;
 import com.constants.components.CommonsConstants;
 import com.constants.components.CustomerConstants;
+import com.constants.components.DemoConstants;
 import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.constants.components.SelectLookupConstants;
@@ -68,6 +68,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
+	private String demoSerialId;
 	private String subscriptionPackageSerialId;
 	private String packageAssignmentSerialId;
 	private String assignmentAttendanceSerialId;
@@ -184,7 +185,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().takeActionOnEnquiry(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -351,7 +352,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().mapRegisteredTutors(Long.parseLong(parentId), Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -403,7 +404,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().unmapRegisteredTutors(Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -582,7 +583,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getEnquiryService().takeActionOnTutorMapper(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -905,7 +906,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getDemoService().takeActionOnDemo(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -938,12 +939,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_RE_SCHEDULE_DEMO;
 		createDemoReSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.demoSerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
+			this.demoObject.setDemoSerialId(this.demoSerialId);
 			getDemoService().reScheduleDemo(this.demoObject, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Re-Scheduled Demo Successfully");
@@ -965,12 +967,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_UPDATE_DEMO_RECORD;
 		createDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.demoSerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.demoObject.setDemoTrackerId(Long.parseLong(parentId));
+			this.demoObject.setDemoSerialId(this.demoSerialId);
 			getDemoService().updateDemoRecord(this.demoObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1153,7 +1156,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final String errorMessage = getSubscriptionPackageService().takeActionOnSubscriptionPackage(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
 			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			} else {
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
@@ -1239,7 +1242,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final String errorMessage = getSubscriptionPackageService().takeActionOnSubscriptionPackageAssignment(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request), true);
 			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			} else {
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, false);
 				restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, errorMessage);
@@ -1545,7 +1548,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final SubscriptionPackage subscriptionPackage = getSubscriptionPackageService().getSubscriptionPackage(this.subscriptionPackageSerialId);
-			restresponse.put(RECORD_OBJECT, subscriptionPackage);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, subscriptionPackage);
 			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getSubscriptionPackageFormUpdateAndActionStatus(subscriptionPackage), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
@@ -1570,7 +1573,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final PackageAssignment packageAssignment = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
-			restresponse.put(RECORD_OBJECT, packageAssignment);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, packageAssignment);
 			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getPackageAssignmentFormUpdateAndActionStatusAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
@@ -1593,7 +1596,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			restresponse.put(RECORD_OBJECT, getSubscriptionPackageService().getAssignmentAttendanceUploadedDocumentCountAndExistence(this.assignmentAttendanceSerialId));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, getSubscriptionPackageService().getAssignmentAttendanceUploadedDocumentCountAndExistence(this.assignmentAttendanceSerialId));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1785,12 +1788,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_RE_SCHEDULE_DEMO : {
-				handleParentId();
+				handleParentSerialId();
 				handleReScheduleDemoSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_DEMO_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleDemoSecurity();
 				break;
 			}
@@ -2268,6 +2271,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.demoObject.setTutorNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "tutorNegotiationRemarks", String.class));
 			this.demoObject.setAdminRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminRemarks", String.class));
 			this.demoObject.setAdminFinalizingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "adminFinalizingRemarks", String.class));
+			this.omittableAttributesList = Arrays.asList(new String[]{"clientRemarks", "tutorRemarks", "clientNegotiationRemarks", "tutorNegotiationRemarks"});
 		}
 	}
 	
@@ -2278,75 +2282,41 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				switch(attributeName) {
 					case "demoOccurred" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getDemoOccurred(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Demo Occurred'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_IS_DEMO_OCCURRED));
 						}
 						break;
 					}
 					case "clientSatisfiedFromTutor" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getClientSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Client Satisfied From Tutor'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_Is_CLIENT_SATISFIED_FROM_TUTOR));
 						} else {
 							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Client Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_CLIENT_REMARKS));
 								}
 							}
 						}
-						break;
-					}
-					case "clientRemarks" : {
 						break;
 					}
 					case "tutorSatisfiedWithClient" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getTutorSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Tutor Satisfied With Client'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_IS_TUTOR_SATISFIED_WITH_CLIENT));
 						} else {
 							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Tutor Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_TUTOR_REMARKS));
 								}
 							}
 						}
 						break;
 					}
-					case "tutorRemarks" : {
-						break;
-					}
 					case "adminSatisfiedFromTutor" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getAdminSatisfiedFromTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Admin Satisfied From Tutor'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_IS_ADMIN_SATISFIED_FROM_TUTOR));
 						} else {
 							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Admin Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_ADMIN_REMARKS));
 								}
 							}
 						}
@@ -2354,19 +2324,11 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "adminSatisfiedWithClient" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getAdminSatisfiedWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Admin Satisfied With Client'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_IS_ADMIN_SATISFIED_WITH_CLIENT));
 						} else {
 							if (NO.equals((this.demoObject.getClientSatisfiedFromTutor()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Admin Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_ADMIN_REMARKS));
 								}
 							}
 						}
@@ -2374,29 +2336,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "isDemoSuccess" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getIsDemoSuccess(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Is Admin Satisfied With Client'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_IS_ADMIN_SATISFIED_WITH_CLIENT));
 						}
 						break;
 					}
 					case "needPriceNegotiationWithClient" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getNeedPriceNegotiationWithClient(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Need Price Negotiation With Client'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_NEED_PRICE_NEGOTIATION_WITH_CLIENT));
 						} else {
 							if (YES.equals((this.demoObject.getNeedPriceNegotiationWithClient()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientNegotiationRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Client Negotiation Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_CLIENT_NEGOTIATION_REMARKS));
 								}
 							}
 						}
@@ -2404,40 +2354,21 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "negotiatedOverrideRateWithClient" : {
 						if (!ValidationUtils.validateNumber(this.demoObject.getNegotiatedOverrideRateWithClient(), false, 0, false, 0)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please enter a valid 'Negotiated Override Rate With Client'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_NEGOTIATED_OVERRIDE_RATE_WITH_CLIENT));
 						} else {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getClientNegotiationRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										"Please provide 'Client Negotiation Remarks'",
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_CLIENT_NEGOTIATION_REMARKS));
 							}
 						}
 						break;
 					}
-					case "clientNegotiationRemarks" : {
-						break;
-					}
 					case "needPriceNegotiationWithTutor" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.demoObject.getNeedPriceNegotiationWithTutor(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please select a valid 'Need Price Negotiation With Tutor'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_NEED_PRICE_NEGOTIATION_WITH_TUTOR));
 						} else {
 							if (YES.equals((this.demoObject.getNeedPriceNegotiationWithClient()))) {
 								if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorNegotiationRemarks())) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											"Please provide 'Tutor Negotiation Remarks'",
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
+									appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_TUTOR_NEGOTIATION_REMARKS));
 								}
 							}
 						}
@@ -2445,42 +2376,23 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					}
 					case "negotiatedOverrideRateWithTutor" : {
 						if (!ValidationUtils.validateNumber(this.demoObject.getNegotiatedOverrideRateWithTutor(), false, 0, false, 0)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please enter a valid 'Negotiated Override Rate With Tutor'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_NEGOTIATED_OVERRIDE_RATE_WITH_TUTOR));
 						} else {
 							if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getTutorNegotiationRemarks())) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										"Please provide 'Tutor Negotiation Remarks'",
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_TUTOR_NEGOTIATION_REMARKS));
 							}
 						}
 						break;
 					}
-					case "tutorNegotiationRemarks" : {
-						break;
-					}
 					case "adminRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please provide 'Admin Remarks'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_ADMIN_REMARKS));
 						}
 						break;
 					}
 					case "adminFinalizingRemarks" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.demoObject.getAdminFinalizingRemarks())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									"Please provide 'Admin Finalizing Remarks'",
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DemoConstants.INVALID_ADMIN_FINALIZING_REMARKS));
 						}
 						break;
 					}
@@ -2498,33 +2410,21 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private void handleSelectedCustomerDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					CustomerConstants.VALIDATION_MESSAGE_CUSTOMER_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(CustomerConstants.MESG_PROPERTY_FILE_NAME, CustomerConstants.INVALID_CUSTOMER_SERIAL_ID));
 		}
 	} 
 	
 	private void handleSelectedEnquiryDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.enquiryId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					EnquiryConstants.VALIDATION_MESSAGE_ENQUIRY_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EnquiryConstants.ENQUIRY_ENQUIRY_ID_ABSENT));
 		}
 	} 
 	
 	private void handleSelectedTutorDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					TutorConstants.VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(TutorConstants.MESG_PROPERTY_FILE_NAME, TutorConstants.INVALID_TUTOR_SERIAL_ID));
 		}
 	} 
 	

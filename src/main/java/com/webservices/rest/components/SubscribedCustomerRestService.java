@@ -22,6 +22,7 @@ import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.CommonsConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
@@ -182,11 +183,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	private void handleSelectedCustomerDataGridView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_CUSTOMER_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_SERIAL_ID));
 		}
 	} 
 	
@@ -230,11 +227,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 							// Check contact number in system
 							final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(this.subscribedCustomerObject.getContactNumber());
 							if (null != subscribedCustomerInDatabaseWithContactNumber) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(AdminConstants.MESG_PROPERTY_FILE_NAME, AdminConstants.FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM));
 							}
 						}
 						break;
@@ -250,11 +243,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 							// Check email Id in system
 							final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(this.subscribedCustomerObject.getEmailId());
 							if (null != subscribedCustomerInDatabaseWithEmailId) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(AdminConstants.MESG_PROPERTY_FILE_NAME, AdminConstants.FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM));
 							} 
 						}
 						break;

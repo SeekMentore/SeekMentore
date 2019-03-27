@@ -10,7 +10,7 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
-	private Long demoTrackerId;
+	private String demoSerialId;
 	private Long tutorMapperId;
 	private Long demoDateAndTimeMillis;
 	private String demoOccurred;
@@ -66,14 +66,14 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 	
 	public Demo() {}
 	
-	public Long getDemoTrackerId() {
-		return demoTrackerId;
+	public String getDemoSerialId() {
+		return demoSerialId;
 	}
 
-	public void setDemoTrackerId(Long demoTrackerId) {
-		this.demoTrackerId = demoTrackerId;
+	public void setDemoSerialId(String demoSerialId) {
+		this.demoSerialId = demoSerialId;
 	}
-
+	
 	public Long getTutorMapperId() {
 		return tutorMapperId;
 	}
@@ -505,7 +505,7 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "demoTrackerId" : return "DEMO_TRACKER_ID";
+			case "demoSerialId" : return "DEMO_SERIAL_ID";
 			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
 			case "demoDateAndTimeMillis" : return "DEMO_DATE_AND_TIME_MILLIS";
 			case "demoOccurred" : return "DEMO_OCCURRED";

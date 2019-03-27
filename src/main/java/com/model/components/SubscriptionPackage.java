@@ -35,7 +35,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private Integer enquiryQuotedClientRate ;
 	private Integer enquiryNegotiatedRateWithClient;
 	private String enquiryClientNegotiationRemarks;
-	private Long demoId;
+	private String demoSerialId;
 	private String demoClientRemarks;
 	private String demoTutorRemarks;
 	private String demoClientSatisfiedFromTutor;
@@ -214,12 +214,12 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.tutorName = tutorName;
 	}
 	
-	public Long getDemoId() {
-		return demoId;
+	public String getDemoSerialId() {
+		return demoSerialId;
 	}
 
-	public void setDemoId(Long demoId) {
-		this.demoId = demoId;
+	public void setDemoSerialId(String demoSerialId) {
+		this.demoSerialId = demoSerialId;
 	}
 
 	public Long getTutorMapperId() {
@@ -638,7 +638,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
 			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
-			case "demoId" : return "DEMO_ID";
+			case "demoSerialId" : return "DEMO_SERIAL_ID";
 			case "demoClientRemarks" : return "DEMO_CLIENT_REMARKS";
 			case "demoTutorRemarks" : return "DEMO_TUTOR_REMARKS";
 			case "demoClientSatisfiedFromTutor" : return "DEMO_CLIENT_SATISFIED_FROM_TUTOR";

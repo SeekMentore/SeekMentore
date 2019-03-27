@@ -131,7 +131,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().blacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -155,7 +155,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getTutorService().unBlacklistRegisteredTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -243,7 +243,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getCustomerService().blacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -267,7 +267,7 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getCustomerService().unBlacklistSubscribedCustomerList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);

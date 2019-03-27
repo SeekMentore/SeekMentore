@@ -225,7 +225,15 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected void handleUploadingFileSizeError() {
 		ApplicationUtils.appendMessageInMapAttribute(
 				this.securityFailureResponse, 
-				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE),
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE, new Object[] {CommonsConstants.MAXIMUM_FILE_SIZE_FOR_EMAIL_DOCUMENTS_IN_MB.toString()}),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
+	protected void handleUploadingFileSizeError(final String maximumFileSizeInMB) {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE, new Object[] {maximumFileSizeInMB}),
 				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		this.securityPassed = false;
 	}
@@ -233,7 +241,15 @@ public abstract class AbstractRestWebservice extends AbstractWebservice implemen
 	protected void handleUploadingFileExtensionError() {
 		ApplicationUtils.appendMessageInMapAttribute(
 				this.securityFailureResponse, 
-				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION),
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION, new Object[] {CommonsConstants.ACCEPTABLE_FILE_EXTENSIONS}),
+				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
+		this.securityPassed = false;
+	}
+	
+	protected void handleUploadingFileExtensionError(final String permittedExtensionsString) {
+		ApplicationUtils.appendMessageInMapAttribute(
+				this.securityFailureResponse, 
+				Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION, new Object[] {permittedExtensionsString}),
 				RESPONSE_MAP_ATTRIBUTE_MESSAGE);
 		this.securityPassed = false;
 	}

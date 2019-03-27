@@ -40,11 +40,11 @@
 	<query type="filter" id="demoDemoStatusFilter">
 		WHERE D.DEMO_STATUS = :demoStatus
 	</query>
-	<query type="filter" id="demoDemoTrackerIdFilter">
-		WHERE D.DEMO_TRACKER_ID = :demoTrackerId
+	<query type="filter" id="demoDemoSerialIdFilter">
+		WHERE D.DEMO_SERIAL_ID = :demoSerialId
 	</query>
-	<query type="filter" id="demoDemoTrackerIdListFilter">
-		WHERE D.DEMO_TRACKER_ID IN (:demoTrackerIdList)
+	<query type="filter" id="demoDemoSerialIdListFilter">
+		WHERE D.DEMO_SERIAL_ID IN (:demoSerialIdList)
 	</query>
 	<query type="filter" id="demoCurrentTutorAdditionalFilter">
 		 AND TM.TUTOR_ID = :tutorId
@@ -66,15 +66,15 @@
 	</query>
 	<query type="insert" id="insertDemo" paramClass="com.model.components.Demo">
 		INSERT INTO DEMO
-			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
+			(DEMO_SERIAL_ID, TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS) 
 		VALUES
-			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis)
+			(:demoSerialId, :tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis)
 	</query>
 	<query type="insert" id="insertReScheduledDemo" paramClass="com.model.components.Demo">
 		INSERT INTO DEMO
-			(TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT) 
+			(DEMO_SERIAL_ID, TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT) 
 		VALUES
-			(:tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount)
+			(:demoSerialId, :tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount)
 	</query>
 	<query type="update" id="updateDemoStatus" paramClass="com.model.components.Demo">
 		UPDATE DEMO SET
@@ -82,7 +82,7 @@
 			WHO_ACTED = :whoActed, 
 			ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis, 
 			ADMIN_FINALIZING_REMARKS = :adminFinalizingRemarks 
-		WHERE DEMO_TRACKER_ID = :demoTrackerId
+		WHERE DEMO_SERIAL_ID = :demoSerialId
 	</query>
 	<query type="update" id="updateDemoSubscriptionCreated" paramClass="com.model.components.Demo">
 		UPDATE DEMO SET
@@ -90,7 +90,7 @@
 			SUBSCRIPTION_CREATED_MILLIS = :subscriptionCreatedMillis,
 			IS_ENQUIRY_CLOSED = :isEnquiryClosed, 
 			ENQUIRY_CLOSED_MILLIS = :enquiryClosedMillis
-		 WHERE DEMO_TRACKER_ID = :demoTrackerId
+		 WHERE DEMO_SERIAL_ID = :demoSerialId
 	</query>
 	<query type="update" id="updateDemoEnquiryClosedForEnquiryMatchStatusList">
 		UPDATE DEMO SET

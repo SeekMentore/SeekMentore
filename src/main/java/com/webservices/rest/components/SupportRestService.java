@@ -25,8 +25,6 @@ import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.constants.components.AdminConstants;
-import com.constants.components.CommonsConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.SupportConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
@@ -359,7 +357,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistBecomeTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -383,7 +381,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistBecomeTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -409,7 +407,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnBecomeTutor(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -709,7 +707,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistFindTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -733,7 +731,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistFindTutorList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -759,7 +757,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnFindTutor(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1041,7 +1039,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().blacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1065,7 +1063,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().unBlacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1091,7 +1089,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1263,7 +1261,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubmitQuery(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1470,7 +1468,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, AdminConstants.ACTION_SUCCESSFUL);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1614,25 +1612,18 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	public void handleTentativeTutorId() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.tentativeTutorId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_TENTATIVE_TUTOR_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, VALIDATION_MESSAGE_BECOME_TUTOR_SERIAL_ID_ABSENT));
 		}
 	}
 	
 	public void handleEnquiryId() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.enquiryId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					AdminConstants.VALIDATION_MESSAGE_ENQUIRY_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, VALIDATION_MESSAGE_FIND_TUTOR_SERIAL_ID_ABSENT));
 		}
 	}
 	
+	@Override
 	public void handleTakeAction() throws Exception {
 		this.securityPassed = true;
 		super.handleTakeAction();
@@ -1654,12 +1645,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 					break;
 				}
 				default : {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_BUTTON_UNKNOWN, new Object[] {this.button}),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
-					break;
+					handleUnknownButtonError();
 				}
 			}
 		}
@@ -1888,21 +1874,13 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2042,21 +2020,13 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	
@@ -2207,21 +2177,13 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 	

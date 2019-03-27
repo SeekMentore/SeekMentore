@@ -29,6 +29,7 @@ import com.utils.ApplicationUtils;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
 import com.utils.MailUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 
@@ -103,7 +104,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public Long insertScheduledDemo (
+	public String insertScheduledDemo (
 			final Long tutorMapperId, 
 			final Long demoDateAndTimeMillis, 
 			final User activeUser, 
@@ -114,6 +115,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 	) throws Exception {
 		final Date currentTimestamp = new Date();
 		final Demo demo = new Demo();
+		demo.setDemoSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		demo.setTutorMapperId(tutorMapperId);
 		demo.setDemoDateAndTimeMillis(demoDateAndTimeMillis);
 		demo.setDemoStatus(DEMO_STATUS_SCHEDULED);
@@ -126,15 +128,15 @@ public class DemoService implements DemoConstants, SalesConstants {
 			demo.setReScheduleCount(reScheduleCount + 1);
 			insertQueryId = "insertReScheduledDemo";
 		}
-		final Long demoTrackerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", insertQueryId, demo);
+		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", insertQueryId, demo);
 		if (sendEmails) {
-			sendDemoScheduledNotificationEmails(demoTrackerId);
+			sendDemoScheduledNotificationEmails(demo.getDemoSerialId());
 		}
-		return demoTrackerId;
+		return demo.getDemoSerialId();
 	}
 	
-	public void sendDemoScheduledNotificationEmails(final Long demoTrackerId) throws Exception {
-		final Demo demo = getDemo(demoTrackerId);
+	public void sendDemoScheduledNotificationEmails(final String demoSerialId) throws Exception {
+		final Demo demo = getDemo(demoSerialId);
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("demo", demo);
@@ -155,32 +157,32 @@ public class DemoService implements DemoConstants, SalesConstants {
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
-	public Demo getDemo(final Long demoTrackerId) throws Exception {
+	public Demo getDemo(final String demoSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("demoTrackerId", demoTrackerId);
+		paramsMap.put("demoSerialId", demoSerialId);
 		return applicationDao.find(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
-									+ queryMapperService.getQuerySQL("sales-demo", "demoDemoTrackerIdFilter"), paramsMap, new DemoRowMapper());
+									+ queryMapperService.getQuerySQL("sales-demo", "demoDemoSerialIdFilter"), paramsMap, new DemoRowMapper());
 	}
 	
-	public List<Demo> getDemoList(final List<?> demoTrackerIdList) throws Exception {
+	public List<Demo> getDemoList(final List<?> demoSerialIdList) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("demoTrackerIdList", demoTrackerIdList);
+		paramsMap.put("demoSerialIdList", demoSerialIdList);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
-										+ queryMapperService.getQuerySQL("sales-demo", "demoDemoTrackerIdListFilter"), paramsMap, new DemoRowMapper());
+										+ queryMapperService.getQuerySQL("sales-demo", "demoDemoSerialIdListFilter"), paramsMap, new DemoRowMapper());
 	}
 	
 	@Transactional
 	public void reScheduleDemo(final Demo demoObject, final User activeUser) throws Exception {
 		final List<String> idList = new ArrayList<String>();
-		idList.add(String.valueOf(demoObject.getDemoTrackerId()));
+		idList.add(demoObject.getDemoSerialId());
 		takeActionOnDemo(BUTTON_ACTION_CANCEL, idList, "Re-scheduling demo", activeUser, false);
-		final Long newDemoTrackerId = insertScheduledDemo(demoObject.getTutorMapperId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demoObject.getReScheduleCount());
-		sendDemoReScheduledNotificationEmails(demoObject.getDemoTrackerId(), newDemoTrackerId);
+		final String newDemoSerialId = insertScheduledDemo(demoObject.getTutorMapperId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demoObject.getReScheduleCount());
+		sendDemoReScheduledNotificationEmails(demoObject.getDemoSerialId(), newDemoSerialId);
 	}
 	
-	public void sendDemoReScheduledNotificationEmails(final Long oldDemoTrackerId, final Long newDemoTrackerId) throws Exception {
-		final Demo oldDemo = getDemo(oldDemoTrackerId);
-		final Demo newDemo = getDemo(newDemoTrackerId);
+	public void sendDemoReScheduledNotificationEmails(final String oldDemoSerialId, final String newDemoSerialId) throws Exception {
+		final Demo oldDemo = getDemo(oldDemoSerialId);
+		final Demo newDemo = getDemo(newDemoSerialId);
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("oldDemo", oldDemo);
@@ -213,13 +215,13 @@ public class DemoService implements DemoConstants, SalesConstants {
 			}
 		}
 		final List<Demo> paramObjectList = new LinkedList<Demo>();
-		for (final String demoTrackerId : idList) {
+		for (final String demoSerialId : idList) {
 			final Demo demo = new Demo();
 			demo.setWhoActed(activeUser.getUserId());
 			demo.setAdminFinalizingRemarks(comments);
 			demo.setDemoStatus(demoStatus);
 			demo.setAdminActionDateMillis(currentTimestamp.getTime());
-			demo.setDemoTrackerId(Long.valueOf(demoTrackerId));
+			demo.setDemoSerialId(demoSerialId);
 			paramObjectList.add(demo);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoStatus", paramObjectList);
@@ -260,8 +262,8 @@ public class DemoService implements DemoConstants, SalesConstants {
 		}
 	}
 	
-	public void sendDemoSuccessNotificationEmails(final Long demoTrackerId) throws Exception {
-		final Demo demo = getDemo(demoTrackerId);
+	public void sendDemoSuccessNotificationEmails(final String demoSerialId) throws Exception {
+		final Demo demo = getDemo(demoSerialId);
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("demo", demo);
@@ -282,8 +284,8 @@ public class DemoService implements DemoConstants, SalesConstants {
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
-	public void sendDemoFailedNotificationEmails(final Long demoTrackerId) throws Exception {
-		final Demo demo = getDemo(demoTrackerId);
+	public void sendDemoFailedNotificationEmails(final String demoSerialId) throws Exception {
+		final Demo demo = getDemo(demoSerialId);
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("demo", demo);
 		// Sales Team Email
@@ -300,7 +302,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) throws Exception {
 		final String baseQuery = "UPDATE DEMO SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE DEMO_TRACKER_ID = :demoTrackerId";
+		final String existingFilterQueryString = "WHERE DEMO_TRACKER_ID = :demoSerialId";
 		Boolean demoSuccessFailureResponseArrived = false;
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
@@ -396,7 +398,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				}
 			}
 		}
-		paramsMap.put("demoTrackerId", demoObject.getDemoTrackerId());
+		paramsMap.put("demoSerialId", demoObject.getDemoSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
@@ -405,9 +407,9 @@ public class DemoService implements DemoConstants, SalesConstants {
 			applicationDao.executeUpdate(completeQuery, paramsMap);
 			if (demoSuccessFailureResponseArrived) {
 				if (YES.equals(demoObject.getIsDemoSuccess())) {
-					sendDemoSuccessNotificationEmails(demoObject.getDemoTrackerId());
+					sendDemoSuccessNotificationEmails(demoObject.getDemoSerialId());
 				} else {
-					sendDemoFailedNotificationEmails(demoObject.getDemoTrackerId());
+					sendDemoFailedNotificationEmails(demoObject.getDemoSerialId());
 				}
 			}
 		}

@@ -30,7 +30,7 @@ import com.constants.FileConstants;
 import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
-import com.constants.components.CommonsConstants;
+import com.constants.components.AdminConstants;
 import com.constants.components.SelectLookupConstants;
 import com.constants.components.TutorConstants;
 import com.constants.components.publicaccess.BecomeTutorConstants;
@@ -523,22 +523,14 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	private void handleSelectedTutorDataView() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_SERIAL_ID));
 		}
 	}
 	
 	private void handleBankDetailModification() throws Exception {
 		this.securityPassed = true;
 		if (!ValidationUtils.checkObjectAvailability(this.bankAccountId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					VALIDATION_MESSAGE_TUTOR_ID_ABSENT,
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_SERIAL_ID));	
 		}
 	}
 	
@@ -590,11 +582,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 							final RegisteredTutor registeredTutorInDatabaseWithContactNumber = getTutorService().getRegisteredTutorInDatabaseWithContactNumber(this.registeredTutorObject.getContactNumber());
 							final BecomeTutor becomeTutorApplicationInDatabaseWithContactNumber = getAdminService().getBecomeTutorApplicationInDatabaseWithContactNumber(this.registeredTutorObject.getContactNumber());
 							if (null != registeredTutorInDatabaseWithContactNumber || null != becomeTutorApplicationInDatabaseWithContactNumber) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM,
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(AdminConstants.MESG_PROPERTY_FILE_NAME, AdminConstants.FAILURE_MESSAGE_THIS_CONTACT_NUMBER_ALREADY_EXISTS_IN_THE_SYSTEM));
 							}
 						}
 						break;
@@ -611,11 +599,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 							final RegisteredTutor registeredTutorInDatabaseWithEmailId = getTutorService().getRegisteredTutorInDatabaseWithEmailId(this.registeredTutorObject.getEmailId());
 							final BecomeTutor becomeTutorApplicationInDatabaseWithEmailId = getAdminService().getBecomeTutorApplicationInDatabaseWithEmailId(this.registeredTutorObject.getEmailId());
 							if (null != registeredTutorInDatabaseWithEmailId || null != becomeTutorApplicationInDatabaseWithEmailId) {
-								ApplicationUtils.appendMessageInMapAttribute(
-										this.securityFailureResponse, 
-										FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM,
-										RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-								this.securityPassed = false;
+								appendError(Message.getMessageFromFile(AdminConstants.MESG_PROPERTY_FILE_NAME, AdminConstants.FAILURE_MESSAGE_THIS_EMAIL_ID_ALREADY_EXISTS_IN_THE_SYSTEM));
 							} 
 						}
 						break;
@@ -741,41 +725,23 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 										|| FileConstants.EXTENSION_JPEG.equalsIgnoreCase(fileExtension)
 										|| FileConstants.EXTENSION_JPG.equalsIgnoreCase(fileExtension)
 										|| FileConstants.EXTENSION_PNG.equalsIgnoreCase(fileExtension))) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											VALIDATION_MESSAGE_INVALID_FILE_TYPE_FOR_DOCUMENTS,
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
-									break;
+									handleUploadingFileExtensionError(VALID_FILE_TYPE_FOR_DOCUMENTS);
 								}
 								if (ApplicationUtils.computeFileSizeInMB((long)document.getContent().length) > MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB) {
-									ApplicationUtils.appendMessageInMapAttribute(
-											this.securityFailureResponse, 
-											VALIDATION_MESSAGE_INVALID_FILE_SIZE_FOR_DOCUMENTS,
-											RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-									this.securityPassed = false;
-									break;
+									handleUploadingFileSizeError(MAXIMUM_VALID_FILE_SIZE_FOR_DOCUMENTS_IN_MB.toString());
 								}
 							}
 						}
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 }

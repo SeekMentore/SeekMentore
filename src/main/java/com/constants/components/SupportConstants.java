@@ -4,6 +4,8 @@ import com.constants.VelocityConstants;
 
 public interface SupportConstants extends ResponseMapConstants {
 	
+	String MESG_PROPERTY_FILE_NAME = "spring.components.support";
+	
 	String VELOCITY_PDF_TEMPLATES_SUPPORT_FOLDER_PATH = VelocityConstants.VELOCITY_PDF_TEMPLATES_FOLDER_PATH + "/support";
 	// Tutor Registration Admin
 	String VELOCITY_PDF_TEMPLATES_BECOME_TUTOR_PATH = VELOCITY_PDF_TEMPLATES_SUPPORT_FOLDER_PATH + "/becometutor";
@@ -28,4 +30,8 @@ public interface SupportConstants extends ResponseMapConstants {
 	String BUTTON_ACTION_PUT_ON_HOLD = "hold";
 	
 	String EXTRA_PARAM_SELECTED_GRID = "grid";
+	
+	// Message Constants
+	String VALIDATION_MESSAGE_BECOME_TUTOR_SERIAL_ID_ABSENT = "VALIDATION_MESSAGE_BECOME_TUTOR_SERIAL_ID_ABSENT";
+	String VALIDATION_MESSAGE_FIND_TUTOR_SERIAL_ID_ABSENT = "VALIDATION_MESSAGE_FIND_TUTOR_SERIAL_ID_ABSENT";
 }

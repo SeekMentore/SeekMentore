@@ -41,7 +41,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
 		subscriptionPackage.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));
 		subscriptionPackage.setEnquiryClientNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryClientNegotiationRemarks"), String.class));
-		subscriptionPackage.setDemoId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("demoId"), Long.class));
+		subscriptionPackage.setDemoSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("demoSerialId"), String.class));
 		subscriptionPackage.setDemoClientRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("demoClientRemarks"), String.class));
 		subscriptionPackage.setDemoTutorRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("demoTutorRemarks"), String.class));
 		subscriptionPackage.setDemoClientSatisfiedFromTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("demoClientSatisfiedFromTutor"), String.class));
