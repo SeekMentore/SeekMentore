@@ -1530,6 +1530,31 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
+	@Path(REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getSubscriptionPackageRecord (
+			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD;
+		this.parentSerialId = parentId;
+		this.subscriptionPackageSerialId = parentId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final SubscriptionPackage subscriptionPackage = getSubscriptionPackageService().getSubscriptionPackage(this.subscriptionPackageSerialId);
+			restresponse.put(RECORD_OBJECT, subscriptionPackage);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getSubscriptionPackageFormUpdateAndActionStatus(subscriptionPackage), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path(REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
@@ -1546,8 +1571,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final PackageAssignment packageAssignment = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
 			restresponse.put(RECORD_OBJECT, packageAssignment);
-			restresponse.put("assignmentMarkAndUpdateAttendanceFormEditDisbaled", getSubscriptionPackageService().getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment));
-			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getPackageAssignmentFormUpdateAndActionStatus(packageAssignment), restresponse);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getSubscriptionPackageService().getPackageAssignmentFormUpdateAndActionStatusAssignmentMarkAndUpdateAttendanceFormDisabledStatus(packageAssignment), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1799,7 +1823,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				handleAssignmentAttendanceUpdateSecurity();
 				break;
 			}
-			case REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD : {
+			case REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD : 
+			case REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD : {
 				handleParentSerialId();
 				break;
 			}
@@ -2548,6 +2573,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.subscriptionPackageObject.setAdditionalDetailsTutor(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetailsTutor", String.class));
 			this.subscriptionPackageObject.setActivatingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "activatingRemarks", String.class));
 			this.subscriptionPackageObject.setTerminatingRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "terminatingRemarks", String.class));
+			this.omittableAttributesList = Arrays.asList(new String[]{"customerRemarks", "tutorRemarks"});
 		}
 	}
 	

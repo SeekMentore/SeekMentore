@@ -126,6 +126,35 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscriptionPackageRowMapper());
 	}
 	
+	public SubscriptionPackage getSubscriptionPackage(final String subscriptionPackageSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("subscriptionPackageSerialId", subscriptionPackageSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage")
+												+ queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageSubscriptionPackageIdFilter"), paramsMap, new SubscriptionPackageRowMapper());
+	}
+	
+	public Map<String, Boolean> getSubscriptionPackageFormUpdateAndActionStatus(final SubscriptionPackage subscriptionPackage) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("subscriptionPackageFormEditMandatoryDisbaled", true);
+		securityAccess.put("subscriptionPackageCanActivateSubscription", false);
+		securityAccess.put("subscriptionPackageCanTerminateSubscription", false);
+		securityAccess.put("subscriptionPackageCanCreateAssignment", false);
+		if (!ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getEndDateMillis())) {
+			securityAccess.put("subscriptionPackageFormEditMandatoryDisbaled", false);
+			if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getStartDateMillis())) {
+				final Boolean canCreateAssignment = checkIfPackageAssignmentCouldBeCreatedForSubscriptionPackage(subscriptionPackage.getSubscriptionPackageSerialId());
+				securityAccess.put("subscriptionPackageCanCreateAssignment", canCreateAssignment);
+				if (canCreateAssignment) {
+					securityAccess.put("subscriptionPackageCanTerminateSubscription", true);
+				}
+			} else {
+				securityAccess.put("subscriptionPackageCanActivateSubscription", true);
+				securityAccess.put("subscriptionPackageCanTerminateSubscription", true);
+			}
+		}
+		return securityAccess;
+	}
+	
 	public List<PackageAssignment> getSelectedSubscriptionPackageAssignmentList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectPackageAssignment");
@@ -301,15 +330,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_NOT_ACTIVE)).append(NEW_LINE).append(LINE_BREAK);
 						canTakeAction = false;
 					} else {
-						paramsMap.put("subscriptionPackageSerialId", subscriptionPackage.getSubscriptionPackageSerialId());
-						Integer activePackageAssignment = 0;
-						final Map<String, Object> countActivePackageAssignment = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "countActivePackageAssignmentForSubscriptionPackage"), paramsMap);
-						if (ValidationUtils.checkObjectAvailability(countActivePackageAssignment) && ValidationUtils.checkObjectAvailability(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS"))) {
-							activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
-						}
-						if (activePackageAssignment > 0) {
+						canTakeAction = checkIfPackageAssignmentCouldBeCreatedForSubscriptionPackage(subscriptionPackage.getSubscriptionPackageSerialId());
+						if (!canTakeAction) {
 							messageDesc.append(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SUBSCRIPTION_HAS_RUNNING_ASSIGNMENT)).append(NEW_LINE).append(LINE_BREAK);
-							canTakeAction = false;
 						}
 					}
 					if (canTakeAction) {
@@ -385,6 +408,20 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			message = new StringBuilder("'"+ failureCount +"' Subscription Packages failed").append(NEW_LINE).append(LINE_BREAK).append(errorMessage);
 		}
 		return message.toString();
+	}
+	
+	private Boolean checkIfPackageAssignmentCouldBeCreatedForSubscriptionPackage(final String subscriptionPackageSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>(); 
+		paramsMap.put("subscriptionPackageSerialId", subscriptionPackageSerialId);
+		Integer activePackageAssignment = 0;
+		final Map<String, Object> countActivePackageAssignment = applicationDao.find(queryMapperService.getQuerySQL("sales-subscriptionpackage", "countActivePackageAssignmentForSubscriptionPackage"), paramsMap);
+		if (ValidationUtils.checkObjectAvailability(countActivePackageAssignment) && ValidationUtils.checkObjectAvailability(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS"))) {
+			activePackageAssignment = Integer.valueOf(countActivePackageAssignment.get("TOTAL_CURRENT_ASSIGNMENTS").toString());
+		}
+		if (activePackageAssignment > 0) {
+			return false;
+		}
+		return true;
 	}
 	
 	private void saveContractPDFInFileSystem(final List<SubscriptionPackage> subscriptionPackageList) throws Exception {
@@ -1195,28 +1232,22 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return workbookRecords;
 	}
 
-	public Boolean getAssignmentMarkAndUpdateAttendanceFormDisabledStatus(final PackageAssignment packageAssignment) {
-		if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getStartDateMillis()) 
-				&& !ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getEndDateMillis())
-				&& packageAssignment.getCompletedHours() < packageAssignment.getTotalHours()) {
-			return false;
-		}
-		return true;
-	}
-	
-	public Map<String, Boolean> getPackageAssignmentFormUpdateAndActionStatus(final PackageAssignment packageAssignment) {
+	public Map<String, Boolean> getPackageAssignmentFormUpdateAndActionStatusAssignmentMarkAndUpdateAttendanceFormDisabledStatus(final PackageAssignment packageAssignment) {
 		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("assignmentMarkAndUpdateAttendanceFormEditDisbaled", true);
 		securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", true);
 		securityAccess.put("packageAssignmentCanStartAssignment", false);
 		securityAccess.put("packageAssignmentCanReviewCompleteAssignment", false);
-		if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getStartDateMillis())) {
-			if (!ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getEndDateMillis())) {
-				securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", false);
-				securityAccess.put("packageAssignmentCanReviewCompleteAssignment", true);
-			}
-		} else {
+		if (!ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getEndDateMillis())) {
 			securityAccess.put("packageAssignmentFormEditMandatoryDisbaled", false);
-			securityAccess.put("packageAssignmentCanStartAssignment", true);
+			securityAccess.put("packageAssignmentCanReviewCompleteAssignment", true);
+			if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getStartDateMillis())) {
+				if (packageAssignment.getCompletedHours() < packageAssignment.getTotalHours()) {
+					securityAccess.put("assignmentMarkAndUpdateAttendanceFormEditDisbaled", false);
+				}
+			} else {
+				securityAccess.put("packageAssignmentCanStartAssignment", true);
+			}
 		}
 		return securityAccess;
 	}

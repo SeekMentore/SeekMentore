@@ -16,7 +16,16 @@ public class UUIDGeneratorUtils implements ApplicationConstants {
 	}
 	
 	public static String generateSerialGUID() {
-		return String.valueOf(generateRandomUUID()).toUpperCase();
+		final StringBuilder serialId = new StringBuilder(EMPTY_STRING);
+		final String uid = String.valueOf(generateRandomUUID()).toUpperCase();
+		final String[] uidSections = uid.split(DASH);
+		for (final String uidSection : uidSections) {
+			serialId.append(String.valueOf(uidSection.charAt(ThreadLocalRandom.current().nextInt(0, uidSection.length()))));
+			if (uidSection.length() > 4) {
+				serialId.append(String.valueOf(uidSection.charAt(ThreadLocalRandom.current().nextInt(0, uidSection.length()))));
+			}
+		}
+		return String.valueOf(serialId);
 	}
 	
 	public static String generateFilenameAppendedUID() {
@@ -28,12 +37,4 @@ public class UUIDGeneratorUtils implements ApplicationConstants {
 		Integer endIndex = ThreadLocalRandom.current().nextInt(startIndex + minimumDistanceApart, max + 1);
 		return uid.substring(startIndex, endIndex);
 	}
-	
-	/*public static void main(String args[]) {
-		final String fsKey = "secured/contracts/customer/subscriptionpackage/8B4EB26D-9E94-417F-835D-267B97F98766/Contract.pdf";
-		final String folderNameWithPathFromRootFolder = fsKey.substring(0, fsKey.lastIndexOf(FORWARD_SLASH));
-		final String filename = fsKey.substring(fsKey.lastIndexOf(FORWARD_SLASH) + 1);
-		System.out.println(folderNameWithPathFromRootFolder);
-		System.out.println(filename);
-	}*/
 }
