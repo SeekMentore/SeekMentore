@@ -41,7 +41,7 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = S.UPDATED_BY), S.UPDATED_BY) AS UPDATED_BY_NAME 
 		FROM SUBSCRIPTION_PACKAGE S
 		INNER JOIN DEMO D ON S.DEMO_SERIAL_ID = D.DEMO_SERIAL_ID
-		INNER JOIN TUTOR_MAPPER TM ON S.TUTOR_MAPPER_ID = TM.TUTOR_MAPPER_ID
+		INNER JOIN TUTOR_MAPPER TM ON S.TUTOR_MAPPER_SERIAL_ID = TM.TUTOR_MAPPER_SERIAL_ID
 		INNER JOIN ENQUIRY EN ON S.ENQUIRY_ID = EN.ENQUIRY_ID 
 		INNER JOIN REGISTERED_TUTOR T ON S.TUTOR_ID = T.TUTOR_ID
 		INNER JOIN REGISTERED_TUTOR_EMAIL_ID RTE ON S.TUTOR_ID = RTE.TUTOR_ID AND RTE.IS_PRIMARY = 'Y'
@@ -79,9 +79,9 @@
 	</query>
 	<query type="insert" id="insertSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
 		INSERT INTO SUBSCRIPTION_PACKAGE
-			(SUBSCRIPTION_PACKAGE_SERIAL_ID, CUSTOMER_ID, TUTOR_ID, ENQUIRY_ID, TUTOR_MAPPER_ID, DEMO_SERIAL_ID, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+			(SUBSCRIPTION_PACKAGE_SERIAL_ID, CUSTOMER_ID, TUTOR_ID, ENQUIRY_ID, TUTOR_MAPPER_SERIAL_ID, DEMO_SERIAL_ID, CREATED_MILLIS, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
 		VALUES
-			(:subscriptionPackageSerialId, :customerId, :tutorId, :enquiryId, :tutorMapperId, :demoSerialId, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
+			(:subscriptionPackageSerialId, :customerId, :tutorId, :enquiryId, :tutorMapperSerialId, :demoSerialId, :createdMillis, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 	<query type="update" id="activateSubscriptionPackage" paramClass="com.model.components.SubscriptionPackage">
 		UPDATE SUBSCRIPTION_PACKAGE SET

@@ -323,9 +323,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	@Transactional
 	public void unmapRegisteredTutors(final List<String> idList, final User activeUser) throws Exception {
 		final List<TutorMapper> tutorMapperList = new LinkedList<TutorMapper>();
-		for (final String tutorMapperId : idList) {
+		for (final String tutorMapperSerialId : idList) {
 			final TutorMapper tutorMapperObject = new TutorMapper();
-			tutorMapperObject.setTutorMapperId(Long.valueOf(tutorMapperId));
+			tutorMapperObject.setTutorMapperSerialId(tutorMapperSerialId);
 			tutorMapperList.add(tutorMapperObject);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutormapper", "deleteTutorMapper", tutorMapperList);
@@ -346,13 +346,13 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			}
 		}
 		final List<TutorMapper> paramObjectList = new LinkedList<TutorMapper>();
-		for (final String tutorMapperId : idList) {
+		for (final String tutorMapperSerialId : idList) {
 			final TutorMapper tutorMapper = new TutorMapper();
 			tutorMapper.setWhoActed(activeUser.getUserId());
 			tutorMapper.setAdminActionRemarks(comments);
 			tutorMapper.setMappingStatus(mappingStatus);
 			tutorMapper.setAdminActionDateMillis(currentTimestamp.getTime());
-			tutorMapper.setTutorMapperId(Long.valueOf(tutorMapperId));
+			tutorMapper.setTutorMapperSerialId(tutorMapperSerialId);
 			paramObjectList.add(tutorMapper);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("sales-tutormapper", "updateTutorMapperMappingStatus", paramObjectList);
@@ -362,7 +362,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public void updateTutorMapperRecord(final TutorMapper tutorMapperObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE TUTOR_MAPPER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_ID = :tutorMapperId";
+		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_SERIAL_ID = :tutorMapperId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		Boolean isTutorContacted = false;
 		Boolean isClientContacted = false;
@@ -444,7 +444,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				}
 			}
 		}
-		paramsMap.put("tutorMapperId", tutorMapperObject.getTutorMapperId());
+		paramsMap.put("tutorMapperSerialId", tutorMapperObject.getTutorMapperSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			if (isTutorContacted) {
 				updateAttributesQuery.add("IS_TUTOR_CONTACTED = 'Y'");
@@ -470,6 +470,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		tutorMapperObject.setWhoActed(activeUser.getUserId());
 		tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
 		applicationDao.executeUpdateWithQueryMapper("sales-tutormapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
-		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null, null);
+		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperSerialId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null, null);
 	}
 }

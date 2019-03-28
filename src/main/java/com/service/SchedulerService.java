@@ -381,7 +381,7 @@ public class SchedulerService implements SchedulerConstants {
 						final SubscriptionPackage subscriptionPackage = new SubscriptionPackage();
 						subscriptionPackage.setSubscriptionPackageSerialId(UUIDGeneratorUtils.generateSerialGUID());
 						subscriptionPackage.setDemoSerialId(demo.getDemoSerialId());
-						subscriptionPackage.setTutorMapperId(demo.getTutorMapperId());
+						subscriptionPackage.setTutorMapperSerialId(demo.getTutorMapperSerialId());
 						subscriptionPackage.setEnquiryId(demo.getEnquiryId());
 						subscriptionPackage.setCustomerId(demo.getCustomerId());
 						subscriptionPackage.setTutorId(demo.getTutorId());

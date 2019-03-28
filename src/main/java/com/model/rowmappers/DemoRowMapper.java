@@ -17,7 +17,7 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Demo demo = new Demo();
 		demo.setDemoSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("demoSerialId"), String.class));
-		demo.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorMapperId"), Long.class));
+		demo.setTutorMapperSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorMapperSerialId"), String.class));
 		demo.setDemoDateAndTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("demoDateAndTimeMillis"), Long.class));
 		demo.setDemoOccurred(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("demoOccurred"), String.class));
 		demo.setDemoStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("demoStatus"), String.class));

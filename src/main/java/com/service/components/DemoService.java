@@ -107,7 +107,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 	
 	@Transactional
 	public String insertScheduledDemo (
-			final Long tutorMapperId, 
+			final String tutorMapperSerialId, 
 			final Long demoDateAndTimeMillis, 
 			final User activeUser, 
 			final Boolean sendEmails,
@@ -119,7 +119,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		final Date currentTimestamp = new Date();
 		final Demo demo = new Demo();
 		demo.setDemoSerialId(UUIDGeneratorUtils.generateSerialGUID());
-		demo.setTutorMapperId(tutorMapperId);
+		demo.setTutorMapperSerialId(tutorMapperSerialId);
 		demo.setDemoDateAndTimeMillis(demoDateAndTimeMillis);
 		demo.setDemoStatus(DEMO_STATUS_SCHEDULED);
 		demo.setWhoActed(activeUser.getUserId());
@@ -198,7 +198,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		final Demo demo = getDemo(demoObject.getDemoSerialId());
 		if (ValidationUtils.checkObjectAvailability(demo)) {
 			takeActionOnDemo(BUTTON_ACTION_CANCEL, Arrays.asList(new String[] {demoObject.getDemoSerialId()}), "Re-scheduling demo", activeUser, false);
-			final String newDemoSerialId = insertScheduledDemo(demo.getTutorMapperId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demo.getReScheduleCount(), demo.getDemoSerialId());
+			final String newDemoSerialId = insertScheduledDemo(demo.getTutorMapperSerialId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demo.getReScheduleCount(), demo.getDemoSerialId());
 			sendDemoReScheduledNotificationEmails(demoObject.getDemoSerialId(), newDemoSerialId);
 			return newDemoSerialId;
 		}

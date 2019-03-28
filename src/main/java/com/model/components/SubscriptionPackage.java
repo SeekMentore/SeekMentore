@@ -19,7 +19,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
-	private Long tutorMapperId;
+	private String tutorMapperSerialId;
 	private Integer tutorMapperQuotedTutorRate;
 	private Integer tutorMapperNegotiatedRateWithTutor;
 	private String tutorMapperTutorNegotiationRemarks;
@@ -222,12 +222,12 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 		this.demoSerialId = demoSerialId;
 	}
 
-	public Long getTutorMapperId() {
-		return tutorMapperId;
+	public String getTutorMapperSerialId() {
+		return tutorMapperSerialId;
 	}
 
-	public void setTutorMapperId(Long tutorMapperId) {
-		this.tutorMapperId = tutorMapperId;
+	public void setTutorMapperSerialId(String tutorMapperSerialId) {
+		this.tutorMapperSerialId = tutorMapperSerialId;
 	}
 
 	public Long getEnquiryId() {
@@ -634,7 +634,7 @@ public class SubscriptionPackage extends GridComponentObject implements Serializ
 			case "enquiryQuotedClientRate" : return "ENQUIRY_QUOTED_CLIENT_RATE";
 			case "enquiryNegotiatedRateWithClient" : return "ENQUIRY_NEGOTIATED_RATE_WITH_CLIENT";
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
-			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "tutorMapperSerialId" : return "TUTOR_MAPPER_SERIAL_ID";
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
 			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";

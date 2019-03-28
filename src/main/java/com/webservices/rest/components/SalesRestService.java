@@ -69,6 +69,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long enquiryId;
 	private Long tutorId;
 	private String demoSerialId;
+	private String tutorMapperSerialId;
 	private String subscriptionPackageSerialId;
 	private String packageAssignmentSerialId;
 	private String assignmentAttendanceSerialId;
@@ -437,12 +438,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD;
 		createTutorMapperObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.tutorMapperSerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
+			this.tutorMapperObject.setTutorMapperSerialId(this.tutorMapperSerialId);
 			getEnquiryService().updateTutorMapperRecord(this.tutorMapperObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -732,12 +734,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_SCHEDULE_DEMO;
 		createTutorMapperSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.tutorMapperSerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.tutorMapperObject.setTutorMapperId(Long.parseLong(parentId));
+			this.tutorMapperObject.setTutorMapperSerialId(this.tutorMapperSerialId);
 			getEnquiryService().scheduleDemo(this.tutorMapperObject, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Scheduled Demo Successfully");
@@ -1793,7 +1796,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleTutorMapperSecurity();
 				break;
 			}
@@ -1815,7 +1818,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_SCHEDULE_DEMO : {
-				handleParentId();
+				handleParentSerialId();
 				handleScheduleDemoSecurity();
 				break;
 			}

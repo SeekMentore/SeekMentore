@@ -16,7 +16,7 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 	public TutorMapper mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final TutorMapper tutorMapperObject = new TutorMapper();
-		tutorMapperObject.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorMapperId"), Long.class));
+		tutorMapperObject.setTutorMapperSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorMapperSerialId"), String.class));
 		tutorMapperObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryId"), Long.class));
 		tutorMapperObject.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquirySubject"), String.class));
 		tutorMapperObject.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryGrade"), String.class));

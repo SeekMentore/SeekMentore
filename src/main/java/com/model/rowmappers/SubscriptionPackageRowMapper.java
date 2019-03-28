@@ -25,7 +25,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorName"), String.class));
 		subscriptionPackage.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorEmail"), String.class));
 		subscriptionPackage.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorContactNumber"), String.class));
-		subscriptionPackage.setTutorMapperId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperId"), Long.class));
+		subscriptionPackage.setTutorMapperSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperSerialId"), String.class));
 		subscriptionPackage.setTutorMapperQuotedTutorRate(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperQuotedTutorRate"), Integer.class));
 		subscriptionPackage.setTutorMapperNegotiatedRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperNegotiatedRateWithTutor"), Integer.class));
 		subscriptionPackage.setTutorMapperTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperTutorNegotiationRemarks"), String.class));

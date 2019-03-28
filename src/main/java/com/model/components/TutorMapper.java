@@ -11,7 +11,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
-	private Long tutorMapperId;
+	private String tutorMapperSerialId;
 	private Long enquiryId;
 	private String enquirySubject;
 	private String enquiryGrade;
@@ -62,12 +62,12 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	
 	public TutorMapper() {}
 	
-	public Long getTutorMapperId() {
-		return tutorMapperId;
+	public String getTutorMapperSerialId() {
+		return tutorMapperSerialId;
 	}
 
-	public void setTutorMapperId(Long tutorMapperId) {
-		this.tutorMapperId = tutorMapperId;
+	public void setTutorMapperSerialId(String tutorMapperSerialId) {
+		this.tutorMapperSerialId = tutorMapperSerialId;
 	}
 
 	public Long getEnquiryId() {
@@ -461,7 +461,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "tutorMapperId" : return "TUTOR_MAPPER_ID";
+			case "tutorMapperSerialId" : return "TUTOR_MAPPER_SERIAL_ID";
 			case "enquiryId" : return "ENQUIRY_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
