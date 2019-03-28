@@ -98,7 +98,7 @@
 			<webservice id="failedDemoList" url="/failedDemoList"></webservice>
 			<webservice id="canceledDemoList" url="/canceledDemoList"></webservice>
 			<webservice id="enquiryClosedDemoList" url="/enquiryClosedDemoList"></webservice>
-			<webservice id="demoTrackerModifyCheckDataAccess" url="/demoTrackerModifyCheckDataAccess"></webservice>
+			<webservice id="demoModifyCheckDataAccess" url="/demoModifyCheckDataAccess"></webservice>
 			<webservice id="takeActionOnDemo" url="/takeActionOnDemo"></webservice>
 			<webservice id="reScheduleDemo" url="/reScheduleDemo"></webservice>
 			<webservice id="updateDemoRecord" url="/updateDemoRecord"></webservice>
@@ -128,6 +128,7 @@
 			<webservice id="removeAssignmentAttendanceDocumentFile" url="/removeAssignmentAttendanceDocumentFile"></webservice>
 			<webservice id="downloadAssignmentAttendanceAllDocuments" url="/downloadAssignmentAttendanceAllDocuments"></webservice>
 			<webservice id="getSubscriptionPackageRecord" url="/getSubscriptionPackageRecord"></webservice>
+			<webservice id="getDemoRecord" url="/getDemoRecord"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

@@ -1,6 +1,7 @@
 package com.service.components;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import com.utils.MailUtils;
 import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
+import com.utils.localization.Message;
 
 @Service(BeanConstants.BEAN_NAME_DEMO_SERVICE)
 public class DemoService implements DemoConstants, SalesConstants {
@@ -111,7 +113,8 @@ public class DemoService implements DemoConstants, SalesConstants {
 			final Boolean sendEmails,
 			final Boolean isReScheduled,
 			final String reschedulingRemarks,
-			final Integer reScheduleCount
+			final Integer reScheduleCount,
+			final String rescheduledFromDemoSerialId
 	) throws Exception {
 		final Date currentTimestamp = new Date();
 		final Demo demo = new Demo();
@@ -126,6 +129,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 		if (isReScheduled) {
 			demo.setReschedulingRemarks(reschedulingRemarks);
 			demo.setReScheduleCount(reScheduleCount + 1);
+			demo.setRescheduledFromDemoSerialId(rescheduledFromDemoSerialId);
 			insertQueryId = "insertReScheduledDemo";
 		}
 		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", insertQueryId, demo);
@@ -164,7 +168,25 @@ public class DemoService implements DemoConstants, SalesConstants {
 									+ queryMapperService.getQuerySQL("sales-demo", "demoDemoSerialIdFilter"), paramsMap, new DemoRowMapper());
 	}
 	
-	public List<Demo> getDemoList(final List<?> demoSerialIdList) throws Exception {
+	public Map<String, Boolean> getDemoFormUpdateAndRescheduleStatus(final Demo demo) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("demoFormEditMandatoryDisbaled", true);
+		securityAccess.put("demoRescheduleMandatoryDisbaled", true);
+		securityAccess.put("demoCanSuccessFailDemo", false);
+		securityAccess.put("demoCanCancelDemo", false);
+		if (DEMO_STATUS_SCHEDULED.equals(demo.getDemoStatus())) {
+			securityAccess.put("demoFormEditMandatoryDisbaled", false);
+			if (ValidationUtils.checkStringAvailability(demo.getDemoOccurred()) && YES.equals(demo.getDemoOccurred())) {
+				securityAccess.put("demoCanSuccessFailDemo", true);
+			} else {
+				securityAccess.put("demoCanCancelDemo", true);
+				securityAccess.put("demoRescheduleMandatoryDisbaled", false);
+			}
+		}
+		return securityAccess;
+	}
+	
+	public List<Demo> getDemoList(final List<String> demoSerialIdList) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("demoSerialIdList", demoSerialIdList);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
@@ -172,12 +194,15 @@ public class DemoService implements DemoConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public void reScheduleDemo(final Demo demoObject, final User activeUser) throws Exception {
-		final List<String> idList = new ArrayList<String>();
-		idList.add(demoObject.getDemoSerialId());
-		takeActionOnDemo(BUTTON_ACTION_CANCEL, idList, "Re-scheduling demo", activeUser, false);
-		final String newDemoSerialId = insertScheduledDemo(demoObject.getTutorMapperId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demoObject.getReScheduleCount());
-		sendDemoReScheduledNotificationEmails(demoObject.getDemoSerialId(), newDemoSerialId);
+	public String reScheduleDemo(final Demo demoObject, final User activeUser) throws Exception {
+		final Demo demo = getDemo(demoObject.getDemoSerialId());
+		if (ValidationUtils.checkObjectAvailability(demo)) {
+			takeActionOnDemo(BUTTON_ACTION_CANCEL, Arrays.asList(new String[] {demoObject.getDemoSerialId()}), "Re-scheduling demo", activeUser, false);
+			final String newDemoSerialId = insertScheduledDemo(demo.getTutorMapperId(), demoObject.getDemoDateAndTimeMillis(), activeUser, false, true, demoObject.getReschedulingRemarks(), demo.getReScheduleCount(), demo.getDemoSerialId());
+			sendDemoReScheduledNotificationEmails(demoObject.getDemoSerialId(), newDemoSerialId);
+			return newDemoSerialId;
+		}
+		return Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_RESCHEDULE_NEW_DATE_AND_TIME);
 	}
 	
 	public void sendDemoReScheduledNotificationEmails(final String oldDemoSerialId, final String newDemoSerialId) throws Exception {
@@ -207,8 +232,22 @@ public class DemoService implements DemoConstants, SalesConstants {
 	@Transactional
 	public void takeActionOnDemo(final String button, final List<String> idList, final String comments, final User activeUser, final Boolean sendEmails) throws Exception {
 		final Date currentTimestamp = new Date();
+		Boolean isSuccessOrFailure = false;
 		String demoStatus = EMPTY_STRING;
+		String isDemoSuccess = EMPTY_STRING;
 		switch(button) {
+			case BUTTON_ACTION_DEMO_SUCCESS : {
+				demoStatus = DEMO_STATUS_SUCCESS;
+				isDemoSuccess = YES;
+				isSuccessOrFailure = true;
+				break;
+			}
+			case BUTTON_ACTION_DEMO_FAILED : {
+				demoStatus = DEMO_STATUS_FAILED;
+				isDemoSuccess = NO;
+				isSuccessOrFailure = true;
+				break;
+			}
 			case BUTTON_ACTION_CANCEL : {
 				demoStatus = DEMO_STATUS_CANCELED;
 				break;
@@ -220,15 +259,29 @@ public class DemoService implements DemoConstants, SalesConstants {
 			demo.setWhoActed(activeUser.getUserId());
 			demo.setAdminFinalizingRemarks(comments);
 			demo.setDemoStatus(demoStatus);
+			if (isSuccessOrFailure) {
+				demo.setIsDemoSuccess(isDemoSuccess);
+			}
 			demo.setAdminActionDateMillis(currentTimestamp.getTime());
 			demo.setDemoSerialId(demoSerialId);
 			paramObjectList.add(demo);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoStatus", paramObjectList);
+		if (isSuccessOrFailure) {
+			applicationDao.executeBatchUpdateWithQueryMapper("sales-demo", "updateDemoSuccessFailure", paramObjectList);
+		}
 		if (sendEmails) {
 			switch(button) {
 				case BUTTON_ACTION_CANCEL : {
 					sendDemoCanceledNotificationEmails(idList);
+					break;
+				}
+				case BUTTON_ACTION_DEMO_SUCCESS : {
+					sendDemoSuccessNotificationEmails(idList);
+					break;
+				}
+				case BUTTON_ACTION_DEMO_FAILED : {
+					sendDemoFailedNotificationEmails(idList);
 					break;
 				}
 			}
@@ -262,48 +315,50 @@ public class DemoService implements DemoConstants, SalesConstants {
 		}
 	}
 	
-	public void sendDemoSuccessNotificationEmails(final String demoSerialId) throws Exception {
-		final Demo demo = getDemo(demoSerialId);
+	public void sendDemoSuccessNotificationEmails(final List<String> idList) throws Exception {
+		final List<Demo> demoList = getDemoList(idList);
 		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("demo", demo);
-		Map<String, Object> mailParams = new HashMap<String, Object>();
-		// Client Email
-		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
-		mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(demo.getCustomerEmail(), demo.getEnquiryEmail()) ? demo.getCustomerEmail() : null);
-		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo was successful for your enquiry");
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes));
-		mailParamList.add(mailParams);
-		mailParams = new HashMap<String, Object>();
-		// Tutor Email
-		mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getTutorEmail());
-		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo was successful with Client - " + demo.getCustomerName());
-		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_TUTOR_EMAIL_PATH, attributes));
-		mailParamList.add(mailParams);
-		
+		for (final Demo demo : demoList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("demo", demo);
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			// Client Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getEnquiryEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_CC, !ApplicationUtils.verifySameObjectWithNullCheck(demo.getCustomerEmail(), demo.getEnquiryEmail()) ? demo.getCustomerEmail() : null);
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Tutor demo was successful for your enquiry");
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_CLIENT_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+			mailParams = new HashMap<String, Object>();
+			// Tutor Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, demo.getTutorEmail());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Your demo was successful with Client - " + demo.getCustomerName());
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_SUCCESS_TUTOR_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+		}
 		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 	
-	public void sendDemoFailedNotificationEmails(final String demoSerialId) throws Exception {
-		final Demo demo = getDemo(demoSerialId);
-		final Map<String, Object> attributes = new HashMap<String, Object>();
-		attributes.put("demo", demo);
-		// Sales Team Email
-		MailUtils.sendMimeMessageEmail( 
-				jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList(), 
-				null,
-				null,
-				"Demo faild with Client - " + demo.getCustomerName(), 
-				VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes),
-				null);
+	public void sendDemoFailedNotificationEmails(final List<String> idList) throws Exception {
+		final List<Demo> demoList = getDemoList(idList);
+		final List<Map<String, Object>> mailParamList = new ArrayList<Map<String, Object>>();
+		for (final Demo demo : demoList) {
+			final Map<String, Object> attributes = new HashMap<String, Object>();
+			attributes.put("demo", demo);
+			Map<String, Object> mailParams = new HashMap<String, Object>();
+			// Sales Team Email
+			mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
+			mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Demo faild with Client - " + demo.getCustomerName());
+			mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_DEMO_FAILED_EMAIL_PATH, attributes));
+			mailParamList.add(mailParams);
+		}
+		MailUtils.sendMultipleMimeMessageEmail(mailParamList);
 	}
 
 	@Transactional
 	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) throws Exception {
 		final String baseQuery = "UPDATE DEMO SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE DEMO_TRACKER_ID = :demoSerialId";
-		Boolean demoSuccessFailureResponseArrived = false;
+		final String existingFilterQueryString = "WHERE DEMO_SERIAL_ID = :demoSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -343,18 +398,6 @@ public class DemoService implements DemoConstants, SalesConstants {
 						paramsMap.put("adminSatisfiedWithClient", demoObject.getAdminSatisfiedWithClient());
 						break;
 					}
-					case "isDemoSuccess" : {
-						demoSuccessFailureResponseArrived = true;
-						updateAttributesQuery.add("IS_DEMO_SUCCESS = :isDemoSuccess");
-						updateAttributesQuery.add("DEMO_STATUS = :demoStatus");
-						paramsMap.put("isDemoSuccess", demoObject.getIsDemoSuccess());
-						if (YES.equals(demoObject.getIsDemoSuccess())) {
-							paramsMap.put("demoStatus", DEMO_STATUS_SUCCESS);
-						} else {
-							paramsMap.put("demoStatus", DEMO_STATUS_FAILED);
-						}
-						break;
-					}
 					case "needPriceNegotiationWithClient" : {
 						updateAttributesQuery.add("NEED_PRICE_NEGOTIATION_WITH_CLIENT = :needPriceNegotiationWithClient");
 						paramsMap.put("needPriceNegotiationWithClient", demoObject.getNeedPriceNegotiationWithClient());
@@ -390,11 +433,6 @@ public class DemoService implements DemoConstants, SalesConstants {
 						paramsMap.put("adminRemarks", demoObject.getAdminRemarks());
 						break;
 					}
-					case "adminFinalizingRemarks" : {
-						updateAttributesQuery.add("ADMIN_FINALIZING_REMARKS = :adminFinalizingRemarks");
-						paramsMap.put("adminFinalizingRemarks", demoObject.getAdminFinalizingRemarks());
-						break;
-					}
 				}
 			}
 		}
@@ -405,13 +443,6 @@ public class DemoService implements DemoConstants, SalesConstants {
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
-			if (demoSuccessFailureResponseArrived) {
-				if (YES.equals(demoObject.getIsDemoSuccess())) {
-					sendDemoSuccessNotificationEmails(demoObject.getDemoSerialId());
-				} else {
-					sendDemoFailedNotificationEmails(demoObject.getDemoSerialId());
-				}
-			}
 		}
 	}
 	

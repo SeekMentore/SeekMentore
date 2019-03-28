@@ -56,6 +56,7 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 	private String adminFinalizingRemarks;
 	private String reschedulingRemarks;
 	private Integer reScheduleCount;
+	private String rescheduledFromDemoSerialId;
 	private Long entryDateMillis;
 	private String isSubscriptionCreated;
 	private Long subscriptionCreatedMillis;
@@ -490,6 +491,14 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 		this.enquiryContactNumber = enquiryContactNumber;
 	}
 	
+	public String getRescheduledFromDemoSerialId() {
+		return rescheduledFromDemoSerialId;
+	}
+
+	public void setRescheduledFromDemoSerialId(String rescheduledFromDemoSerialId) {
+		this.rescheduledFromDemoSerialId = rescheduledFromDemoSerialId;
+	}
+	
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
@@ -528,6 +537,7 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 			case "adminFinalizingRemarks" : return "ADMIN_FINALIZING_REMARKS";
 			case "reschedulingRemarks" : return "RESCHEDULING_REMARKS";
 			case "reScheduleCount" : return "RE_SCHEDULE_COUNT";
+			case "rescheduledFromDemoSerialId" : return "RESCHEDULED_FROM_DEMO_SERIAL_ID";
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";

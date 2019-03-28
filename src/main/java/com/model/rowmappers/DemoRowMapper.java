@@ -39,6 +39,7 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		demo.setAdminFinalizingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("adminFinalizingRemarks"), String.class));
 		demo.setReschedulingRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("reschedulingRemarks"), String.class));
 		demo.setReScheduleCount(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("reScheduleCount"), Integer.class));
+		demo.setRescheduledFromDemoSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("rescheduledFromDemoSerialId"), String.class));
 		demo.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("whoActed"), String.class));
 		demo.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerId"), Long.class));
 		demo.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerName"), String.class));

@@ -470,6 +470,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		tutorMapperObject.setWhoActed(activeUser.getUserId());
 		tutorMapperObject.setAdminActionDateMillis(currentTimestamp.getTime());
 		applicationDao.executeUpdateWithQueryMapper("sales-tutormapper", "updateTutorMapperForDemoScheduled", tutorMapperObject);
-		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null);
+		demoService.insertScheduledDemo(tutorMapperObject.getTutorMapperId(), tutorMapperObject.getDemoDateAndTimeMillis(), activeUser, true, false, null, null, null);
 	}
 }

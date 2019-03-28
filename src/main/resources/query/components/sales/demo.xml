@@ -72,9 +72,9 @@
 	</query>
 	<query type="insert" id="insertReScheduledDemo" paramClass="com.model.components.Demo">
 		INSERT INTO DEMO
-			(DEMO_SERIAL_ID, TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT) 
+			(DEMO_SERIAL_ID, TUTOR_MAPPER_ID, DEMO_DATE_AND_TIME_MILLIS, DEMO_STATUS, WHO_ACTED, ADMIN_ACTION_DATE_MILLIS, ENTRY_DATE_MILLIS, RESCHEDULING_REMARKS, RE_SCHEDULE_COUNT, RESCHEDULED_FROM_DEMO_SERIAL_ID) 
 		VALUES
-			(:demoSerialId, :tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount)
+			(:demoSerialId, :tutorMapperId, :demoDateAndTimeMillis, :demoStatus, :whoActed, :adminActionDateMillis, :entryDateMillis, :reschedulingRemarks, :reScheduleCount, :rescheduledFromDemoSerialId)
 	</query>
 	<query type="update" id="updateDemoStatus" paramClass="com.model.components.Demo">
 		UPDATE DEMO SET
@@ -82,6 +82,11 @@
 			WHO_ACTED = :whoActed, 
 			ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis, 
 			ADMIN_FINALIZING_REMARKS = :adminFinalizingRemarks 
+		WHERE DEMO_SERIAL_ID = :demoSerialId
+	</query>
+	<query type="update" id="updateDemoSuccessFailure" paramClass="com.model.components.Demo">
+		UPDATE DEMO SET
+			IS_DEMO_SUCCESS = :isDemoSuccess 
 		WHERE DEMO_SERIAL_ID = :demoSerialId
 	</query>
 	<query type="update" id="updateDemoSubscriptionCreated" paramClass="com.model.components.Demo">

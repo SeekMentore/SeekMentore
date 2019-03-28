@@ -13,4 +13,5 @@ public interface ResponseMapConstants extends ApplicationConstants {
 	String MESSAGE_UPDATED_RECORD = "Record Updated";
 	String MESSAGE_INSERTED_RECORD = "Record Inserted";
 	String MESSAGE_ACTION_SUCCESSFUL = "Action successful";
+	String RESPONSE_ERROR = "Error";
 }
