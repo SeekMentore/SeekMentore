@@ -31,6 +31,9 @@
 		INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON EN.CUSTOMER_ID = SCE.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y'
         INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON EN.CUSTOMER_ID = SCC.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y'
 	</query>
+	<query type="filter" id="tutorMapperTutorMapperSerialIdFilter">
+		WHERE TM.TUTOR_MAPPER_SERIAL_ID = :tutorMapperSerialId
+	</query>
 	<query type="filter" id="tutorMapperMappingStatusFilter">
 		WHERE TM.MAPPING_STATUS = :mappingStatus
 	</query>

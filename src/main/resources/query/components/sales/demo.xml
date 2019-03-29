@@ -46,6 +46,10 @@
 	<query type="filter" id="demoDemoSerialIdListFilter">
 		WHERE D.DEMO_SERIAL_ID IN (:demoSerialIdList)
 	</query>
+	<query type="filter" id="demoTutorMapperSerialIdAndDemoStatusFilter">
+		WHERE D.TUTOR_MAPPER_SERIAL_ID = :tutorMapperSerialId 
+		AND D.DEMO_STATUS = :demoStatus
+	</query>
 	<query type="filter" id="demoCurrentTutorAdditionalFilter">
 		 AND TM.TUTOR_ID = :tutorId
 	</query>

@@ -174,13 +174,15 @@ public class DemoService implements DemoConstants, SalesConstants {
 		securityAccess.put("demoRescheduleMandatoryDisbaled", true);
 		securityAccess.put("demoCanSuccessFailDemo", false);
 		securityAccess.put("demoCanCancelDemo", false);
-		if (DEMO_STATUS_SCHEDULED.equals(demo.getDemoStatus())) {
-			securityAccess.put("demoFormEditMandatoryDisbaled", false);
-			if (ValidationUtils.checkStringAvailability(demo.getDemoOccurred()) && YES.equals(demo.getDemoOccurred())) {
-				securityAccess.put("demoCanSuccessFailDemo", true);
-			} else {
-				securityAccess.put("demoCanCancelDemo", true);
-				securityAccess.put("demoRescheduleMandatoryDisbaled", false);
+		if (!ValidationUtils.checkStringAvailability(demo.getIsEnquiryClosed()) || NO.equals(demo.getIsEnquiryClosed())) {
+			if (DEMO_STATUS_SCHEDULED.equals(demo.getDemoStatus())) {
+				securityAccess.put("demoFormEditMandatoryDisbaled", false);
+				if (ValidationUtils.checkStringAvailability(demo.getDemoOccurred()) && YES.equals(demo.getDemoOccurred())) {
+					securityAccess.put("demoCanSuccessFailDemo", true);
+				} else {
+					securityAccess.put("demoCanCancelDemo", true);
+					securityAccess.put("demoRescheduleMandatoryDisbaled", false);
+				}
 			}
 		}
 		return securityAccess;
@@ -455,5 +457,13 @@ public class DemoService implements DemoConstants, SalesConstants {
 		}
 		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("sales-demo", "successfullDemoSubscriptionPendingFilter"));
 		return getDemoList(RestMethodConstants.REST_METHOD_NAME_SUCCESSFUL_DEMO_LIST, gridComponent);
+	}
+	
+	public List<Demo> getDemoListForTutorMapperSerialId(final String tutorMapperSerialId, final String demoStatus) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorMapperSerialId", tutorMapperSerialId);
+		paramsMap.put("demoStatus", demoStatus);
+		return applicationDao.findAll(queryMapperService.getQuerySQL("sales-demo", "selectDemo")
+										+ queryMapperService.getQuerySQL("sales-demo", "demoTutorMapperSerialIdAndDemoStatusFilter"), paramsMap, new DemoRowMapper());
 	}
 }

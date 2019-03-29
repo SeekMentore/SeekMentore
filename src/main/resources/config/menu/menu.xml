@@ -129,6 +129,8 @@
 			<webservice id="downloadAssignmentAttendanceAllDocuments" url="/downloadAssignmentAttendanceAllDocuments"></webservice>
 			<webservice id="getSubscriptionPackageRecord" url="/getSubscriptionPackageRecord"></webservice>
 			<webservice id="getDemoRecord" url="/getDemoRecord"></webservice>
+			<webservice id="tutorMapperCheckDataAccess" url="/tutorMapperCheckDataAccess"></webservice>
+			<webservice id="getTutorMapperRecord" url="/getTutorMapperRecord"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

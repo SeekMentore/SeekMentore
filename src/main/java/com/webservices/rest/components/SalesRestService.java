@@ -68,8 +68,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private Long customerId;
 	private Long enquiryId;
 	private Long tutorId;
-	private String demoSerialId;
 	private String tutorMapperSerialId;
+	private String demoSerialId;
 	private String subscriptionPackageSerialId;
 	private String packageAssignmentSerialId;
 	private String assignmentAttendanceSerialId;
@@ -291,18 +291,43 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path("/mapTutorToEnquiryCheckDataAccess")
+	@Path("/tutorMapperCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String mapTutorToEnquiryCheckDataAccess (
+	public String tutorMapperCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("enquiryMappingAccess", true);
 		restresponse.put("message", "");
+		restresponse.put("tutorMapperFormAccess", true);
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getTutorMapperRecord (
+			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD;
+		this.parentSerialId = parentId;
+		this.tutorMapperSerialId = parentId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final TutorMapper tutorMapper = getEnquiryService().getTutorMapper(this.tutorMapperSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, tutorMapper);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getEnquiryService().getTutorMapperFormUpdateUnmapAndScheduleDemoStatus(tutorMapper), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST)
@@ -379,7 +404,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -412,7 +437,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path("/mappedTutorCheckDataAccess")
+	@Path("/mapTutorToEnquiryCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mappedTutorCheckDataAccess (
@@ -421,7 +446,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("mappedEnquiryFormAccess", true);
+		restresponse.put("enquiryMappingAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
@@ -471,7 +496,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -499,7 +524,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -527,7 +552,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -555,7 +580,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST, gridComponent);
+			final List<TutorMapper> allMappedTutorsList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, allMappedTutorsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(allMappedTutorsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -624,7 +649,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST, gridComponent);
+			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllMappingList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllMappingList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -653,7 +678,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getAllMappedTutorsList(REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST, gridComponent);
+			final List<TutorMapper> currentTutorAllMappingList = getEnquiryService().getTutorMapperList(REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, currentTutorAllMappingList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(currentTutorAllMappingList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -1861,6 +1886,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				handleAssignmentAttendanceUpdateSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD :
 			case REST_METHOD_NAME_GET_DEMO_RECORD :
 			case REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD : 
 			case REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD : {

@@ -15,6 +15,15 @@ import com.utils.context.AppContext;
 
 public class ValidationUtils implements ValidationConstants {
 	
+	public static Boolean checkIfResponseIsStringYes(final String yesNoResponse) {
+		if (checkStringAvailability(yesNoResponse)) {
+			if (YES.equals(yesNoResponse)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static Boolean checkObjectAvailability(final Object object) {
 	    if (null != object) {
 	      return true;

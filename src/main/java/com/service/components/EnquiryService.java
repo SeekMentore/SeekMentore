@@ -17,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.constants.BeanConstants;
 import com.constants.RestMethodConstants;
+import com.constants.components.DemoConstants;
 import com.constants.components.EnquiryConstants;
 import com.constants.components.SalesConstants;
 import com.dao.ApplicationDao;
 import com.model.User;
+import com.model.components.Demo;
 import com.model.components.Enquiry;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorMapper;
@@ -30,6 +32,7 @@ import com.model.rowmappers.TutorMapperRowMapper;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 import com.utils.JSONUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_ENQUIRY_SERVICE)
@@ -252,7 +255,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		}
 	}
 	
-	public List<TutorMapper> getAllMappedTutorsList(final String grid, final GridComponent gridComponent) throws Exception {
+	public List<TutorMapper> getTutorMapperList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapper");
 		String existingFilterQueryString = EMPTY_STRING;
@@ -302,12 +305,51 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
 	}
 	
+	public TutorMapper getTutorMapper(final String tutorMapperSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorMapperSerialId", tutorMapperSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapper")
+									+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperTutorMapperSerialIdFilter"), paramsMap, new TutorMapperRowMapper());
+	}
+	
+	public Map<String, Boolean> getTutorMapperFormUpdateUnmapAndScheduleDemoStatus(final TutorMapper tutorMapper) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("tutorMapperFormEditMandatoryDisbaled", true);
+		securityAccess.put("tutorMapperCanUnmapTutor", false);
+		securityAccess.put("tutorMapperCanMakeDemoReady", false);
+		securityAccess.put("tutorMapperCanMakePending", false);
+		securityAccess.put("tutorMapperCanScheduleDemo", false);
+		if (ValidationUtils.checkObjectAvailability(tutorMapper)) {
+			if (!ValidationUtils.checkStringAvailability(tutorMapper.getIsEnquiryClosed()) || NO.equals(tutorMapper.getIsEnquiryClosed())) {
+				if (MAPPING_STATUS_PENDING.equals(tutorMapper.getMappingStatus())) {
+					securityAccess.put("tutorMapperFormEditMandatoryDisbaled", false);
+					securityAccess.put("tutorMapperCanUnmapTutor", true);
+					if (ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsTutorContacted())
+							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsTutorAgreed())
+							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsClientContacted())
+							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsClientAgreed())) {
+						securityAccess.put("tutorMapperCanMakeDemoReady", true);
+					}
+				}
+				if (MAPPING_STATUS_DEMO_READY.equals(tutorMapper.getMappingStatus())) {
+					final List<Demo> demoList = demoService.getDemoListForTutorMapperSerialId(tutorMapper.getTutorMapperSerialId(), DemoConstants.DEMO_STATUS_SCHEDULED);
+					if (!ValidationUtils.checkNonEmptyList(demoList)) {
+						securityAccess.put("tutorMapperCanMakePending", true);
+						securityAccess.put("tutorMapperCanScheduleDemo", true);
+					}
+				}
+			}
+		}
+		return securityAccess;
+	}
+	
 	@Transactional
 	public void mapRegisteredTutors(final Long enquiryId, final List<String> idList, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<TutorMapper> tutorMapperList = new LinkedList<TutorMapper>();
 		for (final String tutorId : idList) {
 			final TutorMapper tutorMapperObject = new TutorMapper();
+			tutorMapperObject.setTutorMapperSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			tutorMapperObject.setEnquiryId(enquiryId);
 			tutorMapperObject.setTutorId(Long.valueOf(tutorId));
 			tutorMapperObject.setMappingStatus(MAPPING_STATUS_PENDING);
@@ -362,7 +404,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public void updateTutorMapperRecord(final TutorMapper tutorMapperObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE TUTOR_MAPPER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_SERIAL_ID = :tutorMapperId";
+		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_SERIAL_ID = :tutorMapperSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		Boolean isTutorContacted = false;
 		Boolean isClientContacted = false;
