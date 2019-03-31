@@ -59,6 +59,9 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private Long enquiryClosedMillis;
 	private String enquiryEmail;
 	private String enquiryContactNumber;
+	// Action Button Security Properties
+	private Boolean showUnMap = false;
+	private Boolean enableUnMap = false;
 	
 	public TutorMapper() {}
 	
@@ -444,6 +447,22 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 
 	public void setEnquiryContactNumber(String enquiryContactNumber) {
 		this.enquiryContactNumber = enquiryContactNumber;
+	}
+	
+	public Boolean getShowUnMap() {
+		return showUnMap;
+	}
+
+	public void setShowUnMap(Boolean showUnMap) {
+		this.showUnMap = showUnMap;
+	}
+	
+	public Boolean getEnableUnMap() {
+		return enableUnMap;
+	}
+
+	public void setEnableUnMap(Boolean enableUnMap) {
+		this.enableUnMap = enableUnMap;
 	}
 
 	@Override
