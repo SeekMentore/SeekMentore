@@ -17,8 +17,8 @@ public class EmployeeContactNumberRowMapper implements RowMapper<EmployeeContact
 	public EmployeeContactNumber mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final EmployeeContactNumber employeeContactNumber = new EmployeeContactNumber();
-		employeeContactNumber.setEmployeeContactNumberId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeContactNumber.resolveColumnNameForMapping("employeeContactNumberId"), Long.class));
-		employeeContactNumber.setEmployeeId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeContactNumber.resolveColumnNameForMapping("employeeId"), Long.class));
+		employeeContactNumber.setEmployeeContactNumberSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeContactNumber.resolveColumnNameForMapping("employeeContactNumberSerialId"), String.class));
+		employeeContactNumber.setEmployeeSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeContactNumber.resolveColumnNameForMapping("employeeSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherContactNumbers(employeeContactNumber, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(employeeContactNumber, row, rowNum);
 		return employeeContactNumber;

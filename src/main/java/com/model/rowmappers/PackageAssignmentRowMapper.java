@@ -37,15 +37,15 @@ public class PackageAssignmentRowMapper implements RowMapper<PackageAssignment> 
 		packageAssignment.setWhoActedName(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("whoActedName"), String.class));
 		packageAssignment.setUpdatedByName(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("updatedByName"), String.class));
 		packageAssignment.setCreatedMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("createdMillis"), Long.class));
-		packageAssignment.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("customerId"), Long.class));
+		packageAssignment.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("customerSerialId"), String.class));
 		packageAssignment.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("customerName"), String.class));
 		packageAssignment.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("customerEmail"), String.class));
 		packageAssignment.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("customerContactNumber"), String.class));
-		packageAssignment.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("tutorId"), Long.class));
+		packageAssignment.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		packageAssignment.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("tutorName"), String.class));
 		packageAssignment.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("tutorEmail"), String.class));
 		packageAssignment.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("tutorContactNumber"), String.class));
-		packageAssignment.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("enquiryId"), Long.class));
+		packageAssignment.setEnquirySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("enquirySerialId"), String.class));
 		packageAssignment.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("enquirySubject"), String.class));
 		packageAssignment.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		packageAssignment.setEnquiryEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, packageAssignment.resolveColumnNameForMapping("enquiryEmail"), String.class));

@@ -12,7 +12,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private static final long serialVersionUID = -1763649873039566289L;
 	
 	private String tutorMapperSerialId;
-	private Long enquiryId;
+	private String enquirySerialId;
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
@@ -22,11 +22,11 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 	private Integer enquiryQuotedClientRate ;
 	private Integer enquiryNegotiatedRateWithClient;
 	private String enquiryClientNegotiationRemarks;
-	private Long customerId;
+	private String customerSerialId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
-	private Long tutorId;
+	private String tutorSerialId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
@@ -73,20 +73,20 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.tutorMapperSerialId = tutorMapperSerialId;
 	}
 
-	public Long getEnquiryId() {
-		return enquiryId;
+	public String getEnquirySerialId() {
+		return enquirySerialId;
 	}
 
-	public void setEnquiryId(Long enquiryId) {
-		this.enquiryId = enquiryId;
+	public void setEnquirySerialId(String enquirySerialId) {
+		this.enquirySerialId = enquirySerialId;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
 	public Integer getQuotedTutorRate() {
@@ -385,12 +385,12 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		this.enquiryClientNegotiationRemarks = enquiryClientNegotiationRemarks;
 	}
 	
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 	
 	public Long getDemoDateAndTimeMillis() {
@@ -481,7 +481,7 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "tutorMapperSerialId" : return "TUTOR_MAPPER_SERIAL_ID";
-			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySerialId" : return "ENQUIRY_SERIAL_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
@@ -493,11 +493,11 @@ public class TutorMapper extends GridComponentObject implements Serializable, Cu
 			case "enquiryClientNegotiationRemarks" : return "ENQUIRY_CLIENT_NEGOTIATION_REMARKS";
 			case "enquiryEmail" : return "ENQUIRY_EMAIL";
 			case "enquiryContactNumber" : return "ENQUIRY_CONTACT_NUMBER";
-			case "customerId" : return "CUSTOMER_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
-			case "tutorId" : return "TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";

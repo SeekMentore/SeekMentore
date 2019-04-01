@@ -93,7 +93,7 @@ public class SchedulerService implements SchedulerConstants {
 				final List<ApplicationMail> applicationMailList = mailService.getPedingApplicationMailList(true, 20);
 				if (ValidationUtils.checkNonEmptyList(applicationMailList)) {
 					for (final ApplicationMail applicationMail : applicationMailList) {
-						applicationMail.setAttachments(mailService.getMailAttachmentList(applicationMail.getMailId()));
+						applicationMail.setAttachments(mailService.getMailAttachmentList(applicationMail.getMailSerialId()));
 						try {
 							int retriedCounter = 0;
 							do {
@@ -150,14 +150,17 @@ public class SchedulerService implements SchedulerConstants {
 				final List<BecomeTutor> tutorObjList = tutorService.getBecomeTutorListForApplicationStatusSelected(true, 20);
 				if (ValidationUtils.checkNonEmptyList(tutorObjList)) {
 					final List<RegisteredTutor> registeredTutorList = new ArrayList<RegisteredTutor>();
+					final List<RegisteredTutorEmail> registeredTutorEmailList = new ArrayList<RegisteredTutorEmail>();
+					final List<RegisteredTutorContactNumber> registeredTutorContactNumberList = new ArrayList<RegisteredTutorContactNumber>();
 					for (final BecomeTutor tutorObj : tutorObjList) {
 						final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 						final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 						final RegisteredTutor registeredTutorObj = new RegisteredTutor();
+						registeredTutorObj.setTutorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 						registeredTutorObj.setName(tutorObj.getFirstName().toUpperCase() + WHITESPACE + tutorObj.getLastName().toUpperCase());
 						registeredTutorObj.setContactNumber(tutorObj.getContactNumber());
 						registeredTutorObj.setEmailId(tutorObj.getEmailId());
-						registeredTutorObj.setTentativeTutorId(tutorObj.getTentativeTutorId());
+						registeredTutorObj.setBecomeTutorSerialId(tutorObj.getBecomeTutorSerialId());
 						registeredTutorObj.setDateOfBirth(tutorObj.getDateOfBirth());
 						registeredTutorObj.setGender(tutorObj.getGender());
 						registeredTutorObj.setQualification(tutorObj.getQualification());
@@ -174,23 +177,35 @@ public class SchedulerService implements SchedulerConstants {
 						registeredTutorObj.setUserId(tutorObj.getEmailId());
 						registeredTutorObj.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 						registeredTutorObj.setUpdatedBy("SYSTEM_SCHEDULER");
-						final Long tutorId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-registeredtutor", "insertRegisteredTutor", registeredTutorObj);
+						registeredTutorList.add(registeredTutorObj);
 						final RegisteredTutorEmail registeredTutorEmail = new RegisteredTutorEmail();
-						registeredTutorEmail.setTutorId(tutorId);
+						registeredTutorEmail.setRegisteredTutorEmailIdSerialId(UUIDGeneratorUtils.generateSerialGUID());
+						registeredTutorEmail.setTutorSerialId(registeredTutorObj.getTutorSerialId());
 						registeredTutorEmail.setEmailId(registeredTutorObj.getEmailId());
 						registeredTutorEmail.setIsPrimary(YES);
-						applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorEmail", registeredTutorEmail);
+						registeredTutorEmailList.add(registeredTutorEmail);
 						final RegisteredTutorContactNumber registeredTutorContactNumber = new RegisteredTutorContactNumber();
-						registeredTutorContactNumber.setTutorId(tutorId);
+						registeredTutorContactNumber.setRegisteredTutorContactNumberSerialId(UUIDGeneratorUtils.generateSerialGUID());
+						registeredTutorContactNumber.setTutorSerialId(registeredTutorObj.getTutorSerialId());
 						registeredTutorContactNumber.setContactNumber(registeredTutorObj.getContactNumber());
 						registeredTutorContactNumber.setIsPrimary(YES);
-						applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorContactNumber", registeredTutorContactNumber);
-						registeredTutorList.add(registeredTutorObj);
+						registeredTutorContactNumberList.add(registeredTutorContactNumber);
 						tutorObj.setIsDataMigrated(YES);
 						tutorObj.setWhenMigratedMillis(currentTimestamp.getTime());
 					}
-					applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateMigratedBecomeTutor", tutorObjList);
-					tutorService.sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
+					if (ValidationUtils.checkNonEmptyList(registeredTutorEmailList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorEmail", registeredTutorEmailList);
+					}
+					if (ValidationUtils.checkNonEmptyList(registeredTutorContactNumberList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutorContactNumber", registeredTutorContactNumberList);
+					}
+					if (ValidationUtils.checkNonEmptyList(registeredTutorList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "insertRegisteredTutor", registeredTutorList);
+						tutorService.sendProfileGenerationEmailToRegisteredTutorList(registeredTutorList);
+					}
+					if (ValidationUtils.checkNonEmptyList(tutorObjList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateMigratedBecomeTutor", tutorObjList);
+					}
 				}
 			} catch(Exception e) {
 				lockService.releaseLock("executeTutorRegisterJob", key);
@@ -211,10 +226,12 @@ public class SchedulerService implements SchedulerConstants {
 				final List<FindTutor> findTutorObjListToBeMigrated = new ArrayList<FindTutor>();
 				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
 					final List<SubscribedCustomer> subscribedCustomerList = new ArrayList<SubscribedCustomer>();
+					final List<SubscribedCustomerEmail> subscribedCustomerEmailList = new ArrayList<SubscribedCustomerEmail>();
+					final List<SubscribedCustomerContactNumber> subscribedCustomerContactNumberList = new ArrayList<SubscribedCustomerContactNumber>();
 					final List<Enquiry> enquiryObjectList = new ArrayList<Enquiry>();
 					for (final FindTutor findTutorObj : findTutorObjList) {
 						Boolean proceedForEnquiryCreation = false;
-						Long customerId = null;
+						String customerSerialId = null;
 						Boolean emailPresentInSystem = false;
 						Boolean contactNumberPresentInSystem = false;
 						Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -222,7 +239,7 @@ public class SchedulerService implements SchedulerConstants {
 						StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
 						query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailFilter"));
 						final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
-						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId.getCustomerId())) {
+						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId())) {
 							emailPresentInSystem = true;
 						} 
 						paramsMap = new HashMap<String, Object>();
@@ -230,36 +247,38 @@ public class SchedulerService implements SchedulerConstants {
 						query = new StringBuilder(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer"));
 						query.append(queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberFilter"));
 						final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = applicationDao.find(query.toString(), paramsMap, new SubscribedCustomerRowMapper());
-						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber.getCustomerId())) {
+						if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber) && ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId())) {
 							contactNumberPresentInSystem = true;
 						}
 						if (emailPresentInSystem || contactNumberPresentInSystem) {
 							if (emailPresentInSystem && contactNumberPresentInSystem) {
-								if (subscribedCustomerInDatabaseWithEmailId.getCustomerId().equals(subscribedCustomerInDatabaseWithContactNumber.getCustomerId())) {
+								if (subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId().equals(subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId())) {
 									proceedForEnquiryCreation = true;
-									customerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+									customerSerialId = subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId();
 								} else {
-									final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Id = " + findTutorObj.getEnquiryId() +" ; Set to Subscribed Customer = Y have different Customer Records for EmailId & Contact Number", false, null);
+									final ErrorPacket errorPacket = new ErrorPacket("executeSubscribedCustomerJob", "Find Tutor Serial Id = " + findTutorObj.getFindTutorSerialId() +" ; Set to Subscribed Customer = Y have different Customer Records for EmailId & Contact Number", false, null);
 									commonsService.feedErrorRecord(errorPacket);
 								}
 							} else {
 								if (emailPresentInSystem) {
 									proceedForEnquiryCreation = true;
-									customerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+									customerSerialId = subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId();
 									final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
-									subscribedCustomerContactNumber.setCustomerId(subscribedCustomerInDatabaseWithEmailId.getCustomerId());
+									subscribedCustomerContactNumber.setSubscribedCustomerContactNumberSerialId(UUIDGeneratorUtils.generateSerialGUID());
+									subscribedCustomerContactNumber.setCustomerSerialId(subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId());
 									subscribedCustomerContactNumber.setContactNumber(findTutorObj.getContactNumber());
 									subscribedCustomerContactNumber.setIsPrimary(NO);
-									applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
+									subscribedCustomerContactNumberList.add(subscribedCustomerContactNumber);
 								}
 								if (contactNumberPresentInSystem) {
 									proceedForEnquiryCreation = true;
-									customerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+									customerSerialId = subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId();
 									final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
-									subscribedCustomerEmail.setCustomerId(subscribedCustomerInDatabaseWithContactNumber.getCustomerId());
+									subscribedCustomerEmail.setSubscribedCustomerEmailIdSerialId(UUIDGeneratorUtils.generateSerialGUID());
+									subscribedCustomerEmail.setCustomerSerialId(subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId());
 									subscribedCustomerEmail.setEmailId(findTutorObj.getEmailId());
 									subscribedCustomerEmail.setIsPrimary(NO);
-									applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
+									subscribedCustomerEmailList.add(subscribedCustomerEmail);
 								}
 							}
 						} else {
@@ -267,10 +286,11 @@ public class SchedulerService implements SchedulerConstants {
 							final String generateTemporaryPassword = ApplicationUtils.getStringFromCharacterArray(PasswordUtils.generateRandomPassword(new Character[] {'I','i','O','o','L','l'}, 4, 8, true, true, false, false, false, false, false, false, true));
 							final String encryptedTemporaryPassword = SecurityUtil.encrypt(generateTemporaryPassword);
 							final SubscribedCustomer subscribedCustomerObj = new SubscribedCustomer();
+							subscribedCustomerObj.setCustomerSerialId(UUIDGeneratorUtils.generateSerialGUID());
 							subscribedCustomerObj.setName(findTutorObj.getName().toUpperCase());
 							subscribedCustomerObj.setContactNumber(findTutorObj.getContactNumber());
 							subscribedCustomerObj.setEmailId(findTutorObj.getEmailId());
-							subscribedCustomerObj.setFindTutorId(findTutorObj.getEnquiryId());
+							subscribedCustomerObj.setFindTutorSerialId(findTutorObj.getFindTutorSerialId());
 							subscribedCustomerObj.setStudentGrades(findTutorObj.getStudentGrade());
 							subscribedCustomerObj.setInterestedSubjects(findTutorObj.getSubjects());
 							subscribedCustomerObj.setLocation(findTutorObj.getLocation());
@@ -280,24 +300,27 @@ public class SchedulerService implements SchedulerConstants {
 							subscribedCustomerObj.setUserId(findTutorObj.getEmailId());
 							subscribedCustomerObj.setUpdatedBy("SYSTEM_SCHEDULER");
 							subscribedCustomerObj.setRecordLastUpdatedMillis(currentTimestamp.getTime());
-							customerId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerObj);
+							customerSerialId = subscribedCustomerObj.getCustomerSerialId();
 							subscribedCustomerList.add(subscribedCustomerObj);
 							final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
-							subscribedCustomerEmail.setCustomerId(customerId);
+							subscribedCustomerEmail.setSubscribedCustomerEmailIdSerialId(UUIDGeneratorUtils.generateSerialGUID());
+							subscribedCustomerEmail.setCustomerSerialId(customerSerialId);
 							subscribedCustomerEmail.setEmailId(subscribedCustomerObj.getEmailId());
 							subscribedCustomerEmail.setIsPrimary(YES);
-							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmail);
+							subscribedCustomerEmailList.add(subscribedCustomerEmail);
 							final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
-							subscribedCustomerContactNumber.setCustomerId(customerId);
+							subscribedCustomerContactNumber.setSubscribedCustomerContactNumberSerialId(UUIDGeneratorUtils.generateSerialGUID());
+							subscribedCustomerContactNumber.setCustomerSerialId(customerSerialId);
 							subscribedCustomerContactNumber.setContactNumber(subscribedCustomerObj.getContactNumber());
 							subscribedCustomerContactNumber.setIsPrimary(YES);
-							applicationDao.executeUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumber);
+							subscribedCustomerContactNumberList.add(subscribedCustomerContactNumber);
 						}
 						if (proceedForEnquiryCreation) {
 							final String[] splitSubjects = findTutorObj.getSubjects().split(SEMICOLON);
 							for (final String subject : splitSubjects) {
 								final Enquiry enquiryObject = new Enquiry();
-								enquiryObject.setCustomerId(customerId);
+								enquiryObject.setEnquirySerialId(UUIDGeneratorUtils.generateSerialGUID());
+								enquiryObject.setCustomerSerialId(customerSerialId);
 								enquiryObject.setEnquiryContactNumber(findTutorObj.getContactNumber());
 								enquiryObject.setEnquiryEmail(findTutorObj.getEmailId());
 								enquiryObject.setSubject(subject);
@@ -313,7 +336,14 @@ public class SchedulerService implements SchedulerConstants {
 							findTutorObjListToBeMigrated.add(findTutorObj);
 						}
 					}
+					if (ValidationUtils.checkNonEmptyList(subscribedCustomerEmailList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerEmail", subscribedCustomerEmailList);
+					}
+					if (ValidationUtils.checkNonEmptyList(subscribedCustomerContactNumberList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomerContactNumber", subscribedCustomerContactNumberList);
+					}
 					if (ValidationUtils.checkNonEmptyList(subscribedCustomerList)) {
+						applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "insertSubscribedCustomer", subscribedCustomerList);
 						customerService.sendProfileGenerationEmailToSubscribedCustomerList(subscribedCustomerList);
 					}
 					if (ValidationUtils.checkNonEmptyList(enquiryObjectList)) {
@@ -382,17 +412,17 @@ public class SchedulerService implements SchedulerConstants {
 						subscriptionPackage.setSubscriptionPackageSerialId(UUIDGeneratorUtils.generateSerialGUID());
 						subscriptionPackage.setDemoSerialId(demo.getDemoSerialId());
 						subscriptionPackage.setTutorMapperSerialId(demo.getTutorMapperSerialId());
-						subscriptionPackage.setEnquiryId(demo.getEnquiryId());
-						subscriptionPackage.setCustomerId(demo.getCustomerId());
-						subscriptionPackage.setTutorId(demo.getTutorId());
+						subscriptionPackage.setEnquirySerialId(demo.getEnquirySerialId());
+						subscriptionPackage.setCustomerSerialId(demo.getCustomerSerialId());
+						subscriptionPackage.setTutorSerialId(demo.getTutorSerialId());
 						subscriptionPackage.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 						subscriptionPackage.setCreatedMillis(currentTimestamp.getTime());
 						subscriptionPackage.setUpdatedBy("SYSTEM_SCHEDULER");
 						subscriptionPackageList.add(subscriptionPackage);
 						final Enquiry enquiry = new Enquiry();
-						enquiry.setEnquiryId(demo.getEnquiryId());
+						enquiry.setEnquirySerialId(demo.getEnquirySerialId());
 						enquiry.setMatchStatus(EnquiryConstants.MATCH_STATUS_COMPLETED);
-						enquiry.setTutorId(demo.getTutorId());
+						enquiry.setTutorSerialId(demo.getTutorSerialId());
 						enquiry.setIsMapped(YES);
 						enquiry.setWhoActed("SYSTEM_SCHEDULER");
 						enquiry.setLastActionDateMillis(currentTimestamp.getTime());

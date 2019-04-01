@@ -2,8 +2,8 @@
 <queryMapper namespace="aws">
 	<query type="insert" id="insertAWSS3DeleteReport" paramClass="com.model.AWSS3DeleteReport">
 		INSERT INTO AWS_S3_DELETE_REPORT
-			(OCCURED_AT_MILLIS, FS_KEY_TO_BE_DELETED, FS_KEY_RECYCLED, IS_FOLDER, USER_ID, USER_TYPE) 
+			(S3_DELETE_SERIAL_ID, OCCURED_AT_MILLIS, FS_KEY_TO_BE_DELETED, FS_KEY_RECYCLED, IS_FOLDER, USER_ID, USER_TYPE) 
 		VALUES
-			(:occuredAtMillis, :fsKeyToBeDeleted, :fsKeyRecycled, :isFolder, :userId, :userType)
+			(:s3DeleteSerialId, :occuredAtMillis, :fsKeyToBeDeleted, :fsKeyRecycled, :isFolder, :userId, :userType)
 	</query>
 </queryMapper>

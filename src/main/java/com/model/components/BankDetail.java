@@ -10,13 +10,13 @@ public class BankDetail extends GridComponentObject implements Serializable, Clo
 	
 	private static final long serialVersionUID = -7058576359707327688L;
 	
-	private Long bankAccountId;
+	private String bankAccountSerialId;
 	private String bankName;
 	private String accountNumber;
 	private String ifscCode;
 	private String accountHolderName;
 	private String isDefault;
-	private Long tutorId;
+	private String tutorSerialId;
 	private String isApproved;
 	private String whoActed;
 	private String whoActedName;
@@ -25,12 +25,12 @@ public class BankDetail extends GridComponentObject implements Serializable, Clo
 	
 	public BankDetail() {}
 
-	public Long getBankAccountId() {
-		return bankAccountId;
+	public String getBankAccountSerialId() {
+		return bankAccountSerialId;
 	}
 
-	public void setBankAccountId(Long bankAccountId) {
-		this.bankAccountId = bankAccountId;
+	public void setBankAccountSerialId(String bankAccountSerialId) {
+		this.bankAccountSerialId = bankAccountSerialId;
 	}
 
 	public String getBankName() {
@@ -73,12 +73,12 @@ public class BankDetail extends GridComponentObject implements Serializable, Clo
 		this.isDefault = isDefault;
 	}
 	
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
 	public String getIsApproved() {
@@ -136,8 +136,8 @@ public class BankDetail extends GridComponentObject implements Serializable, Clo
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "bankAccountId" : return "BANK_ACCOUNT_ID";
-			case "tutorId" : return "TUTOR_ID";
+			case "bankAccountSerialId" : return "BANK_ACCOUNT_SERIAL_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "bankName" : return "BANK_NAME";
 			case "accountNumber" : return "ACCOUNT_NUMBER";
 			case "ifscCode" : return "IFSC_CODE";

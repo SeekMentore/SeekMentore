@@ -11,7 +11,7 @@ public class ApplicationMail extends GridComponentObject implements Serializable
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
-	private Long mailId;
+	private String mailSerialId;
 	private String mailType;
 	private Long entryDateMillis;
 	private String fromAddress;
@@ -51,12 +51,12 @@ public class ApplicationMail extends GridComponentObject implements Serializable
 		this.attachments = attachments;
 	}
 
-	public Long getMailId() {
-		return mailId;
+	public String getMailSerialId() {
+		return mailSerialId;
 	}
 
-	public void setMailId(Long mailId) {
-		this.mailId = mailId;
+	public void setMailSerialId(String mailSerialId) {
+		this.mailSerialId = mailSerialId;
 	}
 
 	public String getFromAddress() {
@@ -186,7 +186,7 @@ public class ApplicationMail extends GridComponentObject implements Serializable
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "mailId" : return "MAIL_ID";
+			case "mailSerialId" : return "MAIL_SERIAL_ID";
 			case "mailType" : return "MAIL_TYPE";
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 			case "fromAddress" : return "FROM_ADDRESS";

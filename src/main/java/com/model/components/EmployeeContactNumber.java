@@ -10,23 +10,26 @@ public class EmployeeContactNumber extends OtherContactNumber implements Seriali
 	
 	private static final long serialVersionUID = -6545113536464760606L;
 	
-	private Long employeeContactNumberId;
-	private Long employeeId;
+	private String employeeContactNumberSerialId;
+	private String employeeSerialId;
 	
-	public Long getEmployeeContactNumberId() {
-		return employeeContactNumberId;
+	public EmployeeContactNumber() {
+	}
+	
+	public String getEmployeeContactNumberSerialId() {
+		return employeeContactNumberSerialId;
 	}
 
-	public void setEmployeeContactNumberId(Long employeeContactNumberId) {
-		this.employeeContactNumberId = employeeContactNumberId;
+	public void setEmployeeContactNumberSerialId(String employeeContactNumberSerialId) {
+		this.employeeContactNumberSerialId = employeeContactNumberSerialId;
 	}
 
-	public Long getEmployeeId() {
-		return employeeId;
+	public String getEmployeeSerialId() {
+		return employeeSerialId;
 	}
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeeSerialId(String employeeSerialId) {
+		this.employeeSerialId = employeeSerialId;
 	}
 	
 	@Override
@@ -44,8 +47,8 @@ public class EmployeeContactNumber extends OtherContactNumber implements Seriali
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "employeeContactNumberId" : return "EMPLOYEE_CONTACT_NUMBER_ID";
-			case "employeeId" : return "EMPLOYEE_ID";
+			case "employeeContactNumberSerialId" : return "EMPLOYEE_CONTACT_NUMBER_SERIAL_ID";
+			case "employeeSerialId" : return "EMPLOYEE_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

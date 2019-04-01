@@ -43,6 +43,7 @@ import com.utils.GridQueryUtils;
 import com.utils.MailUtils;
 import com.utils.PDFUtils;
 import com.utils.SecurityUtil;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.VelocityUtils;
 import com.utils.WorkbookUtils;
@@ -76,9 +77,9 @@ public class TutorService implements TutorConstants {
 		return new ApplicationFile("REGISTERED_TUTORS_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public ApplicationFile downloadRegisteredTutorProfilePdf(final Long tutorId, final Boolean isAdminProfile) throws Exception {
+	public ApplicationFile downloadRegisteredTutorProfilePdf(final String tutorSerialId, final Boolean isAdminProfile) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		final RegisteredTutor registeredTutor = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
 												+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
@@ -86,18 +87,18 @@ public class TutorService implements TutorConstants {
 														+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorEmailTutorIdFilter"), paramsMap, new RegisteredTutorEmailRowMapper()));
 			registeredTutor.setRegisteredTutorContactNumbers(applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutorContactNumber") 
 																+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberTutorIdFilter"), paramsMap, new RegisteredTutorContactNumberRowMapper()));
-			registeredTutor.setDocuments(getTutorDocumentList(registeredTutor.getTutorId()));
+			registeredTutor.setDocuments(getTutorDocumentList(registeredTutor.getTutorSerialId()));
 			registeredTutor.setHasProfilePicture(false);
 			if (ValidationUtils.checkNonEmptyList(registeredTutor.getDocuments())) {
 				for (final TutorDocument tutorDocument : registeredTutor.getDocuments()) {
 					if ("Profile Photo".equals(ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_TUTOR_DOCUMENT_TYPE_LOOKUP, tutorDocument.getDocumentType()))) {
 						registeredTutor.setHasProfilePicture(true);
-						registeredTutor.setProfilePicturePath("/images/profile/registeredtutor/"+tutorId+"/"+tutorDocument.getFilename());
+						registeredTutor.setProfilePicturePath("/images/profile/registeredtutor/"+tutorSerialId+"/"+tutorDocument.getFilename());
 					}
 				}
 			}
 			if (isAdminProfile) {
-				registeredTutor.setBankDetails(getBankDetailList(registeredTutor.getTutorId()));
+				registeredTutor.setBankDetails(getBankDetailList(registeredTutor.getTutorSerialId()));
 			}
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("registeredTutor", registeredTutor);
@@ -121,9 +122,9 @@ public class TutorService implements TutorConstants {
 								+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberFilter"), paramsMap, new RegisteredTutorRowMapper());
 	}
 	
-	public List<TutorDocument> getTutorDocumentList(final Long tutorId, final GridComponent gridComponent) throws Exception {
+	public List<TutorDocument> getTutorDocumentList(final String tutorSerialId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(
 				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
 											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), 
@@ -131,23 +132,23 @@ public class TutorService implements TutorConstants {
 											gridComponent), paramsMap, new TutorDocumentRowMapper());
 	}
 	
-	public List<TutorDocument> getTutorDocumentList(final Long tutorId) throws Exception {
+	public List<TutorDocument> getTutorDocumentList(final String tutorSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
 										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), paramsMap, new TutorDocumentRowMapper());
 	}
 	
-	public List<TutorDocument> getTutorDocumentList(final List<String> documentIdList) throws Exception {
+	public List<TutorDocument> getTutorDocumentList(final List<String> documentSerialIdList) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("documentIdList", documentIdList);
+		paramsMap.put("documentSerialIdList", documentSerialIdList);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
 										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentIdFilter"), paramsMap, new TutorDocumentRowMapper());
 	}
 	
-	public TutorDocument getTutorDocument(final Long documentId) throws Exception {
+	public TutorDocument getTutorDocument(final String documentSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("documentId", documentId);
+		paramsMap.put("documentSerialId", documentSerialId);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"));
 		query.append(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentDocumentIdFilter"));
 		final TutorDocument tutorDocument = applicationDao.find(query.toString(), paramsMap, new TutorDocumentRowMapper());
@@ -155,36 +156,36 @@ public class TutorService implements TutorConstants {
 		return tutorDocument;
 	}
 	
-	public ApplicationFile downloadTutorDocument(final Long documentId) throws Exception {
-		final TutorDocument tutorDocument = getTutorDocument(documentId);
+	public ApplicationFile downloadTutorDocument(final String documentSerialId) throws Exception {
+		final TutorDocument tutorDocument = getTutorDocument(documentSerialId);
 		return new ApplicationFile(tutorDocument.getFilename(), tutorDocument.getContent());
 	}
 	
-	public List<BankDetail> getBankDetailList(final Long tutorId, final GridComponent gridComponent) throws Exception {
+	public List<BankDetail> getBankDetailList(final String tutorSerialId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail"), 
 																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorIdFilter"), 
 																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailExistingSorter"), gridComponent), paramsMap, new BankDetailRowMapper());
 	}
 	
-	public List<BankDetail> getBankDetailList(final Long tutorId) throws Exception {
+	public List<BankDetail> getBankDetailList(final String tutorSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail") 
 										+ queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorIdFilter"), paramsMap, new BankDetailRowMapper());
 	}
 	
-	public List<BankDetail> getBankDetailList(final List<String> bankAccountIdList) throws Exception {
+	public List<BankDetail> getBankDetailList(final List<String> bankAccountSerialIdList) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("bankAccountIdList", bankAccountIdList);
+		paramsMap.put("bankAccountSerialIdList", bankAccountSerialIdList);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail") 
 										+ queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankDetailMultiBankAccountIdFilter"), paramsMap, new BankDetailRowMapper());
 	}
 	
-	public BankDetail getBankDetail(final Long bankAccountId) throws Exception {
+	public BankDetail getBankDetail(final String bankAccountSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("bankAccountId", bankAccountId);
+		paramsMap.put("bankAccountSerialId", bankAccountSerialId);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail"));
 		query.append(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankDetailBankAccountIdilter"));
 		return applicationDao.find(query.toString(), paramsMap, new BankDetailRowMapper());
@@ -194,7 +195,7 @@ public class TutorService implements TutorConstants {
 	public void blacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<RegisteredTutor> paramObjectList = new LinkedList<RegisteredTutor>();
-		for (final String tutorId : idList) {
+		for (final String tutorSerialId : idList) {
 			final RegisteredTutor registeredTutor = new RegisteredTutor();
 			registeredTutor.setIsBlacklisted(YES);
 			registeredTutor.setBlacklistedRemarks(comments);
@@ -202,7 +203,7 @@ public class TutorService implements TutorConstants {
 			registeredTutor.setWhoBlacklisted(activeUser.getUserId());
 			registeredTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			registeredTutor.setUpdatedBy(activeUser.getUserId());
-			registeredTutor.setTutorId(Long.valueOf(tutorId));
+			registeredTutor.setTutorSerialId(tutorSerialId);
 			paramObjectList.add(registeredTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredTutorBlacklist", paramObjectList);
@@ -212,7 +213,7 @@ public class TutorService implements TutorConstants {
 	public void unBlacklistRegisteredTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<RegisteredTutor> paramObjectList = new LinkedList<RegisteredTutor>();
-		for (final String tutorId : idList) {
+		for (final String tutorSerialId : idList) {
 			final RegisteredTutor registeredTutor = new RegisteredTutor();
 			registeredTutor.setIsBlacklisted(NO);
 			registeredTutor.setUnblacklistedRemarks(comments);
@@ -220,49 +221,49 @@ public class TutorService implements TutorConstants {
 			registeredTutor.setWhoUnBlacklisted(activeUser.getUserId());
 			registeredTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			registeredTutor.setUpdatedBy(activeUser.getUserId());
-			registeredTutor.setTutorId(Long.valueOf(tutorId));
+			registeredTutor.setTutorSerialId(tutorSerialId);
 			paramObjectList.add(registeredTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor", "updateRegisteredTutorUnBlacklist", paramObjectList);
 	}
 	
 	@Transactional
-	public void aprroveTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void aprroveTutorDocumentList(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<TutorDocument> paramObjectList = new LinkedList<TutorDocument>();
-		for (final String documentId : idList) {
+		for (final String documentSerialId : idList) {
 			final TutorDocument tutorDocument = new TutorDocument();
 			tutorDocument.setIsApproved(YES);
 			tutorDocument.setWhoActed(activeUser.getUserId());
 			tutorDocument.setRemarks(comments);
 			tutorDocument.setActionDateMillis(currentTimestamp.getTime());
-			tutorDocument.setDocumentId(Long.valueOf(documentId));
+			tutorDocument.setDocumentSerialId(documentSerialId);
 			paramObjectList.add(tutorDocument);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
 	}
 	
 	@Transactional
-	public void rejectTutorDocumentList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void rejectTutorDocumentList(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<TutorDocument> paramObjectList = new LinkedList<TutorDocument>();
-		for (final String documentId : idList) {
+		for (final String documentSerialId : idList) {
 			final TutorDocument tutorDocument = new TutorDocument();
 			tutorDocument.setIsApproved(NO);
 			tutorDocument.setWhoActed(activeUser.getUserId());
 			tutorDocument.setRemarks(comments);
 			tutorDocument.setActionDateMillis(currentTimestamp.getTime());
-			tutorDocument.setDocumentId(Long.valueOf(documentId));
+			tutorDocument.setDocumentSerialId(documentSerialId);
 			paramObjectList.add(tutorDocument);
 		}
 		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
 			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "updateTakeActionTutorDocument", paramObjectList);
-			sendTutorDocumentListRejectionEmails(idList, tutorId, comments, activeUser);
+			sendTutorDocumentListRejectionEmails(idList, tutorSerialId, comments, activeUser);
 		}
 	}
 	
-	public void sendTutorDocumentListRejectionEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		final RegisteredTutor registeredTutor = getRegisteredTutor(tutorId);
+	public void sendTutorDocumentListRejectionEmails(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
+		final RegisteredTutor registeredTutor = getRegisteredTutor(tutorSerialId);
 		if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
 			final List<TutorDocument> tutorDocuments = getTutorDocumentList(idList);
 			if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
@@ -284,9 +285,9 @@ public class TutorService implements TutorConstants {
 		}
 	}
 	
-	public void sendTutorDocumentListReminderEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void sendTutorDocumentListReminderEmails(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		if (ValidationUtils.checkNonEmptyList(idList)) {
-			final RegisteredTutor registeredTutor = getRegisteredTutor(tutorId);
+			final RegisteredTutor registeredTutor = getRegisteredTutor(tutorSerialId);
 			if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
 				final List<TutorDocument> tutorDocuments = getTutorDocumentList(idList);
 				if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
@@ -306,58 +307,58 @@ public class TutorService implements TutorConstants {
 	}
 	
 	@Transactional
-	public void aprroveBankAccountList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void aprroveBankAccountList(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<BankDetail> paramObjectList = new LinkedList<BankDetail>();
-		for (final String bankAccountId : idList) {
+		for (final String bankAccountSerialId : idList) {
 			final BankDetail bankDetail = new BankDetail();
 			bankDetail.setIsApproved(YES);
 			bankDetail.setWhoActed(activeUser.getUserId());
 			bankDetail.setRemarks(comments);
 			bankDetail.setActionDateMillis(currentTimestamp.getTime());
-			bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+			bankDetail.setBankAccountSerialId(bankAccountSerialId);
 			paramObjectList.add(bankDetail);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateTakeActionBankDetail", paramObjectList);
 	}
 	
 	@Transactional
-	public void makeDefaultBankAccount(final Long bankAccountId, final Long tutorId, final String comments, final User activeUser) throws Exception {
-		resetPreviousDefaultBankAccount(tutorId);
+	public void makeDefaultBankAccount(final String bankAccountSerialId, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
+		resetPreviousDefaultBankAccount(tutorSerialId);
 		final Date currentTimestamp = new Date();
 		final BankDetail bankDetail = new BankDetail();
 		bankDetail.setIsDefault(YES);;
 		bankDetail.setWhoActed(activeUser.getUserId());
 		bankDetail.setRemarks(comments);
 		bankDetail.setActionDateMillis(currentTimestamp.getTime());
-		bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+		bankDetail.setBankAccountSerialId(bankAccountSerialId);
 		applicationDao.executeUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateMakeDefaultBankDetail", bankDetail);
 	}
 	
-	private void resetPreviousDefaultBankAccount(final Long tutorId) throws Exception {
+	private void resetPreviousDefaultBankAccount(final String tutorSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		applicationDao.executeUpdate(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "resetPreviousDefaultBankAccount"), paramsMap);
 	}
 	
 	@Transactional
-	public void rejectBankAccountList(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void rejectBankAccountList(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<BankDetail> paramObjectList = new LinkedList<BankDetail>();
-		for (final String bankAccountId : idList) {
+		for (final String bankAccountSerialId : idList) {
 			final BankDetail bankDetail = new BankDetail();
 			bankDetail.setIsApproved(NO);
 			bankDetail.setWhoActed(activeUser.getUserId());
 			bankDetail.setRemarks(comments);
 			bankDetail.setActionDateMillis(currentTimestamp.getTime());
-			bankDetail.setBankAccountId(Long.valueOf(bankAccountId));
+			bankDetail.setBankAccountSerialId(bankAccountSerialId);
 			paramObjectList.add(bankDetail);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-bankdetail", "updateTakeActionBankDetail", paramObjectList);
-		sendBankAccountListRejectionEmails(idList, tutorId, comments, activeUser);
+		sendBankAccountListRejectionEmails(idList, tutorSerialId, comments, activeUser);
 	}
 	
-	public void sendBankAccountListRejectionEmails(final List<String> idList, final Long tutorId, final String comments, final User activeUser) throws Exception {
+	public void sendBankAccountListRejectionEmails(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
 		// @ TODO - Email functionality 
 	}
 	
@@ -388,12 +389,12 @@ public class TutorService implements TutorConstants {
 		return adminService.getBecomeTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST, gridComponent);
 	}
 	
-	public String getFolderPathToUploadTutorDocuments(final String tutorId) {
-		return "secured/tutor/documents/" + tutorId;
+	public String getFolderPathToUploadTutorDocuments(final String tutorSerialId) {
+		return "secured/tutor/documents/" + tutorSerialId;
 	}
 	
 	@Transactional
-	public void uploadTutorDocuments(final List<TutorDocument> documents, final Long tutorId, final Boolean isAdminOverride, final User activeUser) throws Exception {
+	public void uploadTutorDocuments(final List<TutorDocument> documents, final String tutorSerialId, final Boolean isAdminOverride, final User activeUser) throws Exception {
 		if (ValidationUtils.checkNonEmptyList(documents)) {
 			final Date currentTimeStamp = new Date();
 			String queryIdInsert = EMPTY_STRING;
@@ -402,13 +403,13 @@ public class TutorService implements TutorConstants {
 			} else {
 				queryIdInsert = "insertTutorDocumentFromTutor";
 			}
-			final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(String.valueOf(tutorId));
+			final String folderPathToUploadDocuments = getFolderPathToUploadTutorDocuments(tutorSerialId);
 			final List<String> documentTypeList = new ArrayList<String>();
 			for (final TutorDocument document : documents) {
 				documentTypeList.add(document.getDocumentType());
 			}
 			final Map<String, Object> params = new HashMap<String, Object>();
-			params.put("tutorId", tutorId);
+			params.put("tutorSerialId", tutorSerialId);
 			params.put("documentTypeList", documentTypeList);
 			final String queryToSelectOlderFileName = queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocumentFileNameAndFSKey") + 
 														queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentTypeFilter");
@@ -417,7 +418,8 @@ public class TutorService implements TutorConstants {
 				FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(String.valueOf(document.get("FS_KEY")), activeUser);
 			}
 			for (final TutorDocument document : documents) {
-				document.setTutorId(tutorId);
+				document.setDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				document.setTutorSerialId(tutorSerialId);
 				document.setFilename(generateFileNameForDocumentTypeAndIncomingFile(document));
 				document.setFsKey(FileSystemUtils.createFileInsideFolderOnApplicationFileSystemAndReturnKey(folderPathToUploadDocuments, document.getFilename(), document.getContent()));
 				if (isAdminOverride) {
@@ -454,7 +456,7 @@ public class TutorService implements TutorConstants {
 	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) throws Exception {
 		final String baseQuery = "UPDATE REGISTERED_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE TUTOR_ID = :tutorId";
+		final String existingFilterQueryString = "WHERE TUTOR_SERIAL_ID = :tutorSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -540,14 +542,14 @@ public class TutorService implements TutorConstants {
 					}
 					case "documents" : {
 						if (ValidationUtils.checkNonEmptyList(tutor.getDocuments())) {
-							uploadTutorDocuments(tutor.getDocuments(), tutor.getTutorId(), true, activeUser);
+							uploadTutorDocuments(tutor.getDocuments(), tutor.getTutorSerialId(), true, activeUser);
 						}
 						break;
 					}
 				}
 			}
 		}
-		paramsMap.put("tutorId", tutor.getTutorId());
+		paramsMap.put("tutorSerialId", tutor.getTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
@@ -567,10 +569,10 @@ public class TutorService implements TutorConstants {
 		return null;
 	}
 	
-	public RegisteredTutor getRegisteredTutor(final Long tutorId) throws Exception {
-		if (null != tutorId) {
+	public RegisteredTutor getRegisteredTutor(final String tutorSerialId) throws Exception {
+		if (ValidationUtils.checkStringAvailability(tutorSerialId)) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
-			paramsMap.put("tutorId", tutorId);
+			paramsMap.put("tutorSerialId", tutorSerialId);
 			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
 									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		}

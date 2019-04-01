@@ -10,8 +10,8 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
-	private Long enquiryId;
-	private Long customerId;
+	private String enquirySerialId;
+	private String customerSerialId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
@@ -24,7 +24,7 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 	private Long lastActionDateMillis;
 	private Long entryDateMillis;
 	private String matchStatus;
-	private Long tutorId;
+	private String tutorSerialId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
@@ -40,20 +40,20 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 	
 	public Enquiry() {}
 	
-	public Long getEnquiryId() {
-		return enquiryId;
+	public String getEnquirySerialId() {
+		return enquirySerialId;
 	}
 
-	public void setEnquiryId(Long enquiryId) {
-		this.enquiryId = enquiryId;
+	public void setEnquirySerialId(String enquirySerialId) {
+		this.enquirySerialId = enquirySerialId;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 
 	public String getSubject() {
@@ -112,12 +112,12 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 		this.matchStatus = matchStatus;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
 	public String getAdminRemarks() {
@@ -271,8 +271,8 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "enquiryId" : return "ENQUIRY_ID";
-			case "customerId" : return "CUSTOMER_ID";
+			case "enquirySerialId" : return "ENQUIRY_SERIAL_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
@@ -284,7 +284,7 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 			case "isMapped" : return "IS_MAPPED";
 			case "lastActionDateMillis" : return "LAST_ACTION_DATE_MILLIS";
 			case "matchStatus" : return "MATCH_STATUS";
-			case "tutorId" : return "TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";

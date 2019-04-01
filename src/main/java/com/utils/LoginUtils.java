@@ -16,9 +16,11 @@ import com.constants.BeanConstants;
 import com.constants.LoginConstants;
 import com.exception.ApplicationException;
 import com.model.Employee;
-import com.model.LogonTracker;
+import com.model.LoginTracker;
 import com.model.User;
 import com.model.UserAccessOptions;
+import com.model.components.RegisteredTutor;
+import com.model.components.SubscribedCustomer;
 import com.service.LoginService;
 import com.service.components.CommonsService;
 import com.service.components.EmployeeService;
@@ -28,13 +30,14 @@ public class LoginUtils implements LoginConstants {
 	
 	public static void createNewSession(final HttpServletRequest httpRequest, final HttpServletResponse httpResponse, final User user) throws Exception {
 		final Date currentTimestamp = new Date();
-		final LogonTracker logonTracker = new LogonTracker();
-		logonTracker.setUserId(user.getUserId());
-		logonTracker.setUserType(user.getUserType());
-		logonTracker.setLoginTimeMillis(currentTimestamp.getTime());
-		logonTracker.setLoginFrom(WebServiceUtils.getUserAgent(httpRequest));
-		logonTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
-		getLoginService().feedLogonTracker(logonTracker);
+		final LoginTracker loginTracker = new LoginTracker();
+		loginTracker.setLoginSerialId(UUIDGeneratorUtils.generateSerialGUID());
+		loginTracker.setUserId(user.getUserId());
+		loginTracker.setUserType(user.getUserType());
+		loginTracker.setLoginTimeMillis(currentTimestamp.getTime());
+		loginTracker.setLoginFrom(WebServiceUtils.getUserAgent(httpRequest));
+		loginTracker.setMachineIp(WebServiceUtils.getRemoteIPAddress(httpRequest));
+		getLoginService().feedLoginTracker(loginTracker);
 		createTokensForNewSession(httpRequest, httpResponse, user);
 		createNewUserSession(httpRequest, httpResponse, user);
 	}
@@ -143,17 +146,19 @@ public class LoginUtils implements LoginConstants {
 		switch(userType) {
 			case USER_TYPE_EMPLOYEE : {
 				final Employee employee = new Employee();
-				employee.setEmployeeId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "employeeId", Long.class));
+				employee.setEmployeeSerialId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "employeeSerialId", String.class));
 				employee.setEmailDomain(JSONUtils.getValueFromJSONObject(userAsJSONObject, "emailDomain", String.class));
 				return employee;
 			}
 			case USER_TYPE_TUTOR    : {
-				// TODO
-				return null;
+				final RegisteredTutor registeredTutor = new RegisteredTutor();
+				registeredTutor.setTutorSerialId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "tutorSerialId", String.class));
+				return registeredTutor;
 			}
 			case USER_TYPE_CUSTOMER : {
-				// TODO
-				return null;
+				final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
+				subscribedCustomer.setCustomerSerialId(JSONUtils.getValueFromJSONObject(userAsJSONObject, "customerSerialId", String.class));
+				return subscribedCustomer;
 			}
 			default	: return null;
 		}

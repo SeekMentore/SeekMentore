@@ -20,6 +20,7 @@ import com.model.rowmappers.EmailTemplateRowMapper;
 import com.service.QueryMapperService;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_COMMONS_SERVICE)
@@ -56,6 +57,7 @@ public class CommonsService implements CommonsConstants {
 	@Transactional
 	public void feedErrorRecord(final ErrorPacket errorPacket) {
 		try {
+			errorPacket.setErrorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			applicationDao.executeUpdateWithQueryMapper("error", "insertErrorPacket", errorPacket);
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("errorPacket", errorPacket);

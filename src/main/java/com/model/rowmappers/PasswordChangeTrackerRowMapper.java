@@ -16,7 +16,7 @@ public class PasswordChangeTrackerRowMapper implements RowMapper<PasswordChangeT
 	public PasswordChangeTracker mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
-		passwordChangeTracker.setPasswordChangeId(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("passwordChangeId"), Long.class));
+		passwordChangeTracker.setPasswordChangeSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("passwordChangeSerialId"), String.class));
 		passwordChangeTracker.setChangeTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("changeTimeMillis"), Long.class));
 		passwordChangeTracker.setUserType(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("userType"), String.class));
 		passwordChangeTracker.setUserId(ExceptionUtils.exceptionHandlerForRowMapper(row, passwordChangeTracker.resolveColumnNameForMapping("userId"), String.class));

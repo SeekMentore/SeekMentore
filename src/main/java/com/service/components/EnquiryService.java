@@ -78,7 +78,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST : {
 				existingFilterQueryString += queryMapperService.getQuerySQL("sales-enquiry", "enquiryCurrentCustomerAdditionalFilter");
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
-				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
+				paramsMap.put("customerSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class));
 				break;
 			}
 		}
@@ -104,13 +104,13 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			}
 		}
 		final List<Enquiry> paramObjectList = new LinkedList<Enquiry>();
-		for (final String enquiryId : idList) {
+		for (final String enquirySerialId : idList) {
 			final Enquiry enquiry = new Enquiry();
 			enquiry.setWhoActed(activeUser.getUserId());
 			enquiry.setAdminRemarks(comments);
 			enquiry.setMatchStatus(matchStatus);
 			enquiry.setLastActionDateMillis(currentTimestamp.getTime());
-			enquiry.setEnquiryId(Long.valueOf(enquiryId));
+			enquiry.setEnquirySerialId(enquirySerialId);
 			paramObjectList.add(enquiry);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("sales-enquiry", "updateEnquiryMatchStatus", paramObjectList);
@@ -120,7 +120,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE ENQUIRY SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE ENQUIRY_ID = :enquiryId";
+		final String existingFilterQueryString = "WHERE ENQUIRY_SERIAL_ID = :enquirySerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -173,7 +173,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				}
 			}
 		}
-		paramsMap.put("enquiryId", enquiryObject.getEnquiryId());
+		paramsMap.put("enquirySerialId", enquiryObject.getEnquirySerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
@@ -199,9 +199,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	}
 	
 	public List<RegisteredTutor> getEligibleTutorsList(final GridComponent gridComponent) throws Exception {
-		final Long enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
+		final String enquirySerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquirySerialId", String.class);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("enquiryId", enquiryId);
+		paramsMap.put("enquirySerialId", enquirySerialId);
 		setSearchFiltersAsPerEligibilitySelection(paramsMap, gridComponent);
 		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorAlreadyMappedFilter"));
 		return tutorService.getRegisteredTutorListWithParams(gridComponent, paramsMap);
@@ -282,19 +282,19 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentEnquiryAllMappedTutors")
 											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
-				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
+				paramsMap.put("enquirySerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquirySerialId", String.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentTutorMappingFilter")
 											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
-				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				paramsMap.put("tutorSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorSerialId", String.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentCustomerMappingFilter")
 											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
-				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
+				paramsMap.put("customerSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_ENQUIRY_CLOSED_MAPPED_TUTORS_LIST : {
@@ -369,14 +369,14 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	}
 	
 	@Transactional
-	public void mapRegisteredTutors(final Long enquiryId, final List<String> idList, final User activeUser) throws Exception {
+	public void mapRegisteredTutors(final String enquirySerialId, final List<String> idList, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<TutorMapper> tutorMapperList = new LinkedList<TutorMapper>();
-		for (final String tutorId : idList) {
+		for (final String tutorSerialId : idList) {
 			final TutorMapper tutorMapperObject = new TutorMapper();
 			tutorMapperObject.setTutorMapperSerialId(UUIDGeneratorUtils.generateSerialGUID());
-			tutorMapperObject.setEnquiryId(enquiryId);
-			tutorMapperObject.setTutorId(Long.valueOf(tutorId));
+			tutorMapperObject.setEnquirySerialId(enquirySerialId);
+			tutorMapperObject.setTutorSerialId(tutorSerialId);
 			tutorMapperObject.setMappingStatus(MAPPING_STATUS_PENDING);
 			tutorMapperObject.setWhoActed(activeUser.getUserId());
 			tutorMapperObject.setIsDemoScheduled(NO);

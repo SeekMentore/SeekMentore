@@ -16,8 +16,8 @@ public class MailAttachmentRowMapper implements RowMapper<MailAttachment> {
 	public MailAttachment mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final MailAttachment mailAttachmentObject = new MailAttachment();
-		mailAttachmentObject.setAttachmentId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("attachmentId"), Long.class));
-		mailAttachmentObject.setMailId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("mailId"), Long.class));
+		mailAttachmentObject.setAttachmentSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("attachmentSerialId"), String.class));
+		mailAttachmentObject.setMailSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("mailSerialId"), String.class));
 		mailAttachmentObject.setContent(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("content"), byte[].class));
 		mailAttachmentObject.setFilename(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("filename"), String.class));
 		mailAttachmentObject.setApplicationType(ExceptionUtils.exceptionHandlerForRowMapper(row, mailAttachmentObject.resolveColumnNameForMapping("applicationType"), String.class));

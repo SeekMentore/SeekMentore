@@ -34,6 +34,7 @@ import com.service.QueryMapperService;
 import com.service.components.CommonsService;
 import com.utils.ExceptionUtils;
 import com.utils.LoggerUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 import com.utils.context.AppContext;
 
@@ -223,7 +224,9 @@ public class AWSS3HelperUtils implements AWSConstants {
 					}
 				} while(objectExists);
 				LoggerUtils.logOnConsole("fileKeyThatDoesNotExists in recycle bin = " + fileKeyThatDoesNotExists);
-				getApplicationDao().executeUpdateWithQueryMapper("aws", "insertAWSS3DeleteReport", new AWSS3DeleteReport(currentTimestamp.getTime(), key, fileKeyThatDoesNotExists, NO, activeUser.getUserId(), activeUser.getUserType()));
+				final AWSS3DeleteReport awsS3DeleteReport = new AWSS3DeleteReport(currentTimestamp.getTime(), key, fileKeyThatDoesNotExists, NO, activeUser.getUserId(), activeUser.getUserType());
+				awsS3DeleteReport.setS3DeleteSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				getApplicationDao().executeUpdateWithQueryMapper("aws", "insertAWSS3DeleteReport", awsS3DeleteReport);
 				LoggerUtils.logOnConsole("Copying contents from <" + key + "> to <" + fileKeyThatDoesNotExists + ">");
 				createFileUsingKey(fileKeyThatDoesNotExists, readContentFromFileUsingKeyInS3Client(key), false);
 				recycleSuccessfull = true;

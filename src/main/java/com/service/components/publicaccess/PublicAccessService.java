@@ -33,6 +33,7 @@ import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.TutorService;
 import com.utils.MailUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.VelocityUtils;
 
 @Service(BeanConstants.BEAN_NAME_PUBLIC_ACCESS_SERVICE)
@@ -119,6 +120,7 @@ public class PublicAccessService implements PublicAccessConstants {
 			final BecomeTutor becomeTutorApplication, 
 		final Date currentTimestamp
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
+		becomeTutorApplication.setBecomeTutorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		becomeTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		becomeTutorApplication.setApplicationDateMillis(currentTimestamp.getTime());
 		becomeTutorApplication.setApplicationStatus(STATUS_FRESH);

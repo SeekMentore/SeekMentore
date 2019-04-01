@@ -5,7 +5,7 @@ Hello Team,
 	<table style="$CoreTableStyling">
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Query Id</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.tentativeTutorId)</td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.queryId)</td>
 		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Query Date</strong></td>

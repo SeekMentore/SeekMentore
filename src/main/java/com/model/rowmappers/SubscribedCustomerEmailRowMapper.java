@@ -17,8 +17,8 @@ public class SubscribedCustomerEmailRowMapper implements RowMapper<SubscribedCus
 	public SubscribedCustomerEmail mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscribedCustomerEmail subscribedCustomerEmail = new SubscribedCustomerEmail();
-		subscribedCustomerEmail.setSubscribedCustomerEmailIdId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerEmail.resolveColumnNameForMapping("subscribedCustomerEmailIdId"), Long.class));
-		subscribedCustomerEmail.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerEmail.resolveColumnNameForMapping("customerId"), Long.class));
+		subscribedCustomerEmail.setSubscribedCustomerEmailIdSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerEmail.resolveColumnNameForMapping("subscribedCustomerEmailIdSerialId"), String.class));
+		subscribedCustomerEmail.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerEmail.resolveColumnNameForMapping("customerSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherEmails(subscribedCustomerEmail, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribedCustomerEmail, row, rowNum);
 		return subscribedCustomerEmail;

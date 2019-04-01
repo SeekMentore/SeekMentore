@@ -61,7 +61,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
 											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentTutorAdditionalFilter")
 											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
-				paramsMap.put("tutorId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class));
+				paramsMap.put("tutorSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorSerialId", String.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST : {
@@ -69,7 +69,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-demo", "demoDemoStatusFilter") 
 											+ queryMapperService.getQuerySQL("sales-demo", "demoCurrentCustomerAdditionalFilter")
 											+ queryMapperService.getQuerySQL("sales-demo", "demoEnquiryOpenAdditionalFilter");
-				paramsMap.put("customerId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class));
+				paramsMap.put("customerSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SCHEDULED_DEMO_LIST : {
@@ -132,7 +132,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 			demo.setRescheduledFromDemoSerialId(rescheduledFromDemoSerialId);
 			insertQueryId = "insertReScheduledDemo";
 		}
-		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-demo", insertQueryId, demo);
+		applicationDao.executeUpdateWithQueryMapper("sales-demo", insertQueryId, demo);
 		if (sendEmails) {
 			sendDemoScheduledNotificationEmails(demo.getDemoSerialId());
 		}

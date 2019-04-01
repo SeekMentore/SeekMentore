@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <queryMapper namespace="login">
-	<query type="insert" id="insertLogonTracker" paramClass="com.model.LogonTracker">
-		INSERT INTO LOGON_TRACKER
-			(USER_ID, USER_TYPE, LOGIN_TIME_MILLIS, LOGIN_FROM, MACHINE_IP) 
+	<query type="insert" id="insertLoginTracker" paramClass="com.model.LoginTracker">
+		INSERT INTO LOGIN_TRACKER
+			(LOGIN_SERIAL_ID, USER_ID, USER_TYPE, LOGIN_TIME_MILLIS, LOGIN_FROM, MACHINE_IP) 
 		VALUES
-			(:userId, :userType, :loginTimeMillis, :loginFrom, :machineIp)
+			(:loginSerialId, :userId, :userType, :loginTimeMillis, :loginFrom, :machineIp)
 	</query>
-	<query type="select" id="selectLogonTracker">
+	<query type="select" id="selectLoginTracker">
 		SELECT 
 			LT.*,
 			CASE
@@ -15,13 +15,13 @@
 			    WHEN USER_TYPE = 'Customer' THEN IFNULL((SELECT NAME FROM SUBSCRIBED_CUSTOMER S WHERE S.USER_ID = LT.USER_ID), LT.USER_ID)
 			    ELSE LT.USER_ID
 			END AS USER_NAME
-		FROM LOGON_TRACKER LT
+		FROM LOGIN_TRACKER LT
 	</query>
 	<query type="insert" id="insertPasswordChangeTracker" paramClass="com.model.PasswordChangeTracker">
 		INSERT INTO PASSWORD_CHANGE_TRACKER
-			(USER_ID, USER_TYPE, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) 
+			(PASSWORD_CHANGE_SERIAL_ID, USER_ID, USER_TYPE, CHANGE_TIME_MILLIS, ENCRYPTED_PASSWORD_OLD, ENCRYPTED_PASSWORD_NEW) 
 		VALUES
-			(:userId, :userType, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)
+			(:passwordChangeSerialId, :userId, :userType, :changeTimeMillis, :encryptedPasswordOld, :encryptedPasswordNew)
 	</query>
 	<query type="select" id="selectPasswordChangeTracker">
 		SELECT 
@@ -36,9 +36,9 @@
 	</query>
 	<query type="insert" id="insertForgotPasswordToken" paramClass="com.model.ForgotPasswordToken">
 		INSERT INTO FORGOT_PASSWORD_TOKEN
-			(USER_ID, USER_TYPE, TOKEN, ISSUE_DATE_MILLIS, EXPIRY_DATE_MILLIS, IS_VALID) 
+			(FORGOT_PASSWORD_TOKEN_SERIAL_ID, USER_ID, USER_TYPE, TOKEN, ISSUE_DATE_MILLIS, EXPIRY_DATE_MILLIS, IS_VALID) 
 		VALUES
-			(:userId, :userType, :token, :issueDateMillis, :expiryDateMillis, :isValid)
+			(:forgotPasswordTokenSerialId, :userId, :userType, :token, :issueDateMillis, :expiryDateMillis, :isValid)
 	</query>
 	<query type="select" id="selectForgotPasswordToken">
 		SELECT 
@@ -52,11 +52,11 @@
 		FROM FORGOT_PASSWORD_TOKEN FPT
 	</query>
 	<query type="filter" id="forgotPasswordTokenTokenIdFilter">
-		WHERE FORGOT_PASSWORD_TOKEN_ID = :tokenId
+		WHERE FORGOT_PASSWORD_TOKEN_SERIAL_ID = :forgotPasswordTokenSerialId
 	</query>
 	<query type="update" id="updateForgotPasswordTokenAsInvalid" paramClass="com.model.ForgotPasswordToken">
 		UPDATE FORGOT_PASSWORD_TOKEN SET
 		IS_VALID = :isValid
-		WHERE FORGOT_PASSWORD_TOKEN_ID = :forgotPasswordTokenId	
+		WHERE FORGOT_PASSWORD_TOKEN_SERIAL_ID = :forgotPasswordTokenSerialId	
 	</query>
 </queryMapper>

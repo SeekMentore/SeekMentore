@@ -16,7 +16,7 @@ public class ErrorPacketRowMapper implements RowMapper<ErrorPacket> {
 	public ErrorPacket mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final ErrorPacket errorPacket = new ErrorPacket();
-		errorPacket.setErrorId(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("errorId"), Long.class));
+		errorPacket.setErrorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("errorSerialId"), String.class));
 		errorPacket.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("occuredAtMillis"), Long.class));
 		errorPacket.setRequestURI(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("requestURI"), String.class));
 		errorPacket.setErrorTrace(ExceptionUtils.exceptionHandlerForRowMapper(row, errorPacket.resolveColumnNameForMapping("errorTrace"), String.class));

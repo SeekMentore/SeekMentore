@@ -10,23 +10,26 @@ public class RegisteredTutorContactNumber extends OtherContactNumber implements 
 	
 	private static final long serialVersionUID = -8122347075474144999L;
 	
-	private Long registeredTutorContactNumberId;
-	private Long tutorId;
+	private String registeredTutorContactNumberSerialId;
+	private String tutorSerialId;
 	
-	public Long getRegisteredTutorContactNumberId() {
-		return registeredTutorContactNumberId;
+	public RegisteredTutorContactNumber() {
+	}
+	
+	public String getRegisteredTutorContactNumberSerialId() {
+		return registeredTutorContactNumberSerialId;
 	}
 
-	public void setRegisteredTutorContactNumberId(Long registeredTutorContactNumberId) {
-		this.registeredTutorContactNumberId = registeredTutorContactNumberId;
+	public void setRegisteredTutorContactNumberSerialId(String registeredTutorContactNumberSerialId) {
+		this.registeredTutorContactNumberSerialId = registeredTutorContactNumberSerialId;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 	
 	@Override
@@ -44,8 +47,8 @@ public class RegisteredTutorContactNumber extends OtherContactNumber implements 
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "registeredTutorContactNumberId" : return "REGISTERED_TUTOR_CONTACT_NUMBER_ID";
-			case "tutorId" : return "TUTOR_ID";
+			case "registeredTutorContactNumberSerialId" : return "REGISTERED_TUTOR_CONTACT_NUMBER_SERIAL_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

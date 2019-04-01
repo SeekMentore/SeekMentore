@@ -45,24 +45,24 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_SUBSCRIBED_CUSTOMER_ADMIN) 
 public class SubscribedCustomerRestService extends AbstractRestWebservice implements RestMethodConstants, CustomerConstants {
 	
-	private Long customerId;
+	private String customerSerialId;
 	private SubscribedCustomer subscribedCustomerObject;
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminSubscribedCustomerProfilePdf (
-    		@FormParam("customerId") final String customerId,
+    		@FormParam("customerSerialId") final String customerSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF;
 		try {
-			this.customerId = Long.valueOf(customerId);
+			this.customerSerialId = customerSerialId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getCustomerService().downloadSubscribedCustomerProfilePdf(Long.valueOf(customerId), true), response);
+			downloadFile(getCustomerService().downloadSubscribedCustomerProfilePdf(this.customerSerialId, true), response);
 		}
     }
 	
@@ -80,11 +80,11 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, customerId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, this.customerSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -109,11 +109,11 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, customerId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, this.customerSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -135,13 +135,12 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD;
 		createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.customerSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.subscribedCustomerObject.setCustomerId(Long.parseLong(parentId));
+			this.subscribedCustomerObject.setCustomerSerialId(this.customerSerialId);
 			getCustomerService().updateCustomerRecord(this.subscribedCustomerObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -172,7 +171,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleCustomerSecurity();
 				break;
 			}
@@ -182,7 +181,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	
 	private void handleSelectedCustomerDataGridView() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
+		if (!ValidationUtils.checkStringAvailability(this.customerSerialId)) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_CUSTOMER_SERIAL_ID));
 		}
 	} 

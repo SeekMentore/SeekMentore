@@ -2,10 +2,10 @@
 <queryMapper namespace="admin-registeredtutor">
 	<query type="insert" id="insertRegisteredTutor" paramClass="com.model.components.RegisteredTutor">
 		INSERT INTO REGISTERED_TUTOR
-			(NAME, TENTATIVE_TUTOR_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, 
+			(TUTOR_SERIAL_ID, NAME, BECOME_TUTOR_SERIAL_ID, DATE_OF_BIRTH, GENDER, QUALIFICATION, PRIMARY_PROFESSION, 
 			TRANSPORT_MODE, TEACHING_EXP, INTERESTED_STUDENT_GRADES, INTERESTED_SUBJECTS, COMFORTABLE_LOCATIONS, ADDITIONAL_DETAILS, 
 			ADDRESS_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, PREFERRED_TEACHING_TYPE, USER_TYPE)
-		VALUES(:name, :tentativeTutorId, :dateOfBirth, :gender, :qualification, :primaryProfession, 
+		VALUES(:tutorSerialId, :name, :becomeTutorSerialId, :dateOfBirth, :gender, :qualification, :primaryProfession, 
 				:transportMode, :teachingExp, :interestedStudentGrades, :interestedSubjects, :comfortableLocations, :additionalDetails, 
 				:addressDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, :preferredTeachingType, 'Tutor')
 	</query>
@@ -18,23 +18,23 @@
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.WHO_BLACKLISTED), R.WHO_BLACKLISTED) AS WHO_BLACKLISTED_NAME,
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = R.WHO_UN_BLACKLISTED), R.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME
         FROM REGISTERED_TUTOR R
-        INNER JOIN REGISTERED_TUTOR_EMAIL_ID RTE ON R.TUTOR_ID = RTE.TUTOR_ID AND RTE.IS_PRIMARY = 'Y'
-        INNER JOIN REGISTERED_TUTOR_CONTACT_NUMBER RTC ON R.TUTOR_ID = RTC.TUTOR_ID AND RTC.IS_PRIMARY = 'Y'
+        INNER JOIN REGISTERED_TUTOR_EMAIL_ID RTE ON R.TUTOR_SERIAL_ID = RTE.TUTOR_SERIAL_ID AND RTE.IS_PRIMARY = 'Y'
+        INNER JOIN REGISTERED_TUTOR_CONTACT_NUMBER RTC ON R.TUTOR_SERIAL_ID = RTC.TUTOR_SERIAL_ID AND RTC.IS_PRIMARY = 'Y'
 	</query>
 	<query type="filter" id="registeredTutorUserIdFilter">
 		WHERE LOWER(R.USER_ID) = LOWER(:userId)
 	</query>
 	<query type="filter" id="registeredTutorTutorIdFilter">
-		WHERE R.TUTOR_ID = :tutorId
+		WHERE R.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
     <query type="filter" id="registeredTutorEmailFilter">
-		WHERE R.TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_EMAIL_ID WHERE EMAIL_ID = :emailId)
+		WHERE R.TUTOR_SERIAL_ID = (SELECT TUTOR_SERIAL_ID FROM REGISTERED_TUTOR_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
     <query type="filter" id="registeredTutorContactNumberFilter">
-		WHERE R.TUTOR_ID = (SELECT TUTOR_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
+		WHERE R.TUTOR_SERIAL_ID = (SELECT TUTOR_SERIAL_ID FROM REGISTERED_TUTOR_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
 	<query type="filter" id="registeredTutorAlreadyMappedFilter">
-		WHERE TUTOR_ID NOT IN (SELECT T.TUTOR_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_ID = :enquiryId)
+		WHERE TUTOR_SERIAL_ID NOT IN (SELECT T.TUTOR_SERIAL_ID FROM TUTOR_MAPPER T WHERE T.ENQUIRY_SERIAL_ID = :enquirySerialId)
 	</query>
     <query type="update" id="updateRegisteredTutorBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET
@@ -44,7 +44,7 @@
 			WHO_BLACKLISTED = :whoBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TUTOR_ID = :tutorId
+		WHERE TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="update" id="updateRegisteredTutorUnBlacklist" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET
@@ -54,7 +54,7 @@
 			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TUTOR_ID = :tutorId
+		WHERE TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="update" id="updateRegisteredTutorPassword" paramClass="com.model.components.RegisteredTutor">
 		UPDATE REGISTERED_TUTOR SET 
@@ -63,9 +63,9 @@
 	</query>
 	<query type="insert" id="insertRegisteredTutorEmail" paramClass="com.model.components.RegisteredTutorEmail">
 		INSERT INTO REGISTERED_TUTOR_EMAIL_ID
-			(TUTOR_ID, EMAIL_ID, IS_PRIMARY) 
+			(REGISTERED_TUTOR_EMAIL_ID_SERIAL_ID, TUTOR_SERIAL_ID, EMAIL_ID, IS_PRIMARY) 
 		VALUES
-			(:tutorId, :emailId, :isPrimary)
+			(:registeredTutorEmailIdSerialId, :tutorSerialId, :emailId, :isPrimary)
 	</query>
 	<query type="select" id="selectRegisteredTutorEmail">
 		SELECT
@@ -73,13 +73,13 @@
         FROM REGISTERED_TUTOR_EMAIL_ID RTE
 	</query>
 	<query type="filter" id="registeredTutorEmailTutorIdFilter">
-		WHERE RTE.TUTOR_ID = :tutorId
+		WHERE RTE.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="insert" id="insertRegisteredTutorContactNumber" paramClass="com.model.components.RegisteredTutorContactNumber">
 		INSERT INTO REGISTERED_TUTOR_CONTACT_NUMBER
-			(TUTOR_ID, CONTACT_NUMBER, IS_PRIMARY) 
+			(REGISTERED_TUTOR_CONTACT_NUMBER_SERIAL_ID, TUTOR_SERIAL_ID, CONTACT_NUMBER, IS_PRIMARY) 
 		VALUES
-			(:tutorId, :contactNumber, :isPrimary)
+			(:registeredTutorContactNumberSerialId, :tutorSerialId, :contactNumber, :isPrimary)
 	</query>
 	<query type="select" id="selectRegisteredTutorContactNumber">
 		SELECT
@@ -87,6 +87,6 @@
         FROM REGISTERED_TUTOR_CONTACT_NUMBER RTC
 	</query>
 	<query type="filter" id="registeredTutorContactNumberTutorIdFilter">
-		WHERE RTC.TUTOR_ID = :tutorId
+		WHERE RTC.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 </queryMapper>

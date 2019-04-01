@@ -55,9 +55,9 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_SUPPORT) 
 public class SupportRestService extends AbstractRestWebservice implements SupportConstants, RestMethodConstants {
 	
+	private String becomeTutorSerialId;
 	private BecomeTutor becomeTutorObject;
-	private Long tentativeTutorId;
-	private Long enquiryId;
+	private String findTutorSerialId;
 	private FindTutor findTutorObject;
 	private SubscribeWithUs subscriptionObject;
 	private SubmitQuery submitQueryObject;
@@ -88,17 +88,17 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminBecomeTutorProfilePdf (
-    		@FormParam("tentativeTutorId") final String tentativeTutorId,
+    		@FormParam("becomeTutorSerialId") final String becomeTutorSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF;
+		this.becomeTutorSerialId = becomeTutorSerialId;
 		try {
-			this.tentativeTutorId = Long.valueOf(tentativeTutorId);
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getAdminService().downloadBecomeTutorProfilePdf(Long.valueOf(tentativeTutorId)), response);
+			downloadFile(getAdminService().downloadBecomeTutorProfilePdf(this.becomeTutorSerialId), response);
 		}
     }
 	
@@ -425,13 +425,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD;
 		createBecomeTutorObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.becomeTutorSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.becomeTutorObject.setTentativeTutorId(Long.parseLong(parentId));
+			this.becomeTutorObject.setBecomeTutorSerialId(this.becomeTutorSerialId);
 			getAdminService().updateBecomeTutorRecord(this.becomeTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -466,17 +465,15 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminFindTutorProfilePdf (
-    		@FormParam("enquiryId") final String enquiryId,
+    		@FormParam("findTutorSerialId") final String findTutorSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF;
-		try {
-			this.enquiryId = Long.valueOf(enquiryId);
-		} catch(NumberFormatException e) {}
+		this.findTutorSerialId = findTutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getAdminService().downloadFindTutorProfilePdf(Long.valueOf(enquiryId)), response);
+			downloadFile(getAdminService().downloadFindTutorProfilePdf(this.findTutorSerialId), response);
 		}
     }
 	
@@ -775,13 +772,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD;
 		createFindTutorObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		this.parentSerialId = parentId;
+		this.findTutorSerialId = parentId;
 		try {
-			this.parentId = Long.parseLong(parentId);
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.findTutorObject.setEnquiryId(Long.parseLong(parentId));
+			this.findTutorObject.setFindTutorSerialId(this.findTutorSerialId);
 			getAdminService().updateFindTutorRecord(this.findTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1583,12 +1581,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleBecomeTutorSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleFindTutorSecurity();
 				break;
 			}
@@ -1598,27 +1596,27 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				break;
 			}
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF : {
-				handleTentativeTutorId();
+				handleBecomeTutorSerialId();
 				break;
 			}
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF : {
-				handleEnquiryId();
+				handleFindTutorSerialId();
 				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	public void handleTentativeTutorId() throws Exception {
+	public void handleBecomeTutorSerialId() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.tentativeTutorId)) {
+		if (!ValidationUtils.checkObjectAvailability(this.becomeTutorSerialId)) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, VALIDATION_MESSAGE_BECOME_TUTOR_SERIAL_ID_ABSENT));
 		}
 	}
 	
-	public void handleEnquiryId() throws Exception {
+	public void handleFindTutorSerialId() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.enquiryId)) {
+		if (!ValidationUtils.checkObjectAvailability(this.findTutorSerialId)) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, VALIDATION_MESSAGE_FIND_TUTOR_SERIAL_ID_ABSENT));
 		}
 	}

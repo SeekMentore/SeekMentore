@@ -16,7 +16,7 @@ public class AWSS3DeleteReportRowMapper implements RowMapper<AWSS3DeleteReport> 
 	public AWSS3DeleteReport mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final AWSS3DeleteReport awsS3DeleteReport = new AWSS3DeleteReport();
-		awsS3DeleteReport.setS3DeleteId(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("s3DeleteId"), Long.class));
+		awsS3DeleteReport.setS3DeleteSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("s3DeleteSerialId"), String.class));
 		awsS3DeleteReport.setOccuredAtMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("occuredAtMillis"), Long.class));
 		awsS3DeleteReport.setFsKeyToBeDeleted(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("fsKeyToBeDeleted"), String.class));
 		awsS3DeleteReport.setFsKeyRecycled(ExceptionUtils.exceptionHandlerForRowMapper(row, awsS3DeleteReport.resolveColumnNameForMapping("fsKeyRecycled"), String.class));

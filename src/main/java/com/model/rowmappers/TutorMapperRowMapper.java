@@ -17,7 +17,7 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final TutorMapper tutorMapperObject = new TutorMapper();
 		tutorMapperObject.setTutorMapperSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorMapperSerialId"), String.class));
-		tutorMapperObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryId"), Long.class));
+		tutorMapperObject.setEnquirySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquirySerialId"), String.class));
 		tutorMapperObject.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquirySubject"), String.class));
 		tutorMapperObject.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		tutorMapperObject.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryLocation"), String.class));
@@ -27,11 +27,11 @@ public class TutorMapperRowMapper implements RowMapper<TutorMapper> {
 		tutorMapperObject.setEnquiryQuotedClientRate(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryQuotedClientRate"), Integer.class));
 		tutorMapperObject.setEnquiryNegotiatedRateWithClient(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryNegotiatedRateWithClient"), Integer.class));
 		tutorMapperObject.setEnquiryClientNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("enquiryClientNegotiationRemarks"), String.class));
-		tutorMapperObject.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerId"), Long.class));
+		tutorMapperObject.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerSerialId"), String.class));
 		tutorMapperObject.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerName"), String.class));
 		tutorMapperObject.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerEmail"), String.class));
 		tutorMapperObject.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("customerContactNumber"), String.class));
-		tutorMapperObject.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorId"), Long.class));
+		tutorMapperObject.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		tutorMapperObject.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorName"), String.class));
 		tutorMapperObject.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorEmail"), String.class));
 		tutorMapperObject.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorMapperObject.resolveColumnNameForMapping("tutorContactNumber"), String.class));

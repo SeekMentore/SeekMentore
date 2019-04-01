@@ -5,7 +5,7 @@ Hello Team,
 	<table style="$CoreTableStyling">
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Tentative Tutor Id</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($becomeTutor.tentativeTutorId)</td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($becomeTutor.becomeTutorSerialId)</td>
 		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Application Date</strong></td>

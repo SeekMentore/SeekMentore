@@ -32,15 +32,15 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 	private Integer negotiatedOverrideRateWithClient;
 	private Integer negotiatedOverrideRateWithTutor;
 	private Long adminActionDateMillis;
-	private Long customerId;
+	private String customerSerialId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
-	private Long tutorId;
+	private String tutorSerialId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
-	private Long enquiryId;
+	private String enquirySerialId;
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryLocation;
@@ -395,28 +395,28 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 		this.tutorMapperTutorNegotiationRemarks = tutorMapperTutorNegotiationRemarks;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
-	public Long getEnquiryId() {
-		return enquiryId;
+	public String getEnquirySerialId() {
+		return enquirySerialId;
 	}
 
-	public void setEnquiryId(Long enquiryId) {
-		this.enquiryId = enquiryId;
+	public void setEnquirySerialId(String enquirySerialId) {
+		this.enquirySerialId = enquirySerialId;
 	}
 	
 	public Integer getReScheduleCount() {
@@ -541,7 +541,7 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 			case "entryDateMillis" : return "ENTRY_DATE_MILLIS";
 			case "whoActed" : return "WHO_ACTED";
 			case "whoActedName" : return "WHO_ACTED_NAME";
-			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySerialId" : return "ENQUIRY_SERIAL_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryLocation" : return "ENQUIRY_LOCATION";
@@ -556,11 +556,11 @@ public class Demo extends GridComponentObject implements Serializable, Cloneable
 			case "tutorMapperQuotedTutorRate" : return "TUTOR_MAPPER_QUOTED_TUTOR_RATE";
 			case "tutorMapperNegotiatedRateWithTutor" : return "TUTOR_MAPPER_NEGOTIATED_RATE_WITH_TUTOR";
 			case "tutorMapperTutorNegotiationRemarks" : return "TUTOR_MAPPER_TUTOR_NEGOTIATION_REMARKS";
-			case "customerId" : return "CUSTOMER_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
-			case "tutorId" : return "TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";

@@ -17,11 +17,11 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscriptionPackage subscriptionPackage = new SubscriptionPackage();
 		subscriptionPackage.setSubscriptionPackageSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("subscriptionPackageSerialId"), String.class));
-		subscriptionPackage.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerId"), Long.class));
+		subscriptionPackage.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerSerialId"), String.class));
 		subscriptionPackage.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerName"), String.class));
 		subscriptionPackage.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerEmail"), String.class));
 		subscriptionPackage.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("customerContactNumber"), String.class));
-		subscriptionPackage.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorId"), Long.class));
+		subscriptionPackage.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		subscriptionPackage.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorName"), String.class));
 		subscriptionPackage.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorEmail"), String.class));
 		subscriptionPackage.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorContactNumber"), String.class));
@@ -29,7 +29,7 @@ public class SubscriptionPackageRowMapper implements RowMapper<SubscriptionPacka
 		subscriptionPackage.setTutorMapperQuotedTutorRate(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperQuotedTutorRate"), Integer.class));
 		subscriptionPackage.setTutorMapperNegotiatedRateWithTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperNegotiatedRateWithTutor"), Integer.class));
 		subscriptionPackage.setTutorMapperTutorNegotiationRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("tutorMapperTutorNegotiationRemarks"), String.class));
-		subscriptionPackage.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryId"), Long.class));
+		subscriptionPackage.setEnquirySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquirySerialId"), String.class));
 		subscriptionPackage.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquirySubject"), String.class));
 		subscriptionPackage.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		subscriptionPackage.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, subscriptionPackage.resolveColumnNameForMapping("enquiryLocation"), String.class));

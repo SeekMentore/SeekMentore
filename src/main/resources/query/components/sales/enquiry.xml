@@ -11,24 +11,24 @@
 			RTC.CONTACT_NUMBER AS TUTOR_CONTACT_NUMBER,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = EN.WHO_ACTED), EN.WHO_ACTED) AS WHO_ACTED_NAME
 		FROM ENQUIRY EN
-		INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_ID = C.CUSTOMER_ID
-        INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON EN.CUSTOMER_ID = SCE.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y'
-        INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON EN.CUSTOMER_ID = SCC.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y'
-		LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_ID = T.TUTOR_ID
-        LEFT OUTER JOIN REGISTERED_TUTOR_EMAIL_ID RTE ON EN.TUTOR_ID = RTE.TUTOR_ID AND RTE.IS_PRIMARY = 'Y'
-        LEFT OUTER JOIN REGISTERED_TUTOR_CONTACT_NUMBER RTC ON EN.TUTOR_ID = RTC.TUTOR_ID AND RTC.IS_PRIMARY = 'Y'
+		INNER JOIN SUBSCRIBED_CUSTOMER C ON EN.CUSTOMER_SERIAL_ID = C.CUSTOMER_SERIAL_ID
+        INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON EN.CUSTOMER_SERIAL_ID = SCE.CUSTOMER_SERIAL_ID AND SCE.IS_PRIMARY = 'Y'
+        INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON EN.CUSTOMER_SERIAL_ID = SCC.CUSTOMER_SERIAL_ID AND SCC.IS_PRIMARY = 'Y'
+		LEFT OUTER JOIN REGISTERED_TUTOR T ON EN.TUTOR_SERIAL_ID = T.TUTOR_SERIAL_ID
+        LEFT OUTER JOIN REGISTERED_TUTOR_EMAIL_ID RTE ON EN.TUTOR_SERIAL_ID = RTE.TUTOR_SERIAL_ID AND RTE.IS_PRIMARY = 'Y'
+        LEFT OUTER JOIN REGISTERED_TUTOR_CONTACT_NUMBER RTC ON EN.TUTOR_SERIAL_ID = RTC.TUTOR_SERIAL_ID AND RTC.IS_PRIMARY = 'Y'
 	</query>
 	<query type="filter" id="enquiryMatchStatusFilter">
 		WHERE EN.MATCH_STATUS = :matchStatus
 	</query>
 	<query type="filter" id="enquiryCurrentCustomerAdditionalFilter">
-		 AND EN.CUSTOMER_ID = :customerId
+		 AND EN.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="filter" id="enquiryMultipleMatchStatusFilter">
 		WHERE EN.MATCH_STATUS IN (:matchStatusList)
 	</query>
 	<query type="filter" id="enquiryEnquiryIdFilter">
-		WHERE EN.ENQUIRY_ID = :enquiryId
+		WHERE EN.ENQUIRY_SERIAL_ID = :enquirySerialId
 	</query>
 	<query type="sorter" id="enquiryEntryDateSorter">
 		ORDER BY ENTRY_DATE_MILLIS
@@ -39,22 +39,22 @@
 			WHO_ACTED = :whoActed, 
 			LAST_ACTION_DATE_MILLIS = :lastActionDateMillis, 
 			ADMIN_REMARKS = :adminRemarks 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE ENQUIRY_SERIAL_ID = :enquirySerialId
 	</query>
 	<query type="update" id="updateEnquiryCompleted" paramClass="com.model.components.Enquiry">
 		UPDATE ENQUIRY SET
 			MATCH_STATUS = :matchStatus, 
-			TUTOR_ID = :tutorId,
+			TUTOR_SERIAL_ID = :tutorSerialId,
 			IS_MAPPED = :isMapped,
 			WHO_ACTED = :whoActed, 
 			LAST_ACTION_DATE_MILLIS = :lastActionDateMillis, 
 			ADMIN_REMARKS = :adminRemarks 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE ENQUIRY_SERIAL_ID = :enquirySerialId
 	</query>
 	<query type="insert" id="insertEnquiry" paramClass="com.model.components.Enquiry">
 		INSERT INTO ENQUIRY
-			(CUSTOMER_ID, ENQUIRY_EMAIL, ENQUIRY_CONTACT_NUMBER, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
+			(ENQUIRY_SERIAL_ID, CUSTOMER_SERIAL_ID, ENQUIRY_EMAIL, ENQUIRY_CONTACT_NUMBER, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
 		VALUES
-			(:customerId, :enquiryEmail, :enquiryContactNumber, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails, :entryDateMillis)
+			(:enquirySerialId, :customerSerialId, :enquiryEmail, :enquiryContactNumber, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails, :entryDateMillis)
 	</query>
 </queryMapper>

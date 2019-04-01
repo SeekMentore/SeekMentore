@@ -31,15 +31,15 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 	private Long recordLastUpdatedMillis;
 	private String updatedBy;
 	private String updatedByName;
-	private Long customerId;
+	private String customerSerialId;
 	private String customerName;
 	private String customerEmail;
 	private String customerContactNumber;
-	private Long tutorId;
+	private String tutorSerialId;
 	private String tutorName;
 	private String tutorEmail;
 	private String tutorContactNumber;
-	private Long enquiryId;
+	private String enquirySerialId;
 	private String enquirySubject;
 	private String enquiryGrade;
 	private String enquiryEmail;
@@ -215,12 +215,12 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 		this.totalHours = totalHours;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 
 	public String getCustomerName() {
@@ -247,12 +247,12 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 		this.customerContactNumber = customerContactNumber;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
 	public String getTutorName() {
@@ -279,12 +279,12 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 		this.tutorContactNumber = tutorContactNumber;
 	}
 
-	public Long getEnquiryId() {
-		return enquiryId;
+	public String getEnquirySerialId() {
+		return enquirySerialId;
 	}
 
-	public void setEnquiryId(Long enquiryId) {
-		this.enquiryId = enquiryId;
+	public void setEnquirySerialId(String enquirySerialId) {
+		this.enquirySerialId = enquirySerialId;
 	}
 
 	public String getEnquirySubject() {
@@ -355,15 +355,15 @@ public class PackageAssignment extends GridComponentObject implements Serializab
 			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
 			case "updatedBy" : return "UPDATED_BY";
 			case "updatedByName" : return "UPDATED_BY_NAME";
-			case "customerId" : return "CUSTOMER_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 			case "customerName" : return "CUSTOMER_NAME";
 			case "customerEmail" : return "CUSTOMER_EMAIL";
 			case "customerContactNumber" : return "CUSTOMER_CONTACT_NUMBER";
-			case "tutorId" : return "TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "tutorName" : return "TUTOR_NAME";
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
-			case "enquiryId" : return "ENQUIRY_ID";
+			case "enquirySerialId" : return "ENQUIRY_SERIAL_ID";
 			case "enquirySubject" : return "ENQUIRY_SUBJECT";
 			case "enquiryGrade" : return "ENQUIRY_GRADE";
 			case "enquiryEmail" : return "ENQUIRY_EMAIL";

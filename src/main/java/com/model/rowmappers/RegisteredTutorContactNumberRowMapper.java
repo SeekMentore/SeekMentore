@@ -17,8 +17,8 @@ public class RegisteredTutorContactNumberRowMapper implements RowMapper<Register
 	public RegisteredTutorContactNumber mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final RegisteredTutorContactNumber registeredTutorContactNumber = new RegisteredTutorContactNumber();
-		registeredTutorContactNumber.setRegisteredTutorContactNumberId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorContactNumber.resolveColumnNameForMapping("registeredTutorContactNumberId"), Long.class));
-		registeredTutorContactNumber.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorContactNumber.resolveColumnNameForMapping("tutorId"), Long.class));
+		registeredTutorContactNumber.setRegisteredTutorContactNumberSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorContactNumber.resolveColumnNameForMapping("registeredTutorContactNumberSerialId"), String.class));
+		registeredTutorContactNumber.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorContactNumber.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherContactNumbers(registeredTutorContactNumber, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(registeredTutorContactNumber, row, rowNum);
 		return registeredTutorContactNumber;

@@ -2,10 +2,10 @@
 <queryMapper namespace="public-application">
 	<query type="insert" id="insertBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		INSERT INTO BECOME_TUTOR
-			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, GENDER, EMAIL_ID, CONTACT_NUMBER, DATE_OF_BIRTH, PRIMARY_PROFESSION, QUALIFICATION, TRANSPORT_MODE, 
+			(BECOME_TUTOR_SERIAL_ID, APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, GENDER, EMAIL_ID, CONTACT_NUMBER, DATE_OF_BIRTH, PRIMARY_PROFESSION, QUALIFICATION, TRANSPORT_MODE, 
 			STUDENT_GRADE, SUBJECTS, TEACHING_EXP, LOCATIONS, PREFERRED_TEACHING_TYPE, PREFERRED_TIME_TO_CALL, REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS, 
 			IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
-		VALUES(:applicationDateMillis, :applicationStatus, :firstName, :lastName, :gender, :emailId, :contactNumber, :dateOfBirth, :primaryProfession, :qualification, :transportMode,
+		VALUES(:becomeTutorSerialId, :applicationDateMillis, :applicationStatus, :firstName, :lastName, :gender, :emailId, :contactNumber, :dateOfBirth, :primaryProfession, :qualification, :transportMode,
 			   :studentGrade, :subjects, :teachingExp, :locations, :preferredTeachingType, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
 			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
@@ -62,8 +62,8 @@
 	<query type="filter" id="becomeTutorContactNumberFilter">
 		WHERE CONTACT_NUMBER = :contactNumber
 	</query>
-	<query type="filter" id="becomeTutorTentativeTutorIdFilter">
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+	<query type="filter" id="becomeTutorSerialIdFilter">
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="sorter" id="becomeTutorExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
@@ -72,7 +72,7 @@
 		UPDATE BECOME_TUTOR SET 
 			IS_DATA_MIGRATED = :isDataMigrated, 
 			WHEN_MIGRATED_MILLIS = :whenMigratedMillis 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateBlacklistBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -82,7 +82,7 @@
 			WHO_BLACKLISTED = :whoBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateUnBlacklistBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -92,7 +92,7 @@
 			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateContactedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -103,7 +103,7 @@
 			CONTACTED_REMARKS = :contactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateRecontactBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -118,7 +118,7 @@
 			SUGGESTION_REMARKS = :suggestionRemarks,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateRecontactedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -129,7 +129,7 @@
 			RECONTACTED_REMARKS = :recontactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateRejectBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -145,7 +145,7 @@
 			REJECTION_COUNT = (REJECTION_COUNT + 1), 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateVerifyFailverifyReverifyBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -156,7 +156,7 @@
 			VERIFICATION_REMARKS = :verificationRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="update" id="updateSelectedBecomeTutor" paramClass="com.model.components.publicaccess.BecomeTutor">
 		UPDATE BECOME_TUTOR SET
@@ -167,7 +167,7 @@
 			SELECTION_REMARKS = :selectionRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId
+		WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId
 	</query>
 	<query type="select" id="selectFindTutor">
 		SELECT
@@ -193,7 +193,7 @@
 		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
 	</query>
 	<query type="filter" id="findTutorEnquiryIdFilter">
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="sorter" id="findTutorExistingSorter">
 		ORDER BY ENQUIRY_DATE_MILLIS DESC
@@ -202,7 +202,7 @@
 		UPDATE FIND_TUTOR SET 
 			IS_DATA_MIGRATED = :isDataMigrated, 
 			WHEN_MIGRATED_MILLIS = :whenMigratedMillis
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateBlacklistFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -212,7 +212,7 @@
 			WHO_BLACKLISTED = :whoBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateUnBlacklistFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -222,7 +222,7 @@
 			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateContactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -233,7 +233,7 @@
 			CONTACTED_REMARKS = :contactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateRecontactFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -248,7 +248,7 @@
 			SUGGESTION_REMARKS = :suggestionRemarks,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateRecontactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -259,7 +259,7 @@
 			RECONTACTED_REMARKS = :recontactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateRejectFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -274,7 +274,7 @@
 			REJECTION_REMARKS = :rejectionRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateVerifyFailverifyReverifyFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -285,7 +285,7 @@
 			VERIFICATION_REMARKS = :verificationRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="update" id="updateSelectedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
@@ -296,7 +296,7 @@
 			SELECTION_REMARKS = :selectionRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE ENQUIRY_ID = :enquiryId
+		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="select" id="selectSubscribeWithUs">
 		SELECT

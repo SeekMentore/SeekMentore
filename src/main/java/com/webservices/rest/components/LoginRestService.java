@@ -44,7 +44,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	private Credential credential;
 	private User user;
 	private String oldPassword;
-	private Long tokenId;
+	private String tokenSerialId;
 	private String token;
 	private String newPassword;
 	private String retypeNewPassword;
@@ -135,16 +135,14 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String tokenResetPassword (
-			@FormParam("tokenId") final String encryptedTokenId,
+			@FormParam("tokenSerialId") final String encryptedTokenId,
 			@FormParam("token") final String encryptedToken,
 			@FormParam("newPassword") final String newPassword,
 			@FormParam("retypeNewPassword") final String retypeNewPassword,
 			@Context final HttpServletRequest request
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_TOKEN_RESET_PASSWORD;
-		try {
-			this.tokenId = Long.valueOf(SecurityUtil.decrypt(encryptedTokenId));
-		} catch (Exception e) {}
+		this.tokenSerialId = SecurityUtil.decrypt(encryptedTokenId);
 		try {
 			this.token = SecurityUtil.decrypt(encryptedToken);
 		} catch (Exception e) {}
@@ -153,7 +151,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restResponse = new HashMap<String, Object>();
-			final String errorMessage = getLoginService().changePasswordFromToken(this.tokenId, this.token, this.newPassword);
+			final String errorMessage = getLoginService().changePasswordFromToken(this.tokenSerialId, this.token, this.newPassword);
 			if (!ValidationUtils.checkStringAvailability(errorMessage)) {
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 				restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.CHANGED_PASSWORD_FROM_TOKEN));
@@ -386,7 +384,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 	
 	private void handleTokenChangePassword() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.tokenId)) {
+		if (!ValidationUtils.checkStringAvailability(this.tokenSerialId)) {
 			ApplicationUtils.appendMessageInMapAttribute(
 					this.securityFailureResponse, 
 					Message.getMessageFromFile(LoginConstants.MESG_PROPERTY_FILE_NAME, LoginConstants.INVALID_TOKEN_ID),
@@ -442,7 +440,7 @@ public class LoginRestService extends AbstractRestWebservice implements RestMeth
 		if (!this.securityPassed) {
 			final ErrorPacket errorPacket = new ErrorPacket(
 					this.methodName, 
-					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tokenId + LINE_BREAK + this.token + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword, true, getActiveUser(this.request));
+					this.securityFailureResponse.get(RESPONSE_MAP_ATTRIBUTE_MESSAGE) + LINE_BREAK + this.tokenSerialId + LINE_BREAK + this.token + LINE_BREAK + this.newPassword + LINE_BREAK + this.retypeNewPassword, true, getActiveUser(this.request));
 			getCommonsService().feedErrorRecord(errorPacket);
 		}
 	} 

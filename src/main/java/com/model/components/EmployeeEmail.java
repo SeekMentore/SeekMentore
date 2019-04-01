@@ -10,23 +10,26 @@ public class EmployeeEmail extends OtherEmail implements Serializable, Cloneable
 	
 	private static final long serialVersionUID = 5224262790290205742L;
 	
-	private Long employeeEmailIdId;
-	private Long employeeId;
+	private String employeeEmailIdSerialId;
+	private String employeeSerialId;
 	
-	public Long getEmployeeEmailIdId() {
-		return employeeEmailIdId;
+	public EmployeeEmail() {
+	}
+	
+	public String getEmployeeEmailIdSerialId() {
+		return employeeEmailIdSerialId;
 	}
 
-	public void setEmployeeEmailIdId(Long employeeEmailIdId) {
-		this.employeeEmailIdId = employeeEmailIdId;
+	public void setEmployeeEmailIdSerialId(String employeeEmailIdSerialId) {
+		this.employeeEmailIdSerialId = employeeEmailIdSerialId;
 	}
 
-	public Long getEmployeeId() {
-		return employeeId;
+	public String getEmployeeSerialId() {
+		return employeeSerialId;
 	}
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeeSerialId(String employeeSerialId) {
+		this.employeeSerialId = employeeSerialId;
 	}
 	
 	@Override
@@ -44,8 +47,8 @@ public class EmployeeEmail extends OtherEmail implements Serializable, Cloneable
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "employeeEmailIdId" : return "EMPLOYEE_EMAIL_ID_ID";
-			case "employeeId" : return "EMPLOYEE_ID";
+			case "employeeEmailIdSerialId" : return "EMPLOYEE_EMAIL_ID_SERIAL_ID";
+			case "employeeSerialId" : return "EMPLOYEE_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

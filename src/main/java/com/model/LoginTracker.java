@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 import com.utils.ValidationUtils;
 
-public class LogonTracker extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
+public class LoginTracker extends GridComponentObject implements Serializable, Cloneable, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private Long logonId;
+	private String loginSerialId;
 	private Long loginTimeMillis;
 	private String loginFrom;
 	private String machineIp;
@@ -16,14 +16,14 @@ public class LogonTracker extends GridComponentObject implements Serializable, C
 	private String userId;
 	private String userName;
 	
-	public LogonTracker() {}
+	public LoginTracker() {}
 
-	public Long getLogonId() {
-		return logonId;
+	public String getLoginSerialId() {
+		return loginSerialId;
 	}
 
-	public void setLogonId(Long logonId) {
-		this.logonId = logonId;
+	public void setLoginSerialId(String loginSerialId) {
+		this.loginSerialId = loginSerialId;
 	}
 
 	public String getLoginFrom() {
@@ -89,7 +89,7 @@ public class LogonTracker extends GridComponentObject implements Serializable, C
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "logonId" : return "LOGON_ID";
+			case "loginSerialId" : return "LOGIN_SERIAL_ID";
 			case "loginTimeMillis" : return "LOGIN_TIME_MILLIS";
 			case "loginFrom" : return "LOGIN_FROM";
 			case "machineIp" : return "MACHINE_IP";
@@ -101,7 +101,7 @@ public class LogonTracker extends GridComponentObject implements Serializable, C
 	}
 
 	@Override
-	public LogonTracker clone() throws CloneNotSupportedException {  
-		return (LogonTracker)super.clone();
+	public LoginTracker clone() throws CloneNotSupportedException {  
+		return (LoginTracker)super.clone();
 	}
 }

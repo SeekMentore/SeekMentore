@@ -5,7 +5,7 @@
 	<table style="$CoreTableStyling">
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Id</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.enquiryId)</td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.findTutorSerialId)</td>
 		</tr>
     	<tr>
     		<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Date</strong></td>

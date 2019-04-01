@@ -9,7 +9,7 @@ public class ErrorPacket extends GridComponentObject implements Serializable, Cl
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private Long errorId;
+	private String errorSerialId;
 	private Long occuredAtMillis;
 	private String requestURI;
 	private String errorTrace;
@@ -61,12 +61,12 @@ public class ErrorPacket extends GridComponentObject implements Serializable, Cl
 		this.errorTrace = errorTrace;
 	}
 
-	public Long getErrorId() {
-		return errorId;
+	public String getErrorSerialId() {
+		return errorSerialId;
 	}
 
-	public void setErrorId(Long errorId) {
-		this.errorId = errorId;
+	public void setErrorSerialId(String errorSerialId) {
+		this.errorSerialId = errorSerialId;
 	}
 
 	public Long getOccuredAtMillis() {
@@ -108,7 +108,7 @@ public class ErrorPacket extends GridComponentObject implements Serializable, Cl
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "errorId" : return "ERROR_ID";
+			case "errorSerialId" : return "ERROR_SERIAL_ID";
 			case "occuredAtMillis" : return "OCCURED_AT_MILLIS";
 			case "requestURI" : return "REQUEST_URI";
 			case "errorTrace" : return "ERROR_TRACE";

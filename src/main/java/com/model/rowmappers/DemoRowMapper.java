@@ -41,15 +41,15 @@ public class DemoRowMapper implements RowMapper<Demo> {
 		demo.setReScheduleCount(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("reScheduleCount"), Integer.class));
 		demo.setRescheduledFromDemoSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("rescheduledFromDemoSerialId"), String.class));
 		demo.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("whoActed"), String.class));
-		demo.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerId"), Long.class));
+		demo.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerSerialId"), String.class));
 		demo.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerName"), String.class));
 		demo.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerEmail"), String.class));
 		demo.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("customerContactNumber"), String.class));
-		demo.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorId"), Long.class));
+		demo.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		demo.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorName"), String.class));
 		demo.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorEmail"), String.class));
 		demo.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("tutorContactNumber"), String.class));
-		demo.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryId"), Long.class));
+		demo.setEnquirySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquirySerialId"), String.class));
 		demo.setEnquirySubject(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquirySubject"), String.class));
 		demo.setEnquiryGrade(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryGrade"), String.class));
 		demo.setEnquiryLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, demo.resolveColumnNameForMapping("enquiryLocation"), String.class));

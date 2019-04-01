@@ -10,23 +10,26 @@ public class SubscribedCustomerEmail extends OtherEmail implements Serializable,
 	
 	private static final long serialVersionUID = -8353009972804850085L;
 	
-	private Long subscribedCustomerEmailIdId;
-	private Long customerId;
+	private String subscribedCustomerEmailIdSerialId;
+	private String customerSerialId;
 	
-	public Long getSubscribedCustomerEmailIdId() {
-		return subscribedCustomerEmailIdId;
+	public SubscribedCustomerEmail() {
+	}
+	
+	public String getSubscribedCustomerEmailIdSerialId() {
+		return subscribedCustomerEmailIdSerialId;
 	}
 
-	public void setSubscribedCustomerEmailIdId(Long subscribedCustomerEmailIdId) {
-		this.subscribedCustomerEmailIdId = subscribedCustomerEmailIdId;
+	public void setSubscribedCustomerEmailIdSerialId(String subscribedCustomerEmailIdSerialId) {
+		this.subscribedCustomerEmailIdSerialId = subscribedCustomerEmailIdSerialId;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 	
 	@Override
@@ -44,8 +47,8 @@ public class SubscribedCustomerEmail extends OtherEmail implements Serializable,
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "subscribedCustomerEmailIdId" : return "SUBSCRIBED_CUSTOMER_EMAIL_ID_ID";
-			case "customerId" : return "CUSTOMER_ID";
+			case "subscribedCustomerEmailIdSerialId" : return "SUBSCRIBED_CUSTOMER_EMAIL_ID_SERIAL_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

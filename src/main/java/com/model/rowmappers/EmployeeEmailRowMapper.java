@@ -17,8 +17,8 @@ public class EmployeeEmailRowMapper implements RowMapper<EmployeeEmail> {
 	public EmployeeEmail mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final EmployeeEmail employeeEmail = new EmployeeEmail();
-		employeeEmail.setEmployeeEmailIdId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeEmail.resolveColumnNameForMapping("employeeEmailIdId"), Long.class));
-		employeeEmail.setEmployeeId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeEmail.resolveColumnNameForMapping("employeeId"), Long.class));
+		employeeEmail.setEmployeeEmailIdSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeEmail.resolveColumnNameForMapping("employeeEmailIdSerialId"), String.class));
+		employeeEmail.setEmployeeSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, employeeEmail.resolveColumnNameForMapping("employeeSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherEmails(employeeEmail, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(employeeEmail, row, rowNum);
 		return employeeEmail;

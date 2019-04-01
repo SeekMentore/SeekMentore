@@ -11,19 +11,19 @@ public class Employee extends User implements Serializable, Cloneable, Applicati
 
 	private static final long serialVersionUID = -8603850515164057242L;
 	
-	private Long employeeId;
+	private String employeeSerialId;
 	private String emailDomain;
 	private List<EmployeeEmail> employeeEmails;
 	private List<EmployeeContactNumber> employeeContactNumbers;
 	
 	public Employee() {}
 	
-	public Long getEmployeeId() {
-		return employeeId;
+	public String getEmployeeSerialId() {
+		return employeeSerialId;
 	}
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeeSerialId(String employeeSerialId) {
+		this.employeeSerialId = employeeSerialId;
 	}
 
 	public String getEmailDomain() {
@@ -65,7 +65,7 @@ public class Employee extends User implements Serializable, Cloneable, Applicati
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "employeeId" : return "EMPLOYEE_ID";
+			case "employeeSerialId" : return "EMPLOYEE_SERIAL_ID";
 			case "emailDomain" : return "EMAIL_DOMAIN";
 		}
 		return EMPTY_STRING;

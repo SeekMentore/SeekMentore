@@ -63,9 +63,9 @@ import com.utils.WorkbookUtils;
 		return new ApplicationFile("SUBSCRIBED_CUSTOMERS_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public ApplicationFile downloadSubscribedCustomerProfilePdf(final Long customerId, final Boolean isAdminProfile) throws Exception {
+	public ApplicationFile downloadSubscribedCustomerProfilePdf(final String customerSerialId, final Boolean isAdminProfile) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("customerId", customerId);
+		paramsMap.put("customerSerialId", customerSerialId);
 		final SubscribedCustomer subscribedCustomer = applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer") 
 														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerCustomerIdFilter"), paramsMap, new SubscribedCustomerRowMapper());
 		if (ValidationUtils.checkObjectAvailability(subscribedCustomer)) {
@@ -101,7 +101,7 @@ import com.utils.WorkbookUtils;
 	public void blacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribedCustomer> paramObjectList = new LinkedList<SubscribedCustomer>();
-		for (final String customerId : idList) {
+		for (final String customerSerialId : idList) {
 			final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
 			subscribedCustomer.setIsBlacklisted(YES);
 			subscribedCustomer.setBlacklistedRemarks(comments);
@@ -109,7 +109,7 @@ import com.utils.WorkbookUtils;
 			subscribedCustomer.setWhoBlacklisted(activeUser.getUserId());
 			subscribedCustomer.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			subscribedCustomer.setUpdatedBy(activeUser.getUserId());
-			subscribedCustomer.setCustomerId(Long.valueOf(customerId));
+			subscribedCustomer.setCustomerSerialId(customerSerialId);
 			paramObjectList.add(subscribedCustomer);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateBlacklistSubscribedCustomer", paramObjectList);
@@ -119,7 +119,7 @@ import com.utils.WorkbookUtils;
 	public void unBlacklistSubscribedCustomerList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribedCustomer> paramObjectList = new LinkedList<SubscribedCustomer>();
-		for (final String customerId : idList) {
+		for (final String customerSerialId : idList) {
 			final SubscribedCustomer subscribedCustomer = new SubscribedCustomer();
 			subscribedCustomer.setIsBlacklisted(NO);
 			subscribedCustomer.setUnblacklistedRemarks(comments);
@@ -127,7 +127,7 @@ import com.utils.WorkbookUtils;
 			subscribedCustomer.setWhoUnBlacklisted(activeUser.getUserId());
 			subscribedCustomer.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			subscribedCustomer.setUpdatedBy(activeUser.getUserId());
-			subscribedCustomer.setCustomerId(Long.valueOf(customerId));
+			subscribedCustomer.setCustomerSerialId(customerSerialId);
 			paramObjectList.add(subscribedCustomer);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateUnBlacklistSubscribedCustomer", paramObjectList);
@@ -145,7 +145,7 @@ import com.utils.WorkbookUtils;
 	public void updateCustomerRecord(final SubscribedCustomer customer, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE CUSTOMER_ID = :customerId";
+		final String existingFilterQueryString = "WHERE CUSTOMER_SERIAL_ID = :customerSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -197,7 +197,7 @@ import com.utils.WorkbookUtils;
 				}
 			}
 		}
-		paramsMap.put("customerId", customer.getCustomerId());
+		paramsMap.put("customerSerialId", customer.getCustomerSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("UPDATED_BY = :userId");

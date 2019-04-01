@@ -10,23 +10,23 @@ public class SubscribedCustomerContactNumber extends OtherContactNumber implemen
 	
 	private static final long serialVersionUID = 1168913907463884239L;
 	
-	private Long subscribedCustomerContactNumberId;
-	private Long customerId;
+	private String subscribedCustomerContactNumberSerialId;
+	private String customerSerialId;
 	
-	public Long getSubscribedCustomerContactNumberId() {
-		return subscribedCustomerContactNumberId;
+	public String getSubscribedCustomerContactNumberSerialId() {
+		return subscribedCustomerContactNumberSerialId;
 	}
 
-	public void setSubscribedCustomerContactNumberId(Long subscribedCustomerContactNumberId) {
-		this.subscribedCustomerContactNumberId = subscribedCustomerContactNumberId;
+	public void setSubscribedCustomerContactNumberSerialId(String subscribedCustomerContactNumberSerialId) {
+		this.subscribedCustomerContactNumberSerialId = subscribedCustomerContactNumberSerialId;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 	
 	@Override
@@ -44,8 +44,8 @@ public class SubscribedCustomerContactNumber extends OtherContactNumber implemen
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "subscribedCustomerContactNumberId" : return "SUBSCRIBED_CUSTOMER_CONTACT_NUMBER_ID";
-			case "customerId" : return "CUSTOMER_ID";
+			case "subscribedCustomerContactNumberSerialId" : return "SUBSCRIBED_CUSTOMER_CONTACT_NUMBER_SERIAL_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

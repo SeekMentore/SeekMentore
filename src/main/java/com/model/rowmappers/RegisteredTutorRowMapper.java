@@ -19,8 +19,8 @@ public class RegisteredTutorRowMapper implements RowMapper<RegisteredTutor>, Reg
 	public RegisteredTutor mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final RegisteredTutor registeredTutor = new RegisteredTutor();
-		registeredTutor.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("tutorId"), Long.class));
-		registeredTutor.setTentativeTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("tentativeTutorId"), Long.class));
+		registeredTutor.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("tutorSerialId"), String.class));
+		registeredTutor.setBecomeTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("becomeTutorSerialId"), String.class));
 		registeredTutor.setDateOfBirth(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("dateOfBirth"), Timestamp.class));
 		registeredTutor.setGender(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("gender"), String.class));
 		registeredTutor.setQualification(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutor.resolveColumnNameForMapping("qualification"), String.class));

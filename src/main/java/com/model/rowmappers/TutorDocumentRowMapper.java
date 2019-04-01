@@ -16,9 +16,9 @@ public class TutorDocumentRowMapper implements RowMapper<TutorDocument> {
 	public TutorDocument mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final TutorDocument tutorDocument = new TutorDocument();
-		tutorDocument.setDocumentId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("documentId"), Long.class));
+		tutorDocument.setDocumentSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("documentSerialId"), String.class));
 		tutorDocument.setDocumentType(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("documentType"), String.class));
-		tutorDocument.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("tutorId"), Long.class));
+		tutorDocument.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		tutorDocument.setFsKey(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("fsKey"), String.class));
 		tutorDocument.setFilename(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("filename"), String.class));
 		tutorDocument.setIsApproved(ExceptionUtils.exceptionHandlerForRowMapper(row, tutorDocument.resolveColumnNameForMapping("isApproved"), String.class));

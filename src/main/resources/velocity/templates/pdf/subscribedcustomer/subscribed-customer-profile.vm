@@ -6,7 +6,7 @@
 		#if( $fullAdminProfile )
 			<tr>
 				<td style="$CoreTableTDStyling width:25%;"><strong>Customer Id</strong></td>
-				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.customerId)</td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($subscribedCustomer.customerSerialId)</td>
 			</tr>
 		#end
 		<tr>

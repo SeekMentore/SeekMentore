@@ -7,7 +7,7 @@ public interface TutorConstants extends ResponseMapConstants {
 	
 	String MESG_PROPERTY_FILE_NAME = "spring.components.tutor";
 	
-	String REQUEST_PARAM_TUTOR_ID = "tutorId";
+	String REQUEST_PARAM_TUTOR_SERIAL_ID = "tutorSerialId";
 	Double MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB = 2D;
 	
 	String DOCUMENT_TYPE_PAN_CARD = "01";
@@ -27,4 +27,6 @@ public interface TutorConstants extends ResponseMapConstants {
 
 	// Message Constants
 	String INVALID_TUTOR_SERIAL_ID = "INVALID_TUTOR_SERIAL_ID";
+	String INVALID_DOCUMENT_SERIAL_ID = "INVALID_DOCUMENT_SERIAL_ID";
+	String INVALID_BANK_DETAIL_SERIAL_ID = "INVALID_BANK_DETAIL_SERIAL_ID";
 }

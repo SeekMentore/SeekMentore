@@ -2,9 +2,9 @@
 <queryMapper namespace="admin-subscribedcustomer">
 	<query type="insert" id="insertSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		INSERT INTO SUBSCRIBED_CUSTOMER
-			(NAME, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
+			(CUSTOMER_SERIAL_ID, NAME, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
 		VALUES
-			(:name, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
+			(:customerSerialId, :name, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
 	</query>
 	<query type="select" id="selectSubscribedCustomer">
 		SELECT
@@ -15,20 +15,20 @@
             IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.WHO_UN_BLACKLISTED), C.WHO_UN_BLACKLISTED) AS WHO_UN_BLACKLISTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = C.UPDATED_BY), C.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM SUBSCRIBED_CUSTOMER C
-		INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON C.CUSTOMER_ID = SCE.CUSTOMER_ID AND SCE.IS_PRIMARY = 'Y'
-        INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON C.CUSTOMER_ID = SCC.CUSTOMER_ID AND SCC.IS_PRIMARY = 'Y'
+		INNER JOIN SUBSCRIBED_CUSTOMER_EMAIL_ID SCE ON C.CUSTOMER_SERIAL_ID = SCE.CUSTOMER_SERIAL_ID AND SCE.IS_PRIMARY = 'Y'
+        INNER JOIN SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC ON C.CUSTOMER_SERIAL_ID = SCC.CUSTOMER_SERIAL_ID AND SCC.IS_PRIMARY = 'Y'
 	</query>
 	<query type="filter" id="subscribedCustomerUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
 	<query type="filter" id="subscribedCustomerCustomerIdFilter">
-		WHERE C.CUSTOMER_ID = :customerId
+		WHERE C.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
-		WHERE C.CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID WHERE EMAIL_ID = :emailId)
+		WHERE C.CUSTOMER_SERIAL_ID = (SELECT CUSTOMER_SERIAL_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID WHERE EMAIL_ID = :emailId)
 	</query>
 	<query type="filter" id="subscribedCustomerContactNumberFilter">
-		WHERE C.CUSTOMER_ID = (SELECT CUSTOMER_ID FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
+		WHERE C.CUSTOMER_SERIAL_ID = (SELECT CUSTOMER_SERIAL_ID FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER WHERE CONTACT_NUMBER = :contactNumber)
 	</query>
 	<query type="update" id="updateBlacklistSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		UPDATE SUBSCRIBED_CUSTOMER SET
@@ -38,7 +38,7 @@
 			WHO_BLACKLISTED = :whoBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE CUSTOMER_ID = :customerId
+		WHERE CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="update" id="updateUnBlacklistSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		UPDATE SUBSCRIBED_CUSTOMER SET
@@ -48,7 +48,7 @@
 			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE CUSTOMER_ID = :customerId
+		WHERE CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="update" id="updateSubscribedCustomerPassword" paramClass="com.model.components.SubscribedCustomer">
 		UPDATE SUBSCRIBED_CUSTOMER SET 
@@ -57,9 +57,9 @@
 	</query>
 	<query type="insert" id="insertSubscribedCustomerEmail" paramClass="com.model.components.SubscribedCustomerEmail">
 		INSERT INTO SUBSCRIBED_CUSTOMER_EMAIL_ID
-			(CUSTOMER_ID, EMAIL_ID, IS_PRIMARY) 
+			(SUBSCRIBED_CUSTOMER_EMAIL_ID_SERIAL_ID, CUSTOMER_SERIAL_ID, EMAIL_ID, IS_PRIMARY) 
 		VALUES
-			(:customerId, :emailId, :isPrimary)
+			(:subscribedCustomerEmailIdSerialId, :customerSerialId, :emailId, :isPrimary)
 	</query>
 	<query type="select" id="selectSubscribedCustomerEmail">
 		SELECT
@@ -67,13 +67,13 @@
         FROM SUBSCRIBED_CUSTOMER_EMAIL_ID SCE
 	</query>
 	<query type="filter" id="subscribedCustomerEmailCustomerIdFilter">
-		WHERE SCE.CUSTOMER_ID = :customerId
+		WHERE SCE.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="insert" id="insertSubscribedCustomerContactNumber" paramClass="com.model.components.SubscribedCustomerContactNumber">
 		INSERT INTO SUBSCRIBED_CUSTOMER_CONTACT_NUMBER
-			(CUSTOMER_ID, CONTACT_NUMBER, IS_PRIMARY) 
+			(SUBSCRIBED_CUSTOMER_CONTACT_NUMBER_SERIAL_ID, CUSTOMER_SERIAL_ID, CONTACT_NUMBER, IS_PRIMARY) 
 		VALUES
-			(:customerId, :contactNumber, :isPrimary)
+			(:setSubscribedCustomerContactNumberSerialId, :customerSerialId, :contactNumber, :isPrimary)
 	</query>
 	<query type="select" id="selectSubscribedCustomerContactNumber">
 		SELECT
@@ -81,6 +81,6 @@
         FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC
 	</query>
 	<query type="filter" id="subscribedCustomerContactNumberCustomerIdFilter">
-		WHERE SCC.CUSTOMER_ID = :customerId
+		WHERE SCC.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 </queryMapper>

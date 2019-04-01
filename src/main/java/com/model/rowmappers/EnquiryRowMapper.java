@@ -16,8 +16,8 @@ public class EnquiryRowMapper implements RowMapper<Enquiry> {
 	public Enquiry mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Enquiry enquiryObject = new Enquiry();
-		enquiryObject.setEnquiryId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("enquiryId"), Long.class));
-		enquiryObject.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerId"), Long.class));
+		enquiryObject.setEnquirySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("enquirySerialId"), String.class));
+		enquiryObject.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerSerialId"), String.class));
 		enquiryObject.setCustomerName(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerName"), String.class));
 		enquiryObject.setCustomerEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerEmail"), String.class));
 		enquiryObject.setCustomerContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("customerContactNumber"), String.class));
@@ -29,7 +29,7 @@ public class EnquiryRowMapper implements RowMapper<Enquiry> {
 		enquiryObject.setIsMapped(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("isMapped"), String.class));
 		enquiryObject.setLastActionDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("lastActionDateMillis"), Long.class));
 		enquiryObject.setMatchStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("matchStatus"), String.class));
-		enquiryObject.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorId"), Long.class));
+		enquiryObject.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		enquiryObject.setTutorName(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorName"), String.class));
 		enquiryObject.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorEmail"), String.class));
 		enquiryObject.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorContactNumber"), String.class));

@@ -88,9 +88,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new SubscriptionPackageRowMapper());
 	}
 	
-	public List<SubscriptionPackage> getSubscriptionPackageListForTutor(final String grid, final Long tutorId, final GridComponent gridComponent) throws Exception {
+	public List<SubscriptionPackage> getSubscriptionPackageListForTutor(final String grid, final String tutorSerialId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tutorId", tutorId);
+		paramsMap.put("tutorSerialId", tutorSerialId);
 		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage");
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageTutorIdFilter");
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageCreatedDateStartDateSorter");
@@ -107,9 +107,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscriptionPackageRowMapper());
 	}
 	
-	public List<SubscriptionPackage> getSubscriptionPackageListForCustomer(final String grid, final Long customerId, final GridComponent gridComponent) throws Exception {
+	public List<SubscriptionPackage> getSubscriptionPackageListForCustomer(final String grid, final String customerSerialId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("customerId", customerId);
+		paramsMap.put("customerSerialId", customerSerialId);
 		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage");
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageCustomerIdFilter");
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageCreatedDateStartDateSorter");
@@ -768,7 +768,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		assignmentAttendance.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		assignmentAttendance.setUpdatedBy(activeUser.getUserId());
 		assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
-		applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendance);
+		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendance);
 		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignment);
 		final String fsKeyPrefix = packageAssignment.getSubscriptionPackageSerialId() + "/" + packageAssignment.getPackageAssignmentSerialId() + "/" + assignmentAttendance.getAssignmentAttendanceSerialId();
 		insertAssignmentAttendanceDocuments(assignmentAttendance.getDocuments(), assignmentAttendance.getAssignmentAttendanceSerialId(), fsKeyPrefix, activeUser);
@@ -1037,18 +1037,18 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			final String logoImageURL = imageServerURL + "/images/company-logo-complete.png";
 			final String tagLine = "One Stop Solution to All Tutoring Problems";
 			final String reportDesc = "Tutor Invoice and Attendance Tracker";
-			final String customerId = "Customer Id - " + packageAssignment.getCustomerId().toString();                                                                         
+			final String customerSerialId = "Customer Serial Id - " + packageAssignment.getCustomerSerialId().toString();                                                                         
 			final String customerName = packageAssignment.getCustomerName();
 			final String customerContactNumber = packageAssignment.getCustomerContactNumber();
 			final String customerEmail = packageAssignment.getCustomerEmail();
-			final String tutorId = "Tutor ID - " + packageAssignment.getTutorId().toString();                                                                         
+			final String tutorSerialId = "Tutor Serial Id - " + packageAssignment.getTutorSerialId().toString();                                                                         
 			final String tutorName = packageAssignment.getTutorName();
 			final String tutorContactNumber = packageAssignment.getTutorContactNumber();
 			final String tutorEmail = packageAssignment.getTutorEmail();
-			final String packageId = "Package Id - " + packageAssignment.getSubscriptionPackageSerialId();
+			final String packageSerialId = "Package Serial Id - " + packageAssignment.getSubscriptionPackageSerialId();
 			final String enquiryGrade = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, packageAssignment.getEnquiryGrade());
 			final String enquirySubject = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, packageAssignment.getEnquirySubject());
-			final String assignmentId = "Assignment Id - " + packageAssignment.getPackageAssignmentSerialId();
+			final String assignmentSerialId = "Assignment Serial Id - " + packageAssignment.getPackageAssignmentSerialId();
 			final String startDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getStartDateMillis(), "dd-MMM-yyyy");
 			final String endDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getEndDateMillis(), "dd-MMM-yyyy");
 			final String totalDuration = packageAssignment.getTotalHours().toString() + WHITESPACE + "h";
@@ -1080,9 +1080,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			workbookRecords.add(workbookRecord);
 			// 3rd Row - Customer Id & Package Id
 			workbookCells = new LinkedList<WorkbookCell>();
-			workbookCell = new WorkbookCell(customerId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+			workbookCell = new WorkbookCell(customerSerialId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
 			workbookCells.add(workbookCell);
-			workbookCell = new WorkbookCell(packageId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+			workbookCell = new WorkbookCell(packageSerialId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
 			workbookCells.add(workbookCell);
 			workbookRecord = new WorkbookRecord(workbookCells);
 			workbookRecords.add(workbookRecord);
@@ -1124,13 +1124,13 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			workbookCells = new LinkedList<WorkbookCell>();
 			workbookCell = new WorkbookCell(EMPTY_STRING, true, new TypeOfStyleEnum[] {TypeOfStyleEnum.DEFAULT_HEADER_CELL, TypeOfStyleEnum.SOLID_FOREGROUND_LIGHT_GREY}, true, 6, 1);
 			workbookCells.add(workbookCell);
-			workbookCell = new WorkbookCell(assignmentId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+			workbookCell = new WorkbookCell(assignmentSerialId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
 			workbookCells.add(workbookCell);
 			workbookRecord = new WorkbookRecord(workbookCells);
 			workbookRecords.add(workbookRecord);
 			// 8th Row - Tutor Id, Assignment Start Date & End Date
 			workbookCells = new LinkedList<WorkbookCell>();
-			workbookCell = new WorkbookCell(tutorId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
+			workbookCell = new WorkbookCell(tutorSerialId, true, TypeOfStyleEnum.BOLD_HEADER_CELL, true, 6, 1);
 			workbookCells.add(workbookCell);
 			workbookCell = new WorkbookCell("Start date", true, TypeOfStyleEnum.BOLD_HEADER_CELL);
 			workbookCells.add(workbookCell);

@@ -130,11 +130,11 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return new ApplicationFile(getBecomeTutorReportSheetName(grid) + "_BT_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public ApplicationFile downloadBecomeTutorProfilePdf(final Long tentativeTutorId) throws JAXBException, URISyntaxException, Exception {
+	public ApplicationFile downloadBecomeTutorProfilePdf(final String becomeTutorSerialId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tentativeTutorId", tentativeTutorId);
+		paramsMap.put("becomeTutorSerialId", becomeTutorSerialId);
 		final BecomeTutor becomeTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
-										+ queryMapperService.getQuerySQL("public-application", "becomeTutorTentativeTutorIdFilter"), paramsMap, new BecomeTutorRowMapper());
+										+ queryMapperService.getQuerySQL("public-application", "becomeTutorSerialIdFilter"), paramsMap, new BecomeTutorRowMapper());
 		if (ValidationUtils.checkObjectAvailability(becomeTutor)) {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("becomeTutor", becomeTutor);
@@ -178,7 +178,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void blacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
-		for (final String tentativeTutorId : idList) {
+		for (final String becomeTutorSerialId : idList) {
 			final BecomeTutor becomeTutor = new BecomeTutor();
 			becomeTutor.setIsBlacklisted(YES);
 			becomeTutor.setBlacklistedRemarks(comments);
@@ -186,7 +186,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			becomeTutor.setWhoBlacklisted(activeUser.getUserId());
 			becomeTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			becomeTutor.setUpdatedBy(activeUser.getUserId());
-			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			becomeTutor.setBecomeTutorSerialId(becomeTutorSerialId);
 			paramObjectList.add(becomeTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistBecomeTutor", paramObjectList);
@@ -196,7 +196,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void unBlacklistBecomeTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
-		for (final String tentativeTutorId : idList) {
+		for (final String becomeTutorSerialId : idList) {
 			final BecomeTutor becomeTutor = new BecomeTutor();
 			becomeTutor.setIsBlacklisted(NO);
 			becomeTutor.setUnblacklistedRemarks(comments);
@@ -204,7 +204,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			becomeTutor.setWhoUnBlacklisted(activeUser.getUserId());
 			becomeTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			becomeTutor.setUpdatedBy(activeUser.getUserId());
-			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			becomeTutor.setBecomeTutorSerialId(becomeTutorSerialId);
 			paramObjectList.add(becomeTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistBecomeTutor", paramObjectList);
@@ -292,9 +292,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		becomeTutorActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		becomeTutorActionObject.setUpdatedBy(activeUser.getUserId());
 		final List<BecomeTutor> paramObjectList = new LinkedList<BecomeTutor>();
-		for (final String tentativeTutorId : idList) {
+		for (final String becomeTutorSerialId : idList) {
 			final BecomeTutor becomeTutor = becomeTutorActionObject.clone();
-			becomeTutor.setTentativeTutorId(Long.valueOf(tentativeTutorId));
+			becomeTutor.setBecomeTutorSerialId(becomeTutorSerialId);
 			paramObjectList.add(becomeTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
@@ -304,7 +304,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE BECOME_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE TENTATIVE_TUTOR_ID = :tentativeTutorId";
+		final String existingFilterQueryString = "WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -402,7 +402,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				}
 			}
 		}
-		paramsMap.put("tentativeTutorId", becomeTutor.getTentativeTutorId());
+		paramsMap.put("becomeTutorSerialId", becomeTutor.getBecomeTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
@@ -463,9 +463,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return new ApplicationFile(getFindTutorReportSheetName(grid) + "_FT_REPORT" + PERIOD + FileConstants.EXTENSION_XLSX, WorkbookUtils.createWorkbook(workbookReport));
 	}
 	
-	public ApplicationFile downloadFindTutorProfilePdf(final Long enquiryId) throws JAXBException, URISyntaxException, Exception {
+	public ApplicationFile downloadFindTutorProfilePdf(final String findTutorSerialId) throws JAXBException, URISyntaxException, Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("enquiryId", enquiryId);
+		paramsMap.put("findTutorSerialId", findTutorSerialId);
 		final FindTutor findTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectFindTutor") 
 										+ queryMapperService.getQuerySQL("public-application", "findTutorEnquiryIdFilter"), paramsMap, new FindTutorRowMapper());
 		if (ValidationUtils.checkObjectAvailability(findTutor)) {
@@ -508,7 +508,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void blacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
-		for (final String enquiryId : idList) {
+		for (final String findTutorSerialId : idList) {
 			final FindTutor findTutor = new FindTutor();
 			findTutor.setIsBlacklisted(YES);
 			findTutor.setBlacklistedRemarks(comments);
@@ -516,7 +516,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			findTutor.setWhoBlacklisted(activeUser.getUserId());
 			findTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			findTutor.setUpdatedBy(activeUser.getUserId());
-			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			findTutor.setFindTutorSerialId(findTutorSerialId);
 			paramObjectList.add(findTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistFindTutor", paramObjectList);
@@ -526,7 +526,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void unBlacklistFindTutorList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
-		for (final String enquiryId : idList) {
+		for (final String findTutorSerialId : idList) {
 			final FindTutor findTutor = new FindTutor();
 			findTutor.setIsBlacklisted(NO);
 			findTutor.setUnblacklistedRemarks(comments);
@@ -534,7 +534,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			findTutor.setWhoUnBlacklisted(activeUser.getUserId());
 			findTutor.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			findTutor.setUpdatedBy(activeUser.getUserId());
-			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			findTutor.setFindTutorSerialId(findTutorSerialId);
 			paramObjectList.add(findTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistFindTutor", paramObjectList);
@@ -622,9 +622,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		findTutorActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		findTutorActionObject.setUpdatedBy(activeUser.getUserId());
 		final List<FindTutor> paramObjectList = new LinkedList<FindTutor>();
-		for (final String enquiryId : idList) {
+		for (final String findTutorSerialId : idList) {
 			final FindTutor findTutor = findTutorActionObject.clone();
-			findTutor.setEnquiryId(Long.valueOf(enquiryId));
+			findTutor.setFindTutorSerialId(findTutorSerialId);
 			paramObjectList.add(findTutor);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
@@ -634,7 +634,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void updateFindTutorRecord(final FindTutor findTutor, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE FIND_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE ENQUIRY_ID = :enquiryId";
+		final String existingFilterQueryString = "WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -697,7 +697,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				}
 			}
 		}
-		paramsMap.put("enquiryId", findTutor.getEnquiryId());
+		paramsMap.put("findTutorSerialId", findTutor.getFindTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("UPDATED_BY = :userId");

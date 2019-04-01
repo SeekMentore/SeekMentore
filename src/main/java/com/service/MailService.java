@@ -25,6 +25,7 @@ import com.utils.ExceptionUtils;
 import com.utils.FileSystemUtils;
 import com.utils.GridQueryUtils;
 import com.utils.LoggerUtils;
+import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 
 @Service(BeanConstants.BEAN_NAME_MAIl_SERVICE)
@@ -49,51 +50,59 @@ public class MailService implements MailConstants {
 	
 	@Transactional
 	public void insertIntoMailQueue(final ApplicationMail applicationMail) throws Exception {
+		final List<MailAttachment> mailAttachmentListWithFsKey = new LinkedList<MailAttachment>();
+		final List<MailAttachment> mailAttachmentListWithoutFsKey = new LinkedList<MailAttachment>();
 		applicationMail.setMailSent(NO);
-		final Long mailId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("mail", "insertApplicationMail", applicationMail);
+		applicationMail.setMailSerialId(UUIDGeneratorUtils.generateSerialGUID());
+		applicationDao.executeUpdateWithQueryMapper("mail", "insertApplicationMail", applicationMail);
 		if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
 			for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
-				mailAttachment.setMailId(mailId);
+				mailAttachment.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				mailAttachment.setMailSerialId(applicationMail.getMailSerialId());
 				mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-				String attachmentInsertQuery = "insertMailAttachment";
 				if (mailAttachment.getIsFileStoredInFileSystem()) {
-					attachmentInsertQuery = "insertMailAttachmentWithFSKey";
+					mailAttachmentListWithFsKey.add(mailAttachment);
+				} else {
+					mailAttachmentListWithoutFsKey.add(mailAttachment);
 				}
-				applicationDao.executeUpdateWithQueryMapper("mail", attachmentInsertQuery, mailAttachment);
 			}
+		}
+		if (ValidationUtils.checkNonEmptyList(mailAttachmentListWithFsKey)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertMailAttachmentWithFSKey", mailAttachmentListWithFsKey);
+		}
+		if (ValidationUtils.checkNonEmptyList(mailAttachmentListWithoutFsKey)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachmentListWithoutFsKey);
 		}
 	}
 	
 	@Transactional
 	public void insertListIntoMailQueue(final List<ApplicationMail> mpplicationMailList) throws Exception {
-		final List<ApplicationMail> mailListWithAttachments = new LinkedList<ApplicationMail>();
-		final List<ApplicationMail> paramObjectList = new LinkedList<ApplicationMail>();
+		final List<MailAttachment> mailAttachmentListWithFsKey = new LinkedList<MailAttachment>();
+		final List<MailAttachment> mailAttachmentListWithoutFsKey = new LinkedList<MailAttachment>();
 		for (final ApplicationMail applicationMail : mpplicationMailList) {
 			applicationMail.setMailSent(NO);
+			applicationMail.setMailSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
-				mailListWithAttachments.add(applicationMail);
-			} else {
-				paramObjectList.add(applicationMail);
-			}
-		}
-		if (ValidationUtils.checkNonEmptyList(paramObjectList)) {
-			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertApplicationMail", paramObjectList);
-		}
-		if (ValidationUtils.checkNonEmptyList(mailListWithAttachments)) {
-			for (final ApplicationMail applicationMail : mailListWithAttachments) {
-				final Long mailId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("mail", "insertApplicationMail", applicationMail);
-				if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
-					for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
-						mailAttachment.setMailId(mailId);
-						mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-						String attachmentInsertQuery = "insertMailAttachment";
-						if (mailAttachment.getIsFileStoredInFileSystem()) {
-							attachmentInsertQuery = "insertMailAttachmentWithFSKey";
-						}
-						applicationDao.executeUpdateWithQueryMapper("mail", attachmentInsertQuery, mailAttachment);
+				for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
+					mailAttachment.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+					mailAttachment.setMailSerialId(applicationMail.getMailSerialId());
+					mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
+					if (mailAttachment.getIsFileStoredInFileSystem()) {
+						mailAttachmentListWithFsKey.add(mailAttachment);
+					} else {
+						mailAttachmentListWithoutFsKey.add(mailAttachment);
 					}
 				}
-			}
+			} 
+		}
+		if (ValidationUtils.checkNonEmptyList(mpplicationMailList)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertApplicationMail", mpplicationMailList);
+		}
+		if (ValidationUtils.checkNonEmptyList(mailAttachmentListWithFsKey)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertMailAttachmentWithFSKey", mailAttachmentListWithFsKey);
+		}
+		if (ValidationUtils.checkNonEmptyList(mailAttachmentListWithoutFsKey)) {
+			applicationDao.executeBatchUpdateWithQueryMapper("mail", "insertMailAttachment", mailAttachmentListWithoutFsKey);
 		}
 	}
 	
@@ -115,9 +124,9 @@ public class MailService implements MailConstants {
 		return getApplicationMailList(gridComponent);
 	}
 	
-	public List<MailAttachment> getMailAttachmentList(final Long mailId) throws Exception {
+	public List<MailAttachment> getMailAttachmentList(final String mailSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("mailId", mailId);
+		paramsMap.put("mailSerialId", mailSerialId);
 		final List<MailAttachment> dbMailAttachmentList = applicationDao.findAll(queryMapperService.getQuerySQL("mail", "selectMailAttachment")
 																				+ queryMapperService.getQuerySQL("mail", "mailAttachmentMailIdFilter"), paramsMap, new MailAttachmentRowMapper());
 		final List<MailAttachment> mailAttachmentList = new LinkedList<MailAttachment>();
@@ -132,7 +141,7 @@ public class MailService implements MailConstants {
 					mailAttachmentList.add(mailAttachment);
 				} catch (Exception e) {
 					LoggerUtils.logOnConsole(ExceptionUtils.generateErrorLog(e));
-					LoggerUtils.logOnConsole("Exception occurred while fetching Document (attachmentId) " + mailAttachment.getAttachmentId());
+					LoggerUtils.logOnConsole("Exception occurred while fetching Document (attachmentId) " + mailAttachment.getAttachmentSerialId());
 				}
 			}
 		}

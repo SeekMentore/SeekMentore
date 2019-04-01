@@ -10,23 +10,26 @@ public class RegisteredTutorEmail extends OtherEmail implements Serializable, Cl
 	
 	private static final long serialVersionUID = -3524058676928237906L;
 	
-	private Long registeredTutorEmailIdId;
-	private Long tutorId;
+	private String registeredTutorEmailIdSerialId;
+	private String tutorSerialId;
 	
-	public Long getRegisteredTutorEmailIdId() {
-		return registeredTutorEmailIdId;
+	public RegisteredTutorEmail() {
+	}
+	
+	public String getRegisteredTutorEmailIdSerialId() {
+		return registeredTutorEmailIdSerialId;
 	}
 
-	public void setRegisteredTutorEmailIdId(Long registeredTutorEmailIdId) {
-		this.registeredTutorEmailIdId = registeredTutorEmailIdId;
+	public void setRegisteredTutorEmailIdSerialId(String registeredTutorEmailIdSerialId) {
+		this.registeredTutorEmailIdSerialId = registeredTutorEmailIdSerialId;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 	
 	@Override
@@ -44,8 +47,8 @@ public class RegisteredTutorEmail extends OtherEmail implements Serializable, Cl
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "registeredTutorEmailIdId" : return "REGISTERED_TUTOR_EMAIL_ID_ID";
-			case "tutorId" : return "TUTOR_ID";
+			case "registeredTutorEmailIdSerialId" : return "REGISTERED_TUTOR_EMAIL_ID_SERIAL_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

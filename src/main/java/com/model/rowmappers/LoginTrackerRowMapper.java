@@ -5,18 +5,18 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.model.LogonTracker;
+import com.model.LoginTracker;
 import com.utils.ExceptionUtils;
 import com.utils.GridComponentUtils;
 import com.utils.RowMapperUtils;
 
-public class LogonTrackerRowMapper implements RowMapper<LogonTracker> {
+public class LoginTrackerRowMapper implements RowMapper<LoginTracker> {
 
 	@Override
-	public LogonTracker mapRow(ResultSet row, int rowNum) throws SQLException {
+	public LoginTracker mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
-		final LogonTracker logonTracker = new LogonTracker();
-		logonTracker.setLogonId(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("logonId"), Long.class));
+		final LoginTracker logonTracker = new LoginTracker();
+		logonTracker.setLoginSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("loginSerialId"), String.class));
 		logonTracker.setLoginTimeMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("loginTimeMillis"), Long.class));
 		logonTracker.setLoginFrom(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("loginFrom"), String.class));
 		logonTracker.setMachineIp(ExceptionUtils.exceptionHandlerForRowMapper(row, logonTracker.resolveColumnNameForMapping("machineIp"), String.class));

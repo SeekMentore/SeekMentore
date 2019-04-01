@@ -17,8 +17,8 @@ public class RegisteredTutorEmailRowMapper implements RowMapper<RegisteredTutorE
 	public RegisteredTutorEmail mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final RegisteredTutorEmail registeredTutorEmail = new RegisteredTutorEmail();
-		registeredTutorEmail.setRegisteredTutorEmailIdId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorEmail.resolveColumnNameForMapping("registeredTutorEmailIdId"), Long.class));
-		registeredTutorEmail.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorEmail.resolveColumnNameForMapping("tutorId"), Long.class));
+		registeredTutorEmail.setRegisteredTutorEmailIdSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorEmail.resolveColumnNameForMapping("registeredTutorEmailIdSerialId"), String.class));
+		registeredTutorEmail.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, registeredTutorEmail.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherEmails(registeredTutorEmail, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(registeredTutorEmail, row, rowNum);
 		return registeredTutorEmail;

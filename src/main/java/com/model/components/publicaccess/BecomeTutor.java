@@ -16,7 +16,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 	
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	private Long tentativeTutorId;
+	private String becomeTutorSerialId;
 	private String applicationStatus;
 	private Date dateOfBirth;
 	private String contactNumber;
@@ -84,12 +84,12 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 	
 	public BecomeTutor() {}
 	
-	public Long getTentativeTutorId() {
-		return tentativeTutorId;
+	public String getBecomeTutorSerialId() {
+		return becomeTutorSerialId;
 	}
 
-	public void setTentativeTutorId(Long tentativeTutorId) {
-		this.tentativeTutorId = tentativeTutorId;
+	public void setBecomeTutorSerialId(String becomeTutorSerialId) {
+		this.becomeTutorSerialId = becomeTutorSerialId;
 	}
 
 	public Date getDateOfBirth() {
@@ -609,7 +609,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						COLUMN_NAME_TENTATIVE_TUTOR_ID,
+						COLUMN_NAME_BECOME_TUTOR_SERIAL_ID,
 						COLUMN_NAME_APPLICATION_DATE,
 						COLUMN_NAME_APPLICATION_STATUS,
 						COLUMN_NAME_DATE_OF_BIRTH,
@@ -675,7 +675,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						this.tentativeTutorId,
+						this.becomeTutorSerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
 						this.applicationStatus,
 						DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth),
@@ -741,7 +741,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "tentativeTutorId" : return "TENTATIVE_TUTOR_ID";
+			case "becomeTutorSerialId" : return "BECOME_TUTOR_SERIAL_ID";
 			case "applicationDateMillis" : return "APPLICATION_DATE_MILLIS";
 			case "applicationStatus" : return "APPLICATION_STATUS";
 			case "dateOfBirth" : return "DATE_OF_BIRTH";
@@ -814,7 +814,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 	public String getFormattedApplicationForPrinting() {
 		final StringBuilder becomeTutorApplication = new StringBuilder(EMPTY_STRING);
 		becomeTutorApplication.append(PrintFormatterUtils.startATable());
-		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_TUTOR_ID, this.tentativeTutorId));
+		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_BECOME_TUTOR_SERIAL_ID, this.becomeTutorSerialId));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_DATE_OF_BIRTH, DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth)));
 		becomeTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));

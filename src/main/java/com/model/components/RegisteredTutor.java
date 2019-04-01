@@ -17,8 +17,8 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
-	private Long tutorId;
-	private Long tentativeTutorId;
+	private String tutorSerialId;
+	private String becomeTutorSerialId;
 	private Date dateOfBirth;
 	private String gender;
 	private String qualification;
@@ -111,20 +111,20 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 		this.additionalDetails = additionalDetails;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
-	public Long getTentativeTutorId() {
-		return tentativeTutorId;
+	public String getBecomeTutorSerialId() {
+		return becomeTutorSerialId;
 	}
 
-	public void setTentativeTutorId(Long tentativeTutorId) {
-		this.tentativeTutorId = tentativeTutorId;
+	public void setBecomeTutorSerialId(String becomeTutorSerialId) {
+		this.becomeTutorSerialId = becomeTutorSerialId;
 	}
 
 	public Integer getTeachingExp() {
@@ -268,8 +268,8 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 		switch (reportSwitch) {
 			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
-						"TUTOR_ID",
-						"BECOME_TUTOR_ID",
+						"TUTOR_SERIAL_ID",
+						"BECOME_TUTOR_SERIAL_ID",
 						"USER_ID",
 						"NAME",
 						"CONTACT_NUMBER",
@@ -304,8 +304,8 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 		switch (reportSwitch) {
 			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
-						this.tutorId,
-						this.tentativeTutorId,
+						this.tutorSerialId,
+						this.becomeTutorSerialId,
 						this.getUserId(),
 						this.getName(),
 						this.getContactNumber(),
@@ -340,8 +340,8 @@ public class RegisteredTutor extends User implements Serializable, Cloneable, Re
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "tutorId" : return "TUTOR_ID";
-			case "tentativeTutorId" : return "TENTATIVE_TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
+			case "becomeTutorSerialId" : return "BECOME_TUTOR_SERIAL_ID";
 			case "dateOfBirth" : return "DATE_OF_BIRTH";
 			case "gender" : return "GENDER";
 			case "qualification" : return "QUALIFICATION";

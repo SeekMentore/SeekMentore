@@ -20,7 +20,7 @@ import com.model.Credential;
 import com.model.Employee;
 import com.model.ErrorPacket;
 import com.model.ForgotPasswordToken;
-import com.model.LogonTracker;
+import com.model.LoginTracker;
 import com.model.PasswordChangeTracker;
 import com.model.User;
 import com.model.UserAccessOptions;
@@ -85,8 +85,8 @@ public class LoginService implements LoginConstants {
 	}
 	
 	@Transactional
-	public void feedLogonTracker(final LogonTracker logonTracker) throws Exception {
-		applicationDao.executeUpdateWithQueryMapper("login", "insertLogonTracker", logonTracker);
+	public void feedLoginTracker(final LoginTracker loginTracker) throws Exception {
+		applicationDao.executeUpdateWithQueryMapper("login", "insertLoginTracker", loginTracker);
 	}
 	
 	@Transactional
@@ -156,6 +156,7 @@ public class LoginService implements LoginConstants {
 		changePasswordAsPerUserType(user.getUserType(), user.getUserId(), encryptedNewPassword);
 		user.setEncryptedPassword(encryptedNewPassword);
 		final PasswordChangeTracker passwordChangeTracker = new PasswordChangeTracker();
+		passwordChangeTracker.setPasswordChangeSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		passwordChangeTracker.setUserId(user.getUserId());
 		passwordChangeTracker.setUserType(user.getUserType());
 		passwordChangeTracker.setChangeTimeMillis(currentTimestamp.getTime());
@@ -213,14 +214,14 @@ public class LoginService implements LoginConstants {
 		if (ValidationUtils.checkObjectAvailability(user)) {
 			final Date currentTimestamp = new Date();
 			final ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
+			forgotPasswordToken.setForgotPasswordTokenSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			forgotPasswordToken.setUserId(user.getUserId());
 			forgotPasswordToken.setUserType(user.getUserType());
 			forgotPasswordToken.setToken(UUIDGeneratorUtils.generateRandomGUID());
 			forgotPasswordToken.setIssueDateMillis(currentTimestamp.getTime());
 			forgotPasswordToken.setExpiryDateMillis(currentTimestamp.getTime() + (12 * 60 * 60 * 1000)); // 12 hours
 			forgotPasswordToken.setIsValid(YES);
-			final Long tokenId = applicationDao.insertAndReturnGeneratedKeyWithQueryMapper("login", "insertForgotPasswordToken", forgotPasswordToken);
-			forgotPasswordToken.setForgotPasswordTokenId(tokenId);
+			applicationDao.executeUpdateWithQueryMapper("login", "insertForgotPasswordToken", forgotPasswordToken);
 			sendResetPasswordEmailToUser(user, forgotPasswordToken);
 		} else {
 			errorMessage = "No user found in system for the credentials provided.";
@@ -231,7 +232,7 @@ public class LoginService implements LoginConstants {
 	private void sendResetPasswordEmailToUser(final User user, final ForgotPasswordToken forgotPasswordToken) throws Exception {
 		final Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("addressName", user.getName());
-		attributes.put("tokenId", URLEncoder.encode(SecurityUtil.encrypt(forgotPasswordToken.getForgotPasswordTokenId().toString()), "UTF-8"));
+		attributes.put("tokenSerialId", URLEncoder.encode(SecurityUtil.encrypt(forgotPasswordToken.getForgotPasswordTokenSerialId()), "UTF-8"));
 		attributes.put("token", URLEncoder.encode(SecurityUtil.encrypt(forgotPasswordToken.getToken()), "UTF-8"));
 		MailUtils.sendMimeMessageEmail( 
 				user.getEmailId(), 
@@ -243,11 +244,11 @@ public class LoginService implements LoginConstants {
 	}
 
 	/* Returns error message if any else returns EMPTY_STRING*/
-	public String changePasswordFromToken(final Long tokenId, final String token, final String newPassword) throws Exception {
+	public String changePasswordFromToken(final String tokenSerialId, final String token, final String newPassword) throws Exception {
 		String message = EMPTY_STRING;
 		final Date currentTimestamp = new Date();
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("tokenId", tokenId);
+		paramsMap.put("forgotPasswordTokenSerialId", tokenSerialId);
 		final ForgotPasswordToken forgotPasswordToken = applicationDao.find(
 																queryMapperService.getQuerySQL("login", "selectForgotPasswordToken") 
 																+ queryMapperService.getQuerySQL("login", "forgotPasswordTokenTokenIdFilter"), paramsMap, new ForgotPasswordTokenRowMapper());

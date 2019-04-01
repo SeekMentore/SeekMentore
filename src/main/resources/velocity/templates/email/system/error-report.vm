@@ -2,6 +2,10 @@
 <p>
 	<table style="$CoreTableStyling">
 		<tr>
+			<td style="$CoreTableTDStyling"><strong>Serial Id</strong></td>
+			<td style="$CoreTableTDStyling">$errorPacket.errorSerialId</td>
+		</tr>
+		<tr>
 			<td style="$CoreTableTDStyling"><strong>Path</strong></td>
 			<td style="$CoreTableTDStyling">$errorPacket.requestURI</td>
 		</tr>

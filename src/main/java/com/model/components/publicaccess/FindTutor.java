@@ -15,7 +15,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 
 	private static final long serialVersionUID = 7314098186505190523L;
 	
-	private Long enquiryId;
+	private String findTutorSerialId;
 	private String enquiryStatus;
 	private String name;
 	private String contactNumber;
@@ -273,12 +273,12 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		this.rejectionRemarks = rejectionRemarks;
 	}
 
-	public Long getEnquiryId() {
-		return enquiryId;
+	public String getFindTutorSerialId() {
+		return findTutorSerialId;
 	}
 
-	public void setEnquiryId(Long enquiryId) {
-		this.enquiryId = enquiryId;
+	public void setFindTutorSerialId(String findTutorSerialId) {
+		this.findTutorSerialId = findTutorSerialId;
 	}
 
 	public String getEnquiryStatus() {
@@ -518,7 +518,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		switch (reportSwitch) {
 		case AdminConstants.SUPPORT_TEAM_REPORT : {
 			return new Object[] {
-					COLUMN_NAME_ENQUIRY_ID,
+					COLUMN_NAME_FIND_TUTOR_SERIAL_ID,
 					COLUMN_NAME_ENQUIRY_DATE,
 					COLUMN_NAME_ENQUIRY_STATUS,
 					COLUMN_NAME_NAME,
@@ -574,7 +574,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						this.enquiryId,
+						this.findTutorSerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.enquiryDateMillis),
 						this.enquiryStatus,
 						this.name,
@@ -630,7 +630,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "enquiryId" : return "ENQUIRY_ID";
+			case "findTutorSerialId" : return "FIND_TUTOR_SERIAL_ID";
 			case "enquiryDateMillis" : return "ENQUIRY_DATE_MILLIS";
 			case "enquiryStatus" : return "ENQUIRY_STATUS";
 			case "name" : return "NAME";
@@ -693,7 +693,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 	public String getFormattedApplicationForPrinting() {
 		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
 		findTutorApplication.append(PrintFormatterUtils.startATable());
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_ID, this.enquiryId));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIND_TUTOR_SERIAL_ID, this.findTutorSerialId));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, this.enquiryStatus));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, this.name));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));

@@ -17,8 +17,8 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 
 	private static final long serialVersionUID = -6980182144471502902L;
 	
-	private Long attachmentId; 
-	private Long mailId;
+	private String attachmentSerialId; 
+	private String mailSerialId;
 	private String filename;
 	private byte[] content;
 	private String applicationType;
@@ -85,12 +85,12 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 		return dataHandler;
 	}
 
-	public Long getAttachmentId() {
-		return attachmentId;
+	public String getAttachmentSerialId() {
+		return attachmentSerialId;
 	}
 
-	public void setAttachmentId(Long attachmentId) {
-		this.attachmentId = attachmentId;
+	public void setAttachmentSerialId(String attachmentSerialId) {
+		this.attachmentSerialId = attachmentSerialId;
 	}
 	
 	public void setFilename(String filename) {
@@ -109,12 +109,12 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 		this.attachment = attachment;
 	}
 
-	public Long getMailId() {
-		return mailId;
+	public String getMailSerialId() {
+		return mailSerialId;
 	}
 
-	public void setMailId(Long mailId) {
-		this.mailId = mailId;
+	public void setMailSerialId(String mailSerialId) {
+		this.mailSerialId = mailSerialId;
 	}
 
 	public Boolean getIsFileStoredInFileSystem() {
@@ -152,8 +152,8 @@ public class MailAttachment extends GridComponentObject implements Serializable,
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "attachmentId" : return "ATTACHMENT_ID";
-			case "mailId" : return "MAIL_ID";
+			case "attachmentSerialId" : return "ATTACHMENT_SERIAL_ID";
+			case "mailSerialId" : return "MAIL_SERIAL_ID";
 			case "content" : return "CONTENT";
 			case "filename" : return "FILENAME";
 			case "applicationType" : return "APPLICATION_TYPE";

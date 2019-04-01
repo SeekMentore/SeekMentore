@@ -15,8 +15,8 @@ import com.utils.ValidationUtils;
 public class SubscribedCustomer extends User implements Serializable, Cloneable, CustomerConstants, ApplicationWorkbookObject {
 	
 	private static final long serialVersionUID = -1763649873039566289L;
-	private Long customerId;
-	private Long findTutorId ;
+	private String customerSerialId;
+	private String findTutorSerialId;
 	private String studentGrades;
 	private String interestedSubjects;
 	private String location;
@@ -36,20 +36,20 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 	
 	public SubscribedCustomer() {}
 	
-	public Long getCustomerId() {
-		return customerId;
+	public String getCustomerSerialId() {
+		return customerSerialId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
 	}
 
-	public Long getFindTutorId() {
-		return findTutorId;
+	public String getFindTutorSerialId() {
+		return findTutorSerialId;
 	}
 
-	public void setFindTutorId(Long findTutorId) {
-		this.findTutorId = findTutorId;
+	public void setFindTutorSerialId(String findTutorSerialId) {
+		this.findTutorSerialId = findTutorSerialId;
 	}
 
 	public String getStudentGrades() {
@@ -185,8 +185,8 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 		switch (reportSwitch) {
 			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
-						"CUSTOMER_ID",
-						"FIND_TUTOR_ID",
+						"CUSTOMER_SERIAL_ID",
+						"FIND_TUTOR_SERIAL_ID",
 						"USER_ID",
 						"NAME",
 						"CONTACT_NUMBER",
@@ -215,8 +215,8 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 		switch (reportSwitch) {
 			case AdminConstants.ADMIN_REPORT : {
 				return new Object[] {
-						this.customerId,
-						this.findTutorId,
+						this.customerSerialId,
+						this.findTutorSerialId,
 						this.getUserId(),
 						this.getName(),
 						this.getContactNumber(),
@@ -245,8 +245,8 @@ public class SubscribedCustomer extends User implements Serializable, Cloneable,
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "customerId" : return "CUSTOMER_ID";
-			case "findTutorId" : return "FIND_TUTOR_ID";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
+			case "findTutorSerialId" : return "FIND_TUTOR_SERIAL_ID";
 			case "studentGrades" : return "STUDENT_GRADE";
 			case "interestedSubjects" : return "SUBJECTS";
 			case "location" : return "LOCATION";

@@ -16,8 +16,8 @@ public class BankDetailRowMapper implements RowMapper<BankDetail> {
 	public BankDetail mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final BankDetail bankDetail = new BankDetail();
-		bankDetail.setBankAccountId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("bankAccountId"), Long.class));
-		bankDetail.setTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("tutorId"), Long.class));
+		bankDetail.setBankAccountSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("bankAccountSerialId"), String.class));
+		bankDetail.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		bankDetail.setBankName(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("bankName"), String.class));
 		bankDetail.setAccountNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("accountNumber"), String.class));
 		bankDetail.setIfscCode(ExceptionUtils.exceptionHandlerForRowMapper(row, bankDetail.resolveColumnNameForMapping("ifscCode"), String.class));

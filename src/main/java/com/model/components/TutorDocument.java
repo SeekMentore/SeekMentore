@@ -10,8 +10,8 @@ public class TutorDocument extends GridComponentObject implements Serializable, 
 	
 	private static final long serialVersionUID = -1763649873039566289L;
 	
-	private Long documentId;
-	private Long tutorId;
+	private String documentSerialId;
+	private String tutorSerialId;
 	private String documentType;
 	private String fsKey;
 	private String filename;
@@ -30,20 +30,20 @@ public class TutorDocument extends GridComponentObject implements Serializable, 
 		this.content = content;
 	}
 	
-	public Long getDocumentId() {
-		return documentId;
+	public String getDocumentSerialId() {
+		return documentSerialId;
 	}
 
-	public void setDocumentId(Long documentId) {
-		this.documentId = documentId;
+	public void setDocumentSerialId(String documentSerialId) {
+		this.documentSerialId = documentSerialId;
 	}
 
-	public Long getTutorId() {
-		return tutorId;
+	public String getTutorSerialId() {
+		return tutorSerialId;
 	}
 
-	public void setTutorId(Long tutorId) {
-		this.tutorId = tutorId;
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
 	}
 
 	public String getFsKey() {
@@ -133,9 +133,9 @@ public class TutorDocument extends GridComponentObject implements Serializable, 
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "documentId" : return "DOCUMENT_ID";
+			case "documentSerialId" : return "DOCUMENT_SERIAL_ID";
 			case "documentType" : return "DOCUMENT_TYPE";
-			case "tutorId" : return "TUTOR_ID";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "fsKey" : return "FS_KEY";
 			case "filename" : return "FILENAME";
 			case "isApproved" : return "IS_APPROVED";

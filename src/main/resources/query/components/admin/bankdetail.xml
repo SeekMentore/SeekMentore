@@ -7,13 +7,13 @@
 		FROM BANK_DETAIL B
 	</query>
 	<query type="filter" id="bankDetailBankAccountIdilter">
-		WHERE BANK_ACCOUNT_ID = :bankAccountId
+		WHERE BANK_ACCOUNT_SERIAL_ID = :bankAccountSerialId
 	</query>
 	<query type="filter" id="bankDetailMultiBankAccountIdFilter">
-		WHERE BANK_ACCOUNT_ID IN (:bankAccountIdList)
+		WHERE BANK_ACCOUNT_SERIAL_ID IN (:bankAccountSerialIdList)
 	</query>
 	<query type="filter" id="bankdetailTutorIdFilter">
-		WHERE TUTOR_ID = :tutorId
+		WHERE TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="sorter" id="bankdetailExistingSorter">
 		ORDER BY BANK_NAME
@@ -24,7 +24,7 @@
 			WHO_ACTED = :whoActed,
 			REMARKS = :remarks,
 			ACTION_DATE_MILLIS = :actionDateMillis
-		WHERE BANK_ACCOUNT_ID = :bankAccountId
+		WHERE BANK_ACCOUNT_SERIAL_ID = :bankAccountSerialId
 	</query>
 	<query type="update" id="updateMakeDefaultBankDetail" paramClass="com.model.components.BankDetail">
 		UPDATE BANK_DETAIL SET
@@ -32,9 +32,9 @@
 			WHO_ACTED = :whoActed,
 			REMARKS = :remarks,
 			ACTION_DATE_MILLIS = :actionDateMillis
-		WHERE BANK_ACCOUNT_ID = :bankAccountId
+		WHERE BANK_ACCOUNT_SERIAL_ID = :bankAccountSerialId
 	</query>
 	<query type="update" id="resetPreviousDefaultBankAccount" paramClass="com.model.components.BankDetail">
-		UPDATE BANK_DETAIL SET IS_DEFAULT = 'N' WHERE TUTOR_ID = :tutorId AND IS_DEFAULT = 'Y'
+		UPDATE BANK_DETAIL SET IS_DEFAULT = 'N' WHERE TUTOR_SERIAL_ID = :tutorSerialId AND IS_DEFAULT = 'Y'
 	</query>
 </queryMapper>

@@ -8,7 +8,7 @@ public class PasswordChangeTracker extends GridComponentObject implements Serial
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private Long passwordChangeId;
+	private String passwordChangeSerialId;
 	private Long changeTimeMillis;
 	private String userType;
 	private String userId;
@@ -34,12 +34,12 @@ public class PasswordChangeTracker extends GridComponentObject implements Serial
 		this.userId = userId;
 	}
 
-	public Long getPasswordChangeId() {
-		return passwordChangeId;
+	public String getPasswordChangeSerialId() {
+		return passwordChangeSerialId;
 	}
 
-	public void setPasswordChangeId(Long passwordChangeId) {
-		this.passwordChangeId = passwordChangeId;
+	public void setPasswordChangeSerialId(String passwordChangeSerialId) {
+		this.passwordChangeSerialId = passwordChangeSerialId;
 	}
 
 	public String getEncryptedPasswordOld() {
@@ -89,7 +89,7 @@ public class PasswordChangeTracker extends GridComponentObject implements Serial
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "passwordChangeId" : return "PASSWORD_CHANGE_ID";
+			case "passwordChangeSerialId" : return "PASSWORD_CHANGE_SERIAL_ID";
 			case "changeTimeMillis" : return "CHANGE_TIME_MILLIS";
 			case "userType" : return "USER_TYPE";
 			case "userId" : return "USER_ID";

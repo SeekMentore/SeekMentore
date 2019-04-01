@@ -65,9 +65,9 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_SALES) 
 public class SalesRestService extends AbstractRestWebservice implements SalesConstants, SubscriptionPackageConstants, RestMethodConstants {
 	
-	private Long customerId;
-	private Long enquiryId;
-	private Long tutorId;
+	private String tutorSerialId;
+	private String customerSerialId;
+	private String enquirySerialId;
 	private String tutorMapperSerialId;
 	private String demoSerialId;
 	private String subscriptionPackageSerialId;
@@ -219,12 +219,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD;
 		createEnquiryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.enquirySerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.enquiryObject.setEnquiryId(Long.parseLong(parentId));
+			this.enquiryObject.setEnquirySerialId(this.enquirySerialId);
 			getEnquiryService().updateEnquiryRecord(this.enquiryObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -248,7 +249,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
-		customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -345,7 +346,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, RegisteredTutor.class);
-		this.enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
+		this.enquirySerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquirySerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -372,12 +373,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.methodName = REST_METHOD_NAME_MAP_REGISTERED_TUTORS;
 		this.allIdsList = allIdsList;
 		try {
-			this.parentId = Long.parseLong(parentId);
+			this.parentSerialId = parentId;
+			this.enquirySerialId = parentId;
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getEnquiryService().mapRegisteredTutors(Long.parseLong(parentId), Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
+			getEnquiryService().mapRegisteredTutors(this.enquirySerialId, Arrays.asList(allIdsList.split(SEMICOLON)), getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -401,7 +403,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-		enquiryId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class);
+		this.enquirySerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquirySerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -646,7 +648,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -675,7 +677,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_MAPPING_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorMapper.class);
-		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -704,7 +706,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_TUTOR_SCHEDULED_DEMO_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
-		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorId", Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "tutorSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -733,7 +735,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_SCHEDULED_DEMO_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Demo.class);
-		this.customerId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerId", Long.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1817,7 +1819,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleEnquirySecurity();
 				break;
 			}
@@ -1835,7 +1837,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				break;
 			}
 			case REST_METHOD_NAME_MAP_REGISTERED_TUTORS : {
-				handleParentId();
+				handleParentSerialId();
 				handleAllIds();
 				break;
 			}
@@ -2436,21 +2438,21 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	private void handleSelectedCustomerDataGridView() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.customerId)) {
+		if (!ValidationUtils.checkStringAvailability(this.customerSerialId)) {
 			appendError(Message.getMessageFromFile(CustomerConstants.MESG_PROPERTY_FILE_NAME, CustomerConstants.INVALID_CUSTOMER_SERIAL_ID));
 		}
 	} 
 	
 	private void handleSelectedEnquiryDataGridView() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.enquiryId)) {
+		if (!ValidationUtils.checkObjectAvailability(this.enquirySerialId)) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EnquiryConstants.ENQUIRY_ENQUIRY_ID_ABSENT));
 		}
 	} 
 	
 	private void handleSelectedTutorDataGridView() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
+		if (!ValidationUtils.checkObjectAvailability(this.tutorSerialId)) {
 			appendError(Message.getMessageFromFile(TutorConstants.MESG_PROPERTY_FILE_NAME, TutorConstants.INVALID_TUTOR_SERIAL_ID));
 		}
 	} 

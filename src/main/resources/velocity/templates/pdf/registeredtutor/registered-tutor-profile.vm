@@ -19,7 +19,7 @@
 		#if( $fullAdminProfile )
 			<tr>
 				<td style="$CoreTableTDStyling width:25%;"><strong>Tutor Id</strong></td>
-				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.tutorId)</td>
+				<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($registeredTutor.tutorSerialId)</td>
 			</tr>
 		#end
 		<tr>

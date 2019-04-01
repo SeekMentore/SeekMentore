@@ -59,9 +59,9 @@ import com.webservices.rest.AbstractRestWebservice;
 @Path(RestPathConstants.REST_SERVICE_PATH_REGISTERED_TUTOR_ADMIN) 
 public class RegisteredTutorRestService extends AbstractRestWebservice implements RestMethodConstants, TutorConstants {
 	
-	private Long tutorId;
-	private Long documentId;
-	private Long bankAccountId;
+	private String tutorSerialId;
+	private String documentSerialId;
+	private String bankAccountSerialId;
 	private RegisteredTutor registeredTutorObject;
 	
 	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST)
@@ -78,11 +78,11 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, TutorDocument.class);
-		this.tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<TutorDocument> tutorDocumentsList = getTutorService().getTutorDocumentList(tutorId, gridComponent);
+			final List<TutorDocument> tutorDocumentsList = getTutorService().getTutorDocumentList(this.tutorSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, tutorDocumentsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(tutorDocumentsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -97,17 +97,15 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminRegisteredTutorProfilePdf (
-    		@FormParam("tutorId") final String tutorId,
+    		@FormParam("tutorSerialId") final String tutorSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF;
-		try {
-			this.tutorId = Long.valueOf(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getTutorService().downloadRegisteredTutorProfilePdf(Long.valueOf(tutorId), true), response);
+			downloadFile(getTutorService().downloadRegisteredTutorProfilePdf(this.tutorSerialId, true), response);
 		}
     }
 	
@@ -116,17 +114,15 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadTutorDocument (
-    		@FormParam("documentId") final String documentId,
+    		@FormParam("documentSerialId") final String documentSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT;
-		try {
-			this.documentId = Long.parseLong(documentId);
-		} catch(NumberFormatException e) {}
+		this.documentSerialId = documentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
-			downloadFile(getTutorService().downloadTutorDocument(Long.parseLong(documentId)), response);
+			downloadFile(getTutorService().downloadTutorDocument(this.documentSerialId), response);
 		}
     }
 	
@@ -144,11 +140,11 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_BANK_DETAIL_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, BankDetail.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<BankDetail> bankDetailsList = getTutorService().getBankDetailList(tutorId, gridComponent);
+			final List<BankDetail> bankDetailsList = getTutorService().getBankDetailList(this.tutorSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, bankDetailsList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(bankDetailsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -173,11 +169,11 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST, this.tutorSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -202,11 +198,11 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		tutorId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_ID, Long.class);
+		this.tutorSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REQUEST_PARAM_TUTOR_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, tutorId, gridComponent);
+			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForTutor(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, this.tutorSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -223,20 +219,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String approveTutorDocumentList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_APPROVE_TUTOR_DOCUMENT_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().aprroveTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().aprroveTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -251,20 +245,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String sendReminderTutorDocumentList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SEND_REMINDER_TUTOR_DOCUMENT_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().sendTutorDocumentListReminderEmails(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().sendTutorDocumentListReminderEmails(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Sent Reminder for document/s successfully.");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -279,20 +271,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String rejectTutorDocumentList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REJECT_TUTOR_DOCUMENT_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().rejectTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().rejectTutorDocumentList(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -307,20 +297,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String approveBankAccountList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_APPROVE_BANK_ACCOUNT_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().aprroveBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().aprroveBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -333,24 +321,22 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String makeDefaultBankAccount (
-			@FormParam("bankAccountId") final String bankAccountId,
+			@FormParam("bankAccountSerialId") final String bankAccountSerialId,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_MAKE_DEFAULT_BANK_ACCOUNT;
 		this.comments = comments;
+		this.tutorSerialId = tutorSerialId;
+		this.bankAccountSerialId = bankAccountSerialId;
 		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
-		try {
-			this.bankAccountId = Long.parseLong(bankAccountId);
 		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().makeDefaultBankAccount(Long.parseLong(bankAccountId), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().makeDefaultBankAccount(this.bankAccountSerialId, this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -365,20 +351,18 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String rejectBankAccountList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
-			@FormParam(REQUEST_PARAM_TUTOR_ID) final String tutorId,
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_REJECT_BANK_ACCOUNT_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
-		try {
-			this.tutorId = Long.parseLong(tutorId);
-		} catch(NumberFormatException e) {}
+		this.tutorSerialId = tutorSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().rejectBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), Long.parseLong(tutorId), comments, getActiveUser(request));
+			getTutorService().rejectBankAccountList(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -427,13 +411,12 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			this.registeredTutorObject.setDocuments(tutorDocuments);
 			this.changedAttributes.add("documents");
 		}
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.tutorSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.registeredTutorObject.setTutorId(Long.parseLong(parentId));
+			this.registeredTutorObject.setTutorSerialId(this.tutorSerialId);
 			getTutorService().updateTutorRecord(this.registeredTutorObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -497,40 +480,36 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_TUTOR_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleTutorSecurity();
 				break;
 			}
 			case REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT : {
-				handleDocumentId();
+				handleDocumentSerialId();
 				break;
 			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
 	
-	protected void handleDocumentId() throws Exception {
+	protected void handleDocumentSerialId() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.documentId)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					"No 'documentId' found in request, hence cannot perform action.",
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+		if (!ValidationUtils.checkObjectAvailability(this.documentSerialId)) {
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_DOCUMENT_SERIAL_ID));
 		}
 	}
 	
 	private void handleSelectedTutorDataView() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.tutorId)) {
+		if (!ValidationUtils.checkObjectAvailability(this.tutorSerialId)) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_SERIAL_ID));
 		}
 	}
 	
 	private void handleBankDetailModification() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkObjectAvailability(this.bankAccountId)) {
-			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_TUTOR_SERIAL_ID));	
+		if (!ValidationUtils.checkObjectAvailability(this.bankAccountSerialId)) {
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_BANK_DETAIL_SERIAL_ID));	
 		}
 	}
 	

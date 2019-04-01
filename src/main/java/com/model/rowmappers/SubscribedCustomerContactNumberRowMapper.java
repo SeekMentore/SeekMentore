@@ -17,8 +17,8 @@ public class SubscribedCustomerContactNumberRowMapper implements RowMapper<Subsc
 	public SubscribedCustomerContactNumber mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscribedCustomerContactNumber subscribedCustomerContactNumber = new SubscribedCustomerContactNumber();
-		subscribedCustomerContactNumber.setSubscribedCustomerContactNumberId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerContactNumber.resolveColumnNameForMapping("subscribedCustomerContactNumberId"), Long.class));
-		subscribedCustomerContactNumber.setCustomerId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerContactNumber.resolveColumnNameForMapping("customerId"), Long.class));
+		subscribedCustomerContactNumber.setSubscribedCustomerContactNumberSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerContactNumber.resolveColumnNameForMapping("subscribedCustomerContactNumberSerialId"), String.class));
+		subscribedCustomerContactNumber.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribedCustomerContactNumber.resolveColumnNameForMapping("customerSerialId"), String.class));
 		UserUtils.mapUserPseudoColumnsForOtherContactNumbers(subscribedCustomerContactNumber, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(subscribedCustomerContactNumber, row, rowNum);
 		return subscribedCustomerContactNumber;

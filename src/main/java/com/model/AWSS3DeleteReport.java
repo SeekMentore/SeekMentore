@@ -8,7 +8,7 @@ public class AWSS3DeleteReport extends GridComponentObject implements Serializab
 	
 	private static final long serialVersionUID = -6349692224199736678L;
 	
-	private Long s3DeleteId;
+	private String s3DeleteSerialId;
 	private Long occuredAtMillis;
 	private String fsKeyToBeDeleted;
 	private String fsKeyRecycled;
@@ -34,12 +34,12 @@ public class AWSS3DeleteReport extends GridComponentObject implements Serializab
 		this.userType = userType;
 	}
 
-	public Long getS3DeleteId() {
-		return s3DeleteId;
+	public String getS3DeleteSerialId() {
+		return s3DeleteSerialId;
 	}
 
-	public void setS3DeleteId(Long s3DeleteId) {
-		this.s3DeleteId = s3DeleteId;
+	public void setS3DeleteSerialId(String s3DeleteSerialId) {
+		this.s3DeleteSerialId = s3DeleteSerialId;
 	}
 
 	public Long getOccuredAtMillis() {
@@ -109,7 +109,7 @@ public class AWSS3DeleteReport extends GridComponentObject implements Serializab
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "s3DeleteId" : return "S3_DELETE_ID";
+			case "s3DeleteSerialId" : return "S3_DELETE_SERIAL_ID";
 			case "occuredAtMillis" : return "OCCURED_AT_MILLIS";
 			case "fsKeyToBeDeleted" : return "FS_KEY_TO_BE_DELETED";
 			case "fsKeyRecycled" : return "FS_KEY_RECYCLED";

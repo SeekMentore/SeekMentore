@@ -2,9 +2,9 @@
 <queryMapper namespace="error">
 	<query type="insert" id="insertErrorPacket" paramClass="com.model.ErrorPacket">
 		INSERT INTO APP_ERROR_REPORT
-			(OCCURED_AT_MILLIS, REQUEST_URI, ERROR_TRACE) 
+			(ERROR_SERIAL_ID, OCCURED_AT_MILLIS, REQUEST_URI, ERROR_TRACE) 
 		VALUES
-			(:occuredAtMillis, :requestURI, :errorTrace)
+			(:errorSerialId, :occuredAtMillis, :requestURI, :errorTrace)
 	</query>
 	<query type="select" id="selectErrorPacket">
 		SELECT 

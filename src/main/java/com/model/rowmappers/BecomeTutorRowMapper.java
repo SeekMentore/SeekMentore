@@ -19,7 +19,7 @@ public class BecomeTutorRowMapper implements RowMapper<BecomeTutor>, BecomeTutor
 	public BecomeTutor mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final BecomeTutor becomeTutor = new BecomeTutor();
-		becomeTutor.setTentativeTutorId(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("tentativeTutorId"), Long.class));
+		becomeTutor.setBecomeTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("becomeTutorSerialId"), String.class));
 		becomeTutor.setApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("applicationDateMillis"), Long.class));
 		becomeTutor.setApplicationStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("applicationStatus"), String.class));
 		becomeTutor.setDateOfBirth(ExceptionUtils.exceptionHandlerForRowMapper(row, becomeTutor.resolveColumnNameForMapping("dateOfBirth"), Timestamp.class));

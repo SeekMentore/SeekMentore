@@ -16,7 +16,7 @@ public class ApplicationMailRowMapper implements RowMapper<ApplicationMail> {
 	public ApplicationMail mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final ApplicationMail mailObject = new ApplicationMail();
-		mailObject.setMailId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("mailId"), Long.class));
+		mailObject.setMailSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("mailSerialId"), String.class));
 		mailObject.setMailType(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("mailType"), String.class));
 		mailObject.setEntryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("entryDateMillis"), Long.class));
 		mailObject.setFromAddress(ExceptionUtils.exceptionHandlerForRowMapper(row, mailObject.resolveColumnNameForMapping("fromAddress"), String.class));

@@ -451,8 +451,8 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	private void handleFindTutorSecurity() throws Exception {
 		Boolean isEmailIdCustomerPresent = false;
 		Boolean isContactNumberCustomerPresent = false;
-		Long emailIdCustomerId = null;
-		Long contactNumberCustomerId = null;
+		String emailIdCustomerSerialId = null;
+		String contactNumberCustomerSerialId = null;
 		final FindTutor findTutorApplication = (FindTutor) this.application;
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePhoneNumber(findTutorApplication.getContactNumber(), 10)) {
@@ -465,7 +465,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(findTutorApplication.getContactNumber());
 			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber)) {
 				isContactNumberCustomerPresent = true;
-				contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+				contactNumberCustomerSerialId = subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId();
 			}
 		}
 		if (!ValidationUtils.validateEmailAddress(findTutorApplication.getEmailId())) {
@@ -478,13 +478,13 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(findTutorApplication.getEmailId());
 			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId)) {
 				isEmailIdCustomerPresent = true;
-				emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+				emailIdCustomerSerialId = subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId();
 			}
 		}
 		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
 			findTutorApplication.setSubscribedCustomer(YES);
 			if (isEmailIdCustomerPresent && isContactNumberCustomerPresent) {
-				if (!contactNumberCustomerId.equals(emailIdCustomerId)) {
+				if (!contactNumberCustomerSerialId.equals(emailIdCustomerSerialId)) {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
 							FindTutorConstants.VALIDATION_MESSAGE_EMAIL_ID_CONTACT_NUMBER_MULTIPLE_CUSTOMERS,
@@ -549,8 +549,8 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 	private void handleSubscribeWithUsSecurity() throws Exception {
 		Boolean isEmailIdCustomerPresent = false;
 		Boolean isContactNumberCustomerPresent = false;
-		Long emailIdCustomerId = null;
-		Long contactNumberCustomerId = null;
+		String emailIdCustomerSerialId = null;
+		String contactNumberCustomerSerialId = null;
 		final SubscribeWithUs subscribeWithUsApplication = (SubscribeWithUs) this.application;
 		this.securityPassed = true;
 		if (!ValidationUtils.validatePhoneNumber(subscribeWithUsApplication.getContactNumber(), 10)) {
@@ -563,7 +563,7 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(subscribeWithUsApplication.getContactNumber());
 			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithContactNumber)) {
 				isContactNumberCustomerPresent = true;
-				contactNumberCustomerId = subscribedCustomerInDatabaseWithContactNumber.getCustomerId();
+				contactNumberCustomerSerialId = subscribedCustomerInDatabaseWithContactNumber.getCustomerSerialId();
 			}
 		}
 		if (!ValidationUtils.validateEmailAddress(subscribeWithUsApplication.getEmailId())) {
@@ -576,13 +576,13 @@ public class PublicAccessRestService extends AbstractRestWebservice implements R
 			final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(subscribeWithUsApplication.getEmailId());
 			if (ValidationUtils.checkObjectAvailability(subscribedCustomerInDatabaseWithEmailId)) {
 				isEmailIdCustomerPresent = true;
-				emailIdCustomerId = subscribedCustomerInDatabaseWithEmailId.getCustomerId();
+				emailIdCustomerSerialId = subscribedCustomerInDatabaseWithEmailId.getCustomerSerialId();
 			}
 		}
 		if (isEmailIdCustomerPresent || isContactNumberCustomerPresent) {
 			subscribeWithUsApplication.setSubscribedCustomer(YES);
 			if (isEmailIdCustomerPresent && isContactNumberCustomerPresent) {
-				if (!contactNumberCustomerId.equals(emailIdCustomerId)) {
+				if (!contactNumberCustomerSerialId.equals(emailIdCustomerSerialId)) {
 					ApplicationUtils.appendMessageInMapAttribute(
 							this.securityFailureResponse, 
 							FindTutorConstants.VALIDATION_MESSAGE_EMAIL_ID_CONTACT_NUMBER_MULTIPLE_CUSTOMERS,
