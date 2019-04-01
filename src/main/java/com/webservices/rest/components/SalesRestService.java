@@ -302,6 +302,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		restresponse.put("success", true);
 		restresponse.put("message", "");
 		restresponse.put("tutorMapperFormAccess", true);
+		restresponse.put("scheduleDemoFormAccess", true);
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	

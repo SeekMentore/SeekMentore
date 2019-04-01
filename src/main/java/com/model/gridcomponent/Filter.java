@@ -29,8 +29,6 @@ public class Filter implements Serializable {
 	private Boolean clubbedFilterMapping;
 	private List<String> clubbedFilterProperties;
 
-	public Filter() {}
-	
 	public Filter (
 		final String id, 
 		final String type, 

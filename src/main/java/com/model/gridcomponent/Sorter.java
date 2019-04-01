@@ -16,8 +16,6 @@ public class Sorter implements Serializable {
 	private Boolean clubbedSorterMapping;
 	private List<String> clubbedSorterProperties;
 	
-	public Sorter() {}
-	
 	public Sorter (
 			final String id, 
 			final String type, 
@@ -86,11 +84,6 @@ public class Sorter implements Serializable {
 		this.order = order;
 	}
 	
-	@Override
-	public String toString() {
-		return this.id + " " + this.type + " " + this.mapping + " " + this.columnId + " " + this.columnName + " " + this.order;
-	}
-
 	public Boolean getClubbedSorterMapping() {
 		return clubbedSorterMapping;
 	}

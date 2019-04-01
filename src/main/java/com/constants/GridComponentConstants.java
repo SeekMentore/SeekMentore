@@ -62,4 +62,11 @@ public interface GridComponentConstants extends ResponseMapConstants {
 	String AND_CLAUSE = "AND";
 	String WHERE_CLAUSE = "WHERE";
 	String IN_APPENDER = " IN (";
+	
+	String STANDARD_EXTRA_PARAM_SECURE_SELECTION_COLUMN_BUTTONS = "secureSelectionColumnButtons";
+	String STANDARD_EXTRA_PARAM_HAS_SELECTION_BUTTONS = "hasSelectionButtons";
+	String STANDARD_EXTRA_PARAM_SECURE_ACTION_COLUMN_BUTTONS = "secureActionColumnButtons";
+	String STANDARD_EXTRA_PARAM_HAS_ACTION_BUTTONS = "hasActionButtons";
+	
+	String GRID_RECORD_DATA_TOTAL_RECORDS = "gridRecordDataTotalRecords";
 }

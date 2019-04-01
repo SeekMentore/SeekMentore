@@ -28,9 +28,8 @@ public class GridComponent implements Serializable, GridComponentConstants {
 	private List<Filter> filterList;
 	private String additionalFilterQueryString;
 	private String additionalSorterQueryString;
+	private StandardExtraParams standardExtraParams;
 	private JsonObject otherParamsAsJSONObject;
-	
-	public GridComponent() {}
 	
 	public GridComponent(
 		final Integer start,
@@ -58,6 +57,7 @@ public class GridComponent implements Serializable, GridComponentConstants {
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
 		this.gridComponentObjectClass = gridComponentObjectClass;
 		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(otherParams);
+		this.standardExtraParams = new StandardExtraParams(this.otherParamsAsJSONObject);
 	}
 	
 	public GridComponent(
@@ -93,6 +93,7 @@ public class GridComponent implements Serializable, GridComponentConstants {
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
 		this.gridComponentObjectClass = gridComponentObjectClass;
 		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(otherParams);
+		this.standardExtraParams = new StandardExtraParams(this.otherParamsAsJSONObject);
 	}
 	
 	public GridComponent(
@@ -118,6 +119,7 @@ public class GridComponent implements Serializable, GridComponentConstants {
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
 		this.gridComponentObjectClass = gridComponentObjectClass;
 		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(this.otherParams);
+		this.standardExtraParams = new StandardExtraParams(this.otherParamsAsJSONObject);
 	}
 	
 	public GridComponent(final Class<? extends GridComponentObject> gridComponentObjectClass) {
@@ -132,78 +134,43 @@ public class GridComponent implements Serializable, GridComponentConstants {
 		this.sorterList = GridComponentUtils.createSorterListFromSorterJSON(this.sorters);
 		this.gridComponentObjectClass = gridComponentObjectClass;
 		this.otherParamsAsJSONObject = JSONUtils.getJSONObjectFromString(this.otherParams);
+		this.standardExtraParams = new StandardExtraParams(this.otherParamsAsJSONObject);
 	}
 	
 	public String getOtherParams() {
 		return otherParams;
 	}
 	
-	public void setOtherParams(String otherParams) {
-		this.otherParams = otherParams;
-	}
-	
 	public List<Sorter> getSorterList() {
 		return sorterList;
-	}
-	
-	public void setSorterList(List<Sorter> sorterList) {
-		this.sorterList = sorterList;
 	}
 	
 	public List<Filter> getFilterList() {
 		return filterList;
 	}
 	
-	public void setFilterList(List<Filter> filterList) {
-		this.filterList = filterList;
-	}
-
 	public String getFilters() {
 		return filters;
-	}
-
-	public void setFilters(String filters) {
-		this.filters = filters;
 	}
 
 	public String getSorters() {
 		return sorters;
 	}
 
-	public void setSorters(String sorters) {
-		this.sorters = sorters;
-	}
-
 	public Integer getStart() {
 		return start;
-	}
-
-	public void setStart(Integer start) {
-		this.start = start;
 	}
 
 	public Integer getLimit() {
 		return limit;
 	}
 
-	public void setLimit(Integer limit) {
-		this.limit = limit;
-	}
-
 	public Integer getEnd() {
 		return end;
 	}
 
-	public void setEnd(Integer end) {
-		this.end = end;
-	}
-
 	public Boolean getPagingAvailable() {
 		return pagingAvailable;
-	}
-
-	public void setPagingAvailable(Boolean pagingAvailable) {
-		this.pagingAvailable = pagingAvailable;
 	}
 
 	public String getAdditionalFilterQueryString() {
@@ -226,18 +193,14 @@ public class GridComponent implements Serializable, GridComponentConstants {
 		return gridComponentObjectClass;
 	}
 
-	public void setGridComponentObjectClass(Class<? extends GridComponentObject> gridComponentObjectClass) {
-		this.gridComponentObjectClass = gridComponentObjectClass;
-	}
-
 	public JsonObject getOtherParamsAsJSONObject() {
 		return otherParamsAsJSONObject;
 	}
-
-	public void setOtherParamsAsJSONObject(JsonObject otherParamsAsJSONObject) {
-		this.otherParamsAsJSONObject = otherParamsAsJSONObject;
-	}
 	
+	public StandardExtraParams getStandardExtraParams() {
+		return standardExtraParams;
+	}
+
 	public void addStringFilterToFilterList (
 			final String mapping,
 			final String stringValue, 

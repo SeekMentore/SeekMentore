@@ -19,7 +19,7 @@ import com.model.gridcomponent.Sorter;
 public class GridComponentUtils implements GridComponentConstants {
 	
 	public static void mapGridPseudoColumnsForRecords(final GridComponentObject gridComponentObject, final ResultSet row, final int rowNum) throws SQLException {
-		gridComponentObject.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, gridComponentObject.resolveColumnNameForMapping("gridRecordDataTotalRecords"), Integer.class));
+		gridComponentObject.setGridRecordDataTotalRecords(ExceptionUtils.exceptionHandlerForRowMapper(row, gridComponentObject.resolveColumnNameForMapping(GRID_RECORD_DATA_TOTAL_RECORDS), Integer.class));
 	}
 	
 	public static Integer getTotalRecords(final List<? extends GridComponentObject> dataList, final GridComponent gridComponent) {

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,7 +257,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	public List<TutorMapper> getTutorMapperList(final String grid, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
-		final List<String> secureActionColumnButtons = new ArrayList<String>();
 		final String baseQuery = queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapper");
 		String existingFilterQueryString = EMPTY_STRING;
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEntryDateSorter");
@@ -285,14 +283,6 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 				existingFilterQueryString = queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperCurrentEnquiryAllMappedTutors")
 											+ queryMapperService.getQuerySQL("sales-tutormapper", "tutorMapperEnquiryOpenAdditionalFilter");
 				paramsMap.put("enquiryId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "enquiryId", Long.class));
-				final Boolean hasActionButtons = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "hasActionButtons", Boolean.class);
-				if (ValidationUtils.checkObjectAvailability(hasActionButtons) && hasActionButtons) {
-					final JsonArray secureActionColumnButtonsJSONArray = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "secureActionColumnButtons", JsonArray.class);
-					for (Object secureActionColumnButtonObject : secureActionColumnButtonsJSONArray) {
-						final String secureButton = secureActionColumnButtonObject.toString().replaceAll(INVERTED_COMMA, EMPTY_STRING);
-						secureActionColumnButtons.add(secureButton);
-					}
-				}
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST : {
@@ -313,7 +303,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			}
 		}
 		final List<TutorMapper> tutorMapperList = applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new TutorMapperRowMapper());
-		setActionButtonSecuritySetupForTutorMapperList(tutorMapperList, secureActionColumnButtons, grid);
+		setActionButtonSecuritySetupForTutorMapperList(tutorMapperList, gridComponent.getStandardExtraParams().getSecureActionColumnButtons(), grid);
 		return tutorMapperList;
 	}
 	
