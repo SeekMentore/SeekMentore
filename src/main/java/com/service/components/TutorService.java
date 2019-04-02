@@ -444,16 +444,9 @@ public class TutorService implements TutorConstants {
 		throw new ApplicationException("Invalid Document Type");
 	}
 	
-	/*private void sendEmailAboutEmailAndUserIdChange(final Long tutorId, final String newEmailId) {
-		// TODO - Email
-	}
-	
-	private void sendEmailAboutContactNumberChange(final Long tutorId, final String newContactNumber) {
-		// TODO - Email
-	}*/
-	
 	@Transactional
 	public void updateTutorRecord(final RegisteredTutor tutor, final List<String> changedAttributes, final User activeUser) throws Exception {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE REGISTERED_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE TUTOR_SERIAL_ID = :tutorSerialId";
@@ -464,20 +457,6 @@ public class TutorService implements TutorConstants {
 					case "name" : {
 						updateAttributesQuery.add("NAME = :name");
 						paramsMap.put("name", tutor.getName());
-						break;
-					}
-					case "contactNumber" : {
-						//updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
-						//sendEmailAboutContactNumberChange(tutor.getTutorId(), tutor.getContactNumber());
-						paramsMap.put("contactNumber", tutor.getContactNumber());
-						break;
-					}
-					case "emailId" : {
-						//updateAttributesQuery.add("EMAIL_ID = :emailId");
-						// If emailId is changed also change the userId
-						//updateAttributesQuery.add("USER_ID = :emailId");
-						//sendEmailAboutEmailAndUserIdChange(tutor.getTutorId(), tutor.getEmailId());
-						paramsMap.put("emailId", tutor.getEmailId());
 						break;
 					}
 					case "dateOfBirth" : {
@@ -551,8 +530,9 @@ public class TutorService implements TutorConstants {
 		}
 		paramsMap.put("tutorSerialId", tutor.getTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);

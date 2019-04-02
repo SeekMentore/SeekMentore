@@ -21,7 +21,7 @@
 	<query type="filter" id="subscribedCustomerUserIdFilter">
 		WHERE LOWER(USER_ID) = LOWER(:userId)
 	</query>
-	<query type="filter" id="subscribedCustomerCustomerIdFilter">
+	<query type="filter" id="subscribedCustomerCustomerSerialIdFilter">
 		WHERE C.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="filter" id="subscribedCustomerEmailFilter">
@@ -66,7 +66,7 @@
             SCE.*
         FROM SUBSCRIBED_CUSTOMER_EMAIL_ID SCE
 	</query>
-	<query type="filter" id="subscribedCustomerEmailCustomerIdFilter">
+	<query type="filter" id="subscribedCustomerEmailCustomerSerialIdFilter">
 		WHERE SCE.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 	<query type="insert" id="insertSubscribedCustomerContactNumber" paramClass="com.model.components.SubscribedCustomerContactNumber">
@@ -80,7 +80,7 @@
             SCC.*
         FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER SCC
 	</query>
-	<query type="filter" id="subscribedCustomerContactNumberCustomerIdFilter">
+	<query type="filter" id="subscribedCustomerContactNumberCustomerSerialIdFilter">
 		WHERE SCC.CUSTOMER_SERIAL_ID = :customerSerialId
 	</query>
 </queryMapper>

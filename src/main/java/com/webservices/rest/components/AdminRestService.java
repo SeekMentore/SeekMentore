@@ -219,9 +219,9 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("formDataEditAccess", true);
-		restresponse.put("activePackageViewAccess", true);
-		restresponse.put("historyPackagesViewAccess", true);
+		restresponse.put("subscribedCustomerRecordUpdateAccess", true);
+		restresponse.put("subscribedCustomerActiveSubscriptionPackageViewAccess", true);
+		restresponse.put("subscribedCustomerHistorySubscriptionPackagesViewAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}

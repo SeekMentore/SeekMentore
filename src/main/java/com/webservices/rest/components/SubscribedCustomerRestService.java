@@ -1,5 +1,6 @@
 package com.webservices.rest.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,8 @@ import com.constants.RestMethodConstants;
 import com.constants.RestPathConstants;
 import com.constants.ScopeConstants;
 import com.constants.components.AdminConstants;
-import com.constants.components.CommonsConstants;
 import com.constants.components.CustomerConstants;
 import com.constants.components.SelectLookupConstants;
-import com.constants.components.publicaccess.FindTutorConstants;
 import com.model.components.SubscribedCustomer;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
@@ -52,7 +51,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminSubscribedCustomerProfilePdf (
-    		@FormParam("customerSerialId") final String customerSerialId,
+    		@FormParam(REST_PARAM_CUSTOMER_SERIAL_ID) final String customerSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
@@ -78,7 +77,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REST_PARAM_CUSTOMER_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -107,13 +106,38 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscriptionPackage.class);
-		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
+		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), REST_PARAM_CUSTOMER_SERIAL_ID, String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final List<SubscriptionPackage> subscriptionPackagesList = getSubscriptionPackageService().getSubscriptionPackageListForCustomer(REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST, this.customerSerialId, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionPackagesList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionPackagesList, gridComponent));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_GET_SUBSCRIBED_CUSTOMER_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getSubscribedCustomerRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_SUBSCRIBED_CUSTOMER_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.customerSerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final SubscribedCustomer subscribedCustomer = getCustomerService().getSubscribedCustomer(this.customerSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, subscribedCustomer);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getCustomerService().getRecordFormUpdateStatus(subscribedCustomer), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -132,7 +156,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD;
-		createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
+		createSubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		this.parentSerialId = parentSerialId;
 		this.customerSerialId = parentSerialId;
 		doSecurity(request, response);
@@ -170,7 +194,11 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			}
 			case REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD : {
 				handleParentSerialId();
-				handleCustomerSecurity();
+				handleSubscribedCustomerSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_GET_SUBSCRIBED_CUSTOMER_RECORD : {
+				handleParentSerialId();
 				break;
 			}
 		}
@@ -184,7 +212,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 		}
 	} 
 	
-	private void createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
+	private void createSubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {
 			this.subscribedCustomerObject = new SubscribedCustomer();
 			this.subscribedCustomerObject.setName(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "name", String.class));
@@ -195,31 +223,24 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 			this.subscribedCustomerObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
 			this.subscribedCustomerObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
 			this.subscribedCustomerObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
+			this.omittableAttributesList = Arrays.asList(new String[]{"additionalDetails"});
 		}
 	}
 	
-	private void handleCustomerSecurity() throws Exception {
+	private void handleSubscribedCustomerSecurity() throws Exception {
 		this.securityPassed = true;
 		if (ValidationUtils.checkNonEmptyList(this.changedAttributes)) {
 			for (final String attributeName : this.changedAttributes) {
 				switch(attributeName) {
 					case "name" : {
 						if (!ValidationUtils.validateNameString(this.subscribedCustomerObject.getName(), true)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_NAME,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PROVIDE_A_VALID_NAME));
 						}
 						break;
 					}
 					case "contactNumber" : {
 						if (!ValidationUtils.validatePhoneNumber(this.subscribedCustomerObject.getContactNumber(), 10)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_CONTACT_NUMBER_MOBILE,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PROVIDE_A_VALID_CONTACT_NUMBER_MOBILE));
 						} else {
 							// Check contact number in system
 							final SubscribedCustomer subscribedCustomerInDatabaseWithContactNumber = getCustomerService().getSubscribedCustomerInDatabaseWithContactNumber(this.subscribedCustomerObject.getContactNumber());
@@ -231,11 +252,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 					}
 					case "emailId" : {
 						if (!ValidationUtils.validateEmailAddress(this.subscribedCustomerObject.getEmailId())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_A_VALID_EMAIL_ID,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PROVIDE_A_VALID_EMAIL_ID));
 						} else {
 							// Check email Id in system
 							final SubscribedCustomer subscribedCustomerInDatabaseWithEmailId = getCustomerService().getSubscribedCustomerInDatabaseWithEmailId(this.subscribedCustomerObject.getEmailId());
@@ -247,63 +264,36 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 					}
 					case "studentGrades" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getStudentGrades(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_A_STUDENT_GRADE,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SELECT_A_STUDENT_GRADE));
 						}
 						break;
 					}
 					case "interestedSubjects" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getInterestedSubjects(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_MULTIPLE_SUBJECTS,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SELECT_VALID_MULTIPLE_SUBJECTS));
 						}
 						break;
 					}
 					case "location" : {
 						if (!ValidationUtils.validateAgainstSelectLookupValues(this.subscribedCustomerObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_SELECT_VALID_LOCATION,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, SELECT_VALID_LOCATION));
 						}
-						break;
-					}
-					case "additionalDetails" : {
 						break;
 					}
 					case "addressDetails" : {
 						if (!ValidationUtils.validatePlainNotNullAndEmptyTextString(this.subscribedCustomerObject.getAddressDetails())) {
-							ApplicationUtils.appendMessageInMapAttribute(
-									this.securityFailureResponse, 
-									FindTutorConstants.VALIDATION_MESSAGE_PLEASE_ENTER_ADDRESS_DETAILS,
-									RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-							this.securityPassed = false;
+							appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, PROVIDE_ADDRESS_DETAILS));
 						}
 						break;
 					}
 					default : {
-						ApplicationUtils.appendMessageInMapAttribute(
-								this.securityFailureResponse, 
-								Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_UNKONWN_PROPERTY, new Object[] {attributeName}),
-								RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-						this.securityPassed = false;
+						handleUnkownAttributeError(attributeName);
 						break;
 					}
 				}
 			}
 		} else {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.VALIDATION_MESSAGE_NO_ATTRIBUTES_CHANGED),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			handleNoAttributeChangedError();
 		}
 	}
 }

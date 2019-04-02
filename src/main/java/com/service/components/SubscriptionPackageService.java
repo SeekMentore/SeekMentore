@@ -176,6 +176,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	
 	@Transactional
 	public void updateSubscriptionPackageRecord(final SubscriptionPackage subscriptionPackageObject, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE SUBSCRIPTION_PACKAGE SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE SUBSCRIPTION_PACKAGE_SERIAL_ID = :subscriptionPackageSerialId";
@@ -258,10 +259,12 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		paramsMap.put("subscriptionPackageSerialId", subscriptionPackageObject.getSubscriptionPackageSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("ACTION_DATE_MILLIS = :actionDateMillis");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("actionDateMillis", currenTimestamp.getTime());
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -508,6 +511,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 	
 	@Transactional
 	public void updateSubscriptionPackageAssignmentRecord(final PackageAssignment packageAssignmentObject, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE PACKAGE_ASSIGNMENT SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE PACKAGE_ASSIGNMENT_SERIAL_ID = :packageAssignmentSerialId";
@@ -560,10 +564,12 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		}
 		paramsMap.put("packageAssignmentSerialId", packageAssignmentObject.getPackageAssignmentSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("ACTION_DATE_MILLIS = :actionDateMillis");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("actionDateMillis", currenTimestamp.getTime());
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -737,17 +743,6 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		return applicationDao.findAllWithoutParams(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), new PackageAssignmentRowMapper());
 	}
 	
-	private String getFolderPathToUploadAttendanceDocuments (
-			final String fsKeyPrefix, 
-			final String documentTypeLabel
-	) {
-		return "secured/attendance/subscriptionpackage/" + fsKeyPrefix + DASH + "Documents/" + documentTypeLabel;
-	}
-	
-	private String getUniqueFilenameForAttendanceDocument(final String filename) {
-		return UUIDGeneratorUtils.generateFilenameAppendedUID() + DASH + filename;
-	}
-
 	@Transactional
 	public void insertAssignmentAttendance(final AssignmentAttendance assignmentAttendance, final PackageAssignment packageAssignment, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
@@ -770,7 +765,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		assignmentAttendance.setUpdatedByUserType(activeUser.getUserType());
 		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendance", assignmentAttendance);
 		applicationDao.executeUpdateWithQueryMapper("sales-subscriptionpackage", "updateHoursTaughtInPackageAssignment", packageAssignment);
-		final String fsKeyPrefix = packageAssignment.getSubscriptionPackageSerialId() + "/" + packageAssignment.getPackageAssignmentSerialId() + "/" + assignmentAttendance.getAssignmentAttendanceSerialId();
+		final String fsKeyPrefix = packageAssignment.getSubscriptionPackageSerialId() + FORWARD_SLASH + packageAssignment.getPackageAssignmentSerialId() + FORWARD_SLASH + assignmentAttendance.getAssignmentAttendanceSerialId();
 		insertAssignmentAttendanceDocuments(assignmentAttendance.getDocuments(), assignmentAttendance.getAssignmentAttendanceSerialId(), fsKeyPrefix, activeUser);
 		if (newCompletedHours == packageAssignment.getTotalHours()) {
 			sendNotificationEmailsForPackageAssignmentHoursCompletion(packageAssignment);
@@ -779,6 +774,17 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 				sendPackageAssignmentRenewReminderEmails(packageAssignment);
 			}
 		}
+	}
+	
+	private String getFolderPathToUploadAttendanceDocuments (
+			final String fsKeyPrefix, 
+			final String documentTypeLabel
+	) {
+		return "secured/attendance/subscriptionpackage/" + fsKeyPrefix + DASH + "Documents/" + documentTypeLabel;
+	}
+	
+	private String getUniqueFilenameForAttendanceDocument(final String documentTypeLabel, final String filename) {
+		return UUIDGeneratorUtils.generateSerialGUID() + UNDERSCORE + documentTypeLabel + filename.substring(filename.lastIndexOf(PERIOD) + 1);
 	}
 	
 	private void insertAssignmentAttendanceDocuments (
@@ -790,15 +796,14 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		final Date currentTimestamp = new Date();
 		if (ValidationUtils.checkNonEmptyList(documents)) {
 			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : documents) {
+				final String documentTypeLabel = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType());
 				assignmentAttendanceDocument.setAssignmentAttendanceDocumentSerialId(UUIDGeneratorUtils.generateSerialGUID());
 				assignmentAttendanceDocument.setAssignmentAttendanceSerialId(assignmentAttendanceSerialId);
 				assignmentAttendanceDocument.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 				assignmentAttendanceDocument.setUpdatedBy(activeUser.getUserId());
 				assignmentAttendanceDocument.setUpdatedByUserType(activeUser.getUserType());
-				final String fsKey = getFolderPathToUploadAttendanceDocuments(
-						fsKeyPrefix,
-						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_ASSIGNMENT_ATTENDANCE_DOCUMENT_TYPE_LOOKUP, assignmentAttendanceDocument.getDocumentType())) 
-						+ "/" + getUniqueFilenameForAttendanceDocument(assignmentAttendanceDocument.getFilename());
+				final String fsKey = getFolderPathToUploadAttendanceDocuments(fsKeyPrefix, documentTypeLabel) 
+									+ FORWARD_SLASH + getUniqueFilenameForAttendanceDocument(documentTypeLabel, assignmentAttendanceDocument.getFilename());
 				assignmentAttendanceDocument.setFsKey(fsKey);
 			}
 			applicationDao.executeBatchUpdateWithQueryMapper("sales-subscriptionpackage", "insertAssignmentAttendanceDocument", documents);
@@ -906,7 +911,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 						break;
 					}
 					case "documents" : {
-						final String fsKeyPrefix = packageAssignmentObject.getSubscriptionPackageSerialId() + "/" + packageAssignmentObject.getPackageAssignmentSerialId() + "/" + assignmentAttendance.getAssignmentAttendanceSerialId();
+						final String fsKeyPrefix = packageAssignmentObject.getSubscriptionPackageSerialId() + FORWARD_SLASH + packageAssignmentObject.getPackageAssignmentSerialId() + FORWARD_SLASH + assignmentAttendance.getAssignmentAttendanceSerialId();
 						insertAssignmentAttendanceDocuments(assignmentAttendance.getDocuments(), assignmentAttendance.getAssignmentAttendanceSerialId(), fsKeyPrefix, activeUser);
 						break;
 					}

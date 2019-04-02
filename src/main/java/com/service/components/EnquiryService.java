@@ -118,6 +118,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Transactional
 	public void updateEnquiryRecord(final Enquiry enquiryObject, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE ENQUIRY SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE ENQUIRY_SERIAL_ID = :enquirySerialId";
@@ -175,8 +176,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		}
 		paramsMap.put("enquirySerialId", enquiryObject.getEnquirySerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("LAST_ACTION_DATE_MILLIS = :lastActionDateMillis");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
+			paramsMap.put("lastActionDateMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -427,6 +429,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	
 	@Transactional
 	public void updateTutorMapperRecord(final TutorMapper tutorMapperObject, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE TUTOR_MAPPER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE TUTOR_MAPPER_SERIAL_ID = :tutorMapperSerialId";
@@ -515,14 +518,17 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			if (isTutorContacted) {
 				updateAttributesQuery.add("IS_TUTOR_CONTACTED = 'Y'");
-				updateAttributesQuery.add("TUTOR_CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+				updateAttributesQuery.add("TUTOR_CONTACTED_DATE_MILLIS = :tutorContactedDateMillis");
+				paramsMap.put("tutorContactedDateMillis", currenTimestamp.getTime());
 			}
 			if (isClientContacted) {
 				updateAttributesQuery.add("IS_CLIENT_CONTACTED = 'Y'");
-				updateAttributesQuery.add("CLIENT_CONTACTED_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+				updateAttributesQuery.add("CLIENT_CONTACTED_DATE_MILLIS = :clientContactedDateMillis");
+				paramsMap.put("clientContactedDateMillis", currenTimestamp.getTime());
 			}
-			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
+			paramsMap.put("adminActionDateMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);

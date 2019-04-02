@@ -27,14 +27,4 @@ public class UUIDGeneratorUtils implements ApplicationConstants {
 		}
 		return String.valueOf(serialId);
 	}
-	
-	public static String generateFilenameAppendedUID() {
-		final String uid = String.valueOf(generateRandomUUID()).toUpperCase().replaceAll(DASH, EMPTY_STRING);
-		final Integer min = 0;
-		final Integer max = uid.length() - 1;
-		final Integer minimumDistanceApart = 3;
-		Integer startIndex = ThreadLocalRandom.current().nextInt(min, max - minimumDistanceApart - 1);
-		Integer endIndex = ThreadLocalRandom.current().nextInt(startIndex + minimumDistanceApart, max + 1);
-		return uid.substring(startIndex, endIndex);
-	}
 }

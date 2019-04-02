@@ -358,6 +358,7 @@ public class DemoService implements DemoConstants, SalesConstants {
 
 	@Transactional
 	public void updateDemoRecord(final Demo demoObject, final List<String> changedAttributes, final User activeUser) throws Exception {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE DEMO SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE DEMO_SERIAL_ID = :demoSerialId";
@@ -440,8 +441,9 @@ public class DemoService implements DemoConstants, SalesConstants {
 		}
 		paramsMap.put("demoSerialId", demoObject.getDemoSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("ADMIN_ACTION_DATE_MILLIS = :adminActionDateMillis");
 			updateAttributesQuery.add("WHO_ACTED = :userId");
+			paramsMap.put("adminActionDateMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);

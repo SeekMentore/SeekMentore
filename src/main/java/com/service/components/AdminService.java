@@ -302,6 +302,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	@Transactional
 	public void updateBecomeTutorRecord(final BecomeTutor becomeTutor, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE BECOME_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE BECOME_TUTOR_SERIAL_ID = :becomeTutorSerialId";
@@ -404,8 +405,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		}
 		paramsMap.put("becomeTutorSerialId", becomeTutor.getBecomeTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -632,6 +634,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	@Transactional
 	public void updateFindTutorRecord(final FindTutor findTutor, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE FIND_TUTOR SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId";
@@ -699,8 +702,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		}
 		paramsMap.put("findTutorSerialId", findTutor.getFindTutorSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -913,6 +917,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	@Transactional
 	public void updateSubscriptionRecord(final SubscribeWithUs subscription, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId";
@@ -985,8 +990,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		}
 		paramsMap.put("subscribeWithUsSerialId", subscription.getSubscribeWithUsSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);

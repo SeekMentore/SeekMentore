@@ -25,6 +25,8 @@ public interface TutorConstants extends ResponseMapConstants {
 	String VALID_FILE_TYPE_FOR_DOCUMENTS = Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, "VALID_FILE_TYPE_FOR_DOCUMENTS").trim();
 	Double MAXIMUM_VALID_FILE_SIZE_FOR_DOCUMENTS_IN_MB = Double.valueOf(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, "MAXIMUM_VALID_FILE_SIZE_FOR_DOCUMENTS_IN_MB").trim());
 
+	String REST_PARAM_TUTOR_SERIAL_ID = "tutorSerialId";
+	
 	// Message Constants
 	String INVALID_TUTOR_SERIAL_ID = "INVALID_TUTOR_SERIAL_ID";
 	String INVALID_DOCUMENT_SERIAL_ID = "INVALID_DOCUMENT_SERIAL_ID";

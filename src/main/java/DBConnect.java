@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,41 +10,100 @@ import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 
 public class DBConnect {
+	
+	private static final String CONNECTION_DRIVER = "com.mysql.jdbc.Driver";
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/SEEK_MENTORE";
+	private static final String DB_USER = "root";
+	private static final String DB_PASSWORD = "pass";
+	
 	/*
-	
-  	feedSubscribeWithUsSerialId();
- 	feedSubmitQuerySerialId();	
-	feedFindTutorSerialId();
-	feedBecomeTutorSerialId();
-	feedEmployeeEmailSerialId();
-	feedEmployeeContactNumberSerialId();
-	feedEmployeeSerialId();
-	feedPasswordChangeSerialId();
-	feedLogonSerialId();
-	feedErrorSerialId();
-	feedMailAttachmentSerialId();
-	feedMailSerialId();
-	feedDocumentSerialId();
-	feedTutorEmailIdSerialId();
-	feedTutorContactNumberSerialId();
-	feedTutorSerialId();
-	feedCustomerEmailIdSerialId();
-	feedCustomerContactNumberSerialId();
-	feedCustomerSerialId();
-	feedEnquirySerialId();
-	feedTutorMapperSerialId();
-	feedDemoSerialId();
-	
+		createTutorDocumentsInNewPath();
+	  	feedSubscribeWithUsSerialId();
+	 	feedSubmitQuerySerialId();	
+		feedFindTutorSerialId();
+		feedBecomeTutorSerialId();
+		feedEmployeeEmailSerialId();
+		feedEmployeeContactNumberSerialId();
+		feedEmployeeSerialId();
+		feedPasswordChangeSerialId();
+		feedLogonSerialId();
+		feedErrorSerialId();
+		feedMailAttachmentSerialId();
+		feedMailSerialId();
+		feedDocumentSerialId();
+		feedTutorEmailIdSerialId();
+		feedTutorContactNumberSerialId();
+		feedTutorSerialId();
+		feedCustomerEmailIdSerialId();
+		feedCustomerContactNumberSerialId();
+		feedCustomerSerialId();
+		feedEnquirySerialId();
+		feedTutorMapperSerialId();
+		feedDemoSerialId();
 	*/
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
+	}
+	
+	public static void createTutorDocumentsInNewPath() throws IOException {
+		System.out.println("Started");
+		String documentSerialId = null;
+		String tutorId = null;
+		String tutorSerialId = null;
+		String fsKey = null;
+		String filename = null;
+		final List<String> dbUniqueIdList = new LinkedList<String>();
+		final List<String> newFsKeyList = new LinkedList<String>();
+		final List<String> fsKeyToDeleteList = new LinkedList<String>();
+		AWSTransfer transfer = new AWSTransfer();
+		transfer.connect();
+		try {
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM TUTOR_DOCUMENT");
+			while (rs.next()) {
+				documentSerialId = rs.getString("DOCUMENT_SERIAL_ID");
+				tutorId = rs.getString("TUTOR_ID");
+				tutorSerialId = rs.getString("TUTOR_SERIAL_ID");
+				fsKey = rs.getString("FS_KEY");
+				filename = rs.getString("FILENAME");
+				System.out.println(tutorId + "   " + tutorSerialId + "  " + fsKey + "  " + filename);
+				final String newFsKey = "secured/tutor/documents/" + tutorSerialId + "/" + filename;
+				try {
+					transfer.moveFileToDifferentLocationInSameBucket("seekmentore-dev", fsKey, newFsKey);
+					dbUniqueIdList.add(documentSerialId);
+					fsKeyToDeleteList.add(fsKey);
+					newFsKeyList.add(newFsKey);
+				} catch(Exception e) {
+					System.out.println("Exception Occured For DocumentId : [" + documentSerialId + "]");
+				}
+			}
+			if (ValidationUtils.checkNonEmptyList(dbUniqueIdList) && ValidationUtils.checkNonEmptyList(newFsKeyList)) {
+				for (int i = 0; i < dbUniqueIdList.size(); i++) {
+					final String dbUniqueId = dbUniqueIdList.get(i);
+					final String newFsKey = newFsKeyList.get(i);
+					stmt.executeUpdate("UPDATE TUTOR_DOCUMENT SET FS_KEY = '"+newFsKey+"' WHERE DOCUMENT_SERIAL_ID = '"+dbUniqueId+"'");
+					System.out.println(dbUniqueId + " -> " + newFsKey);
+				}
+			}
+			con.close();
+			if (ValidationUtils.checkNonEmptyList(fsKeyToDeleteList) && ValidationUtils.checkNonEmptyList(fsKeyToDeleteList)) {
+				for (final String fsKeyToDelete : fsKeyToDeleteList) {
+					transfer.deleteFileInFolder("seekmentore-dev", fsKeyToDelete);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Completed");
 	}
 	
 	public static void feedSubscribeWithUsSerialId() {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBSCRIBE_WITH_US");
 			while (rs.next()) {
@@ -67,8 +127,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBMIT_QUERY");
 			while (rs.next()) {
@@ -92,8 +152,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM FIND_TUTOR");
 			while (rs.next()) {
@@ -117,8 +177,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM BECOME_TUTOR");
 			while (rs.next()) {
@@ -142,8 +202,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM EMPLOYEE_EMAIL_ID");
 			while (rs.next()) {
@@ -167,8 +227,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM EMPLOYEE_CONTACT_NUMBER");
 			while (rs.next()) {
@@ -192,8 +252,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM EMPLOYEE");
 			while (rs.next()) {
@@ -217,8 +277,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM PASSWORD_CHANGE_TRACKER");
 			while (rs.next()) {
@@ -242,8 +302,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM LOGON_TRACKER");
 			while (rs.next()) {
@@ -267,8 +327,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM APP_ERROR_REPORT");
 			while (rs.next()) {
@@ -292,8 +352,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM MAIL_ATTACHMENTS");
 			while (rs.next()) {
@@ -317,8 +377,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM MAIL_QUEUE");
 			while (rs.next()) {
@@ -342,8 +402,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM TUTOR_DOCUMENT");
 			while (rs.next()) {
@@ -367,8 +427,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM REGISTERED_TUTOR_EMAIL_ID");
 			while (rs.next()) {
@@ -392,8 +452,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM REGISTERED_TUTOR_CONTACT_NUMBER");
 			while (rs.next()) {
@@ -417,8 +477,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM REGISTERED_TUTOR");
 			while (rs.next()) {
@@ -442,8 +502,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBSCRIBED_CUSTOMER_EMAIL_ID");
 			while (rs.next()) {
@@ -467,8 +527,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBSCRIBED_CUSTOMER_CONTACT_NUMBER");
 			while (rs.next()) {
@@ -492,8 +552,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBSCRIBED_CUSTOMER");
 			while (rs.next()) {
@@ -517,8 +577,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM ENQUIRY");
 			while (rs.next()) {
@@ -542,8 +602,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM TUTOR_MAPPER");
 			while (rs.next()) {
@@ -567,8 +627,8 @@ public class DBConnect {
 		System.out.println("Started");
 		final List<String> dbUniqueIdList = new LinkedList<String>();
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM DEMO");
 			while (rs.next()) {
@@ -590,8 +650,8 @@ public class DBConnect {
 	
 	public static void querySomeTable() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Class.forName(CONNECTION_DRIVER);
+			Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from DEMO");
 			while (rs.next()) {

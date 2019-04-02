@@ -97,7 +97,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminRegisteredTutorProfilePdf (
-    		@FormParam("tutorSerialId") final String tutorSerialId,
+    		@FormParam(REST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {

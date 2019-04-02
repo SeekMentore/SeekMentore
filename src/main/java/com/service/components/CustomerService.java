@@ -64,21 +64,33 @@ import com.utils.WorkbookUtils;
 	}
 	
 	public ApplicationFile downloadSubscribedCustomerProfilePdf(final String customerSerialId, final Boolean isAdminProfile) throws Exception {
+		final SubscribedCustomer subscribedCustomer = getSubscribedCustomer(customerSerialId);
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("customerSerialId", customerSerialId);
-		final SubscribedCustomer subscribedCustomer = applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer") 
-														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerCustomerIdFilter"), paramsMap, new SubscribedCustomerRowMapper());
 		if (ValidationUtils.checkObjectAvailability(subscribedCustomer)) {
 			subscribedCustomer.setSubscribedCustomerEmails(applicationDao.findAll(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomerEmail") 
-														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailCustomerIdFilter"), paramsMap, new SubscribedCustomerEmailRowMapper()));
+														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerEmailCustomerSerialIdFilter"), paramsMap, new SubscribedCustomerEmailRowMapper()));
 			subscribedCustomer.setSubscribedCustomerContactNumbers(applicationDao.findAll(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomerContactNumber") 
-																+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberCustomerIdFilter"), paramsMap, new SubscribedCustomerContactNumberRowMapper()));
+																+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerContactNumberCustomerSerialIdFilter"), paramsMap, new SubscribedCustomerContactNumberRowMapper()));
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("subscribedCustomer", subscribedCustomer);
 	        attributes.put("fullAdminProfile", isAdminProfile);
 	        return new ApplicationFile(subscribedCustomer.getName() + "_PROFILE" + PERIOD + FileConstants.EXTENSION_PDF, PDFUtils.getPDFByteArrayFromHTMLString(VelocityUtils.parsePDFTemplate(SUBSCRIBED_CUSTOMER_PROFILE_VELOCITY_TEMPLATE_PATH, attributes)));
 		}
 		return null;
+	}
+	
+	public SubscribedCustomer getSubscribedCustomer(final String customerSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("customerSerialId", customerSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer") 
+														+ queryMapperService.getQuerySQL("admin-subscribedcustomer", "subscribedCustomerCustomerSerialIdFilter"), paramsMap, new SubscribedCustomerRowMapper());
+	}
+	
+	public Map<String, Boolean> getRecordFormUpdateStatus(final SubscribedCustomer subscribedCustomer) {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("subscribedCustomerFormEditMandatoryDisbaled", false);
+		return securityAccess;
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerInDatabaseWithEmailId(final String emailId) throws Exception {
@@ -133,16 +145,9 @@ import com.utils.WorkbookUtils;
 		applicationDao.executeBatchUpdateWithQueryMapper("admin-subscribedcustomer", "updateUnBlacklistSubscribedCustomer", paramObjectList);
 	}
 	
-	/*private void sendEmailAboutEmailAndUserIdChange(final Long customerId, final String newEmailId) {
-		// TODO - Email
-	}
-	
-	private void sendEmailAboutContactNumberChange(final Long customerId, final String newContactNumber) {
-		// TODO - Email
-	}*/
-
 	@Transactional
 	public void updateCustomerRecord(final SubscribedCustomer customer, final List<String> changedAttributes, final User activeUser) {
+		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE SUBSCRIBED_CUSTOMER SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
 		final String existingFilterQueryString = "WHERE CUSTOMER_SERIAL_ID = :customerSerialId";
@@ -153,20 +158,6 @@ import com.utils.WorkbookUtils;
 					case "name" : {
 						updateAttributesQuery.add("NAME = :name");
 						paramsMap.put("name", customer.getName());
-						break;
-					}
-					case "contactNumber" : {
-						//updateAttributesQuery.add("CONTACT_NUMBER = :contactNumber");
-						//sendEmailAboutContactNumberChange(customer.getCustomerId(), customer.getContactNumber());
-						paramsMap.put("contactNumber", customer.getContactNumber());
-						break;
-					}
-					case "emailId" : {
-						//updateAttributesQuery.add("EMAIL_ID = :emailId");
-						// If emailId is changed also change the userId
-						//updateAttributesQuery.add("USER_ID = :emailId");
-						//sendEmailAboutEmailAndUserIdChange(customer.getCustomerId(), customer.getEmailId());
-						paramsMap.put("emailId", customer.getEmailId());
 						break;
 					}
 					case "studentGrades" : {
@@ -199,8 +190,9 @@ import com.utils.WorkbookUtils;
 		}
 		paramsMap.put("customerSerialId", customer.getCustomerSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
-			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
+			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
+			paramsMap.put("recordLastUpdatedMillis", currenTimestamp.getTime());
 			paramsMap.put("userId", activeUser.getUserId());
 			final String completeQuery = WHITESPACE + baseQuery + WHITESPACE + String.join(COMMA, updateAttributesQuery) + WHITESPACE + existingFilterQueryString;
 			applicationDao.executeUpdate(completeQuery, paramsMap);
@@ -235,7 +227,7 @@ import com.utils.WorkbookUtils;
 	}
 	
 	public SubscribedCustomer getSubscribedCustomerFromDbUsingUserId(final String userId) throws Exception {
-		if (null != userId) {
+		if (ValidationUtils.checkStringAvailability(userId)) {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("userId", userId.toLowerCase());
 			return applicationDao.find(queryMapperService.getQuerySQL("admin-subscribedcustomer", "selectSubscribedCustomer")
