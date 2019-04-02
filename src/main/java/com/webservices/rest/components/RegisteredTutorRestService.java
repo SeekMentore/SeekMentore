@@ -331,8 +331,6 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		this.comments = comments;
 		this.tutorSerialId = tutorSerialId;
 		this.bankAccountSerialId = bankAccountSerialId;
-		try {
-		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -376,7 +374,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@POST
 	public String updateTutorRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@FormDataParam("inputFilePANCard") final InputStream uploadedInputStreamFilePANCard,
 			@FormDataParam("inputFilePANCard") final FormDataContentDisposition uploadedFileDetailFilePANCard,
 			@FormDataParam("inputFileAadhaarCard") final InputStream uploadedInputStreamFileAadhaarCard,
@@ -411,8 +409,8 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			this.registeredTutorObject.setDocuments(tutorDocuments);
 			this.changedAttributes.add("documents");
 		}
-		this.parentSerialId = parentId;
-		this.tutorSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.tutorSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();

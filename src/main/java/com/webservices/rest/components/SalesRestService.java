@@ -212,16 +212,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateEnquiryRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD;
 		createEnquiryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentSerialId = parentId;
-			this.enquirySerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.enquirySerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -311,13 +309,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getTutorMapperRecord (
-			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD;
-		this.parentSerialId = parentId;
-		this.tutorMapperSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.tutorMapperSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -365,17 +363,15 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String mapRegisteredTutors (
-			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_MAP_REGISTERED_TUTORS;
 		this.allIdsList = allIdsList;
-		try {
-			this.parentSerialId = parentId;
-			this.enquirySerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.enquirySerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -459,16 +455,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateTutorMapperRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD;
 		createTutorMapperObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentSerialId = parentId;
-			this.tutorMapperSerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.tutorMapperSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -755,16 +749,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String scheduleDemo (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_SCHEDULE_DEMO;
 		createTutorMapperSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentSerialId = parentId;
-			this.tutorMapperSerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.tutorMapperSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -963,13 +955,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getDemoRecord (
-			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_DEMO_RECORD;
-		this.parentSerialId = parentId;
-		this.demoSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.demoSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -989,16 +981,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String reScheduleDemo (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_RE_SCHEDULE_DEMO;
 		createDemoReSchdeuleDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentSerialId = parentId;
-			this.demoSerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.demoSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1023,16 +1013,14 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateDemoRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_DEMO_RECORD;
 		createDemoObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentSerialId = parentId;
-			this.demoSerialId = parentId;
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.demoSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1179,17 +1167,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateSubscriptionPackageRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_RECORD;
 		createSubscriptionPackageObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
+		this.parentSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.subscriptionPackageObject.setSubscriptionPackageSerialId(parentId);
+			this.subscriptionPackageObject.setSubscriptionPackageSerialId(parentSerialId);
 			getSubscriptionPackageService().updateSubscriptionPackageRecord(this.subscriptionPackageObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1265,17 +1253,17 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateSubscriptionPackageAssignmentRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_PACKAGE_ASSIGNMENT_RECORD;
 		createSubscriptionPackageAssignmentObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
+		this.parentSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.packageAssignmentObject.setPackageAssignmentSerialId(parentId);
+			this.packageAssignmentObject.setPackageAssignmentSerialId(parentSerialId);
 			getSubscriptionPackageService().updateSubscriptionPackageAssignmentRecord(this.packageAssignmentObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1447,7 +1435,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String insertAssignmentAttendance (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@FormDataParam("inputFileClasswork") final InputStream uploadedInputStreamFileClasswork,
 			@FormDataParam("inputFileClasswork") final FormDataContentDisposition uploadedFileDetailFileClasswork,
 			@FormDataParam("inputFileHomework") final InputStream uploadedInputStreamFileHomework,
@@ -1490,8 +1478,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.assignmentAttendanceObject.setDocuments(assignmentAttendanceDocuments);
 			this.changedAttributes.add("documents");
 		}
-		this.parentSerialId = parentId;
-		this.packageAssignmentSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.packageAssignmentSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1538,7 +1526,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@POST
 	public String updateAssignmentAttendance (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@FormDataParam("inputFileClasswork") final InputStream uploadedInputStreamFileClasswork,
 			@FormDataParam("inputFileClasswork") final FormDataContentDisposition uploadedFileDetailFileClasswork,
 			@FormDataParam("inputFileHomework") final InputStream uploadedInputStreamFileHomework,
@@ -1551,8 +1539,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_ASSIGNMENT_ATTENDANCE;
-		this.parentSerialId = parentId;
-		this.assignmentAttendanceSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.assignmentAttendanceSerialId = parentSerialId;
 		createAssignmentAttendanceObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		final List<AssignmentAttendanceDocument> assignmentAttendanceDocuments = new ArrayList<AssignmentAttendanceDocument>();
 		if (null != uploadedInputStreamFileClasswork) {
@@ -1600,13 +1588,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getSubscriptionPackageRecord (
-			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD;
-		this.parentSerialId = parentId;
-		this.subscriptionPackageSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.subscriptionPackageSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1625,13 +1613,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
 	public String getPackageAssignmentRecord (
-			@FormParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_GET_PACKAGE_ASSIGNMENT_RECORD;
-		this.parentSerialId = parentId;
-		this.packageAssignmentSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.packageAssignmentSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();

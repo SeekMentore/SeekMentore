@@ -57,9 +57,7 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
     		@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF;
-		try {
-			this.customerSerialId = customerSerialId;
-		} catch(NumberFormatException e) {}
+		this.customerSerialId = customerSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			downloadFile(getCustomerService().downloadSubscribedCustomerProfilePdf(this.customerSerialId, true), response);
@@ -129,14 +127,14 @@ public class SubscribedCustomerRestService extends AbstractRestWebservice implem
 	@POST
 	public String updateCustomerRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD;
 		createsubscribedCustomerObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.customerSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.customerSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();

@@ -97,8 +97,6 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF;
 		this.becomeTutorSerialId = becomeTutorSerialId;
-		try {
-		} catch(NumberFormatException e) {}
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			downloadFile(getAdminService().downloadBecomeTutorProfilePdf(this.becomeTutorSerialId), response);
@@ -422,14 +420,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@POST
 	public String updateBecomeTutorRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD;
 		createBecomeTutorObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.becomeTutorSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.becomeTutorSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -769,16 +767,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@POST
 	public String updateFindTutorRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD;
 		createFindTutorObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.findTutorSerialId = parentId;
-		try {
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentSerialId;
+		this.findTutorSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1102,14 +1098,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@POST
 	public String updateSubscriptionRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD;
 		createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.subscribeWithUsSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.subscribeWithUsSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1273,14 +1269,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@POST
 	public String updateSubmitQueryRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD;
 		createSubmitQueryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.querySerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.querySerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
@@ -1479,14 +1475,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	@POST
 	public String updateComplaintRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
-			@FormDataParam(REQUEST_PARAM_PARENT_ID) final String parentId,
+			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD;
 		createComplaintObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		this.parentSerialId = parentId;
-		this.complaintSerialId = parentId;
+		this.parentSerialId = parentSerialId;
+		this.complaintSerialId = parentSerialId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
