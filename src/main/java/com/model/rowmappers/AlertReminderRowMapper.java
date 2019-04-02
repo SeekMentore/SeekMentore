@@ -17,7 +17,7 @@ public class AlertReminderRowMapper implements RowMapper<AlertReminder> {
 	public AlertReminder mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final AlertReminder alertReminder = new AlertReminder();
-		alertReminder.setAlertReminderId(ExceptionUtils.exceptionHandlerForRowMapper(row, alertReminder.resolveColumnNameForMapping("alertReminderId"), Long.class));
+		alertReminder.setAlertReminderSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, alertReminder.resolveColumnNameForMapping("alertReminderSerialId"), String.class));
 		NotificationUtils.mapNotificationColumnsForRecords(alertReminder, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(alertReminder, row, rowNum);
 		return alertReminder;

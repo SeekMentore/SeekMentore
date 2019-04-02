@@ -10,16 +10,16 @@ public class AlertReminder extends Notification implements Serializable, Cloneab
 	
 	private static final long serialVersionUID = -2375203428701697320L;
 	
-	private Long alertReminderId;
+	private String alertReminderSerialId;
 	
 	public AlertReminder() {}
 	
-	public Long getAlertReminderId() {
-		return alertReminderId;
+	public String getAlertReminderSerialId() {
+		return alertReminderSerialId;
 	}
 
-	public void setAlertReminderId(Long alertReminderId) {
-		this.alertReminderId = alertReminderId;
+	public void setAlertReminderSerialId(String alertReminderSerialId) {
+		this.alertReminderSerialId = alertReminderSerialId;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class AlertReminder extends Notification implements Serializable, Cloneab
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "alertReminderId" : return "ALERT_REMINDER_ID";
+			case "alertReminderSerialId" : return "ALERT_REMINDER_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

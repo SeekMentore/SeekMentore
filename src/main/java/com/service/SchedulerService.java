@@ -222,7 +222,7 @@ public class SchedulerService implements SchedulerConstants {
 			try {
 				LoggerUtils.logOnConsole("executeSubscribedCustomerJob");
 				final Date currentTimestamp = new Date();
-				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForEnquiryStatusSelected(true, 20);
+				final List<FindTutor> findTutorObjList = customerService.getFindTutorListForApplicationStatusSelected(true, 20);
 				final List<FindTutor> findTutorObjListToBeMigrated = new ArrayList<FindTutor>();
 				if (ValidationUtils.checkNonEmptyList(findTutorObjList)) {
 					final List<SubscribedCustomer> subscribedCustomerList = new ArrayList<SubscribedCustomer>();

@@ -207,7 +207,7 @@ import com.utils.WorkbookUtils;
 		}
 	}
 	
-	public List<FindTutor> getFindTutorListForEnquiryStatusSelected(final Boolean limitRecords, final Integer limit) throws Exception {
+	public List<FindTutor> getFindTutorListForApplicationStatusSelected(final Boolean limitRecords, final Integer limit) throws Exception {
 		GridComponent gridComponent = null;
 		if (limitRecords) {
 			gridComponent = new GridComponent(1, limit, FindTutor.class);

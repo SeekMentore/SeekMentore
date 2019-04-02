@@ -9,8 +9,83 @@ import com.utils.UUIDGeneratorUtils;
 import com.utils.ValidationUtils;
 
 public class DBConnect {
-
+	/*
+	
+  	feedSubscribeWithUsSerialId();
+ 	feedSubmitQuerySerialId();	
+	feedFindTutorSerialId();
+	feedBecomeTutorSerialId();
+	feedEmployeeEmailSerialId();
+	feedEmployeeContactNumberSerialId();
+	feedEmployeeSerialId();
+	feedPasswordChangeSerialId();
+	feedLogonSerialId();
+	feedErrorSerialId();
+	feedMailAttachmentSerialId();
+	feedMailSerialId();
+	feedDocumentSerialId();
+	feedTutorEmailIdSerialId();
+	feedTutorContactNumberSerialId();
+	feedTutorSerialId();
+	feedCustomerEmailIdSerialId();
+	feedCustomerContactNumberSerialId();
+	feedCustomerSerialId();
+	feedEnquirySerialId();
+	feedTutorMapperSerialId();
+	feedDemoSerialId();
+	
+	*/
 	public static void main(String args[]) {
+	}
+	
+	public static void feedSubscribeWithUsSerialId() {
+		System.out.println("Started");
+		final List<String> dbUniqueIdList = new LinkedList<String>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBSCRIBE_WITH_US");
+			while (rs.next()) {
+				dbUniqueIdList.add(rs.getString("TENTATIVE_SUBSCRIPTION_ID"));
+			}
+			if (ValidationUtils.checkNonEmptyList(dbUniqueIdList)) {
+				for (final String dbUniqueId : dbUniqueIdList) {
+					final String serailId = UUIDGeneratorUtils.generateSerialGUID();
+					stmt.executeUpdate("UPDATE SUBSCRIBE_WITH_US SET SUBSCRIBE_WITH_US_SERIAL_ID = '"+serailId+"' WHERE TENTATIVE_SUBSCRIPTION_ID = '"+dbUniqueId+"'");
+					System.out.println(dbUniqueId + "  " + serailId);
+				}
+			}
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Completed");
+	}
+	
+	public static void feedSubmitQuerySerialId() {
+		System.out.println("Started");
+		final List<String> dbUniqueIdList = new LinkedList<String>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SEEK_MENTORE", "root", "pass");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM SUBMIT_QUERY");
+			while (rs.next()) {
+				dbUniqueIdList.add(rs.getString("QUERY_ID"));
+			}
+			if (ValidationUtils.checkNonEmptyList(dbUniqueIdList)) {
+				for (final String dbUniqueId : dbUniqueIdList) {
+					final String serailId = UUIDGeneratorUtils.generateSerialGUID();
+					stmt.executeUpdate("UPDATE SUBMIT_QUERY SET QUERY_SERIAL_ID = '"+serailId+"' WHERE QUERY_ID = '"+dbUniqueId+"'");
+					System.out.println(dbUniqueId + "  " + serailId);
+				}
+			}
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Completed");
 	}
 	
 	public static void feedFindTutorSerialId() {

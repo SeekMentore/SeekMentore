@@ -16,7 +16,7 @@ public class ComplaintRowMapper implements RowMapper<Complaint> {
 	public Complaint mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Complaint complaint = new Complaint();
-		complaint.setComplaintId(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("complaintId"), Long.class));
+		complaint.setComplaintSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("complaintSerialId"), String.class));
 		complaint.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("name"), String.class));
 		complaint.setComplaintFiledDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("complaintFiledDateMillis"), Long.class));
 		complaint.setComplaintStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, complaint.resolveColumnNameForMapping("complaintStatus"), String.class));

@@ -16,7 +16,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 	private static final long serialVersionUID = 7314098186505190523L;
 	
 	private String findTutorSerialId;
-	private String enquiryStatus;
+	private String applicationStatus;
 	private String name;
 	private String contactNumber;
 	private String emailId;
@@ -45,7 +45,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 	private String location;
 	private String reference;
 	private String addressDetails;
-	private Long enquiryDateMillis;
+	private Long applicationDateMillis;
 	private Long contactedDateMillis;
 	private Long verificationDateMillis;
 	private Long suggestionDateMillis;
@@ -281,12 +281,12 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		this.findTutorSerialId = findTutorSerialId;
 	}
 
-	public String getEnquiryStatus() {
-		return enquiryStatus;
+	public String getApplicationStatus() {
+		return applicationStatus;
 	}
 
-	public void setEnquiryStatus(String enquiryStatus) {
-		this.enquiryStatus = enquiryStatus;
+	public void setApplicationStatus(String applicationStatus) {
+		this.applicationStatus = applicationStatus;
 	}
 
 	public String getName() {
@@ -313,12 +313,12 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		this.subscribedCustomer = subscribedCustomer;
 	}
 	
-	public Long getEnquiryDateMillis() {
-		return enquiryDateMillis;
+	public Long getApplicationDateMillis() {
+		return applicationDateMillis;
 	}
 
-	public void setEnquiryDateMillis(Long enquiryDateMillis) {
-		this.enquiryDateMillis = enquiryDateMillis;
+	public void setApplicationDateMillis(Long applicationDateMillis) {
+		this.applicationDateMillis = applicationDateMillis;
 	}
 
 	public Long getContactedDateMillis() {
@@ -519,8 +519,8 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		case AdminConstants.SUPPORT_TEAM_REPORT : {
 			return new Object[] {
 					COLUMN_NAME_FIND_TUTOR_SERIAL_ID,
-					COLUMN_NAME_ENQUIRY_DATE,
-					COLUMN_NAME_ENQUIRY_STATUS,
+					COLUMN_NAME_APPLICATION_DATE,
+					COLUMN_NAME_APPLICATION_STATUS,
 					COLUMN_NAME_NAME,
 					COLUMN_NAME_CONTACT_NUMBER,
 					COLUMN_NAME_EMAIL_ID,
@@ -575,8 +575,8 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
 						this.findTutorSerialId,
-						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.enquiryDateMillis),
-						this.enquiryStatus,
+						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
+						this.applicationStatus,
 						this.name,
 						this.contactNumber,
 						this.emailId,
@@ -631,8 +631,8 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
 			case "findTutorSerialId" : return "FIND_TUTOR_SERIAL_ID";
-			case "enquiryDateMillis" : return "ENQUIRY_DATE_MILLIS";
-			case "enquiryStatus" : return "ENQUIRY_STATUS";
+			case "applicationDateMillis" : return "APPLICATION_DATE_MILLIS";
+			case "applicationStatus" : return "APPLICATION_STATUS";
 			case "name" : return "NAME";
 			case "contactNumber" : return "CONTACT_NUMBER";
 			case "emailId" : return "EMAIL_ID";
@@ -694,7 +694,7 @@ public class FindTutor extends PublicApplication implements Serializable, Clonea
 		final StringBuilder findTutorApplication = new StringBuilder(EMPTY_STRING);
 		findTutorApplication.append(PrintFormatterUtils.startATable());
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIND_TUTOR_SERIAL_ID, this.findTutorSerialId));
-		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ENQUIRY_STATUS, this.enquiryStatus));
+		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_NAME, this.name));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
 		findTutorApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));

@@ -15,7 +15,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	private Long tentativeSubscriptionId;
+	private String subscribeWithUsSerialId;
 	private String applicationStatus;
 	private String firstName;
 	private String lastName;
@@ -290,12 +290,12 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		this.subscribedCustomer = subscribedCustomer;
 	}
 	
-	public Long getTentativeSubscriptionId() {
-		return tentativeSubscriptionId;
+	public String getSubscribeWithUsSerialId() {
+		return subscribeWithUsSerialId;
 	}
 
-	public void setTentativeSubscriptionId(Long tentativeSubscriptionId) {
-		this.tentativeSubscriptionId = tentativeSubscriptionId;
+	public void setSubscribeWithUsSerialId(String subscribeWithUsSerialId) {
+		this.subscribeWithUsSerialId = subscribeWithUsSerialId;
 	}
 
 	public String getApplicationStatus() {
@@ -527,7 +527,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		switch (reportSwitch) {
 		case AdminConstants.SUPPORT_TEAM_REPORT : {
 			return new Object[] {
-					COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID,
+					COLUMN_NAME_SUBSCRIBE_WITH_US_SERIAL_ID,
 					COLUMN_NAME_APPLICATION_DATE,
 					COLUMN_NAME_APPLICATION_STATUS,
 					COLUMN_NAME_FIRST_NAME,
@@ -584,7 +584,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						this.tentativeSubscriptionId,
+						this.subscribeWithUsSerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
 						this.applicationStatus,
 						this.firstName,
@@ -641,7 +641,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "tentativeSubscriptionId" : return "TENTATIVE_SUBSCRIPTION_ID";
+			case "subscribeWithUsSerialId" : return "SUBSCRIBE_WITH_US_SERIAL_ID";
 			case "applicationDateMillis" : return "APPLICATION_DATE_MILLIS";
 			case "applicationStatus" : return "APPLICATION_STATUS";
 			case "firstName" : return "FIRST_NAME";
@@ -705,7 +705,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 	public String getFormattedApplicationForPrinting() {
 		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
 		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_TENTATIVE_SUBSCRIPTION_ID, this.tentativeSubscriptionId));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBE_WITH_US_SERIAL_ID, this.subscribeWithUsSerialId));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, this.firstName));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, this.lastName));

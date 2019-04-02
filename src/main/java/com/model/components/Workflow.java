@@ -10,16 +10,16 @@ public class Workflow extends Notification implements Serializable, Cloneable, A
 	
 	private static final long serialVersionUID = -2375203428701697320L;
 	
-	private Long workflowId;
+	private String workflowSerialId;
 	
 	public Workflow() {}
 
-	public Long getWorkflowId() {
-		return workflowId;
+	public String getWorkflowSerialId() {
+		return workflowSerialId;
 	}
 
-	public void setWorkflowId(Long workflowId) {
-		this.workflowId = workflowId;
+	public void setWorkflowSerialId(String workflowSerialId) {
+		this.workflowSerialId = workflowSerialId;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class Workflow extends Notification implements Serializable, Cloneable, A
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "workflowId" : return "WORKFLOW_ID";
+			case "workflowSerialId" : return "WORKFLOW_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

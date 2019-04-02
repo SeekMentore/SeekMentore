@@ -18,7 +18,7 @@ public class SubscribeWithUsRowMapper implements RowMapper<SubscribeWithUs>, Sub
 	public SubscribeWithUs mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
-		subscribeWithUs.setTentativeSubscriptionId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("tentativeSubscriptionId"), Long.class));
+		subscribeWithUs.setSubscribeWithUsSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("subscribeWithUsSerialId"), String.class));
 		subscribeWithUs.setApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("applicationDateMillis"), Long.class));
 		subscribeWithUs.setApplicationStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("applicationStatus"), String.class));
 		subscribeWithUs.setFirstName(ExceptionUtils.exceptionHandlerForRowMapper(row, subscribeWithUs.resolveColumnNameForMapping("firstName"), String.class));

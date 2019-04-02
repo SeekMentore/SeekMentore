@@ -4,8 +4,8 @@ Hello Team,
 <p>
 	<table style="$CoreTableStyling">
 		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Query Id</strong></td>
-			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.queryId)</td>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Query Serial Id</strong></td>
+			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($submitQuery.querySerialId)</td>
 		</tr>
 		<tr>
 			<td style="$CoreTableTDStyling width:25%;"><strong>Query Date</strong></td>

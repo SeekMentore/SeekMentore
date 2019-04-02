@@ -4,16 +4,16 @@ Hello Team,
 <p>
 	<table style="$CoreTableStyling">
 		<tr>
-			<td style="$CoreTableTDStyling width:25%;"><strong>Enquiry Id</strong></td>
+			<td style="$CoreTableTDStyling width:25%;"><strong>Find Tutor Serial Id</strong></td>
 			<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($findTutor.findTutorSerialId)</td>
 		</tr>
     	<tr>
-    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Enquiry Date</strong></td>
-    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($findTutor.enquiryDateMillis))</td>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Application Date</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone($findTutor.applicationDateMillis))</td>
     	</tr>
     	<tr>
-    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Enquiry Status</strong></td>
-    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PUBLIC_APPLICATION_STATUS_LOOKUP', $findTutor.enquiryStatus))</td>
+    		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Application Status</strong></td>
+    		<td style="$CoreTableTDStyling">$ApplicationUtils.getBlankForNull($ApplicationUtils.getSelectLookupItemLabel('PUBLIC_APPLICATION_STATUS_LOOKUP', $findTutor.applicationStatus))</td>
     	</tr>
     	<tr>
     		<td style="$CoreTableTDStyling width:25%;"><strong><strong>Name</strong></td>

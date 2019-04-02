@@ -17,7 +17,7 @@ public class TaskRowMapper implements RowMapper<Task> {
 	public Task mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Task task = new Task();
-		task.setTaskId(ExceptionUtils.exceptionHandlerForRowMapper(row, task.resolveColumnNameForMapping("taskId"), Long.class));
+		task.setTaskSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, task.resolveColumnNameForMapping("taskSerialId"), String.class));
 		NotificationUtils.mapNotificationColumnsForRecords(task, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(task, row, rowNum);
 		return task;

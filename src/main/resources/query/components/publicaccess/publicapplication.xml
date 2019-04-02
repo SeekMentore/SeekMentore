@@ -11,24 +11,24 @@
 	</query>
 	<query type="insert" id="insertFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		INSERT INTO FIND_TUTOR
-			(ENQUIRY_DATE_MILLIS, ENQUIRY_STATUS, NAME,  EMAIL_ID, CONTACT_NUMBER, STUDENT_GRADE, SUBJECTS, LOCATION, SUBSCRIBED_CUSTOMER, PREFERRED_TIME_TO_CALL, 
+			(FIND_TUTOR_SERIAL_ID, APPLICATION_DATE_MILLIS, APPLICATION_STATUS, NAME,  EMAIL_ID, CONTACT_NUMBER, STUDENT_GRADE, SUBJECTS, LOCATION, SUBSCRIBED_CUSTOMER, PREFERRED_TIME_TO_CALL, 
 			REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS,	IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
-		VALUES(:enquiryDateMillis, :enquiryStatus, :name, :emailId, :contactNumber, :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
+		VALUES(:findTutorSerialId, :applicationDateMillis, :applicationStatus, :name, :emailId, :contactNumber, :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
 			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 	<query type="insert" id="insertSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		INSERT INTO SUBSCRIBE_WITH_US
-			(APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, EMAIL_ID, CONTACT_NUMBER, 
+			(SUBSCRIBE_WITH_US_SERIAL_ID, APPLICATION_DATE_MILLIS, APPLICATION_STATUS, FIRST_NAME, LAST_NAME, EMAIL_ID, CONTACT_NUMBER, 
 			STUDENT_GRADE, SUBJECTS, LOCATION, SUBSCRIBED_CUSTOMER, PREFERRED_TIME_TO_CALL, REFERENCE, ADDRESS_DETAILS, ADDITIONAL_DETAILS, 
 			IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
-		VALUES(:applicationDateMillis, :applicationStatus, :firstName, :lastName, :emailId, :contactNumber,
+		VALUES(:subscribeWithUsSerialId, :applicationDateMillis, :applicationStatus, :firstName, :lastName, :emailId, :contactNumber,
 			   :studentGrade, :subjects, :location, :subscribedCustomer, :preferredTimeToCall, :reference, :addressDetails, :additionalDetails,
 			   :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 	<query type="insert" id="insertSubmitQuery" paramClass="com.model.components.publicaccess.SubmitQuery">
 		INSERT INTO SUBMIT_QUERY
-			(QUERY_REQUESTED_DATE_MILLIS, QUERY_STATUS, EMAIL_ID, QUERY_DETAILS, REGISTERED_TUTOR, SUBSCRIBED_CUSTOMER, IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
-		VALUES(:queryRequestedDateMillis, :queryStatus, :emailId, :queryDetails, :registeredTutor, :subscribedCustomer, :isContacted, :recordLastUpdatedMillis, :updatedBy)
+			(QUERY_SERIAL_ID, QUERY_REQUESTED_DATE_MILLIS, QUERY_STATUS, EMAIL_ID, QUERY_DETAILS, REGISTERED_TUTOR, SUBSCRIBED_CUSTOMER, IS_CONTACTED, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY) 
+		VALUES(:querySerialId, :queryRequestedDateMillis, :queryStatus, :emailId, :queryDetails, :registeredTutor, :subscribedCustomer, :isContacted, :recordLastUpdatedMillis, :updatedBy)
 	</query>
 	<query type="select" id="selectBecomeTutor">
 		SELECT
@@ -183,11 +183,11 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = F.UPDATED_BY), F.UPDATED_BY) AS UPDATED_BY_NAME
 		FROM FIND_TUTOR F
 	</query>
-	<query type="filter" id="findTutorEnquiryStatusFilter">
-		WHERE ENQUIRY_STATUS = :enquiryStatus
+	<query type="filter" id="findTutorApplicationStatusFilter">
+		WHERE APPLICATION_STATUS = :applicationStatus
 	</query>
-	<query type="filter" id="findTutorMultiEnquiryStatusFilter">
-		WHERE ENQUIRY_STATUS IN (:enquiryStatusList)
+	<query type="filter" id="findTutorMultiApplicationStatusFilter">
+		WHERE APPLICATION_STATUS IN (:applicationStatusList)
 	</query>
 	<query type="filter" id="findTutorNonMigratedFilter">
 		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
@@ -196,7 +196,7 @@
 		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="sorter" id="findTutorExistingSorter">
-		ORDER BY ENQUIRY_DATE_MILLIS DESC
+		ORDER BY APPLICATION_DATE_MILLIS DESC
 	</query>
 	<query type="update" id="updateFindTutorDataMigrated" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET 
@@ -226,7 +226,7 @@
 	</query>
 	<query type="update" id="updateContactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_CONTACTED = :isContacted, 
 			WHO_CONTACTED = :whoContacted, 
 			CONTACTED_DATE_MILLIS = :contactedDateMillis, 
@@ -237,7 +237,7 @@
 	</query>
 	<query type="update" id="updateRecontactFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_CONTACTED = :isContacted,
 			WHO_CONTACTED = :whoContacted, 
 			CONTACTED_DATE_MILLIS = :contactedDateMillis,
@@ -252,7 +252,7 @@
 	</query>
 	<query type="update" id="updateRecontactedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_TO_BE_RECONTACTED = :isToBeRecontacted, 
 			WHO_RECONTACTED = :whoRecontacted, 
 			RECONTACTED_DATE_MILLIS = :recontactedDateMillis, 
@@ -263,7 +263,7 @@
 	</query>
 	<query type="update" id="updateRejectFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_CONTACTED = :isContacted,
 			WHO_CONTACTED = :whoContacted, 
 			CONTACTED_DATE_MILLIS = :contactedDateMillis,
@@ -278,7 +278,7 @@
 	</query>
 	<query type="update" id="updateVerifyFailverifyReverifyFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_AUTHENTICATION_VERIFIED = :isAuthenticationVerified, 
 			WHO_VERIFIED = :whoVerified, 
 			VERIFICATION_DATE_MILLIS = :verificationDateMillis, 
@@ -289,7 +289,7 @@
 	</query>
 	<query type="update" id="updateSelectedFindTutor" paramClass="com.model.components.publicaccess.FindTutor">
 		UPDATE FIND_TUTOR SET
-			ENQUIRY_STATUS = :enquiryStatus, 
+			APPLICATION_STATUS = :applicationStatus, 
 			IS_SELECTED = :isSelected, 
 			WHO_SELECTED = :whoSelected, 
 			SELECTION_DATE_MILLIS = :selectionDateMillis, 
@@ -329,7 +329,7 @@
 			WHO_BLACKLISTED = :whoBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateUnBlacklistSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -339,7 +339,7 @@
 			WHO_UN_BLACKLISTED = :whoUnBlacklisted,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateContactedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -350,7 +350,7 @@
 			CONTACTED_REMARKS = :contactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateRecontactSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -365,7 +365,7 @@
 			SUGGESTION_REMARKS = :suggestionRemarks,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateRecontactedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -376,7 +376,7 @@
 			RECONTACTED_REMARKS = :recontactedRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateRejectSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -391,7 +391,7 @@
 			REJECTION_REMARKS = :rejectionRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis,
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateVerifyFailverifyReverifySubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -402,7 +402,7 @@
 			VERIFICATION_REMARKS = :verificationRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="update" id="updateSelectedSubscribeWithUs" paramClass="com.model.components.publicaccess.SubscribeWithUs">
 		UPDATE SUBSCRIBE_WITH_US SET
@@ -413,7 +413,7 @@
 			SELECTION_REMARKS = :selectionRemarks, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy 
-		WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
 	</query>
 	<query type="select" id="selectSubmitQuery">
 		SELECT
@@ -441,7 +441,7 @@
 			QUERY_RESPONSE = :queryResponse, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy
-		 WHERE QUERY_ID = :queryId
+		 WHERE QUERY_SERIAL_ID = :querySerialId
 	</query>
 	<query type="update" id="updateHoldSubmitQuery" paramClass="com.model.components.publicaccess.SubmitQuery">
 		UPDATE SUBMIT_QUERY SET
@@ -451,12 +451,12 @@
 			NOT_ANSWERED_REASON = :notAnsweredReason,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy
-		 WHERE QUERY_ID = :queryId
+		 WHERE QUERY_SERIAL_ID = :querySerialId
 	</query>
 	<query type="update" id="updateRespondSubmitQueryMailSent" paramClass="com.model.components.publicaccess.SubmitQuery">
 		UPDATE SUBMIT_QUERY SET
 			IS_MAIL_SENT = :isMailSent, 
 			MAIL_SENT_MILLIS = :mailSentMillis 
-		 WHERE QUERY_ID = :queryId
+		 WHERE QUERY_SERIAL_ID = :querySerialId
 	</query>
 </queryMapper>

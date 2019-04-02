@@ -15,7 +15,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 
 	private static final long serialVersionUID = 7314098186505190523L;
 
-	private Long queryId;
+	private String querySerialId;
 	private String queryStatus;
 	private String emailId;
 	private String queryDetails;
@@ -63,12 +63,12 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 		this.whoContacted = whoContacted;
 	}
 
-	public Long getQueryId() {
-		return queryId;
+	public String getQuerySerialId() {
+		return querySerialId;
 	}
 
-	public void setQueryId(Long queryId) {
-		this.queryId = queryId;
+	public void setQuerySerialId(String querySerialId) {
+		this.querySerialId = querySerialId;
 	}
 
 	public String getQueryStatus() {
@@ -208,40 +208,10 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 	}
 
 	@Override
-	public String resolveColumnNameForMapping(final String mappingProperty) {
-		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
-		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
-		switch(mappingProperty) {
-			case "queryId" : return "QUERY_ID";
-			case "queryRequestedDateMillis" : return "QUERY_REQUESTED_DATE_MILLIS";
-			case "queryStatus" : return "QUERY_STATUS";
-			case "registeredTutor" : return "REGISTERED_TUTOR";
-			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
-			case "queryDetails" : return "QUERY_DETAILS";
-			case "queryResponse" : return "QUERY_RESPONSE";
-			case "notAnswered" : return "NOT_ANSWERED";
-			case "notAnsweredReason" : return "NOT_ANSWERED_REASON";
-			case "whoNotAnswered" : return "WHO_NOT_ANSWERED";
-			case "emailId" : return "EMAIL_ID";
-			case "isContacted" : return "IS_CONTACTED";
-			case "whoContacted" : return "WHO_CONTACTED";
-			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
-			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
-			case "updatedBy" : return "UPDATED_BY";
-			case "whoContactedName" : return "WHO_CONTACTED_NAME";
-			case "whoNotAnsweredName" : return "WHO_NOT_ANSWERED_NAME";
-			case "updatedByName" : return "UPDATED_BY_NAME";
-			case "isMailSent" : return "IS_MAIL_SENT";
-			case "mailSentMillis" : return "MAIL_SENT_MILLIS";
-		}
-		return EMPTY_STRING;
-	}
-
-	@Override
 	public String getFormattedApplicationForPrinting() {
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
 		submitQueryApplication.append(PrintFormatterUtils.startATable());
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_ID, this.queryId));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_SERIAL_ID, this.querySerialId));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, this.queryStatus));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, this.queryDetails));
@@ -256,7 +226,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						COLUMN_NAME_QUERY_ID,
+						COLUMN_NAME_QUERY_SERIAL_ID,
 						COLUMN_NAME_QUERY_REQUESTED_DATE,
 						COLUMN_NAME_QUERY_STATUS,
 						COLUMN_NAME_EMAIL_ID,
@@ -283,7 +253,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 		switch (reportSwitch) {
 			case AdminConstants.SUPPORT_TEAM_REPORT : {
 				return new Object[] {
-						this.queryId,
+						this.querySerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.queryRequestedDateMillis),
 						this.queryStatus,
 						this.emailId,
@@ -303,6 +273,36 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 			}
 		}
 		return new Object[] {};
+	}
+	
+	@Override
+	public String resolveColumnNameForMapping(final String mappingProperty) {
+		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
+		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
+		switch(mappingProperty) {
+			case "querySerialId" : return "QUERY_SERIAL_ID";
+			case "queryRequestedDateMillis" : return "QUERY_REQUESTED_DATE_MILLIS";
+			case "queryStatus" : return "QUERY_STATUS";
+			case "registeredTutor" : return "REGISTERED_TUTOR";
+			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "queryDetails" : return "QUERY_DETAILS";
+			case "queryResponse" : return "QUERY_RESPONSE";
+			case "notAnswered" : return "NOT_ANSWERED";
+			case "notAnsweredReason" : return "NOT_ANSWERED_REASON";
+			case "whoNotAnswered" : return "WHO_NOT_ANSWERED";
+			case "emailId" : return "EMAIL_ID";
+			case "isContacted" : return "IS_CONTACTED";
+			case "whoContacted" : return "WHO_CONTACTED";
+			case "contactedDateMillis" : return "CONTACTED_DATE_MILLIS";
+			case "recordLastUpdatedMillis" : return "RECORD_LAST_UPDATED_MILLIS";
+			case "updatedBy" : return "UPDATED_BY";
+			case "whoContactedName" : return "WHO_CONTACTED_NAME";
+			case "whoNotAnsweredName" : return "WHO_NOT_ANSWERED_NAME";
+			case "updatedByName" : return "UPDATED_BY_NAME";
+			case "isMailSent" : return "IS_MAIL_SENT";
+			case "mailSentMillis" : return "MAIL_SENT_MILLIS";
+		}
+		return EMPTY_STRING;
 	}
 	
 	@Override

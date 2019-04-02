@@ -59,8 +59,11 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	private BecomeTutor becomeTutorObject;
 	private String findTutorSerialId;
 	private FindTutor findTutorObject;
+	private String subscribeWithUsSerialId;
 	private SubscribeWithUs subscriptionObject;
+	private String querySerialId;
 	private SubmitQuery submitQueryObject;
+	private String complaintSerialId;
 	private Complaint complaintObject;
 	
 	@Path(REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST)
@@ -1105,13 +1108,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD;
 		createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.subscribeWithUsSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.subscriptionObject.setTentativeSubscriptionId(Long.parseLong(parentId));
+			this.subscriptionObject.setSubscribeWithUsSerialId(this.subscribeWithUsSerialId);
 			getAdminService().updateSubscriptionRecord(this.subscriptionObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1277,13 +1279,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_SUBMIT_QUERY_RECORD;
 		createSubmitQueryObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.querySerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.submitQueryObject.setQueryId(Long.parseLong(parentId));
+			this.submitQueryObject.setQuerySerialId(this.querySerialId);
 			getAdminService().updateSubmitQueryRecord(this.submitQueryObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1484,13 +1485,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		this.methodName = REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD;
 		createComplaintObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
-		try {
-			this.parentId = Long.parseLong(parentId);
-		} catch(NumberFormatException e) {}
+		this.parentSerialId = parentId;
+		this.complaintSerialId = parentId;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			this.complaintObject.setComplaintId(Long.parseLong(parentId));
+			this.complaintObject.setComplaintSerialId(this.complaintSerialId);
 			getAdminService().updateComplaintRecord(this.complaintObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
@@ -1591,7 +1591,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				break;
 			}
 			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD : {
-				handleParentId();
+				handleParentSerialId();
 				handleSubscribeWithUsSecurity();
 				break;
 			}

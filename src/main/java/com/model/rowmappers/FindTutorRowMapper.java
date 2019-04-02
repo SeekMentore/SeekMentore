@@ -19,8 +19,8 @@ public class FindTutorRowMapper implements RowMapper<FindTutor>, FindTutorConsta
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final FindTutor findTutor = new FindTutor();
 		findTutor.setFindTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("findTutorSerialId"), String.class));
-		findTutor.setEnquiryDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("enquiryDateMillis"), Long.class));
-		findTutor.setEnquiryStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("enquiryStatus"), String.class));
+		findTutor.setApplicationDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("applicationDateMillis"), Long.class));
+		findTutor.setApplicationStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("applicationStatus"), String.class));
 		findTutor.setName(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("name"), String.class));
 		findTutor.setContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("contactNumber"), String.class));
 		findTutor.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, findTutor.resolveColumnNameForMapping("emailId"), String.class));

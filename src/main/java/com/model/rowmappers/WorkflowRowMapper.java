@@ -17,7 +17,7 @@ public class WorkflowRowMapper implements RowMapper<Workflow> {
 	public Workflow mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final Workflow workflow = new Workflow();
-		workflow.setWorkflowId(ExceptionUtils.exceptionHandlerForRowMapper(row, workflow.resolveColumnNameForMapping("workflowId"), Long.class));
+		workflow.setWorkflowSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, workflow.resolveColumnNameForMapping("workflowSerialId"), String.class));
 		NotificationUtils.mapNotificationColumnsForRecords(workflow, row, rowNum);
 		GridComponentUtils.mapGridPseudoColumnsForRecords(workflow, row, rowNum);
 		return workflow;

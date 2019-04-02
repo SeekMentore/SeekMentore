@@ -10,7 +10,7 @@ public class Complaint extends GridComponentObject implements Serializable, Clon
 	
 	private static final long serialVersionUID = -7058576359707327688L;
 	
-	private Long complaintId;
+	private String complaintSerialId;
 	private String name;
 	private Long complaintFiledDateMillis;
 	private String complaintStatus;
@@ -33,12 +33,12 @@ public class Complaint extends GridComponentObject implements Serializable, Clon
 	
 	public Complaint() {}
 
-	public Long getComplaintId() {
-		return complaintId;
+	public String getComplaintSerialId() {
+		return complaintSerialId;
 	}
 
-	public void setComplaintId(Long complaintId) {
-		this.complaintId = complaintId;
+	public void setComplaintSerialId(String complaintSerialId) {
+		this.complaintSerialId = complaintSerialId;
 	}
 
 	public String getName() {
@@ -208,7 +208,7 @@ public class Complaint extends GridComponentObject implements Serializable, Clon
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "complaintId" : return "COMPLAINT_ID";
+			case "complaintSerialId" : return "COMPLAINT_SERIAL_ID";
 			case "name" : return "NAME";
 			case "complaintFiledDateMillis" : return "COMPLAINT_FILED_DATE_MILLIS";
 			case "complaintStatus" : return "COMPLAINT_STATUS";

@@ -419,38 +419,38 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_FRESH);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorMultiEnquiryStatusFilter");
-				paramsMap.put("enquiryStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorMultiApplicationStatusFilter");
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_VERIFICATION_SUCCESSFUL);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_VERIFICATION_FAILED);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_SELECTED);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
-				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorEnquiryStatusFilter");
-				paramsMap.put("enquiryStatus", STATUS_REJECTED);
+				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
+				paramsMap.put("applicationStatus", STATUS_REJECTED);
 				break;
 			}
 		}
@@ -547,7 +547,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final FindTutor findTutorActionObject = new FindTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				findTutorActionObject.setEnquiryStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
+				findTutorActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -556,7 +556,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				findTutorActionObject.setEnquiryStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				findTutorActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -569,7 +569,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				findTutorActionObject.setEnquiryStatus(STATUS_REJECTED);
+				findTutorActionObject.setApplicationStatus(STATUS_REJECTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -583,7 +583,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				findTutorActionObject.setEnquiryStatus(STATUS_VERIFICATION_SUCCESSFUL);
+				findTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
 				findTutorActionObject.setIsAuthenticationVerified(YES);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -592,7 +592,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				findTutorActionObject.setEnquiryStatus(STATUS_VERIFICATION_FAILED);
+				findTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
 				findTutorActionObject.setIsAuthenticationVerified(NO);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -601,7 +601,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				findTutorActionObject.setEnquiryStatus(STATUS_SELECTED);
+				findTutorActionObject.setApplicationStatus(STATUS_SELECTED);
 				findTutorActionObject.setIsSelected(YES);
 				findTutorActionObject.setWhoSelected(activeUser.getUserId());
 				findTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -610,7 +610,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				findTutorActionObject.setEnquiryStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
+				findTutorActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsToBeRecontacted(NO);
 				findTutorActionObject.setWhoRecontacted(activeUser.getUserId());
 				findTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -789,7 +789,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void blacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
-		for (final String tentativeSubscriptionId : idList) {
+		for (final String subscribeWithUsSerialId : idList) {
 			final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
 			subscribeWithUs.setIsBlacklisted(YES);
 			subscribeWithUs.setBlacklistedRemarks(comments);
@@ -797,7 +797,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			subscribeWithUs.setWhoBlacklisted(activeUser.getUserId());
 			subscribeWithUs.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			subscribeWithUs.setUpdatedBy(activeUser.getUserId());
-			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			subscribeWithUs.setSubscribeWithUsSerialId(subscribeWithUsSerialId);
 			paramObjectList.add(subscribeWithUs);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateBlacklistSubscribeWithUs", paramObjectList);
@@ -807,7 +807,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void unBlacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
-		for (final String tentativeSubscriptionId : idList) {
+		for (final String subscribeWithUsSerialId : idList) {
 			final SubscribeWithUs subscribeWithUs = new SubscribeWithUs();
 			subscribeWithUs.setIsBlacklisted(NO);
 			subscribeWithUs.setUnblacklistedRemarks(comments);
@@ -815,7 +815,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			subscribeWithUs.setWhoUnBlacklisted(activeUser.getUserId());
 			subscribeWithUs.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 			subscribeWithUs.setUpdatedBy(activeUser.getUserId());
-			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			subscribeWithUs.setSubscribeWithUsSerialId(subscribeWithUsSerialId);
 			paramObjectList.add(subscribeWithUs);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", "updateUnBlacklistSubscribeWithUs", paramObjectList);
@@ -903,9 +903,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		subscribeWithUsActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		subscribeWithUsActionObject.setUpdatedBy(activeUser.getUserId());
 		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
-		for (final String tentativeSubscriptionId : idList) {
+		for (final String subscribeWithUsSerialId : idList) {
 			final SubscribeWithUs subscribeWithUs = subscribeWithUsActionObject.clone();
-			subscribeWithUs.setTentativeSubscriptionId(Long.valueOf(tentativeSubscriptionId));
+			subscribeWithUs.setSubscribeWithUsSerialId(subscribeWithUsSerialId);
 			paramObjectList.add(subscribeWithUs);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", queryId, paramObjectList);
@@ -915,7 +915,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	public void updateSubscriptionRecord(final SubscribeWithUs subscription, final List<String> changedAttributes, final User activeUser) {
 		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();
-		final String existingFilterQueryString = "WHERE TENTATIVE_SUBSCRIPTION_ID = :tentativeSubscriptionId";
+		final String existingFilterQueryString = "WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId";
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if (ValidationUtils.checkNonEmptyList(changedAttributes)) {
 			for (final String attributeName : changedAttributes) {
@@ -983,7 +983,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				}
 			}
 		}
-		paramsMap.put("tentativeSubscriptionId", subscription.getTentativeSubscriptionId());
+		paramsMap.put("subscribeWithUsSerialId", subscription.getSubscribeWithUsSerialId());
 		if (ValidationUtils.checkNonEmptyList(updateAttributesQuery)) {
 			updateAttributesQuery.add("RECORD_LAST_UPDATED_MILLIS = (UNIX_TIMESTAMP(SYSDATE()) * 1000)");
 			updateAttributesQuery.add("UPDATED_BY = :userId");
@@ -1066,9 +1066,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		submitQueryActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		submitQueryActionObject.setUpdatedBy(activeUser.getUserId());
 		final List<SubmitQuery> paramObjectList = new LinkedList<SubmitQuery>();
-		for (final String queryId : idList) {
+		for (final String querySerialId : idList) {
 			final SubmitQuery submitQuery = submitQueryActionObject.clone();
-			submitQuery.setQueryId(Long.valueOf(queryId));
+			submitQuery.setQuerySerialId(querySerialId);
 			paramObjectList.add(submitQuery);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("public-application", querySQLId, paramObjectList);
@@ -1155,9 +1155,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		complaintActionObject.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		complaintActionObject.setUpdatedBy(activeUser.getUserId());
 		final List<Complaint> paramObjectList = new LinkedList<Complaint>();
-		for (final String complaintId : idList) {
+		for (final String complaintSerialId : idList) {
 			final Complaint complaint = complaintActionObject.clone();
-			complaint.setComplaintId(Long.valueOf(complaintId));
+			complaint.setComplaintSerialId(complaintSerialId);
 			paramObjectList.add(complaint);
 		}
 		applicationDao.executeBatchUpdateWithQueryMapper("complaint", queryId, paramObjectList);

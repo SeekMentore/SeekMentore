@@ -132,9 +132,10 @@ public class PublicAccessService implements PublicAccessConstants {
 			final FindTutor findTutorApplication, 
 			final Date currentTimestamp
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
+		findTutorApplication.setFindTutorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		findTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
-		findTutorApplication.setEnquiryDateMillis(currentTimestamp.getTime());
-		findTutorApplication.setEnquiryStatus(STATUS_FRESH);
+		findTutorApplication.setApplicationDateMillis(currentTimestamp.getTime());
+		findTutorApplication.setApplicationStatus(STATUS_FRESH);
 		findTutorApplication.setIsContacted(NO);
 		findTutorApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -143,6 +144,7 @@ public class PublicAccessService implements PublicAccessConstants {
 			final SubscribeWithUs subscribeWithUsApplication, 
 			final Date currentTimestamp
 	) throws DataAccessException, InstantiationException, IllegalAccessException {
+		subscribeWithUsApplication.setSubscribeWithUsSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationDateMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationStatus(STATUS_FRESH);
@@ -154,6 +156,7 @@ public class PublicAccessService implements PublicAccessConstants {
 			final SubmitQuery submitQueryApplication, 
 			final Date currentTimestamp
 	) throws Exception {
+		submitQueryApplication.setQuerySerialId(UUIDGeneratorUtils.generateSerialGUID());
 		// Check contact number in system for Registered Tutor
 		final RegisteredTutor registeredTutorInDatabaseWithEmailId = tutorService.getRegisteredTutorInDatabaseWithEmailId(submitQueryApplication.getEmailId());
 		// Check email Id in system for Subscribed Customer

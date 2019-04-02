@@ -10,16 +10,16 @@ public class Task extends Notification implements Serializable, Cloneable, Appli
 	
 	private static final long serialVersionUID = -2375203428701697320L;
 	
-	private Long taskId;
+	private String taskSerialId;
 	
 	public Task() {}
 
-	public Long getTaskId() {
-		return taskId;
+	public String getTaskId() {
+		return taskSerialId;
 	}
 
-	public void setTaskId(Long taskId) {
-		this.taskId = taskId;
+	public void setTaskSerialId(String taskSerialId) {
+		this.taskSerialId = taskSerialId;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class Task extends Notification implements Serializable, Cloneable, Appli
 		final String columnName = super.resolveColumnNameForMapping(mappingProperty);
 		if (ValidationUtils.checkStringAvailability(columnName)) return columnName;
 		switch(mappingProperty) {
-			case "taskId" : return "TASK_ID";
+			case "taskSerialId" : return "TASK_SERIAL_ID";
 		}
 		return EMPTY_STRING;
 	}

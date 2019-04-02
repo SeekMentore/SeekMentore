@@ -18,7 +18,7 @@ public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQuery
 	public SubmitQuery mapRow(ResultSet row, int rowNum) throws SQLException {
 		RowMapperUtils.showQueryFetch(row, rowNum, this);
 		final SubmitQuery submitQuery = new SubmitQuery();
-		submitQuery.setQueryId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryId"), Long.class));
+		submitQuery.setQuerySerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("querySerialId"), String.class));
 		submitQuery.setQueryRequestedDateMillis(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryRequestedDateMillis"), Long.class));
 		submitQuery.setQueryStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryStatus"), String.class));
 		submitQuery.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("emailId"), String.class));

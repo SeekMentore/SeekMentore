@@ -26,7 +26,7 @@
 			COMPLAINT_RESPONSE = :complaintResponse, 
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy
-		 WHERE COMPLAINT_ID = :complaintId
+		 WHERE COMPLAINT_SERIAL_ID = :complaintSerialId
 	</query>
 	<query type="update" id="updateHoldComplaint" paramClass="com.model.components.Complaint">
 		UPDATE COMPLAINT SET
@@ -36,6 +36,6 @@
 			NOT_RESOLVED_REASON = :notResolvedReason,
 			RECORD_LAST_UPDATED_MILLIS = :recordLastUpdatedMillis, 
 			UPDATED_BY = :updatedBy
-		 WHERE COMPLAINT_ID = :complaintId
+		 WHERE COMPLAINT_SERIAL_ID = :complaintSerialId
 	</query>
 </queryMapper>
