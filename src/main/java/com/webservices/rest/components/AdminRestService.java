@@ -103,13 +103,13 @@ public class AdminRestService extends AbstractRestWebservice implements RestMeth
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("documentViewAccess", true);
-		restresponse.put("documentHandleAccess", true);
-		restresponse.put("bankViewAccess", true);
-		restresponse.put("bankHandleAccess", true);
-		restresponse.put("formDataEditAccess", true);
-		restresponse.put("activePackageViewAccess", true);
-		restresponse.put("historyPackagesViewAccess", true);
+		restresponse.put("registeredTutorDocumentViewAccess", true);
+		restresponse.put("registeredTutorDocumentTakeActionAccess", true);
+		restresponse.put("registeredTutorBankDetailViewAccess", true);
+		restresponse.put("registeredTutorBankDetailTakeActionAccess", true);
+		restresponse.put("registeredTutorRecordUpdateAccess", true);
+		restresponse.put("registeredTutorActiveSubscriptionPackageViewAccess", true);
+		restresponse.put("registeredTutorHistorySubscriptionPackagesViewAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}

@@ -6,20 +6,27 @@
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = TD.WHO_ACTED), TD.WHO_ACTED) AS WHO_ACTED_NAME
 		FROM TUTOR_DOCUMENT TD
 	</query>
-	<query type="filter" id="tutorDocumentDocumentIdFilter">
+	<query type="filter" id="tutorDocumentDocumentSerialIdFilter">
 		WHERE DOCUMENT_SERIAL_ID = :documentSerialId
 	</query>
-	<query type="filter" id="tutorDocumentMultiDocumentIdFilter">
+	<query type="filter" id="tutorDocumentMultiDocumentSerialIdFilter">
 		WHERE DOCUMENT_SERIAL_ID IN (:documentSerialIdList)
 	</query>
-	<query type="filter" id="tutorDocumentTutorIdFilter">
+	<query type="filter" id="tutorDocumentTutorSerialIdFilter">
 		WHERE TUTOR_SERIAL_ID = :tutorSerialId
+	</query>
+	<query type="filter" id="tutorDocumentTutorSerialIdAndDocumentTypeFilter">
+		WHERE TUTOR_SERIAL_ID = :tutorSerialId
+		AND DOCUMENT_TYPE = :documentType
 	</query>
 	<query type="sorter" id="tutorDocumentFilenameSorter">
 		ORDER BY FILENAME
 	</query>
-	<query type="delete" id="deleteTutorDocumentForTutorIdDocumentType" paramClass="com.model.components.TutorDocument">
+	<query type="delete" id="deleteTutorDocumentForTutorSerialIdDocumentType" paramClass="com.model.components.TutorDocument">
 		DELETE FROM TUTOR_DOCUMENT WHERE TUTOR_SERIAL_ID = :tutorSerialId AND DOCUMENT_TYPE = :documentType
+	</query>
+	<query type="delete" id="deleteTutorDocumentForDocumentSerialId" paramClass="com.model.components.TutorDocument">
+		DELETE FROM TUTOR_DOCUMENT WHERE DOCUMENT_SERIAL_ID = :documentSerialId
 	</query>
 	<query type="insert" id="insertTutorDocumentFromAdmin" paramClass="com.model.components.TutorDocument">
 		INSERT INTO TUTOR_DOCUMENT

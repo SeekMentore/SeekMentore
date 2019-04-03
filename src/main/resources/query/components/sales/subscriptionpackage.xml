@@ -56,7 +56,7 @@
 	<query type="filter" id="subscriptionPackageSubscriptionPackageIdListFilter">
 		WHERE S.SUBSCRIPTION_PACKAGE_SERIAL_ID IN (:subscriptionPackageSerialIdList)
 	</query>
-	<query type="filter" id="subscriptionPackageTutorIdFilter">
+	<query type="filter" id="subscriptionPackageTutorSerialIdFilter">
 		WHERE S.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="filter" id="subscriptionPackageCustomerIdFilter">

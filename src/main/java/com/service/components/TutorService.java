@@ -31,6 +31,7 @@ import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
 import com.model.mail.MailAttachment;
 import com.model.rowmappers.BankDetailRowMapper;
+import com.model.rowmappers.MapRowMapper;
 import com.model.rowmappers.RegisteredTutorContactNumberRowMapper;
 import com.model.rowmappers.RegisteredTutorEmailRowMapper;
 import com.model.rowmappers.RegisteredTutorRowMapper;
@@ -81,12 +82,12 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		final RegisteredTutor registeredTutor = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
-												+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorIdFilter"), paramsMap, new RegisteredTutorRowMapper());
+												+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorSerialIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
 			registeredTutor.setRegisteredTutorEmails(applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutorEmail") 
-														+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorEmailTutorIdFilter"), paramsMap, new RegisteredTutorEmailRowMapper()));
+														+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorEmailTutorSerialIdFilter"), paramsMap, new RegisteredTutorEmailRowMapper()));
 			registeredTutor.setRegisteredTutorContactNumbers(applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutorContactNumber") 
-																+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberTutorIdFilter"), paramsMap, new RegisteredTutorContactNumberRowMapper()));
+																+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorContactNumberTutorSerialIdFilter"), paramsMap, new RegisteredTutorContactNumberRowMapper()));
 			registeredTutor.setDocuments(getTutorDocumentList(registeredTutor.getTutorSerialId()));
 			registeredTutor.setHasProfilePicture(false);
 			if (ValidationUtils.checkNonEmptyList(registeredTutor.getDocuments())) {
@@ -127,7 +128,7 @@ public class TutorService implements TutorConstants {
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(
 				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), 
+											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdFilter"), 
 											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentFilenameSorter"), 
 											gridComponent), paramsMap, new TutorDocumentRowMapper());
 	}
@@ -136,21 +137,21 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
-										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorIdFilter"), paramsMap, new TutorDocumentRowMapper());
+										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdFilter"), paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public List<TutorDocument> getTutorDocumentList(final List<String> documentSerialIdList) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("documentSerialIdList", documentSerialIdList);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument") 
-										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentIdFilter"), paramsMap, new TutorDocumentRowMapper());
+										+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentMultiDocumentSerialIdFilter"), paramsMap, new TutorDocumentRowMapper());
 	}
 	
 	public TutorDocument getTutorDocument(final String documentSerialId) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("documentSerialId", documentSerialId);
 		final StringBuilder query = new StringBuilder(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"));
-		query.append(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentDocumentIdFilter"));
+		query.append(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentDocumentSerialIdFilter"));
 		final TutorDocument tutorDocument = applicationDao.find(query.toString(), paramsMap, new TutorDocumentRowMapper());
 		tutorDocument.setContent(FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()));
 		return tutorDocument;
@@ -165,7 +166,7 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail"), 
-																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorIdFilter"), 
+																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorSerialIdFilter"), 
 																	queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailExistingSorter"), gridComponent), paramsMap, new BankDetailRowMapper());
 	}
 	
@@ -173,7 +174,7 @@ public class TutorService implements TutorConstants {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		return applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "selectBankDetail") 
-										+ queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorIdFilter"), paramsMap, new BankDetailRowMapper());
+										+ queryMapperService.getQuerySQL("admin-registeredtutor-bankdetail", "bankdetailTutorSerialIdFilter"), paramsMap, new BankDetailRowMapper());
 	}
 	
 	public List<BankDetail> getBankDetailList(final List<String> bankAccountSerialIdList) throws Exception {
@@ -429,7 +430,7 @@ public class TutorService implements TutorConstants {
 					document.setRemarks("Admin override");
 				}
 			}
-			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "deleteTutorDocumentForTutorIdDocumentType", documents);
+			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", "deleteTutorDocumentForTutorSerialIdDocumentType", documents);
 			applicationDao.executeBatchUpdateWithQueryMapper("admin-registeredtutor-tutordocument", queryIdInsert, documents);
 		}
 	}
@@ -554,8 +555,87 @@ public class TutorService implements TutorConstants {
 			final Map<String, Object> paramsMap = new HashMap<String, Object>();
 			paramsMap.put("tutorSerialId", tutorSerialId);
 			return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutor") 
-									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorIdFilter"), paramsMap, new RegisteredTutorRowMapper());
+									+ queryMapperService.getQuerySQL("admin-registeredtutor", "registeredTutorTutorSerialIdFilter"), paramsMap, new RegisteredTutorRowMapper());
 		}
 		return null;
+	}
+	
+	public Map<String, Boolean> getRecordFormUpdateStatus(final RegisteredTutor registeredTutor) {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("registeredTutorFormEditMandatoryDisbaled", false);
+		return securityAccess;
+	}
+	
+	public Map<String, Object> getRegisteredTutorDocumentCountAndExistence(final String tutorSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorSerialId", tutorSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor", "selectRegisteredTutorDocumentCountAndExistence"), paramsMap, new MapRowMapper());
+	}
+	
+	public ApplicationFile downloadRegisteredTutorDocumentFile(final String tutorSerialId, final String documentType) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorSerialId", tutorSerialId);
+		switch(documentType) {
+			case "panCard" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_PAN_CARD);
+				break;
+			}
+			case "photo" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_PROFILE_PHOTO);
+				break;
+			}
+			case "aadharCard" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_AADHAAR_CARD);
+				break;
+			}
+		}
+		final TutorDocument tutorDocument = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument")
+																+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdAndDocumentTypeFilter"), paramsMap, new TutorDocumentRowMapper());
+		if (ValidationUtils.checkObjectAvailability(tutorDocument)) {
+			return new ApplicationFile(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()));
+		}
+		return null;
+	}
+	
+	public List<ApplicationFile> downloadRegisteredTutorAllDocuments(final String tutorSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorSerialId", tutorSerialId);
+		final List<TutorDocument> tutorDocumentList = applicationDao.findAll(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument")
+																			+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdFilter"), paramsMap, new TutorDocumentRowMapper());
+		if (ValidationUtils.checkNonEmptyList(tutorDocumentList)) {
+			final List<ApplicationFile> applicationFiles = new LinkedList<ApplicationFile>();
+			for (final TutorDocument tutorDocument : tutorDocumentList) {
+				applicationFiles.add(new ApplicationFile(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey())));
+			}
+			return applicationFiles;
+		}
+		return null;
+	}
+	
+	@Transactional
+	public void removeRegisteredTutorDocumentFile(final String tutorSerialId, final String documentType, final User activeUser) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("tutorSerialId", tutorSerialId);
+		switch(documentType) {
+			case "panCard" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_PAN_CARD);
+				break;
+			}
+			case "photo" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_PROFILE_PHOTO);
+				break;
+			}
+			case "aadharCard" : {
+				paramsMap.put("documentType", DOCUMENT_TYPE_AADHAAR_CARD);
+				break;
+			}
+		}
+		final TutorDocument tutorDocument = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument")
+																+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdAndDocumentTypeFilter"), paramsMap, new TutorDocumentRowMapper());
+		if (ValidationUtils.checkObjectAvailability(tutorDocument)) {
+			paramsMap.put("documentSerialId", tutorDocument.getDocumentSerialId());
+			applicationDao.executeUpdate(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "deleteTutorDocumentForDocumentSerialId"), paramsMap);
+			FileSystemUtils.deleteFileInFolderOnApplicationFileSystemUsingKey(tutorDocument.getFsKey(), activeUser);
+		}
 	}
 }

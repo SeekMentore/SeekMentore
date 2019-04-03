@@ -38,6 +38,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/blacklistSubscribedCustomers";
 	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBED_CUSTOMERS = "/unBlacklistSubscribedCustomers";
 	// Admin - RegisteredTutor REST Methods
+	String REST_METHOD_NAME_GET_REGISTERED_TUTOR_RECORD = "/getRegisteredTutorRecord";
 	String REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST = "/uploadedDocumentList";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REGISTERED_TUTOR_PROFILE_PDF = "/downloadAdminRegisteredTutorProfilePdf";
 	String REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT = "/downloadTutorDocument";
@@ -51,6 +52,10 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST = "/currentSubscriptionPackageList";
 	String REST_METHOD_NAME_HISTORY_SUBSCRIPTION_PACKAGE_LIST = "/historySubscriptionPackageList";
 	String REST_METHOD_NAME_UPDATE_TUTOR_RECORD = "/updateTutorRecord";
+	String REST_METHOD_NAME_GET_REGISTERED_TUTOR_DOCUMENT_COUNT_AND_EXISTENCE = "/getRegisteredTutorDocumentCountAndExistence";
+	String REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_DOCUMENT_FILE = "/downloadRegisteredTutorDocumentFile";
+	String REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_ALL_DOCUMENTS = "/downloadRegisteredTutorAllDocuments";
+	String REST_METHOD_NAME_REMOVE_REGISTERED_TUTOR_DOCUMENT_FILE = "/removeRegisteredTutorDocumentFile";
 	// Admin - SubscribedCustomer REST Methods
 	String REST_METHOD_NAME_GET_SUBSCRIBED_CUSTOMER_RECORD = "/getSubscribedCustomerRecord";
 	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";

@@ -15,7 +15,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -62,7 +61,33 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	private String tutorSerialId;
 	private String documentSerialId;
 	private String bankAccountSerialId;
+	private String documentType;
 	private RegisteredTutor registeredTutorObject;
+	
+	@Path(REST_METHOD_NAME_GET_REGISTERED_TUTOR_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getRegisteredTutorRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_REGISTERED_TUTOR_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.tutorSerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final RegisteredTutor registeredTutor = getTutorService().getRegisteredTutor(this.tutorSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, registeredTutor);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getTutorService().getRecordFormUpdateStatus(registeredTutor), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
 	
 	@Path(REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -97,7 +122,7 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadAdminRegisteredTutorProfilePdf (
-    		@FormParam(REST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
+    		@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
@@ -109,12 +134,33 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		}
     }
 	
+	@Path(REST_METHOD_NAME_GET_REGISTERED_TUTOR_DOCUMENT_COUNT_AND_EXISTENCE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getRegisteredTutorDocumentCountAndExistence (
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_REGISTERED_TUTOR_DOCUMENT_COUNT_AND_EXISTENCE;
+		this.tutorSerialId = tutorSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, getTutorService().getRegisteredTutorDocumentCountAndExistence(this.tutorSerialId));
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
 	@Path(REST_METHOD_NAME_DOWNLOAD_TUTOR_DOCUMENT)
-	@Produces({MediaType.APPLICATION_JSON})  
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
     public void downloadTutorDocument (
-    		@FormParam("documentSerialId") final String documentSerialId,
+    		@FormParam(REQUEST_PARAM_DOCUMENT_SERIAL_ID) final String documentSerialId,
     		@Context final HttpServletRequest request,
     		@Context final HttpServletResponse response
 	) throws Exception {
@@ -125,6 +171,65 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			downloadFile(getTutorService().downloadTutorDocument(this.documentSerialId), response);
 		}
     }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_DOCUMENT_FILE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadRegisteredTutorDocumentFile (
+    		@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
+    		@FormParam(REQUEST_PARAM_DOCUMENT_TYPE) final String documentType,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_DOCUMENT_FILE;
+		this.tutorSerialId = tutorSerialId;
+		this.documentType = documentType;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			downloadFile(getTutorService().downloadRegisteredTutorDocumentFile(this.tutorSerialId, this.documentType), response);
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_ALL_DOCUMENTS)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+    public void downloadRegisteredTutorAllDocuments (
+    		@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
+    		@Context final HttpServletRequest request,
+    		@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_ALL_DOCUMENTS;
+		this.tutorSerialId = tutorSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			downloadZipFile(getTutorService().downloadRegisteredTutorAllDocuments(this.tutorSerialId), this.tutorSerialId + "_DOCUMENTS" + PERIOD + FileConstants.EXTENSION_ZIP, response);
+		}
+    }
+	
+	@Path(REST_METHOD_NAME_REMOVE_REGISTERED_TUTOR_DOCUMENT_FILE)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String removeRegisteredTutorDocumentFile (
+			@FormParam(REQUEST_PARAM_TUTOR_SERIAL_ID) final String tutorSerialId,
+    		@FormParam(REQUEST_PARAM_DOCUMENT_TYPE) final String documentType,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_REMOVE_REGISTERED_TUTOR_DOCUMENT_FILE;
+		this.tutorSerialId = tutorSerialId;
+		this.documentType = documentType;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			getTutorService().removeRegisteredTutorDocumentFile(this.tutorSerialId, this.documentType, getActiveUser(request));
+			restresponse.put(RESPONSE_MAP_REMOVED_DOCUMENT_TYPE, documentType);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
 	
 	@Path(REST_METHOD_NAME_BANK_DETAIL_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
@@ -375,12 +480,12 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 	public String updateTutorRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
 			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
-			@FormDataParam("inputFilePANCard") final InputStream uploadedInputStreamFilePANCard,
-			@FormDataParam("inputFilePANCard") final FormDataContentDisposition uploadedFileDetailFilePANCard,
-			@FormDataParam("inputFileAadhaarCard") final InputStream uploadedInputStreamFileAadhaarCard,
-			@FormDataParam("inputFileAadhaarCard") final FormDataContentDisposition uploadedFileDetailFileAadhaarCard,
-			@FormDataParam("inputFilePhoto") final InputStream uploadedInputStreamFilePhoto,
-			@FormDataParam("inputFilePhoto") final FormDataContentDisposition uploadedFileDetailFilePhoto,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_PAN_CARD) final InputStream uploadedInputStreamFilePANCard,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_PAN_CARD) final FormDataContentDisposition uploadedFileDetailFilePANCard,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_AADHAAR_CARD) final InputStream uploadedInputStreamFileAadhaarCard,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_AADHAAR_CARD) final FormDataContentDisposition uploadedFileDetailFileAadhaarCard,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_PHOTO) final InputStream uploadedInputStreamFilePhoto,
+			@FormDataParam(REQUEST_PARAM_INPUT_FILE_PHOTO) final FormDataContentDisposition uploadedFileDetailFilePhoto,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -486,6 +591,28 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 				handleDocumentSerialId();
 				break;
 			}
+			case REST_METHOD_NAME_GET_REGISTERED_TUTOR_RECORD : {
+				handleParentSerialId();
+				break;
+			}
+			case REST_METHOD_NAME_GET_REGISTERED_TUTOR_DOCUMENT_COUNT_AND_EXISTENCE : {
+				handleSelectedTutorDataView();
+				break;
+			}
+			case REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_DOCUMENT_FILE : {
+				handleSelectedTutorDataView();
+				handleSelectedDocumentTypeSecurity();
+				break;
+			}
+			case REST_METHOD_NAME_DOWNLOAD_REGISTERED_TUTOR_ALL_DOCUMENTS : {
+				handleSelectedTutorDataView();
+				break;
+			}
+			case REST_METHOD_NAME_REMOVE_REGISTERED_TUTOR_DOCUMENT_FILE : {
+				handleSelectedTutorDataView();
+				handleSelectedDocumentTypeSecurity();
+				break;
+			}
 		}
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, this.securityPassed);
 	}
@@ -510,6 +637,13 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, INVALID_BANK_DETAIL_SERIAL_ID));	
 		}
 	}
+	
+	private void handleSelectedDocumentTypeSecurity() throws Exception {
+		this.securityPassed = true;
+		if (!ValidationUtils.checkStringAvailability(this.documentType)) {
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, DOCUMENT_TYPE_MISSING));
+		}
+	} 
 	
 	private void createRegisteredTutorObjectFromCompleteUpdatedRecordJSONObject(final JsonObject jsonObject) {
 		if (ValidationUtils.checkObjectAvailability(jsonObject)) {

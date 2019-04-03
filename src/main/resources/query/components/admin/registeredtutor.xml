@@ -24,7 +24,7 @@
 	<query type="filter" id="registeredTutorUserIdFilter">
 		WHERE LOWER(R.USER_ID) = LOWER(:userId)
 	</query>
-	<query type="filter" id="registeredTutorTutorIdFilter">
+	<query type="filter" id="registeredTutorTutorSerialIdFilter">
 		WHERE R.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
     <query type="filter" id="registeredTutorEmailFilter">
@@ -72,7 +72,7 @@
             RTE.*
         FROM REGISTERED_TUTOR_EMAIL_ID RTE
 	</query>
-	<query type="filter" id="registeredTutorEmailTutorIdFilter">
+	<query type="filter" id="registeredTutorEmailTutorSerialIdFilter">
 		WHERE RTE.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="insert" id="insertRegisteredTutorContactNumber" paramClass="com.model.components.RegisteredTutorContactNumber">
@@ -86,7 +86,17 @@
             RTC.*
         FROM REGISTERED_TUTOR_CONTACT_NUMBER RTC
 	</query>
-	<query type="filter" id="registeredTutorContactNumberTutorIdFilter">
+	<query type="filter" id="registeredTutorContactNumberTutorSerialIdFilter">
 		WHERE RTC.TUTOR_SERIAL_ID = :tutorSerialId
+	</query>
+	<query type="select" id="selectRegisteredTutorDocumentCountAndExistence">
+		SELECT 
+			T.TUTOR_SERIAL_ID,
+		    (SELECT COUNT(1) FROM TUTOR_DOCUMENT TD WHERE TD.TUTOR_SERIAL_ID = T.TUTOR_SERIAL_ID) AS TOTAL_FILES,
+			(SELECT 'Y' FROM TUTOR_DOCUMENT TD WHERE TD.TUTOR_SERIAL_ID = T.TUTOR_SERIAL_ID AND TD.DOCUMENT_TYPE = '01') AS PAN_CARD_FILE_EXIST,
+		    (SELECT 'Y' FROM TUTOR_DOCUMENT TD WHERE TD.TUTOR_SERIAL_ID = T.TUTOR_SERIAL_ID AND TD.DOCUMENT_TYPE = '02') AS PHOTOGRAH_FILE_EXIST,
+		    (SELECT 'Y' FROM TUTOR_DOCUMENT TD WHERE TD.TUTOR_SERIAL_ID = T.TUTOR_SERIAL_ID AND TD.DOCUMENT_TYPE = '03') AS AADHAR_CARD_FILE_EXIST
+		FROM REGISTERED_TUTOR T 
+		WHERE T.TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 </queryMapper>

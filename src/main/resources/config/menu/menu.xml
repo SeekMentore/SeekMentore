@@ -59,6 +59,11 @@
 			<webservice id="makeDefaultBankAccount" url="/makeDefaultBankAccount"></webservice>
 			<webservice id="rejectBankAccountList" url="/rejectBankAccountList"></webservice>
 			<webservice id="updateTutorRecord" url="/updateTutorRecord"></webservice>
+			<webservice id="getRegisteredTutorRecord" url="/getRegisteredTutorRecord"></webservice>
+			<webservice id="getRegisteredTutorDocumentCountAndExistence" url="/getRegisteredTutorDocumentCountAndExistence"></webservice>
+			<webservice id="downloadRegisteredTutorDocumentFile" url="/downloadRegisteredTutorDocumentFile"></webservice>
+			<webservice id="downloadRegisteredTutorAllDocuments" url="/downloadRegisteredTutorAllDocuments"></webservice>
+			<webservice id="removeRegisteredTutorDocumentFile" url="/removeRegisteredTutorDocumentFile"></webservice>
 		</page>
 		<page id="subscribedCustomerRest" url="/rest/subscribedCustomer" pageAccessType="admin">
 			<webservice id="currentSubscriptionPackageList" url="/currentSubscriptionPackageList"></webservice>

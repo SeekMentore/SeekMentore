@@ -8,6 +8,14 @@ public interface TutorConstants extends ResponseMapConstants {
 	String MESG_PROPERTY_FILE_NAME = "spring.components.tutor";
 	
 	String REQUEST_PARAM_TUTOR_SERIAL_ID = "tutorSerialId";
+	String REQUEST_PARAM_DOCUMENT_SERIAL_ID = "documentSerialId";
+	String REQUEST_PARAM_DOCUMENT_TYPE = "documentType";
+	String REQUEST_PARAM_INPUT_FILE_PHOTO = "inputFilePhoto";
+	String REQUEST_PARAM_INPUT_FILE_AADHAAR_CARD = "inputFileAadhaarCard";
+	String REQUEST_PARAM_INPUT_FILE_PAN_CARD = "inputFilePANCard";
+	
+	String RESPONSE_MAP_REMOVED_DOCUMENT_TYPE = "removedDocumentType";
+	
 	Double MAXIMUM_FILE_SIZE_FOR_DOCUMENTS_IN_MB = 2D;
 	
 	String DOCUMENT_TYPE_PAN_CARD = "01";
@@ -25,10 +33,9 @@ public interface TutorConstants extends ResponseMapConstants {
 	String VALID_FILE_TYPE_FOR_DOCUMENTS = Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, "VALID_FILE_TYPE_FOR_DOCUMENTS").trim();
 	Double MAXIMUM_VALID_FILE_SIZE_FOR_DOCUMENTS_IN_MB = Double.valueOf(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, "MAXIMUM_VALID_FILE_SIZE_FOR_DOCUMENTS_IN_MB").trim());
 
-	String REST_PARAM_TUTOR_SERIAL_ID = "tutorSerialId";
-	
 	// Message Constants
 	String INVALID_TUTOR_SERIAL_ID = "INVALID_TUTOR_SERIAL_ID";
 	String INVALID_DOCUMENT_SERIAL_ID = "INVALID_DOCUMENT_SERIAL_ID";
 	String INVALID_BANK_DETAIL_SERIAL_ID = "INVALID_BANK_DETAIL_SERIAL_ID";
+	String DOCUMENT_TYPE_MISSING = "REGISTERED_TUTOR_DOCUMENT_TYPE_MISSING";
 }

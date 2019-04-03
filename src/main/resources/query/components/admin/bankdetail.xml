@@ -12,7 +12,7 @@
 	<query type="filter" id="bankDetailMultiBankAccountIdFilter">
 		WHERE BANK_ACCOUNT_SERIAL_ID IN (:bankAccountSerialIdList)
 	</query>
-	<query type="filter" id="bankdetailTutorIdFilter">
+	<query type="filter" id="bankdetailTutorSerialIdFilter">
 		WHERE TUTOR_SERIAL_ID = :tutorSerialId
 	</query>
 	<query type="sorter" id="bankdetailExistingSorter">

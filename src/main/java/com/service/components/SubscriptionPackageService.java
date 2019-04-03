@@ -92,7 +92,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
 		final String baseQuery = queryMapperService.getQuerySQL("sales-subscriptionpackage", "selectSubscriptionPackage");
-		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageTutorIdFilter");
+		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageTutorSerialIdFilter");
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-subscriptionpackage", "subscriptionPackageCreatedDateStartDateSorter");
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_CURRENT_SUBSCRIPTION_PACKAGE_LIST : {
