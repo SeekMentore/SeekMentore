@@ -27,6 +27,7 @@ import com.model.User;
 import com.model.components.BankDetail;
 import com.model.components.RegisteredTutor;
 import com.model.components.TutorDocument;
+import com.model.components.commons.SelectLookup;
 import com.model.components.publicaccess.BecomeTutor;
 import com.model.gridcomponent.GridComponent;
 import com.model.mail.MailAttachment;
@@ -52,11 +53,20 @@ import com.utils.WorkbookUtils;
 @Service(BeanConstants.BEAN_NAME_TUTOR_SERVICE)
 public class TutorService implements TutorConstants {
 	
+	private static final String ACTION_BUTTON_REJECT = "REJECT";
+
+	private static final String ACTION_BUTTON_SEND_REMINDER = "SENDREMINDER";
+
+	private static final String ACTION_BUTTON_APPROVE = "APPROVE";
+
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
 	private transient AdminService adminService;
+	
+	@Autowired
+	private transient CommonsService commonsService;
 	
 	@Autowired
 	private transient QueryMapperService queryMapperService;
@@ -126,11 +136,76 @@ public class TutorService implements TutorConstants {
 	public List<TutorDocument> getTutorDocumentList(final String tutorSerialId, final GridComponent gridComponent) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
-		return applicationDao.findAll(
-				GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdFilter"), 
-											queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentFilenameSorter"), 
-											gridComponent), paramsMap, new TutorDocumentRowMapper());
+		final List<TutorDocument> tutorDocumentList = applicationDao.findAll(GridQueryUtils.createGridQuery(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument"), 
+																									queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdFilter"), 
+																									queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentFilenameSorter"), 
+																									gridComponent), paramsMap, new TutorDocumentRowMapper());
+		setActionButtonSecuritySetupForTutorDocumentGrid(tutorDocumentList, gridComponent.getStandardExtraParams().getSecureActionColumnButtons(), RestMethodConstants.REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST);
+		return tutorDocumentList;
+	}
+	
+	private void setActionButtonSecuritySetupForTutorDocumentGrid(final List<TutorDocument> tutorDocumentList, final List<String> secureActionColumnButtons, final String grid) {
+		switch(grid) {
+			case RestMethodConstants.REST_METHOD_NAME_UPLOADED_DOCUMENT_LIST : {
+				final List<SelectLookup> tutorDocumentTypeSelectLookupList = commonsService.getSelectLookupList(SelectLookupConstants.SELECT_LOOKUP_TABLE_TUTOR_DOCUMENT_TYPE_LOOKUP);
+				final List<String> allNonHiddenDocumentTypeValues = new ArrayList<String>();
+				if (ValidationUtils.checkNonEmptyList(tutorDocumentTypeSelectLookupList)) {
+					for (final SelectLookup tutorDocumentSelectLookupItem : tutorDocumentTypeSelectLookupList) {
+						allNonHiddenDocumentTypeValues.add(tutorDocumentSelectLookupItem.getValue());
+					}
+				}
+				final List<String> allDocumentTypeValuesPresentForTutor = new ArrayList<String>();
+				if (ValidationUtils.checkNonEmptyList(tutorDocumentList)) {
+					for (final TutorDocument tutorDocument : tutorDocumentList) {
+						allDocumentTypeValuesPresentForTutor.add(tutorDocument.getDocumentType());
+						if (ValidationUtils.checkNonEmptyList(secureActionColumnButtons)) {
+							for (final String buttonId : secureActionColumnButtons) {
+								switch(buttonId.toUpperCase()) {
+									case ACTION_BUTTON_APPROVE: {
+										tutorDocument.setShowApprove(true);
+										tutorDocument.setEnableApprove(false);
+										if (!ValidationUtils.checkStringAvailability(tutorDocument.getIsApproved()) || NO.equals(tutorDocument.getIsApproved())) {
+											tutorDocument.setEnableApprove(true);
+										}
+										break;
+									}
+									case ACTION_BUTTON_SEND_REMINDER: {
+										tutorDocument.setShowSendReminder(true);
+										tutorDocument.setEnableSendReminder(false);
+									}
+									case ACTION_BUTTON_REJECT: {
+										tutorDocument.setShowReject(true);
+										tutorDocument.setEnableReject(false);
+										if (!ValidationUtils.checkStringAvailability(tutorDocument.getIsApproved()) || YES.equals(tutorDocument.getIsApproved())) {
+											tutorDocument.setEnableApprove(true);
+										}
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+				if (ValidationUtils.checkNonEmptyList(allNonHiddenDocumentTypeValues)) {
+					if (ValidationUtils.checkNonEmptyList(allDocumentTypeValuesPresentForTutor)) {
+						allNonHiddenDocumentTypeValues.removeAll(allDocumentTypeValuesPresentForTutor);
+					}
+				}
+				if (ValidationUtils.checkNonEmptyList(allNonHiddenDocumentTypeValues)) {
+					for (final String documentTypeWhichIsNotPresentWithTutor : allNonHiddenDocumentTypeValues) {
+						final TutorDocument tutorDocument = new TutorDocument(documentTypeWhichIsNotPresentWithTutor);
+						tutorDocument.setShowApprove(true);
+						tutorDocument.setEnableApprove(false);
+						tutorDocument.setShowSendReminder(true);
+						tutorDocument.setEnableSendReminder(true);
+						tutorDocument.setShowReject(true);
+						tutorDocument.setEnableReject(false);
+						tutorDocumentList.add(tutorDocument);
+					}
+				}
+				break;
+			}
+		}
 	}
 	
 	public List<TutorDocument> getTutorDocumentList(final String tutorSerialId) throws Exception {

@@ -21,8 +21,19 @@ public class TutorDocument extends GridComponentObject implements Serializable, 
 	private String remarks;
 	private Long actionDateMillis;
 	private byte[] content;
+	// Action Button Security Properties
+	private Boolean showApprove = false;
+	private Boolean enableApprove = false;
+	private Boolean showSendReminder = false;
+	private Boolean enableSendReminder = false;
+	private Boolean showReject = false;
+	private Boolean enableReject = false;
 	
 	public TutorDocument() {}
+	
+	public TutorDocument(final String documentType) {
+		this.documentType = documentType;
+	}
 	
 	public TutorDocument(final String documentType, final String filename, final byte[] content) {
 		this.documentType = documentType;
@@ -118,6 +129,54 @@ public class TutorDocument extends GridComponentObject implements Serializable, 
 		this.documentType = documentType;
 	}
 	
+	public Boolean getShowApprove() {
+		return showApprove;
+	}
+
+	public void setShowApprove(Boolean showApprove) {
+		this.showApprove = showApprove;
+	}
+
+	public Boolean getEnableApprove() {
+		return enableApprove;
+	}
+
+	public void setEnableApprove(Boolean enableApprove) {
+		this.enableApprove = enableApprove;
+	}
+
+	public Boolean getShowSendReminder() {
+		return showSendReminder;
+	}
+
+	public void setShowSendReminder(Boolean showSendReminder) {
+		this.showSendReminder = showSendReminder;
+	}
+
+	public Boolean getEnableSendReminder() {
+		return enableSendReminder;
+	}
+
+	public void setEnableSendReminder(Boolean enableSendReminder) {
+		this.enableSendReminder = enableSendReminder;
+	}
+
+	public Boolean getShowReject() {
+		return showReject;
+	}
+
+	public void setShowReject(Boolean showReject) {
+		this.showReject = showReject;
+	}
+
+	public Boolean getEnableReject() {
+		return enableReject;
+	}
+
+	public void setEnableReject(Boolean enableReject) {
+		this.enableReject = enableReject;
+	}
+
 	@Override
 	public Object[] getReportHeaders(String reportSwitch) {
 		return null;
