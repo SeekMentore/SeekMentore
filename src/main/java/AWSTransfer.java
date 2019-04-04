@@ -31,8 +31,8 @@ public class AWSTransfer {
 	AWSTransfer() throws IOException {
 		connect();
 		//String bucketName = "seekmentore-dev";;
-		//deleteBucket("seekmentore-dev2");
-		//createNewBucketInS3Client("seekmentore-dev2");
+		//deleteBucket("test-mashery");
+		//createNewBucketInS3Client("test-mashery");
 		/*List<Bucket> bList = getAllBucketListForS3Client();
 		for (Bucket bucket : bList) {
 			System.out.println(bucket.getName());

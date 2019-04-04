@@ -293,7 +293,7 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 					VelocityUtils.createEmailFromHTMLContent(body),
 					attachments.isEmpty() ? null : attachments);
 			restResponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
-			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.EMAIL_SEND_SUCCESS));
+			restResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, EMAIL_SEND_SUCCESS));
 			return JSONUtils.convertObjToJSONString(restResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
 		return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -338,53 +338,40 @@ public class CommonsRestService extends AbstractRestWebservice implements RestMe
 	
 	private void handleSendEmailSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.validateEmailAddress(this.to)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_TO_EMAIL_ADDRESS),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+		if (!ValidationUtils.validateSemicolonSeperatedEmailAddress(this.to)) {
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, INVALID_TO_EMAIL_ADDRESS));
 		} 
 		if (ValidationUtils.checkStringAvailability(this.cc)) {
-			if (!ValidationUtils.validateEmailAddress(this.cc)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_CC_EMAIL_ADDRESS),
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+			if (!ValidationUtils.validateSemicolonSeperatedEmailAddress(this.cc)) {
+				appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, INVALID_CC_EMAIL_ADDRESS));
 			} 
 		}
 		if (ValidationUtils.checkStringAvailability(this.bcc)) {
-			if (!ValidationUtils.validateEmailAddress(this.bcc)) {
-				ApplicationUtils.appendMessageInMapAttribute(
-						this.securityFailureResponse, 
-						Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_BCC_EMAIL_ADDRESS),
-						RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-				this.securityPassed = false;
+			if (!ValidationUtils.validateSemicolonSeperatedEmailAddress(this.bcc)) {
+				appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, INVALID_BCC_EMAIL_ADDRESS));
 			} 
 		}
 		if (!ValidationUtils.checkStringAvailability(this.subject)) {
-			ApplicationUtils.appendMessageInMapAttribute(
-					this.securityFailureResponse, 
-					Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SUBJECT),
-					RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-			this.securityPassed = false;
+			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, INVALID_SUBJECT));
 		}
 		if (ValidationUtils.checkNonEmptyList(this.attachments)) {
+			Boolean fileExtensionErrorComputed = false;
+			Boolean fileSizeErrorComputed = false;
 			for (final MailAttachment attachment : this.attachments) {
-				if (!ValidationUtils.validateFileExtension(ACCEPTABLE_FILE_EXTENSIONS_ARRAY, attachment.getFilename())) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_EXTENSION),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+				if (fileExtensionErrorComputed && fileSizeErrorComputed) {
+					break;
 				}
-				if (!ValidationUtils.validateFileSizeInMB(attachment.getContent(), MAXIMUM_FILE_SIZE_FOR_EMAIL_DOCUMENTS_IN_MB)) {
-					ApplicationUtils.appendMessageInMapAttribute(
-							this.securityFailureResponse, 
-							Message.getMessageFromFile(CommonsConstants.MESG_PROPERTY_FILE_NAME_WEB_SERVICE_COMMON, CommonsConstants.INVALID_SIZE),
-							RESPONSE_MAP_ATTRIBUTE_MESSAGE);
-					this.securityPassed = false;
+				if (!fileExtensionErrorComputed) {
+					if (!ValidationUtils.validateFileExtension(ACCEPTABLE_FILE_EXTENSIONS_ARRAY, attachment.getFilename())) {
+						handleUploadingFileExtensionError();
+						fileExtensionErrorComputed = true;
+					}
+				}
+				if (!fileSizeErrorComputed) {
+					if (!ValidationUtils.validateFileSizeInMB(attachment.getContent(), MAXIMUM_FILE_SIZE_FOR_EMAIL_DOCUMENTS_IN_MB)) {
+						handleUploadingFileSizeError();
+						fileSizeErrorComputed = true;
+					}
 				}
 			}
 		}

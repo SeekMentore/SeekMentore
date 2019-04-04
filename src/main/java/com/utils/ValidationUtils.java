@@ -169,6 +169,27 @@ public class ValidationUtils implements ValidationConstants {
 		return false;
 	}
 	
+	public static Boolean validateSemicolonSeperatedEmailAddress(final String semicolonSeperatedEmailAddress) {
+		if (validatePlainNotNullAndEmptyTextString(semicolonSeperatedEmailAddress)) {
+			final String emailAddresses[] = semicolonSeperatedEmailAddress.split(SEMICOLON);
+			if (checkNonEmptyArray(emailAddresses)) {
+				for (final String email : emailAddresses) {
+					if (validatePlainNotNullAndEmptyTextString(email)) {
+						try {
+							new InternetAddress(email).validate();
+						} catch (AddressException ex) {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static Boolean validateFileExtension(final String[] extensions, final String filename) {
 		if (validatePlainNotNullAndEmptyTextString(filename)) {
 			final String fileExtension = filename.substring(filename.lastIndexOf(DOT) + 1);

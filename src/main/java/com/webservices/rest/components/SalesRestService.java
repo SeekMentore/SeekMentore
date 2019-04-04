@@ -2772,11 +2772,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			for (final AssignmentAttendanceDocument assignmentAttendanceDocument : this.assignmentAttendanceObject.getDocuments()) {
 				if (!ValidationUtils.validateFileExtension(CommonsConstants.ACCEPTABLE_FILE_EXTENSIONS_ARRAY, assignmentAttendanceDocument.getFilename())) {
 					handleUploadingFileExtensionError();
-					break;
 				}
 				if (!ValidationUtils.validateFileSizeInMB(assignmentAttendanceDocument.getContent(), CommonsConstants.MAXIMUM_FILE_SIZE_FOR_EMAIL_DOCUMENTS_IN_MB)) {
 					handleUploadingFileSizeError();
-					break;
 				}
 			}
 		}
