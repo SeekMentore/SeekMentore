@@ -27,7 +27,7 @@
 	<query type="filter" id="enquiryMultipleMatchStatusFilter">
 		WHERE EN.MATCH_STATUS IN (:matchStatusList)
 	</query>
-	<query type="filter" id="enquiryEnquiryIdFilter">
+	<query type="filter" id="enquiryEnquirySerialIdFilter">
 		WHERE EN.ENQUIRY_SERIAL_ID = :enquirySerialId
 	</query>
 	<query type="sorter" id="enquiryEntryDateSorter">

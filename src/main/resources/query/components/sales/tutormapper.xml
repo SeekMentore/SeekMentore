@@ -93,4 +93,7 @@
 		WHERE ENQUIRY_SERIAL_ID IN (SELECT ENQUIRY_SERIAL_ID FROM ENQUIRY WHERE MATCH_STATUS IN (:matchStatusList))
 		AND (IS_ENQUIRY_CLOSED IS NULL OR IS_ENQUIRY_CLOSED &lt;&gt; 'Y')
 	</query>
+	<query type="select" id="selectTutorMapperCountForEnquirySerialId">
+		SELECT COUNT(1) TOTAL_MAPPED_TUTORS FROM TUTOR_MAPPER WHERE ENQUIRY_SERIAL_ID = :enquirySerialId
+	</query>
 </queryMapper>

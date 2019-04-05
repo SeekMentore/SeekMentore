@@ -77,7 +77,7 @@
 			<webservice id="completedEnquiriesList" url="/completedEnquiriesList"></webservice>
 			<webservice id="abortedEnquiriesList" url="/abortedEnquiriesList"></webservice>
 			<webservice id="takeActionOnEnquiry" url="/takeActionOnEnquiry"></webservice>
-			<webservice id="pendingEnquiryCheckDataAccess" url="/pendingEnquiryCheckDataAccess"></webservice>
+			<webservice id="enquiryCheckDataAccess" url="/enquiryCheckDataAccess"></webservice>
 			<webservice id="currentCustomerAllPendingEnquiriesList" url="/currentCustomerAllPendingEnquiriesList"></webservice>
 			<webservice id="updateEnquiryRecord" url="/updateEnquiryRecord"></webservice>
 			<webservice id="toBeMappedEnquiriesGridList" url="/toBeMappedEnquiriesGridList"></webservice>
@@ -137,6 +137,7 @@
 			<webservice id="getDemoRecord" url="/getDemoRecord"></webservice>
 			<webservice id="tutorMapperCheckDataAccess" url="/tutorMapperCheckDataAccess"></webservice>
 			<webservice id="getTutorMapperRecord" url="/getTutorMapperRecord"></webservice>
+			<webservice id="getEnquiryRecord" url="/getEnquiryRecord"></webservice>
 		</page>
 		<page id="supportRest" url="/rest/support" pageAccessType="support">
 			<webservice id="downloadAdminReportBecomeTutorList" url="/downloadAdminReportBecomeTutorList"></webservice>

@@ -193,18 +193,43 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path("/pendingEnquiryCheckDataAccess")
+	@Path("/enquiryCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String pendingEnquiryCheckDataAccess (
+	public String enquiryCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("allEnquiriesDataModificationAccess", true);
+		restresponse.put("enquiryDataModificationAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_GET_ENQUIRY_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getEnquiryRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_ENQUIRY_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.enquirySerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final Enquiry enquiry = getEnquiryService().getEnquiry(this.enquirySerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, enquiry);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getEnquiryService().getEnquiryFormUpdateAndRescheduleStatus(enquiry), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD)
@@ -1877,6 +1902,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				handleAssignmentAttendanceUpdateSecurity();
 				break;
 			}
+			case REST_METHOD_NAME_GET_ENQUIRY_RECORD :
 			case REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD :
 			case REST_METHOD_NAME_GET_DEMO_RECORD :
 			case REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD : 

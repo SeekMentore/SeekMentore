@@ -114,6 +114,7 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_GET_SUBSCRIPTION_PACKAGE_RECORD = "/getSubscriptionPackageRecord";
 	String REST_METHOD_NAME_GET_DEMO_RECORD = "/getDemoRecord";
 	String REST_METHOD_NAME_GET_TUTOR_MAPPER_RECORD = "/getTutorMapperRecord";
+	String REST_METHOD_NAME_GET_ENQUIRY_RECORD = "/getEnquiryRecord";
 	// Support REST methods
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_BECOME_TUTOR_LIST = "/downloadAdminReportBecomeTutorList";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_BECOME_TUTOR_PROFILE_PDF = "/downloadAdminBecomeTutorProfilePdf";

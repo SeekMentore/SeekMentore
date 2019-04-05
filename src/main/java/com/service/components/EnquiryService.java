@@ -85,6 +85,39 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new EnquiryRowMapper());
 	}
 	
+	public Enquiry getEnquiry(final String enquirySerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("enquirySerialId", enquirySerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry")
+									+ queryMapperService.getQuerySQL("sales-enquiry", "enquiryEnquirySerialIdFilter"), paramsMap, new EnquiryRowMapper());
+	}
+	
+	public Map<String, Boolean> getEnquiryFormUpdateAndRescheduleStatus(final Enquiry enquiry) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("enquiryFormEditMandatoryDisbaled", true);
+		securityAccess.put("enquiryFormCanChangeToPending", false);
+		securityAccess.put("enquiryFormCanChangeToBeMapped", false);
+		securityAccess.put("enquiryFormCanChangeAborted", false);
+		if (!MATCH_STATUS_ABORTED.equals(enquiry.getMatchStatus()) && !MATCH_STATUS_COMPLETED.equals(enquiry.getMatchStatus())) {
+			securityAccess.put("enquiryFormCanChangeAborted", true);
+			if (MATCH_STATUS_PENDING.equals(enquiry.getMatchStatus())) {
+				securityAccess.put("enquiryFormEditMandatoryDisbaled", false);
+				if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(enquiry.getQuotedClientRate())) {
+					securityAccess.put("enquiryFormCanChangeToBeMapped", true);
+				}
+			}
+			if (MATCH_STATUS_TO_BE_MAPPED.equals(enquiry.getMatchStatus())) {
+				final Map<String, Object> params = new HashMap<String, Object>();
+				params.put("enquirySerialId", enquiry.getEnquirySerialId());
+				final Map<String, Object> totalMappedTutors = applicationDao.find(queryMapperService.getQuerySQL("sales-tutormapper", "selectTutorMapperCountForEnquirySerialId"), params);
+				if (Integer.parseInt(String.valueOf(totalMappedTutors.get("TOTAL_MAPPED_TUTORS"))) == 0) {
+					securityAccess.put("enquiryFormCanChangeToPending", true);
+				}
+			}
+		}
+		return securityAccess;
+	}
+	
 	@Transactional
 	public void takeActionOnEnquiry(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
@@ -213,7 +246,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		final JsonObject searchTutorExtraParam = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "searchTutorExtraParam", JsonObject.class);
 		if (ValidationUtils.checkObjectAvailability(searchTutorExtraParam)) {
 			final String baseQuery = queryMapperService.getQuerySQL("sales-enquiry", "selectEnquiry");
-			final String filterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEnquiryIdFilter");
+			final String filterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEnquirySerialIdFilter");
 			final Enquiry enquiry = applicationDao.find(baseQuery + filterQueryString, paramsMap, new EnquiryRowMapper());
 			final Map<String, Object> searchTutorExtraParamMap = new HashMap<String, Object>();
 			searchTutorExtraParamMap.put("matchSubject", JSONUtils.getValueFromJSONObject(searchTutorExtraParam, "matchSubject", Boolean.class));
