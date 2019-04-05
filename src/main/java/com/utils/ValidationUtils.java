@@ -76,6 +76,15 @@ public class ValidationUtils implements ValidationConstants {
 	    return false;
 	}
 	
+	public static Boolean checkStringContainsText(final String stringObject, final String textToSearch) {
+	    if (checkStringAvailability(stringObject) && checkStringAvailability(textToSearch)) {
+	    	if (stringObject.indexOf(textToSearch) != -1) {
+	    		return true;
+	    	}	
+	    }
+	    return false;
+	  }
+	
 	public static Boolean checkNonEmptyList(final List<?> dataList) {
 		if (checkObjectAvailability(dataList)) {
 			return !dataList.isEmpty();

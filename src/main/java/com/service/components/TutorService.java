@@ -172,12 +172,16 @@ public class TutorService implements TutorConstants {
 									case ACTION_BUTTON_SEND_REMINDER: {
 										tutorDocument.setShowSendReminder(true);
 										tutorDocument.setEnableSendReminder(false);
+										if (!ValidationUtils.checkStringAvailability(tutorDocument.getIsApproved()) || NO.equals(tutorDocument.getIsApproved())) {
+											tutorDocument.setEnableSendReminder(true);
+										}
+										break;
 									}
 									case ACTION_BUTTON_REJECT: {
 										tutorDocument.setShowReject(true);
 										tutorDocument.setEnableReject(false);
 										if (!ValidationUtils.checkStringAvailability(tutorDocument.getIsApproved()) || YES.equals(tutorDocument.getIsApproved())) {
-											tutorDocument.setEnableApprove(true);
+											tutorDocument.setEnableReject(true);
 										}
 										break;
 									}
@@ -361,20 +365,44 @@ public class TutorService implements TutorConstants {
 		}
 	}
 	
-	public void sendTutorDocumentListReminderEmails(final List<String> idList, final String tutorSerialId, final String comments, final User activeUser) throws Exception {
-		if (ValidationUtils.checkNonEmptyList(idList)) {
+	public void sendTutorDocumentListReminderEmails(
+			final List<String> idList, 
+			final List<String> documentTypeList, 
+			final String tutorSerialId, 
+			final String comments, 
+			final User activeUser
+	) throws Exception {
+		if (ValidationUtils.checkNonEmptyList(idList) || ValidationUtils.checkNonEmptyList(documentTypeList)) {
 			final RegisteredTutor registeredTutor = getRegisteredTutor(tutorSerialId);
 			if (ValidationUtils.checkObjectAvailability(registeredTutor)) {
-				final List<TutorDocument> tutorDocuments = getTutorDocumentList(idList);
-				if (ValidationUtils.checkNonEmptyList(tutorDocuments)) {
+				if (ValidationUtils.checkNonEmptyList(idList)) {
+					final List<TutorDocument> tutorDocumentListFromDocumentSerialId = getTutorDocumentList(idList);
+					if (ValidationUtils.checkNonEmptyList(tutorDocumentListFromDocumentSerialId)) {
+						final Map<String, Object> attributes = new HashMap<String, Object>();
+						attributes.put("addressName", registeredTutor.getName());
+						attributes.put("tutorDocuments", tutorDocumentListFromDocumentSerialId);
+						final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
+						for (final TutorDocument tutorDocument : tutorDocumentListFromDocumentSerialId) {
+							attachments.add(new MailAttachment(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+						}
+						MailUtils.sendMimeMessageEmail( 
+								registeredTutor.getEmailId(), 
+								null,
+								null,
+								"Your document/s has been asked for Re-upload", 
+								VelocityUtils.parseEmailTemplate(REGISTERED_TUTOR_DOCUMENT_REJECTED_VELOCITY_TEMPLATE_PATH, attributes),
+								attachments);
+					}
+				}
+				if (ValidationUtils.checkNonEmptyList(documentTypeList)) {
 					final Map<String, Object> attributes = new HashMap<String, Object>();
 					attributes.put("addressName", registeredTutor.getName());
-					attributes.put("tutorDocuments", tutorDocuments);
+					attributes.put("documentTypes", documentTypeList);
 					MailUtils.sendMimeMessageEmail( 
 							registeredTutor.getEmailId(), 
 							null,
 							null,
-							"Your document/s has been asked for upload", 
+							"Your document/s are pending and has been asked for upload", 
 							VelocityUtils.parseEmailTemplate(REGISTERED_TUTOR_DOCUMENT_REMINDER_VELOCITY_TEMPLATE_PATH, attributes),
 							null);
 				}
@@ -650,20 +678,7 @@ public class TutorService implements TutorConstants {
 	public ApplicationFile downloadRegisteredTutorDocumentFile(final String tutorSerialId, final String documentType) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
-		switch(documentType) {
-			case "panCard" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_PAN_CARD);
-				break;
-			}
-			case "photo" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_PROFILE_PHOTO);
-				break;
-			}
-			case "aadharCard" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_AADHAAR_CARD);
-				break;
-			}
-		}
+		paramsMap.put("documentType", documentType);
 		final TutorDocument tutorDocument = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument")
 																+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdAndDocumentTypeFilter"), paramsMap, new TutorDocumentRowMapper());
 		if (ValidationUtils.checkObjectAvailability(tutorDocument)) {
@@ -691,20 +706,7 @@ public class TutorService implements TutorConstants {
 	public void removeRegisteredTutorDocumentFile(final String tutorSerialId, final String documentType, final User activeUser) throws Exception {
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("tutorSerialId", tutorSerialId);
-		switch(documentType) {
-			case "panCard" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_PAN_CARD);
-				break;
-			}
-			case "photo" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_PROFILE_PHOTO);
-				break;
-			}
-			case "aadharCard" : {
-				paramsMap.put("documentType", DOCUMENT_TYPE_AADHAAR_CARD);
-				break;
-			}
-		}
+		paramsMap.put("documentType", documentType);
 		final TutorDocument tutorDocument = applicationDao.find(queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "selectTutorDocument")
 																+ queryMapperService.getQuerySQL("admin-registeredtutor-tutordocument", "tutorDocumentTutorSerialIdAndDocumentTypeFilter"), paramsMap, new TutorDocumentRowMapper());
 		if (ValidationUtils.checkObjectAvailability(tutorDocument)) {

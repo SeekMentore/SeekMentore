@@ -1,12 +1,12 @@
 Hello $addressName,
 <p>Greetings from "Seek Mentore".</p>
-<p>Your below document/s are still not uploaded.</p>
+<p>Your below document/s are pending and still not uploaded.</p>
 <p>
 	<table style="$CoreTableStyling">
-	  #foreach( $document in $tutorDocuments )
+	  #foreach( $documentType in $documentTypes )
 	    <tr>
 	    	<td style="$CoreTableTDStyling width: 10%;">$velocityCount</td>
-	    	<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TUTOR_DOCUMENT_TYPE_LOOKUP', $document.documentType)</td>
+	    	<td style="$CoreTableTDStyling">$ApplicationUtils.getSelectLookupItemLabel('TUTOR_DOCUMENT_TYPE_LOOKUP', $documentType)</td>
 		</tr>
 	  #end
 	</table>

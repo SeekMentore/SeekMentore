@@ -361,7 +361,24 @@ public class RegisteredTutorRestService extends AbstractRestWebservice implement
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getTutorService().sendTutorDocumentListReminderEmails(Arrays.asList(allIdsList.split(SEMICOLON)), this.tutorSerialId, comments, getActiveUser(request));
+			List<String> idList = null;
+			List<String> documentTypeList = null;
+			if (ValidationUtils.checkStringContainsText(allIdsList, COLON)) {
+				final String[] bothIdListElements = allIdsList.split(COLON);
+				if (ValidationUtils.checkStringAvailability(bothIdListElements[0])) {
+					idList = Arrays.asList(bothIdListElements[0].split(SEMICOLON));
+				}
+				if (ValidationUtils.checkStringAvailability(bothIdListElements[1])) {
+					documentTypeList = Arrays.asList(bothIdListElements[1].split(SEMICOLON));
+				}
+			} else {
+				idList = Arrays.asList(allIdsList.split(SEMICOLON));
+			}
+			getTutorService().sendTutorDocumentListReminderEmails(idList, 
+																	documentTypeList, 
+																	this.tutorSerialId, 
+																	comments, 
+																	getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, "Sent Reminder for document/s successfully.");
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
