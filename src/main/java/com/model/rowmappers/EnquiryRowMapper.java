@@ -34,7 +34,7 @@ public class EnquiryRowMapper implements RowMapper<Enquiry> {
 		enquiryObject.setTutorEmail(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorEmail"), String.class));
 		enquiryObject.setTutorContactNumber(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("tutorContactNumber"), String.class));
 		enquiryObject.setAdminRemarks(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("adminRemarks"), String.class));
-		enquiryObject.setLocationDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("locationDetails"), String.class));
+		enquiryObject.setLocation(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("location"), String.class));
 		enquiryObject.setAddressDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("addressDetails"), String.class));
 		enquiryObject.setAdditionalDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("additionalDetails"), String.class));
 		enquiryObject.setWhoActed(ExceptionUtils.exceptionHandlerForRowMapper(row, enquiryObject.resolveColumnNameForMapping("whoActed"), String.class));

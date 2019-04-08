@@ -53,8 +53,8 @@
 	</query>
 	<query type="insert" id="insertEnquiry" paramClass="com.model.components.Enquiry">
 		INSERT INTO ENQUIRY
-			(ENQUIRY_SERIAL_ID, CUSTOMER_SERIAL_ID, ENQUIRY_EMAIL, ENQUIRY_CONTACT_NUMBER, SUBJECT, GRADE, MATCH_STATUS, LOCATION_DETAILS, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
+			(ENQUIRY_SERIAL_ID, CUSTOMER_SERIAL_ID, ENQUIRY_EMAIL, ENQUIRY_CONTACT_NUMBER, SUBJECT, GRADE, MATCH_STATUS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENTRY_DATE_MILLIS) 
 		VALUES
-			(:enquirySerialId, :customerSerialId, :enquiryEmail, :enquiryContactNumber, :subject, :grade, :matchStatus, :locationDetails, :addressDetails, :additionalDetails, :entryDateMillis)
+			(:enquirySerialId, :customerSerialId, :enquiryEmail, :enquiryContactNumber, :subject, :grade, :matchStatus, :location, :addressDetails, :additionalDetails, :entryDateMillis)
 	</query>
 </queryMapper>

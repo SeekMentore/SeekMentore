@@ -61,13 +61,13 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UPDATE_CUSTOMER_RECORD = "/updateCustomerRecord";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_SUBSCRIBED_CUSTOMER_PROFILE_PDF = "/downloadAdminSubscribedCustomerProfilePdf";
 	// Sales REST methods
-	String REST_METHOD_NAME_PENDING_ENQUIRIES_LIST = "/pendingEnquiriesList";
-	String REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST = "/completedEnquiriesList";
-	String REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST = "/abortedEnquiriesList";
+	String REST_METHOD_NAME_PENDING_ENQUIRY_LIST = "/pendingEnquiryList";
+	String REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST = "/completedEnquiryList";
+	String REST_METHOD_NAME_ABORTED_ENQUIRY_LIST = "/abortedEnquiryList";
 	String REST_METHOD_NAME_UPDATE_ENQUIRY_RECORD = "/updateEnquiryRecord";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_ENQUIRY = "/takeActionOnEnquiry";
-	String REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST = "/currentCustomerAllPendingEnquiriesList";
-	String REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST = "/toBeMappedEnquiriesGridList";
+	String REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST = "/currentCustomerAllPendingEnquiryList";
+	String REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST = "/toBeMappedEnquiryGridList";
 	String REST_METHOD_NAME_ALL_MAPPING_ELIGIBLE_TUTORS_LIST = "/allMappingEligibleTutorsList";
 	String REST_METHOD_NAME_MAP_REGISTERED_TUTORS = "/mapRegisteredTutors";
 	String REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST = "/currentEnquiryAllMappedTutorsList";

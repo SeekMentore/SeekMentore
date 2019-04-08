@@ -326,7 +326,7 @@ public class SchedulerService implements SchedulerConstants {
 								enquiryObject.setSubject(subject);
 								enquiryObject.setGrade(findTutorObj.getStudentGrade());
 								enquiryObject.setMatchStatus(EnquiryConstants.MATCH_STATUS_PENDING);
-								enquiryObject.setLocationDetails(findTutorObj.getLocation());
+								enquiryObject.setLocation(findTutorObj.getLocation());
 								enquiryObject.setAddressDetails(findTutorObj.getAddressDetails());
 								enquiryObject.setAdditionalDetails(findTutorObj.getAdditionalDetails());
 								enquiryObjectList.add(enquiryObject);

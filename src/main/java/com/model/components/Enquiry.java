@@ -29,7 +29,7 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 	private String tutorEmail;
 	private String tutorContactNumber;
 	private String adminRemarks;
-	private String locationDetails;
+	private String location;
 	private String addressDetails;
 	private String additionalDetails;
 	private String whoActed;
@@ -136,12 +136,12 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 		this.whoActed = whoActed;
 	}
 	
-	public String getLocationDetails() {
-		return locationDetails;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setLocationDetails(String locationDetails) {
-		this.locationDetails = locationDetails;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public String getAddressDetails() {
@@ -289,7 +289,7 @@ public class Enquiry extends GridComponentObject implements Serializable, Clonea
 			case "tutorEmail" : return "TUTOR_EMAIL";
 			case "tutorContactNumber" : return "TUTOR_CONTACT_NUMBER";
 			case "adminRemarks" : return "ADMIN_REMARKS";
-			case "locationDetails" : return "LOCATION_DETAILS";
+			case "location" : return "LOCATION";
 			case "addressDetails" : return "ADDRESS_DETAILS";
 			case "additionalDetails" : return "ADDITIONAL_DETAILS";
 			case "whoActed" : return "WHO_ACTED";

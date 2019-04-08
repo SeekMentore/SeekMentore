@@ -59,23 +59,23 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 		String existingFilterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryMatchStatusFilter");
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("sales-enquiry", "enquiryEntryDateSorter");
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_PENDING_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_PENDING_ENQUIRY_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_TO_BE_MAPPED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_COMPLETED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_ABORTED_ENQUIRY_LIST : {
 				paramsMap.put("matchStatus", MATCH_STATUS_ABORTED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST : {
 				existingFilterQueryString += queryMapperService.getQuerySQL("sales-enquiry", "enquiryCurrentCustomerAdditionalFilter");
 				paramsMap.put("matchStatus", MATCH_STATUS_PENDING);
 				paramsMap.put("customerSerialId", JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class));
@@ -184,9 +184,9 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 						paramsMap.put("clientNegotiationRemarks", enquiryObject.getClientNegotiationRemarks());
 						break;
 					}
-					case "locationDetails" : {
-						updateAttributesQuery.add("LOCATION_DETAILS = :locationDetails");
-						paramsMap.put("locationDetails", enquiryObject.getLocationDetails());
+					case "location" : {
+						updateAttributesQuery.add("LOCATION = :location");
+						paramsMap.put("location", enquiryObject.getLocation());
 						break;
 					}
 					case "addressDetails" : {
@@ -282,7 +282,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 			}
 			if (ValidationUtils.checkObjectAvailability(searchTutorExtraParamMap.get("matchLocation")) && (Boolean)searchTutorExtraParamMap.get("matchLocation")) {
 				final List<String> listValue = new ArrayList<String>();
-				listValue.add(enquiry.getLocationDetails());
+				listValue.add(enquiry.getLocation());
 				if (ValidationUtils.checkNonEmptyList(listValue)) {
 					gridComponent.addListFilterToFilterList("comfortableLocations", listValue, true, false, null);
 				}
@@ -345,7 +345,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 	private void setActionButtonSecuritySetupForTutorMapperList(final List<TutorMapper> tutorMapperList, final List<String> secureActionColumnButtons, final String grid) {
 		if (ValidationUtils.checkNonEmptyList(tutorMapperList) && ValidationUtils.checkNonEmptyList(secureActionColumnButtons)) {
 			switch(grid) {
-				case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : {
+				case RestMethodConstants.REST_METHOD_NAME_CURRENT_ENQUIRY_ALL_MAPPED_TUTORS_LIST : 
+				case RestMethodConstants.REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : {
 					for (final TutorMapper tutorMapper : tutorMapperList) {
 						for (final String buttonId : secureActionColumnButtons) {
 							if ("unmapTutor".equalsIgnoreCase(buttonId)) {
@@ -387,7 +388,8 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 					if (ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsTutorContacted())
 							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsTutorAgreed())
 							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsClientContacted())
-							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsClientAgreed())) {
+							&& ValidationUtils.checkIfResponseIsStringYes(tutorMapper.getIsClientAgreed())
+							&& ValidationUtils.checkNonNegativeNonZeroNumberAvailability(tutorMapper.getQuotedTutorRate())) {
 						securityAccess.put("tutorMapperCanMakeDemoReady", true);
 					}
 				}

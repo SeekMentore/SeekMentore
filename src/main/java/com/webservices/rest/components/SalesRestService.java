@@ -83,10 +83,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	private PackageAssignment packageAssignmentObject;
 	private AssignmentAttendance assignmentAttendanceObject;
 	
-	@Path(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_PENDING_ENQUIRY_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String pendingEnquiriesList (
+	public String pendingEnquiryList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -95,12 +95,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_PENDING_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_PENDING_ENQUIRY_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_PENDING_ENQUIRIES_LIST, gridComponent);
+			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_PENDING_ENQUIRY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, enquiryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -111,10 +111,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String completedEnquiriesList (
+	public String completedEnquiryList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -123,12 +123,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST, gridComponent);
+			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, enquiryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -139,10 +139,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_ABORTED_ENQUIRY_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String abortedEnquiriesList (
+	public String abortedEnquiryList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -151,12 +151,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_ABORTED_ENQUIRY_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST, gridComponent);
+			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_ABORTED_ENQUIRY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, enquiryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -203,6 +203,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
 		restresponse.put("enquiryDataModificationAccess", true);
+		restresponse.put("enquiryTutorMappingAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
@@ -258,10 +259,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String currentCustomerAllPendingEnquiriesList (
+	public String currentCustomerAllPendingEnquiryList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -270,13 +271,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST;
 		final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 		this.customerSerialId = JSONUtils.getValueFromJSONObject(gridComponent.getOtherParamsAsJSONObject(), "customerSerialId", String.class);
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST, gridComponent);
+			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, enquiryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -287,10 +288,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST)
+	@Path(REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String toBeMappedEnquiriesGridList (
+	public String toBeMappedEnquiryGridList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -299,12 +300,12 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST;
+		this.methodName = REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, Enquiry.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST, gridComponent);
+			final List<Enquiry> enquiryList = getEnquiryService().getEnquiryList(REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, enquiryList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(enquiryList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -459,20 +460,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-	}
-	
-	@Path("/mapTutorToEnquiryCheckDataAccess")
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String mappedTutorCheckDataAccess (
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("enquiryMappingAccess", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_UPDATE_TUTOR_MAPPER_RECORD)
@@ -637,20 +624,6 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		} else {
 			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 		}
-	}
-	
-	@Path("/mappedTutorCheckScheduleDemoAccess")
-	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
-	@POST
-	public String mappedTutorCheckScheduleDemoAccess (
-			@Context final HttpServletRequest request,
-			@Context final HttpServletResponse response
-	) throws Exception {
-		Map<String, Object> restresponse = new HashMap<String, Object>();
-		restresponse.put("success", true);
-		restresponse.put("scheduleDemoFormAccess", true);
-		restresponse.put("message", "");
-		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
 	@Path(REST_METHOD_NAME_CURRENT_TUTOR_MAPPING_LIST)
@@ -1790,10 +1763,10 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		this.securityFailureResponse = new HashMap<String, Object>();
 		this.securityFailureResponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 		switch(this.methodName) {
-			case REST_METHOD_NAME_PENDING_ENQUIRIES_LIST :
-			case REST_METHOD_NAME_COMPLETED_ENQUIRIES_LIST :
-			case REST_METHOD_NAME_ABORTED_ENQUIRIES_LIST :
-			case REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRIES_GRID_LIST :
+			case REST_METHOD_NAME_PENDING_ENQUIRY_LIST :
+			case REST_METHOD_NAME_COMPLETED_ENQUIRY_LIST :
+			case REST_METHOD_NAME_ABORTED_ENQUIRY_LIST :
+			case REST_METHOD_NAME_TO_BE_MAPPED_ENQUIRY_GRID_LIST :
 			case REST_METHOD_NAME_PENDING_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_DEMO_READY_MAPPED_TUTORS_LIST : 
 			case REST_METHOD_NAME_DEMO_SCHEDULED_MAPPED_TUTORS_LIST : 
@@ -1812,7 +1785,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				this.securityPassed = true;
 				break;
 			}
-			case REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRIES_LIST :{
+			case REST_METHOD_NAME_CURRENT_CUSTOMER_ALL_PENDING_ENQUIRY_LIST :{
 				handleSelectedCustomerDataGridView();
 				break;
 			}
@@ -1968,7 +1941,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			this.enquiryObject.setNegotiatedRateWithClient(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "negotiatedRateWithClient", Integer.class));
 			this.enquiryObject.setClientNegotiationRemarks(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "clientNegotiationRemarks", String.class));
 			this.enquiryObject.setAdditionalDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "additionalDetails", String.class));
-			this.enquiryObject.setLocationDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "locationDetails", String.class));
+			this.enquiryObject.setLocation(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "location", String.class));
 			this.enquiryObject.setAddressDetails(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "addressDetails", String.class));
 			this.enquiryObject.setPreferredTeachingType(getValueForPropertyFromCompleteUpdatedJSONObject(jsonObject, "preferredTeachingType", String.class));
 		}
@@ -2033,8 +2006,8 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					case "additionalDetails" : {
 						break;
 					}
-					case "locationDetails" : {
-						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getLocationDetails(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
+					case "location" : {
+						if (!ValidationUtils.validateAgainstSelectLookupValues(this.enquiryObject.getLocation(), SEMI_COLON, SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP)) {
 							ApplicationUtils.appendMessageInMapAttribute(
 									this.securityFailureResponse, 
 									"Please select valid 'Location'",
