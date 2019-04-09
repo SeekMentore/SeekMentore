@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.constants.BeanConstants;
 import com.dao.ApplicationDao;
 import com.model.Employee;
-import com.model.rowmappers.EmployeeRowMapper;
+import com.model.rowmapper.EmployeeRowMapper;
 import com.service.QueryMapperService;
 
 @Service(BeanConstants.BEAN_NAME_EMPLOYEE_SERVICE)

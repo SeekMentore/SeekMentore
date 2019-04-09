@@ -23,7 +23,7 @@ import com.dao.ApplicationDao;
 import com.model.User;
 import com.model.components.Demo;
 import com.model.gridcomponent.GridComponent;
-import com.model.rowmappers.DemoRowMapper;
+import com.model.rowmapper.DemoRowMapper;
 import com.service.JNDIandControlConfigurationLoadService;
 import com.service.QueryMapperService;
 import com.utils.ApplicationUtils;

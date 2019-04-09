@@ -12,7 +12,7 @@ import com.constants.BeanConstants;
 import com.constants.components.SelectLookupConstants;
 import com.dao.ApplicationDao;
 import com.model.components.commons.SelectLookup;
-import com.model.rowmappers.SelectLookupRowMapper;
+import com.model.rowmapper.SelectLookupRowMapper;
 import com.service.QueryMapperService;
 import com.utils.QueryUtils;
 import com.utils.ValidationUtils;

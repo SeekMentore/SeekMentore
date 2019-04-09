@@ -32,11 +32,11 @@ import com.model.components.PackageAssignment;
 import com.model.components.SubscriptionPackage;
 import com.model.gridcomponent.GridComponent;
 import com.model.mail.MailAttachment;
-import com.model.rowmappers.AssignmentAttendanceDocumentRowMapper;
-import com.model.rowmappers.AssignmentAttendanceRowMapper;
-import com.model.rowmappers.MapRowMapper;
-import com.model.rowmappers.PackageAssignmentRowMapper;
-import com.model.rowmappers.SubscriptionPackageRowMapper;
+import com.model.rowmapper.AssignmentAttendanceDocumentRowMapper;
+import com.model.rowmapper.AssignmentAttendanceRowMapper;
+import com.model.rowmapper.MapRowMapper;
+import com.model.rowmapper.PackageAssignmentRowMapper;
+import com.model.rowmapper.SubscriptionPackageRowMapper;
 import com.model.workbook.WorkbookCell;
 import com.model.workbook.WorkbookCell.TypeOfStyleEnum;
 import com.model.workbook.WorkbookRecord;
@@ -139,6 +139,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		securityAccess.put("subscriptionPackageCanActivateSubscription", false);
 		securityAccess.put("subscriptionPackageCanTerminateSubscription", false);
 		securityAccess.put("subscriptionPackageCanCreateAssignment", false);
+		securityAccess.put("subscriptionPackageCanRegenerateContract", false);
 		if (!ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getEndDateMillis())) {
 			securityAccess.put("subscriptionPackageFormEditMandatoryDisbaled", false);
 			if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getStartDateMillis())) {
@@ -148,7 +149,11 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					securityAccess.put("subscriptionPackageCanTerminateSubscription", true);
 				}
 			} else {
-				securityAccess.put("subscriptionPackageCanActivateSubscription", true);
+				if (ValidationUtils.checkStringAvailability(subscriptionPackage.getPackageBillingType())
+						&& ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getFinalizedRateForClient())
+						&& ValidationUtils.checkNonNegativeNonZeroNumberAvailability(subscriptionPackage.getFinalizedRateForTutor())) {
+					securityAccess.put("subscriptionPackageCanActivateSubscription", true);
+				}
 				securityAccess.put("subscriptionPackageCanTerminateSubscription", true);
 			}
 		}
@@ -1000,7 +1005,7 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 		Map<String, Object> mailParams = new HashMap<String, Object>();
 		// Sales Team Email 
 		mailParams.put(MailConstants.MAIL_PARAM_TO, jndiAndControlConfigurationLoadService.getControlConfiguration().getMailConfiguration().getImportantCompanyMailIdsAndLists().getSalesDeptMailList());
-		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours have been completed for Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
+		mailParams.put(MailConstants.MAIL_PARAM_SUBJECT, "Assignment hours are nearing completion for Subscription Package - " + packageAssignment.getSubscriptionPackageSerialId());
 		mailParams.put(MailConstants.MAIL_PARAM_MESSAGE, VelocityUtils.parseEmailTemplate(VELOCITY_TEMPLATES_ASSIGNMENT_RENEWAL_NOTIFICATION_SALES_TEAM_EMAIL_PATH, attributes));
 		mailParamList.add(mailParams);
 		
@@ -1050,10 +1055,10 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 			final String tutorName = packageAssignment.getTutorName();
 			final String tutorContactNumber = packageAssignment.getTutorContactNumber();
 			final String tutorEmail = packageAssignment.getTutorEmail();
-			final String packageSerialId = "Package Serial Id - " + packageAssignment.getSubscriptionPackageSerialId();
+			final String packageSerialId = "Subscription Package Serial Id - " + packageAssignment.getSubscriptionPackageSerialId();
 			final String enquiryGrade = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_STUDENT_GRADE_LOOKUP, packageAssignment.getEnquiryGrade());
 			final String enquirySubject = ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_SUBJECTS_LOOKUP, packageAssignment.getEnquirySubject());
-			final String assignmentSerialId = "Assignment Serial Id - " + packageAssignment.getPackageAssignmentSerialId();
+			final String assignmentSerialId = "Package Assignment Serial Id - " + packageAssignment.getPackageAssignmentSerialId();
 			final String startDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getStartDateMillis(), "dd-MMM-yyyy");
 			final String endDate = DateUtils.parseDateInSpecifiedFormatAfterConvertingToIndianTimeZone(packageAssignment.getEndDateMillis(), "dd-MMM-yyyy");
 			final String totalDuration = packageAssignment.getTotalHours().toString() + WHITESPACE + "h";
@@ -1251,7 +1256,9 @@ public class SubscriptionPackageService implements SubscriptionPackageConstants 
 					securityAccess.put("assignmentMarkAndUpdateAttendanceFormEditDisbaled", false);
 				}
 			} else {
-				securityAccess.put("packageAssignmentCanStartAssignment", true);
+				if (ValidationUtils.checkNonNegativeNonZeroNumberAvailability(packageAssignment.getTotalHours())) {
+					securityAccess.put("packageAssignmentCanStartAssignment", true);
+				}
 			}
 		}
 		return securityAccess;

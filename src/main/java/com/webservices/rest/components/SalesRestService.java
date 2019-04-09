@@ -1232,16 +1232,16 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 		}
     }
 	
-	@Path("/subscriptionPackageAssignmentCheckDataAccess")
+	@Path("/packageAssignmentCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String subscriptionPackageAssignmentCheckDataAccess (
+	public String packageAssignmentCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("subscriptionPackageAssignmentDataModificationAccess", true);
+		restresponse.put("packageAssignmentDataModificationAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
@@ -2756,10 +2756,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 				final Integer completedMinutes = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedMinutes()) ? this.packageAssignmentObject.getCompletedMinutes() : 0;
 				final Integer hoursTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) ? this.assignmentAttendanceObject.getDurationHours() : 0;
 				final Integer minutesTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes()) ? this.assignmentAttendanceObject.getDurationMinutes() : 0;
-				if ((completedHours + hoursTaught) > totalHours) {
-					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
-				}
-				if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
+				if ((((completedHours + hoursTaught) * 60) + (completedMinutes + minutesTaught)) > (totalHours * 60)) {
 					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 				}
 			}
@@ -2800,10 +2797,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 					final Integer completedMinutes = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getCompletedMinutes()) ? this.packageAssignmentObject.getCompletedMinutes() : 0;
 					final Integer hoursTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) ? this.additionalHoursTaught : 0;
 					final Integer minutesTaught = ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught) ? this.additionalMinutesTaught : 0;
-					if ((completedHours + hoursTaught) > totalHours) {
-						appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
-					}
-					if ((completedHours + hoursTaught) == totalHours && (completedMinutes + minutesTaught) > 0) {
+					if ((((completedHours + hoursTaught) * 60) + (completedMinutes + minutesTaught)) > (totalHours * 60)) {
 						appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, EXTRA_HOURS_TAUGHT));
 					}
 				}

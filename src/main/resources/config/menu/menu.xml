@@ -114,7 +114,7 @@
 			<webservice id="updateSubscriptionPackageRecord" url="/updateSubscriptionPackageRecord"></webservice>
 			<webservice id="takeActionOnSubscriptionPackage" url="/takeActionOnSubscriptionPackage"></webservice>
 			<webservice id="downloadSubscriptionPackageContractPdf" url="/downloadSubscriptionPackageContractPdf"></webservice>
-			<webservice id="subscriptionPackageAssignmentCheckDataAccess" url="/subscriptionPackageAssignmentCheckDataAccess"></webservice>
+			<webservice id="packageAssignmentCheckDataAccess" url="/packageAssignmentCheckDataAccess"></webservice>
 			<webservice id="updateSubscriptionPackageAssignmentRecord" url="/updateSubscriptionPackageAssignmentRecord"></webservice>
 			<webservice id="takeActionOnSubscriptionPackageAssignment" url="/takeActionOnSubscriptionPackageAssignment"></webservice>
 			<webservice id="newAssignmentList" url="/newAssignmentList"></webservice>

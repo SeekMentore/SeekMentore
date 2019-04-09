@@ -26,7 +26,7 @@ import com.model.User;
 import com.model.UserAccessOptions;
 import com.model.components.RegisteredTutor;
 import com.model.components.SubscribedCustomer;
-import com.model.rowmappers.ForgotPasswordTokenRowMapper;
+import com.model.rowmapper.ForgotPasswordTokenRowMapper;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
 import com.service.components.EmployeeService;

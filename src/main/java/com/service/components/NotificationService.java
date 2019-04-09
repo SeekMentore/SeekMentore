@@ -15,9 +15,9 @@ import com.model.components.AlertReminder;
 import com.model.components.Task;
 import com.model.components.Workflow;
 import com.model.gridcomponent.GridComponent;
-import com.model.rowmappers.AlertReminderRowMapper;
-import com.model.rowmappers.TaskRowMapper;
-import com.model.rowmappers.WorkflowRowMapper;
+import com.model.rowmapper.AlertReminderRowMapper;
+import com.model.rowmapper.TaskRowMapper;
+import com.model.rowmapper.WorkflowRowMapper;
 import com.service.QueryMapperService;
 import com.utils.GridQueryUtils;
 

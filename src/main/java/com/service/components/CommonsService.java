@@ -16,7 +16,7 @@ import com.dao.ApplicationDao;
 import com.model.ErrorPacket;
 import com.model.components.commons.SelectLookup;
 import com.model.mail.EmailTemplate;
-import com.model.rowmappers.EmailTemplateRowMapper;
+import com.model.rowmapper.EmailTemplateRowMapper;
 import com.service.QueryMapperService;
 import com.utils.ExceptionUtils;
 import com.utils.MailUtils;

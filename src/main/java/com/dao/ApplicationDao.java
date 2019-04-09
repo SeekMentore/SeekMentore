@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.constants.ApplicationConstants;
 import com.constants.BeanConstants;
 import com.exception.ApplicationException;
-import com.model.rowmappers.MapRowMapper;
+import com.model.rowmapper.MapRowMapper;
 import com.service.QueryMapperService;
 import com.utils.LoggerUtils;
 import com.utils.ValidationUtils;

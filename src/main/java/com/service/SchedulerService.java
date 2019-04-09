@@ -38,7 +38,7 @@ import com.model.components.publicaccess.FindTutor;
 import com.model.components.publicaccess.SubmitQuery;
 import com.model.mail.ApplicationMail;
 import com.model.mail.MailAttachment;
-import com.model.rowmappers.SubscribedCustomerRowMapper;
+import com.model.rowmapper.SubscribedCustomerRowMapper;
 import com.service.components.AdminService;
 import com.service.components.CommonsService;
 import com.service.components.CustomerService;
