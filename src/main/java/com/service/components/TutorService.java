@@ -53,12 +53,6 @@ import com.utils.WorkbookUtils;
 @Service(BeanConstants.BEAN_NAME_TUTOR_SERVICE)
 public class TutorService implements TutorConstants {
 	
-	private static final String ACTION_BUTTON_REJECT = "REJECT";
-
-	private static final String ACTION_BUTTON_SEND_REMINDER = "SENDREMINDER";
-
-	private static final String ACTION_BUTTON_APPROVE = "APPROVE";
-
 	@Autowired
 	private transient ApplicationDao applicationDao;
 	
@@ -352,7 +346,7 @@ public class TutorService implements TutorConstants {
 				attributes.put("tutorDocuments", tutorDocuments);
 				final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 				for (final TutorDocument tutorDocument : tutorDocuments) {
-					attachments.add(new MailAttachment(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+					attachments.add(new MailAttachment(tutorDocument.getFilename(), tutorDocument.getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 				}
 				MailUtils.sendMimeMessageEmail( 
 						registeredTutor.getEmailId(), 
@@ -383,7 +377,7 @@ public class TutorService implements TutorConstants {
 						attributes.put("tutorDocuments", tutorDocumentListFromDocumentSerialId);
 						final List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 						for (final TutorDocument tutorDocument : tutorDocumentListFromDocumentSerialId) {
-							attachments.add(new MailAttachment(tutorDocument.getFilename(), FileSystemUtils.readContentFromFileOnApplicationFileSystemUsingKey(tutorDocument.getFsKey()), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
+							attachments.add(new MailAttachment(tutorDocument.getFilename(), tutorDocument.getFsKey(), FileConstants.APPLICATION_TYPE_OCTET_STEAM));
 						}
 						MailUtils.sendMimeMessageEmail( 
 								registeredTutor.getEmailId(), 

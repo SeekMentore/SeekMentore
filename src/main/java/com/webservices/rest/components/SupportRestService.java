@@ -336,9 +336,34 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("formDataEditAccess", true);
+		restresponse.put("becomeTutorFormDataEditAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getBecomeTutorRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.becomeTutorSerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final BecomeTutor becomeTutor = getAdminService().getBecomeTutor(this.becomeTutorSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, becomeTutor);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getAdminService().getBecomeTutorFormUpdateStatus(becomeTutor), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_BLACKLIST_BECOME_TUTOR_LIST)
@@ -478,10 +503,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
     }
 	
-	@Path(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String nonContactedEnquiriesList (
+	public String nonContactedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -490,12 +515,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -506,10 +531,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String nonVerifiedEnquiriesList (
+	public String nonVerifiedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -518,12 +543,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -534,10 +559,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String verifiedEnquiriesList (
+	public String verifiedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -546,12 +571,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -562,10 +587,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String verificationFailedEnquiriesList (
+	public String verificationFailedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -574,12 +599,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -590,10 +615,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String toBeReContactedEnquiriesList (
+	public String toBeReContactedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -602,12 +627,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -618,10 +643,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String selectedEnquiriesList (
+	public String selectedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -630,12 +655,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -646,10 +671,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST)
+	@Path(REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String rejectedEnquiriesList (
+	public String rejectedFindTutorList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -658,12 +683,12 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST;
+		this.methodName = REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, FindTutor.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST, gridComponent);
+			final List<FindTutor> findTutorList = getAdminService().getFindTutorList(REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST, gridComponent);
 			restresponse.put(GRID_COMPONENT_RECORD_DATA, findTutorList);
 			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(findTutorList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
@@ -674,10 +699,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path("/enquiryRequestCheckDataAccess")
+	@Path("/findTutorCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String enquiryRequestCheckDataAccess (
+	public String findTutorCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
@@ -688,16 +713,16 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path(REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST)
+	@Path(REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String blacklistEnquiryRequestList (
+	public String blacklistFindTutorList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST;
+		this.methodName = REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		doSecurity(request, response);
@@ -712,16 +737,16 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST)
+	@Path(REST_METHOD_NAME_UN_BLACKLIST_FIND_TUTOR_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String unBlacklistEnquiryRequestList (
+	public String unBlacklistFindTutorList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST;
+		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_FIND_TUTOR_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		doSecurity(request, response);
@@ -1526,13 +1551,13 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			case REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : 
 			case REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : 
 			case REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : 
-			case REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : 
-			case REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : 
+			case REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST : 
 			case REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : 
 			case REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : 
 			case REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : 
@@ -1553,8 +1578,8 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			}
 			case REST_METHOD_NAME_BLACKLIST_BECOME_TUTOR_LIST : 
 			case REST_METHOD_NAME_UN_BLACKLIST_BECOME_TUTOR_LIST :
-			case REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST : 
-			case REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST : 
+			case REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST : 
+			case REST_METHOD_NAME_UN_BLACKLIST_FIND_TUTOR_LIST : 
 			case REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST : 
 			case REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST : {
 				handleAllIds();
@@ -1597,6 +1622,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			}
 			case REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF : {
 				handleFindTutorSerialId();
+				break;
+			}
+			case REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD : {
+				handleParentSerialId();
 				break;
 			}
 		}

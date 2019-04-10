@@ -32,14 +32,14 @@ public class DateUtils implements DateConstants {
 	public static String parseDateInIndianDTFormat(final Date date) {
 		if (!isValid(date))
 			return null;
-		final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_INDIA);
+		final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_INDIA_WITH_COMPLETE_MONTH_AND_NO_SECONDS);
 		return formatter.format(date);
 	}
 	
 	public static String parseDateInIndianDTFormatWithoutTime(final Date date) {
 		if (!isValid(date))
 			return null;
-		final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_INDIA_WT);
+		final SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_INDIA_WITH_COMPLETE_MONTH_WT);
 		return formatter.format(date);
 	}
 	

@@ -207,7 +207,7 @@ import com.utils.WorkbookUtils;
 			gridComponent = new GridComponent(FindTutor.class);
 		}
 		gridComponent.setAdditionalFilterQueryString(queryMapperService.getQuerySQL("public-application", "findTutorNonMigratedFilter"));
-		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST, gridComponent);
+		return adminService.getFindTutorList(RestMethodConstants.REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST, gridComponent);
 	}
 	
 	public void sendProfileGenerationEmailToSubscribedCustomerList(final List<SubscribedCustomer> subscribedCustomerList) throws Exception {

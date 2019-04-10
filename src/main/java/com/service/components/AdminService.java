@@ -65,37 +65,37 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_FRESH);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorMultiApplicationStatusFilter");
-				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING, APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SELECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_BECOME_TUTORS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "becomeTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_REJECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_REJECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REGISTERED_BECOME_TUTORS_LIST : {
@@ -122,6 +122,70 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		paramsMap.put("contactNumber", contactNumber);
 		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor") 
 								+ queryMapperService.getQuerySQL("public-application", "becomeTutorContactNumberFilter"), paramsMap, new BecomeTutorRowMapper());
+	}
+	
+	public BecomeTutor getBecomeTutor(final String becomeTutorSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("becomeTutorSerialId", becomeTutorSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectBecomeTutor")
+									+ queryMapperService.getQuerySQL("public-application", "becomeTutorSerialIdFilter"), paramsMap, new BecomeTutorRowMapper());
+	}
+	
+	public Map<String, Boolean> getBecomeTutorFormUpdateStatus(final BecomeTutor becomeTutor) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("becomeTutorFormEditMandatoryDisbaled", true);
+		securityAccess.put("becomeTutorCanMakeContacted", false);
+		securityAccess.put("becomeTutorCanMakeToBeRecontact", false);
+		securityAccess.put("becomeTutorCanMakeVerified", false);
+		securityAccess.put("becomeTutorCanMakeReverified", false);
+		securityAccess.put("becomeTutorCanMakeRecontacted", false);
+		securityAccess.put("becomeTutorCanMakeSelected", false);
+		securityAccess.put("becomeTutorCanMakeFailVerified", false);
+		securityAccess.put("becomeTutorCanMakeRejected", false);
+		securityAccess.put("becomeTutorCanBlacklist", false);
+		if (!ValidationUtils.checkIfResponseIsStringYes(becomeTutor.getIsBlacklisted())) {
+			securityAccess.put("becomeTutorFormEditMandatoryDisbaled", false);
+			securityAccess.put("becomeTutorCanBlacklist", true);
+			switch(becomeTutor.getApplicationStatus()) {
+				case APPLICATION_STATUS_FRESH : {
+					securityAccess.put("becomeTutorCanMakeContacted", true);
+					securityAccess.put("becomeTutorCanMakeToBeRecontact", true);
+					securityAccess.put("becomeTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING : 
+				case APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING : {
+					securityAccess.put("becomeTutorCanMakeVerified", true);
+					securityAccess.put("becomeTutorCanMakeFailVerified", true);
+					securityAccess.put("becomeTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_SUCCESSFUL : {
+					securityAccess.put("becomeTutorCanMakeSelected", true);
+					securityAccess.put("becomeTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_FAILED : {
+					securityAccess.put("becomeTutorCanMakeReverified", true);
+					securityAccess.put("becomeTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED : {
+					securityAccess.put("becomeTutorCanMakeRecontacted", true);
+					securityAccess.put("becomeTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SELECTED : {
+					break;
+				}
+				case APPLICATION_STATUS_REJECTED : {
+					securityAccess.put("becomeTutorCanMakeRecontacted", true);
+					securityAccess.put("becomeTutorCanMakeSelected", true);
+					break;
+				}
+			}
+		}
+		return securityAccess;
 	}
 	
 	public ApplicationFile downloadReportBecomeTutorList(final String grid, final GridComponent gridComponent) throws Exception {
@@ -217,7 +281,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final BecomeTutor becomeTutorActionObject = new BecomeTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -226,7 +290,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -239,7 +303,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_REJECTED);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_REJECTED);
 				becomeTutorActionObject.setIsContacted(YES);
 				becomeTutorActionObject.setWhoContacted(activeUser.getUserId());
 				becomeTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -253,7 +317,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				becomeTutorActionObject.setIsAuthenticationVerified(YES);
 				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
 				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -262,7 +326,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_FAILED);
 				becomeTutorActionObject.setIsAuthenticationVerified(NO);
 				becomeTutorActionObject.setWhoVerified(activeUser.getUserId());
 				becomeTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -271,7 +335,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_SELECTED);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_SELECTED);
 				becomeTutorActionObject.setIsSelected(YES);
 				becomeTutorActionObject.setWhoSelected(activeUser.getUserId());
 				becomeTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -280,7 +344,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				becomeTutorActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
+				becomeTutorActionObject.setApplicationStatus(APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING);
 				becomeTutorActionObject.setIsToBeRecontacted(NO);
 				becomeTutorActionObject.setWhoRecontacted(activeUser.getUserId());
 				becomeTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -420,39 +484,39 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorExistingSorter");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_FRESH);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_FRESH);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorMultiApplicationStatusFilter");
-				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING, APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_FAILED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SELECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SELECTED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "findTutorApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_REJECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_REJECTED);
 				break;
 			}
 		}
@@ -481,25 +545,25 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	private String getFindTutorReportSheetName(final String grid) {
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST : {
 				return "NON_CONTACTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST : {
 				return "NON_VERIFIED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST : {
 				return "VERIFIED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST : {
 				return "VERIFICATION_FAILED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST : {
 				return "TO_BE_RECONTACTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST : {
 				return "SELECTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST : {
 				return "REJECTED";
 			}
 		}
@@ -549,7 +613,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final FindTutor findTutorActionObject = new FindTutor();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				findTutorActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -558,7 +622,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				findTutorActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -571,7 +635,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				findTutorActionObject.setApplicationStatus(STATUS_REJECTED);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_REJECTED);
 				findTutorActionObject.setIsContacted(YES);
 				findTutorActionObject.setWhoContacted(activeUser.getUserId());
 				findTutorActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -585,7 +649,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				findTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				findTutorActionObject.setIsAuthenticationVerified(YES);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -594,7 +658,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				findTutorActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_FAILED);
 				findTutorActionObject.setIsAuthenticationVerified(NO);
 				findTutorActionObject.setWhoVerified(activeUser.getUserId());
 				findTutorActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -603,7 +667,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				findTutorActionObject.setApplicationStatus(STATUS_SELECTED);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_SELECTED);
 				findTutorActionObject.setIsSelected(YES);
 				findTutorActionObject.setWhoSelected(activeUser.getUserId());
 				findTutorActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -612,7 +676,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				findTutorActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
+				findTutorActionObject.setApplicationStatus(APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING);
 				findTutorActionObject.setIsToBeRecontacted(NO);
 				findTutorActionObject.setWhoRecontacted(activeUser.getUserId());
 				findTutorActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -719,37 +783,37 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_FRESH);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsMultiApplicationStatusFilter");
-				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {STATUS_CONTACTED_VERIFICATION_PENDING, STATUS_RECONTACTED_VERIFICATION_PENDING}));
+				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING, APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_SUCCESSFUL);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_VERIFICATION_FAILED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_FAILED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_SELECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_SELECTED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
-				paramsMap.put("applicationStatus", STATUS_REJECTED);
+				paramsMap.put("applicationStatus", APPLICATION_STATUS_REJECTED);
 				break;
 			}
 		}
@@ -832,7 +896,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final SubscribeWithUs subscribeWithUsActionObject = new SubscribeWithUs();
 		switch(button) {
 			case BUTTON_ACTION_CONTACTED : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_CONTACTED_VERIFICATION_PENDING);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING);
 				subscribeWithUsActionObject.setIsContacted(YES);
 				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
 				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -841,7 +905,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACT : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_SUGGESTED_TO_BE_RECONTACTED);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				subscribeWithUsActionObject.setIsContacted(YES);
 				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
 				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -854,7 +918,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_REJECT : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_REJECTED);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_REJECTED);
 				subscribeWithUsActionObject.setIsContacted(YES);
 				subscribeWithUsActionObject.setWhoContacted(activeUser.getUserId());
 				subscribeWithUsActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -868,7 +932,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			}
 			case BUTTON_ACTION_VERIFY:
 			case BUTTON_ACTION_REVERIFY : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_VERIFICATION_SUCCESSFUL);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				subscribeWithUsActionObject.setIsAuthenticationVerified(YES);
 				subscribeWithUsActionObject.setWhoVerified(activeUser.getUserId());
 				subscribeWithUsActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -877,7 +941,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_FAIL_VERIFY : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_VERIFICATION_FAILED);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_VERIFICATION_FAILED);
 				subscribeWithUsActionObject.setIsAuthenticationVerified(NO);
 				subscribeWithUsActionObject.setWhoVerified(activeUser.getUserId());
 				subscribeWithUsActionObject.setVerificationDateMillis(currentTimestamp.getTime());
@@ -886,7 +950,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_SELECT : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_SELECTED);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_SELECTED);
 				subscribeWithUsActionObject.setIsSelected(YES);
 				subscribeWithUsActionObject.setWhoSelected(activeUser.getUserId());
 				subscribeWithUsActionObject.setSelectionDateMillis(currentTimestamp.getTime());
@@ -895,7 +959,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_RECONTACTED : {
-				subscribeWithUsActionObject.setApplicationStatus(STATUS_RECONTACTED_VERIFICATION_PENDING);
+				subscribeWithUsActionObject.setApplicationStatus(APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING);
 				subscribeWithUsActionObject.setIsToBeRecontacted(NO);
 				subscribeWithUsActionObject.setWhoRecontacted(activeUser.getUserId());
 				subscribeWithUsActionObject.setRecontactedDateMillis(currentTimestamp.getTime());
@@ -1007,17 +1071,17 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
-				paramsMap.put("queryStatus", STATUS_FRESH);
+				paramsMap.put("queryStatus", QUERY_STATUS_FRESH);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_ANSWERED_QUERY_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
-				paramsMap.put("queryStatus", STATUS_RESPONDED);
+				paramsMap.put("queryStatus", QUERY_STATUS_RESPONDED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "submitQueryQueryStatusFilter");
-				paramsMap.put("queryStatus", STATUS_PUT_ON_HOLD);
+				paramsMap.put("queryStatus", QUERY_STATUS_PUT_ON_HOLD);
 				break;
 			}
 		}
@@ -1052,7 +1116,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final SubmitQuery submitQueryActionObject = new SubmitQuery();
 		switch(button) {
 			case BUTTON_ACTION_RESPOND : {
-				submitQueryActionObject.setQueryStatus(STATUS_RESPONDED);
+				submitQueryActionObject.setQueryStatus(QUERY_STATUS_RESPONDED);
 				submitQueryActionObject.setIsContacted(YES);
 				submitQueryActionObject.setWhoContacted(activeUser.getUserId());
 				submitQueryActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -1061,7 +1125,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_PUT_ON_HOLD : {
-				submitQueryActionObject.setQueryStatus(STATUS_PUT_ON_HOLD);
+				submitQueryActionObject.setQueryStatus(QUERY_STATUS_PUT_ON_HOLD);
 				submitQueryActionObject.setNotAnswered(YES);
 				submitQueryActionObject.setWhoNotAnswered(activeUser.getUserId());
 				submitQueryActionObject.setNotAnsweredReason(comments);
@@ -1104,30 +1168,30 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		switch(grid) {
 			case RestMethodConstants.REST_METHOD_NAME_CUSTOMER_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
-				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintStatus", COMPLAINT_STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_CUSTOMER);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_TUTOR_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
-				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintStatus", COMPLAINT_STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_TUTOR);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_EMPLOYEE_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintUserComplaintStatusFilter");
-				paramsMap.put("complaintStatus", STATUS_FRESH);
+				paramsMap.put("complaintStatus", COMPLAINT_STATUS_FRESH);
 				paramsMap.put("complaintUser", USER_EMPLOYEE);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_RESOLVED_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
-				paramsMap.put("complaintStatus", STATUS_RESOLVED);
+				paramsMap.put("complaintStatus", COMPLAINT_STATUS_RESOLVED);
 				break;
 			}
 			case RestMethodConstants.REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("complaint", "complaintComplaintStatusFilter");
-				paramsMap.put("complaintStatus", STATUS_PUT_ON_HOLD);
+				paramsMap.put("complaintStatus", COMPLAINT_STATUS_PUT_ON_HOLD);
 				break;
 			}
 		}
@@ -1141,7 +1205,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final Complaint complaintActionObject = new Complaint();
 		switch(button) {
 			case BUTTON_ACTION_RESPOND : {
-				complaintActionObject.setComplaintStatus(STATUS_RESPONDED);
+				complaintActionObject.setComplaintStatus(COMPLAINT_STATUS_RESOLVED);
 				complaintActionObject.setIsContacted(YES);
 				complaintActionObject.setWhoContacted(activeUser.getUserId());
 				complaintActionObject.setContactedDateMillis(currentTimestamp.getTime());
@@ -1150,7 +1214,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 				break;
 			}
 			case BUTTON_ACTION_PUT_ON_HOLD : {
-				complaintActionObject.setComplaintStatus(STATUS_PUT_ON_HOLD);
+				complaintActionObject.setComplaintStatus(COMPLAINT_STATUS_PUT_ON_HOLD);
 				complaintActionObject.setNotResolved(YES);
 				complaintActionObject.setWhoNotResolved(activeUser.getUserId());
 				complaintActionObject.setNotResolvedReason(comments);

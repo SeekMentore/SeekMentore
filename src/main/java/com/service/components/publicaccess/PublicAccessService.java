@@ -43,16 +43,16 @@ public class PublicAccessService implements PublicAccessConstants {
 	private transient ApplicationDao applicationDao;
 	
 	@Autowired
-	private JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
+	private transient JNDIandControlConfigurationLoadService jndiAndControlConfigurationLoadService;
 	
 	@Autowired
-	private CommonsService commonsService;
+	private transient CommonsService commonsService;
 	
 	@Autowired
-	private TutorService tutorService;
+	private transient TutorService tutorService;
 	
 	@Autowired
-	private CustomerService customerService;
+	private transient CustomerService customerService;
 	
 	@PostConstruct
 	public void init() {}
@@ -123,7 +123,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		becomeTutorApplication.setBecomeTutorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		becomeTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		becomeTutorApplication.setApplicationDateMillis(currentTimestamp.getTime());
-		becomeTutorApplication.setApplicationStatus(STATUS_FRESH);
+		becomeTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
 		becomeTutorApplication.setIsContacted(NO);
 		becomeTutorApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -135,7 +135,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		findTutorApplication.setFindTutorSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		findTutorApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		findTutorApplication.setApplicationDateMillis(currentTimestamp.getTime());
-		findTutorApplication.setApplicationStatus(STATUS_FRESH);
+		findTutorApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
 		findTutorApplication.setIsContacted(NO);
 		findTutorApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -147,7 +147,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		subscribeWithUsApplication.setSubscribeWithUsSerialId(UUIDGeneratorUtils.generateSerialGUID());
 		subscribeWithUsApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		subscribeWithUsApplication.setApplicationDateMillis(currentTimestamp.getTime());
-		subscribeWithUsApplication.setApplicationStatus(STATUS_FRESH);
+		subscribeWithUsApplication.setApplicationStatus(APPLICATION_STATUS_FRESH);
 		subscribeWithUsApplication.setIsContacted(NO);
 		subscribeWithUsApplication.setUpdatedBy(FRESH_ENTRY);
 	}
@@ -173,7 +173,7 @@ public class PublicAccessService implements PublicAccessConstants {
 		}
 		submitQueryApplication.setRecordLastUpdatedMillis(currentTimestamp.getTime());
 		submitQueryApplication.setQueryRequestedDateMillis(currentTimestamp.getTime());
-		submitQueryApplication.setQueryStatus(STATUS_FRESH);
+		submitQueryApplication.setQueryStatus(APPLICATION_STATUS_FRESH);
 		submitQueryApplication.setIsContacted(NO);
 		submitQueryApplication.setUpdatedBy(FRESH_ENTRY);
 	}

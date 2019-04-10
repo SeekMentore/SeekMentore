@@ -92,7 +92,7 @@ public class EnquiryService implements EnquiryConstants, SalesConstants {
 									+ queryMapperService.getQuerySQL("sales-enquiry", "enquiryEnquirySerialIdFilter"), paramsMap, new EnquiryRowMapper());
 	}
 	
-	public Map<String, Boolean> getEnquiryFormUpdateAndRescheduleStatus(final Enquiry enquiry) throws Exception {
+	public Map<String, Boolean> getEnquiryFormUpdateStatus(final Enquiry enquiry) throws Exception {
 		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
 		securityAccess.put("enquiryFormEditMandatoryDisbaled", true);
 		securityAccess.put("enquiryFormCanChangeToPending", false);

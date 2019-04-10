@@ -677,7 +677,7 @@ public class BecomeTutor extends PublicApplication implements Serializable, Clon
 				return new Object[] {
 						this.becomeTutorSerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
-						this.applicationStatus,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP, this.applicationStatus),
 						DateUtils.parseDateInIndianDTFormatWithoutTime(this.dateOfBirth),
 						this.contactNumber,
 						this.emailId,

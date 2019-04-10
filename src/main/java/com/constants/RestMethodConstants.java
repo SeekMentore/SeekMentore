@@ -132,15 +132,15 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UPDATE_BECOME_TUTOR_RECORD = "/updateBecomeTutorRecord";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_FIND_TUTOR_LIST = "/downloadAdminReportFindTutorList";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_FIND_TUTOR_PROFILE_PDF = "/downloadAdminFindTutorProfilePdf";
-	String REST_METHOD_NAME_NON_CONTACTED_ENQUIRIES_LIST = "/nonContactedEnquiriesList";
-	String REST_METHOD_NAME_NON_VERIFIED_ENQUIRIES_LIST = "/nonVerifiedEnquiriesList";
-	String REST_METHOD_NAME_VERIFIED_ENQUIRIES_LIST = "/verifiedEnquiriesList";
-	String REST_METHOD_NAME_VERIFICATION_FAILED_ENQUIRIES_LIST = "/verificationFailedEnquiriesList";
-	String REST_METHOD_NAME_TO_BE_RECONTACTED_ENQUIRIES_LIST = "/toBeReContactedEnquiriesList";
-	String REST_METHOD_NAME_SELECTED_ENQUIRIES_LIST = "/selectedEnquiriesList";
-	String REST_METHOD_NAME_REJECTED_ENQUIRIES_LIST = "/rejectedEnquiriesList";	
-	String REST_METHOD_NAME_BLACKLIST_ENQUIRY_REQUEST_LIST = "/blacklistEnquiryRequestList";
-	String REST_METHOD_NAME_UN_BLACKLIST_ENQUIRY_REQUEST_LIST = "/unBlacklistEnquiryRequestList";
+	String REST_METHOD_NAME_NON_CONTACTED_FIND_TUTOR_LIST = "/nonContactedFindTutorList";
+	String REST_METHOD_NAME_NON_VERIFIED_FIND_TUTOR_LIST = "/nonVerifiedFindTutorList";
+	String REST_METHOD_NAME_VERIFIED_FIND_TUTOR_LIST = "/verifiedFindTutorList";
+	String REST_METHOD_NAME_VERIFICATION_FAILED_FIND_TUTOR_LIST = "/verificationFailedFindTutorList";
+	String REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST = "/toBeReContactedFindTutorList";
+	String REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST = "/selectedFindTutorList";
+	String REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST = "/rejectedFindTutorList";	
+	String REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST = "/blacklistFindTutorList";
+	String REST_METHOD_NAME_UN_BLACKLIST_FIND_TUTOR_LIST = "/unBlacklistFindTutorList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR = "/takeActionOnFindTutor";
 	String REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD = "/updateFindTutorRecord";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST = "/downloadAdminReportSubscribeWithUsList";
@@ -168,4 +168,5 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_NOT_RESOLVED_COMPLAINT_LIST = "/holdComplaintList";
 	String REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT = "/takeActionOnComplaint";
 	String REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD = "/updateComplaintRecord";
+	String REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD = "/getBecomeTutorRecord";
 }

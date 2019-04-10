@@ -155,16 +155,16 @@
 			<webservice id="updateBecomeTutorRecord" url="/updateBecomeTutorRecord"></webservice>
 			<webservice id="downloadAdminReportFindTutorList" url="/downloadAdminReportFindTutorList"></webservice>	
 			<webservice id="downloadAdminFindTutorProfilePdf" url="/downloadAdminFindTutorProfilePdf"></webservice>
-			<webservice id="nonContactedEnquiriesList" url="/nonContactedEnquiriesList"></webservice>
-			<webservice id="nonVerifiedEnquiriesList" url="/nonVerifiedEnquiriesList"></webservice>
-			<webservice id="verifiedEnquiriesList" url="/verifiedEnquiriesList"></webservice>
-			<webservice id="verificationFailedEnquiriesList" url="/verificationFailedEnquiriesList"></webservice>
-			<webservice id="toBeReContactedEnquiriesList" url="/toBeReContactedEnquiriesList"></webservice>
-			<webservice id="selectedEnquiriesList" url="/selectedEnquiriesList"></webservice>
-			<webservice id="rejectedEnquiriesList" url="/rejectedEnquiriesList"></webservice>		
-			<webservice id="enquiryRequestCheckDataAccess" url="/enquiryRequestCheckDataAccess"></webservice>	
-			<webservice id="blacklistEnquiryRequestList" url="/blacklistEnquiryRequestList"></webservice>	
-			<webservice id="unBlacklistEnquiryRequestList" url="/unBlacklistEnquiryRequestList"></webservice>
+			<webservice id="nonContactedFindTutorList" url="/nonContactedFindTutorList"></webservice>
+			<webservice id="nonVerifiedFindTutorList" url="/nonVerifiedFindTutorList"></webservice>
+			<webservice id="verifiedFindTutorList" url="/verifiedFindTutorList"></webservice>
+			<webservice id="verificationFailedFindTutorList" url="/verificationFailedFindTutorList"></webservice>
+			<webservice id="toBeReContactedFindTutorList" url="/toBeReContactedFindTutorList"></webservice>
+			<webservice id="selectedFindTutorList" url="/selectedFindTutorList"></webservice>
+			<webservice id="rejectedFindTutorList" url="/rejectedFindTutorList"></webservice>		
+			<webservice id="findTutorCheckDataAccess" url="/findTutorCheckDataAccess"></webservice>	
+			<webservice id="blacklistFindTutorList" url="/blacklistFindTutorList"></webservice>	
+			<webservice id="unBlacklistFindTutorList" url="/unBlacklistFindTutorList"></webservice>
 			<webservice id="takeActionOnFindTutor" url="/takeActionOnFindTutor"></webservice>
 			<webservice id="updateFindTutorRecord" url="/updateFindTutorRecord"></webservice>
 			<webservice id="downloadAdminReportSubscribeWithUsList" url="/downloadAdminReportSubscribeWithUsList"></webservice>
@@ -194,6 +194,7 @@
 			<webservice id="resolvedComplaintList" url="/resolvedComplaintList"></webservice>
 			<webservice id="complaintCheckDataAccess" url="/complaintCheckDataAccess"></webservice>	
 			<webservice id="updateComplaintRecord" url="/updateComplaintRecord"></webservice>
+			<webservice id="getBecomeTutorRecord" url="/getBecomeTutorRecord"></webservice>
 		</page>
 	</pageList>
 	<pageList id="unsecured">

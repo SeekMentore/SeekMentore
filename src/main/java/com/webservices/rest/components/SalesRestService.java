@@ -224,7 +224,7 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			final Enquiry enquiry = getEnquiryService().getEnquiry(this.enquirySerialId);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, enquiry);
-			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getEnquiryService().getEnquiryFormUpdateAndRescheduleStatus(enquiry), restresponse);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getEnquiryService().getEnquiryFormUpdateStatus(enquiry), restresponse);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -2744,7 +2744,9 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 	
 	private void handleAssignmentAttendanceInsertSecurity() throws Exception {
 		this.securityPassed = true;
-		if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
+		if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) 
+				|| !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())
+				|| !ValidationUtils.checkNonNegativeNonZeroNumberAvailability((this.assignmentAttendanceObject.getDurationHours() * 60) + this.assignmentAttendanceObject.getDurationMinutes())) {
 			appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
 		} else {
 			this.packageAssignmentObject = getSubscriptionPackageService().getPackageAssignment(this.packageAssignmentSerialId);
@@ -2787,9 +2789,13 @@ public class SalesRestService extends AbstractRestWebservice implements SalesCon
 			} 
 			if (this.changedAttributes.contains("entryDateMillis") || this.changedAttributes.contains("entryTimeMillis") 
 					|| this.changedAttributes.contains("exitDateMillis") || this.changedAttributes.contains("exitTimeMillis")) {
-				if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) && !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())) {
+				if (!ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationHours()) 
+						|| !ValidationUtils.checkNonNegativeNumberAvailability(this.assignmentAttendanceObject.getDurationMinutes())
+						|| !ValidationUtils.checkNonNegativeNonZeroNumberAvailability((this.assignmentAttendanceObject.getDurationHours() * 60) + this.assignmentAttendanceObject.getDurationMinutes())) {
 					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
-				} else if (!ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) && !ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught)) {
+				} else if (!ValidationUtils.checkNonNegativeNumberAvailability(this.additionalHoursTaught) 
+						|| !ValidationUtils.checkNonNegativeNumberAvailability(this.additionalMinutesTaught)
+						|| !ValidationUtils.checkNonNegativeNonZeroNumberAvailability((this.additionalHoursTaught * 60) + this.additionalMinutesTaught)) {
 					appendError(Message.getMessageFromFile(MESG_PROPERTY_FILE_NAME, ZERO_HOURS_TAUGHT));
 				} else {
 					final Integer totalHours = ValidationUtils.checkNonNegativeNumberAvailability(this.packageAssignmentObject.getTotalHours()) ? this.packageAssignmentObject.getTotalHours() : 0;

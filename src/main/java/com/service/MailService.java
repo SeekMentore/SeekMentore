@@ -57,13 +57,15 @@ public class MailService implements MailConstants {
 		applicationDao.executeUpdateWithQueryMapper("mail", "insertApplicationMail", applicationMail);
 		if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
 			for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
-				mailAttachment.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-				mailAttachment.setMailSerialId(applicationMail.getMailSerialId());
-				mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-				if (mailAttachment.getIsFileStoredInFileSystem()) {
-					mailAttachmentListWithFsKey.add(mailAttachment);
+				// Cloning the Object to avoid the same attachment being sent as multiple items throwing Duplicate Key exception
+				final MailAttachment mailAttachmentCloned = mailAttachment.clone();
+				mailAttachmentCloned.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+				mailAttachmentCloned.setMailSerialId(applicationMail.getMailSerialId());
+				mailAttachmentCloned.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
+				if (mailAttachmentCloned.getIsFileStoredInFileSystem()) {
+					mailAttachmentListWithFsKey.add(mailAttachmentCloned);
 				} else {
-					mailAttachmentListWithoutFsKey.add(mailAttachment);
+					mailAttachmentListWithoutFsKey.add(mailAttachmentCloned);
 				}
 			}
 		}
@@ -84,13 +86,15 @@ public class MailService implements MailConstants {
 			applicationMail.setMailSerialId(UUIDGeneratorUtils.generateSerialGUID());
 			if (ValidationUtils.checkNonEmptyList(applicationMail.getAttachments())) {
 				for(final MailAttachment mailAttachment : applicationMail.getAttachments()) {
-					mailAttachment.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
-					mailAttachment.setMailSerialId(applicationMail.getMailSerialId());
-					mailAttachment.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
-					if (mailAttachment.getIsFileStoredInFileSystem()) {
-						mailAttachmentListWithFsKey.add(mailAttachment);
+					// Cloning the Object to avoid the same attachment being sent as multiple items throwing Duplicate Key exception
+					final MailAttachment mailAttachmentCloned = mailAttachment.clone();
+					mailAttachmentCloned.setAttachmentSerialId(UUIDGeneratorUtils.generateSerialGUID());
+					mailAttachmentCloned.setMailSerialId(applicationMail.getMailSerialId());
+					mailAttachmentCloned.setApplicationType(FileConstants.APPLICATION_TYPE_OCTET_STEAM);
+					if (mailAttachmentCloned.getIsFileStoredInFileSystem()) {
+						mailAttachmentListWithFsKey.add(mailAttachmentCloned);
 					} else {
-						mailAttachmentListWithoutFsKey.add(mailAttachment);
+						mailAttachmentListWithoutFsKey.add(mailAttachmentCloned);
 					}
 				}
 			} 
