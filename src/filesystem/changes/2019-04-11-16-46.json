@@ -1,0 +1,12 @@
+[
+	{
+		"Action":"InsertedNew",
+		"FilePath":"public_access/media/brochures/v1/Brochure.pdf"
+	}, {
+		"Action":"InsertedNew",
+		"FilePath":"public_access/termsandconditions/customer/v1/Terms_and_Conditions.pdf"
+	}, {
+		"Action":"InsertedNew",
+		"FilePath":"public_access/termsandconditions/tutor/v1/Terms_and_Conditions.pdf"
+	}
+]

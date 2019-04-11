@@ -1,7 +1,14 @@
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
+
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 
 import org.apache.poi.util.IOUtils;
 
@@ -19,8 +26,30 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.constants.ApplicationConstants;
+import com.utils.ExceptionUtils;
+import com.utils.JSONUtils;
 
 public class AWSTransfer {
+	
+	private String MIGRATE_FROM_BUCKET = "seekmentore-dev";
+	private String MIGRATE_TO_BUCKET = "test-mashery";
+	
+	class ChangedFile {
+		String action;
+		String filePath;
+		
+		ChangedFile(String action, String filePath) {
+			this.action = action;
+			this.filePath = filePath;
+		}
+		
+		public String toString() {
+			return action + " " + filePath;
+		}
+	}
+	
+	private String CHANGES_JSON_FILE_PATH = "C:/Users/smukherjee/Documents/GitHub/SeekMentore/src/filesystem/changes/2019-04-11-16-46.json";
+	
 	private AmazonS3 s3client;
 	
 	public void connect() {
@@ -30,6 +59,7 @@ public class AWSTransfer {
 	
 	AWSTransfer() throws IOException {
 		connect();
+		//processChangedFiles(createChangedFilesList());
 		//String bucketName = "seekmentore-dev";;
 		//deleteBucket("test-mashery");
 		//createNewBucketInS3Client("test-mashery");
@@ -37,7 +67,7 @@ public class AWSTransfer {
 		for (Bucket bucket : bList) {
 			System.out.println(bucket.getName());
 		}*/
-		//deleteAllContentFromBucket("seekmentore-dev2");
+		//deleteAllContentFromBucket("test-mashery");
 		//copyBucket("seekmentore-dev", "seekmentore-dev2");
 		//copyBucket("seekmentore-dev2", "seekmentore-dev");
 		//deleteBucket("seekmentore-dev2");
@@ -53,6 +83,73 @@ public class AWSTransfer {
 		//deleteObjectFromS3Client("seekmentore-dev2", "secured/tutor/documents/21/PROFILE_PHOTO.jpg");
 	}
 	
+	public String readChangedJSONStringFile(final String filePath) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+	    StringBuilder builder = new StringBuilder("");
+	    String currentLine = reader.readLine();
+	    while (currentLine != null) {
+	        builder.append(currentLine);
+	        builder.append("\n");
+	        currentLine = reader.readLine();
+	    }
+	    reader.close();
+	    return builder.toString();
+	}
+	
+	public List<ChangedFile> createChangedFilesList() throws IOException {
+		final String changesJSONString = readChangedJSONStringFile(this.CHANGES_JSON_FILE_PATH);
+		final JsonArray changedFilesJsonArray = JSONUtils.getJSONArrayFromString(changesJSONString);
+		final List<ChangedFile> changedFiles = new LinkedList<ChangedFile>();
+		for (Object object : changedFilesJsonArray) {
+			final JsonObject jsonObject = (JsonObject) object;
+			final String action = JSONUtils.getValueFromJSONObject(jsonObject, "Action", String.class);
+			final String filePath = JSONUtils.getValueFromJSONObject(jsonObject, "FilePath", String.class);
+			changedFiles.add(new ChangedFile(action, filePath));
+		}
+		return changedFiles;
+	}
+	
+	public void processChangedFiles(final List<ChangedFile> changedFiles) throws IOException {
+		System.out.println("Reading Change List File >> " + CHANGES_JSON_FILE_PATH);
+		System.out.println("Migrate From >> " + MIGRATE_FROM_BUCKET);
+		System.out.println("Migrate To >> " + MIGRATE_TO_BUCKET);
+		Scanner sc = new Scanner(System.in);
+		System.out.println();
+		System.out.println("Read the details above and then type 'CONFIRM' and press ENTER to move forward with Migration, type anything else to ABORT");
+		String confirmText = sc.next();
+		sc.close();
+		if ("CONFIRM".equals(confirmText)) {
+			System.out.println("Proceeding with Migration");
+			for (final ChangedFile changedFile : changedFiles) {
+				try {
+					switch(changedFile.action) {
+						case "InsertedNew" : {
+							insertNewChangedFile(changedFile);
+							break;
+						}
+					}
+				} catch (Exception e) {
+					System.out.println("Excetion occurred for Changed File >> " + changedFile);
+					System.out.println("Exception Message Started");
+					System.out.println(ExceptionUtils.generateErrorLog(e));
+					System.out.println("Exception Message Ended");
+				}
+			}
+			System.out.println("Migration Process Completed");
+		} else {
+			System.out.println("Migration Aborted");
+		}
+	}
+	
+	public void insertNewChangedFile(final ChangedFile changedFile) throws IOException {
+		System.out.println("Placing New File >> " + changedFile.filePath);
+		putObjectInS3Client(createPutObjectRequest(MIGRATE_TO_BUCKET, changedFile.filePath, readContentFromFileInS3Client(MIGRATE_FROM_BUCKET, changedFile.filePath), false));
+		System.out.println("Completed");
+	}
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public void moveFileToDifferentLocationInSameBucket(final String bucket, final String fromFsKey, final String toFsKey) throws IOException {
 		System.out.println("FROM >> [" + fromFsKey + "] : TO >> [" + toFsKey + "]");
 		putObjectInS3Client(createPutObjectRequest(bucket, toFsKey, readContentFromFileInS3Client(bucket, fromFsKey), false));

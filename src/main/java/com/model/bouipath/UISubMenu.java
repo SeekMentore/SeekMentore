@@ -10,14 +10,16 @@ public class UISubMenu implements Serializable, Cloneable {
 	private String url;
 	private String pageAccessType;
 	private Integer order;
+	private Boolean hidden;
 	
 	public UISubMenu() {}
 	
-	public UISubMenu(final String name, final String url, final String pageAccessType, final Integer order) {
+	public UISubMenu(final String name, final String url, final String pageAccessType, final Integer order, final Boolean hidden) {
 		this.name = name;
 		this.url = url;
 		this.pageAccessType = pageAccessType;
 		this.order = order;
+		this.hidden = hidden;
 	}
 	
 	public UISubMenu cloneForSendingToBOUI() throws CloneNotSupportedException {
@@ -57,6 +59,14 @@ public class UISubMenu implements Serializable, Cloneable {
 
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+	
+	public Boolean getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
 	}
 	
 	@Override

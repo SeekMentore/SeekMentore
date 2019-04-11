@@ -13,6 +13,7 @@ public class UIPage implements Serializable {
 	private Boolean urlActive;
 	private String itemHeader;
 	private Integer order;
+	private Boolean hidden;
 	private String additionalAccessFunction;
 
 	public String getId() {
@@ -76,5 +77,14 @@ public class UIPage implements Serializable {
 	@XmlAttribute
 	public void setOrder(Integer order) {
 		this.order = order;
+	}
+	
+	public Boolean getHidden() {
+		return hidden;
+	}
+
+	@XmlAttribute
+	public void setHidden(Boolean hidden) {
+		this.hidden = hidden;
 	}
 }

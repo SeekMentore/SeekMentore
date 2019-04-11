@@ -58,17 +58,24 @@ public class UIMenu implements Serializable, Cloneable {
 		}
 	}
 	
-	public void addUISubMenu(final String subMenuName, final String subMenuUrl, final String pageAccessType, final Integer order) {
-		addUISubMenu(new UISubMenu(subMenuName, subMenuUrl,pageAccessType, order));
+	public void addUISubMenu(final String subMenuName, final String subMenuUrl, final String pageAccessType, final Integer order, final Boolean hidden) {
+		addUISubMenu(new UISubMenu(subMenuName, subMenuUrl,pageAccessType, order, hidden));
 	}
 	
 	public void computeSubMenuArrayAsPerOrderingInXML() {
 		if (this.submenu) {
-			subMenuArray = new UISubMenu[subMenuItems.size()];
+			final UISubMenu[] subMenuIntermittentArray = new UISubMenu[subMenuItems.size()];
 			for (int index = 0; index < subMenuItems.size(); index++) {
 				final UISubMenu uiSubMenu = subMenuItems.get(index);
-				subMenuArray[uiSubMenu.getOrder() - 1] = uiSubMenu;
+				subMenuIntermittentArray[uiSubMenu.getOrder() - 1] = uiSubMenu;
 			}
+			final List<UISubMenu> uiSubMenuListFinalized = new LinkedList<UISubMenu>();
+			for (int index = 0; index < subMenuIntermittentArray.length; index++) {
+				if (!subMenuIntermittentArray[index].getHidden()) {
+					uiSubMenuListFinalized.add(subMenuIntermittentArray[index]);
+				}
+			}
+			subMenuArray = uiSubMenuListFinalized.toArray(new UISubMenu[0]);
 		} else {
 			subMenuArray = new UISubMenu[0];
 		}
