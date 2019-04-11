@@ -144,7 +144,9 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		securityAccess.put("becomeTutorCanMakeRejected", false);
 		securityAccess.put("becomeTutorCanBlacklist", false);
 		if (!ValidationUtils.checkIfResponseIsStringYes(becomeTutor.getIsBlacklisted())) {
-			securityAccess.put("becomeTutorFormEditMandatoryDisbaled", false);
+			if (!APPLICATION_STATUS_SELECTED.equals(becomeTutor.getApplicationStatus())) {
+				securityAccess.put("becomeTutorFormEditMandatoryDisbaled", false);
+			}
 			securityAccess.put("becomeTutorCanBlacklist", true);
 			switch(becomeTutor.getApplicationStatus()) {
 				case APPLICATION_STATUS_FRESH : {
@@ -523,6 +525,72 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new FindTutorRowMapper());
 	}
 	
+	public FindTutor getFindTutor(final String findTutorSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("findTutorSerialId", findTutorSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectFindTutor")
+									+ queryMapperService.getQuerySQL("public-application", "findTutorSerialIdFilter"), paramsMap, new FindTutorRowMapper());
+	}
+	
+	public Map<String, Boolean> getFindTutorFormUpdateStatus(final FindTutor findTutor) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("findTutorFormEditMandatoryDisbaled", true);
+		securityAccess.put("findTutorCanMakeContacted", false);
+		securityAccess.put("findTutorCanMakeToBeRecontact", false);
+		securityAccess.put("findTutorCanMakeVerified", false);
+		securityAccess.put("findTutorCanMakeReverified", false);
+		securityAccess.put("findTutorCanMakeRecontacted", false);
+		securityAccess.put("findTutorCanMakeSelected", false);
+		securityAccess.put("findTutorCanMakeFailVerified", false);
+		securityAccess.put("findTutorCanMakeRejected", false);
+		securityAccess.put("findTutorCanBlacklist", false);
+		if (!ValidationUtils.checkIfResponseIsStringYes(findTutor.getIsBlacklisted())) {
+			if (!APPLICATION_STATUS_SELECTED.equals(findTutor.getApplicationStatus())) {
+				securityAccess.put("findTutorFormEditMandatoryDisbaled", false);
+			}
+			securityAccess.put("findTutorCanBlacklist", true);
+			switch(findTutor.getApplicationStatus()) {
+				case APPLICATION_STATUS_FRESH : {
+					securityAccess.put("findTutorCanMakeContacted", true);
+					securityAccess.put("findTutorCanMakeToBeRecontact", true);
+					securityAccess.put("findTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING : 
+				case APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING : {
+					securityAccess.put("findTutorCanMakeVerified", true);
+					securityAccess.put("findTutorCanMakeFailVerified", true);
+					securityAccess.put("findTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_SUCCESSFUL : {
+					securityAccess.put("findTutorCanMakeSelected", true);
+					securityAccess.put("findTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_FAILED : {
+					securityAccess.put("findTutorCanMakeReverified", true);
+					securityAccess.put("findTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED : {
+					securityAccess.put("findTutorCanMakeRecontacted", true);
+					securityAccess.put("findTutorCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SELECTED : {
+					break;
+				}
+				case APPLICATION_STATUS_REJECTED : {
+					securityAccess.put("findTutorCanMakeRecontacted", true);
+					securityAccess.put("findTutorCanMakeSelected", true);
+					break;
+				}
+			}
+		}
+		return securityAccess;
+	}
+	
 	public ApplicationFile downloadAdminReportFindTutorList(final String grid, final GridComponent gridComponent) throws Exception {
 		final WorkbookReport workbookReport = new WorkbookReport();
 		workbookReport.createSheet(getFindTutorReportSheetName(grid), WorkbookUtils.computeHeaderAndRecordsForApplicationWorkbookObjectList(getFindTutorList(grid, gridComponent), FindTutor.class, SUPPORT_TEAM_REPORT));
@@ -533,7 +601,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("findTutorSerialId", findTutorSerialId);
 		final FindTutor findTutor = applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectFindTutor") 
-										+ queryMapperService.getQuerySQL("public-application", "findTutorEnquiryIdFilter"), paramsMap, new FindTutorRowMapper());
+										+ queryMapperService.getQuerySQL("public-application", "findTutorSerialIdFilter"), paramsMap, new FindTutorRowMapper());
 		if (ValidationUtils.checkObjectAvailability(findTutor)) {
 			final Map<String, Object> attributes = new HashMap<String, Object>();
 	        attributes.put("findTutor", findTutor);
@@ -1086,6 +1154,35 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 			}
 		}
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubmitQueryRowMapper());
+	}
+	
+	public SubmitQuery getSubmitQuery(final String querySerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("querySerialId", querySerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectSubmitQuery")
+									+ queryMapperService.getQuerySQL("public-application", "submitQuerySerialIdFilter"), paramsMap, new SubmitQueryRowMapper());
+	}
+	
+	public Map<String, Boolean> getSubmitQueryFormUpdateStatus(final SubmitQuery submitQuery) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("submitQueryFormEditMandatoryDisbaled", true);
+		securityAccess.put("submitQueryCanRespond", false);
+		securityAccess.put("submitQueryCanPutOnHold", false);
+		switch(submitQuery.getQueryStatus()) {
+			case QUERY_STATUS_FRESH : {
+				securityAccess.put("submitQueryCanRespond", true);
+				securityAccess.put("submitQueryCanPutOnHold", true);
+				break;
+			}
+			case QUERY_STATUS_RESPONDED : {
+				break;
+			}
+			case QUERY_STATUS_PUT_ON_HOLD : {
+				securityAccess.put("submitQueryCanRespond", true);
+				break;
+			}
+		}
+		return securityAccess;
 	}
 	
 	public ApplicationFile downloadAdminReportSubmitQueryList(final String grid, final GridComponent gridComponent) throws Exception {

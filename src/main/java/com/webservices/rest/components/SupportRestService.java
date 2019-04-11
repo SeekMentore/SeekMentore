@@ -708,9 +708,34 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("formDataEditAccess", true);
+		restresponse.put("findTutorFormDataEditAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_GET_FIND_TUTOR_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getFindTutorRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_FIND_TUTOR_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.findTutorSerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final FindTutor findTutor = getAdminService().getFindTutor(this.findTutorSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, findTutor);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getAdminService().getFindTutorFormUpdateStatus(findTutor), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST)
@@ -1258,9 +1283,34 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("queryResponseCapableAccess", true);
+		restresponse.put("submitQueryResponseCapableAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+	}
+	
+	@Path(REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String getSubmitQueryRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.querySerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final SubmitQuery submitQuery = getAdminService().getSubmitQuery(this.querySerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, submitQuery);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getAdminService().getSubmitQueryFormUpdateStatus(submitQuery), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
 	}
 	
 	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY)
@@ -1624,7 +1674,9 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				handleFindTutorSerialId();
 				break;
 			}
-			case REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD : {
+			case REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD : 
+			case REST_METHOD_NAME_GET_FIND_TUTOR_RECORD : 
+			case REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD : {
 				handleParentSerialId();
 				break;
 			}

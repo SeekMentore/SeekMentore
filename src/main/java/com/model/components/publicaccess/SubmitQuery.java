@@ -20,7 +20,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 	private String emailId;
 	private String queryDetails;
 	private String registeredTutor;
+	private String tutorSerialId;
 	private String subscribedCustomer;
+	private String customerSerialId;
 	private String isContacted;
 	private String whoContacted;
 	private String queryResponse;
@@ -206,6 +208,22 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 	public void setMailSentMillis(Long mailSentMillis) {
 		this.mailSentMillis = mailSentMillis;
 	}
+	
+	public String getCustomerSerialId() {
+		return customerSerialId;
+	}
+
+	public void setCustomerSerialId(String customerSerialId) {
+		this.customerSerialId = customerSerialId;
+	}
+
+	public String getTutorSerialId() {
+		return tutorSerialId;
+	}
+
+	public void setTutorSerialId(String tutorSerialId) {
+		this.tutorSerialId = tutorSerialId;
+	}
 
 	@Override
 	public String getFormattedApplicationForPrinting() {
@@ -232,7 +250,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 						COLUMN_NAME_EMAIL_ID,
 						COLUMN_NAME_QUERY_DETAILS,
 						COLUMN_NAME_REGISTERED_TUTOR,
+						"TUTOR_SERIAL_ID",
 						COLUMN_NAME_SUBSCRIBED_CUSTOMER,
+						"CUSTOMER_SERIAL_ID",
 						COLUMN_NAME_QUERY_RESPONSE,
 						COLUMN_NAME_NOT_ANSWERED,
 						COLUMN_NAME_NOT_ANSWERED_REASON,
@@ -259,7 +279,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 						this.emailId,
 						this.queryDetails,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.registeredTutor),
+						this.tutorSerialId,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer),
+						this.customerSerialId,
 						this.queryResponse,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.notAnswered),
 						this.notAnsweredReason,
@@ -284,7 +306,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 			case "queryRequestedDateMillis" : return "QUERY_REQUESTED_DATE_MILLIS";
 			case "queryStatus" : return "QUERY_STATUS";
 			case "registeredTutor" : return "REGISTERED_TUTOR";
+			case "tutorSerialId" : return "TUTOR_SERIAL_ID";
 			case "subscribedCustomer" : return "SUBSCRIBED_CUSTOMER";
+			case "customerSerialId" : return "CUSTOMER_SERIAL_ID";
 			case "queryDetails" : return "QUERY_DETAILS";
 			case "queryResponse" : return "QUERY_RESPONSE";
 			case "notAnswered" : return "NOT_ANSWERED";

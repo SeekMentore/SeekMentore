@@ -192,7 +192,7 @@
 	<query type="filter" id="findTutorNonMigratedFilter">
 		WHERE (IS_DATA_MIGRATED IS NULL OR IS_DATA_MIGRATED &lt;&gt; 'Y')
 	</query>
-	<query type="filter" id="findTutorEnquiryIdFilter">
+	<query type="filter" id="findTutorSerialIdFilter">
 		WHERE FIND_TUTOR_SERIAL_ID = :findTutorSerialId
 	</query>
 	<query type="sorter" id="findTutorExistingSorter">
@@ -418,6 +418,14 @@
 	<query type="select" id="selectSubmitQuery">
 		SELECT
 			Q.*,
+			CASE WHEN REGISTERED_TUTOR = 'Y' THEN 
+				(SELECT RTE.TUTOR_SERIAL_ID FROM REGISTERED_TUTOR_EMAIL_ID RTE WHERE RTE.EMAIL_ID = Q.EMAIL_ID)
+			ELSE '' 
+			END TUTOR_SERIAL_ID,
+			CASE WHEN SUBSCRIBED_CUSTOMER = 'Y' THEN 
+				(SELECT SCE.CUSTOMER_SERIAL_ID FROM SUBSCRIBED_CUSTOMER_EMAIL_ID SCE WHERE SCE.EMAIL_ID = Q.EMAIL_ID)
+			ELSE '' 
+			END CUSTOMER_SERIAL_ID,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_CONTACTED), Q.WHO_CONTACTED) AS WHO_CONTACTED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.WHO_NOT_ANSWERED), Q.WHO_NOT_ANSWERED) AS WHO_NOT_ANSWERED_NAME,
 			IFNULL((SELECT NAME FROM EMPLOYEE E WHERE E.USER_ID = Q.UPDATED_BY), Q.UPDATED_BY) AS UPDATED_BY_NAME
@@ -425,6 +433,9 @@
 	</query>
 	<query type="filter" id="submitQueryQueryStatusFilter">
 		WHERE QUERY_STATUS = :queryStatus
+	</query>
+	<query type="filter" id="submitQuerySerialIdFilter">
+		WHERE QUERY_SERIAL_ID = :querySerialId
 	</query>
 	<query type="filter" id="submitQueryRespondedNonEmailSentFilter">
 		WHERE (IS_MAIL_SENT IS NULL OR IS_MAIL_SENT &lt;&gt; 'Y')

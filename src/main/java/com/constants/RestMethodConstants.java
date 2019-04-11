@@ -169,4 +169,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT = "/takeActionOnComplaint";
 	String REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD = "/updateComplaintRecord";
 	String REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD = "/getBecomeTutorRecord";
+	String REST_METHOD_NAME_GET_FIND_TUTOR_RECORD = "/getFindTutorRecord";
+	String REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD = "/getSubmitQueryRecord";
 }

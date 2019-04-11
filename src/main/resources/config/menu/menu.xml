@@ -195,6 +195,8 @@
 			<webservice id="complaintCheckDataAccess" url="/complaintCheckDataAccess"></webservice>	
 			<webservice id="updateComplaintRecord" url="/updateComplaintRecord"></webservice>
 			<webservice id="getBecomeTutorRecord" url="/getBecomeTutorRecord"></webservice>
+			<webservice id="getFindTutorRecord" url="/getFindTutorRecord"></webservice>
+			<webservice id="getSubmitQueryRecord" url="/getSubmitQueryRecord"></webservice>
 		</page>
 	</pageList>
 	<pageList id="unsecured">

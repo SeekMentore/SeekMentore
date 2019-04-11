@@ -23,7 +23,9 @@ public class SubmitQueryRowMapper implements RowMapper<SubmitQuery>, SubmitQuery
 		submitQuery.setQueryStatus(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryStatus"), String.class));
 		submitQuery.setEmailId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("emailId"), String.class));
 		submitQuery.setRegisteredTutor(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("registeredTutor"), String.class));
+		submitQuery.setTutorSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("tutorSerialId"), String.class));
 		submitQuery.setSubscribedCustomer(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("subscribedCustomer"), String.class));
+		submitQuery.setCustomerSerialId(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("customerSerialId"), String.class));
 		submitQuery.setQueryDetails(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("queryDetails"), String.class));
 		submitQuery.setIsContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("isContacted"), String.class));
 		submitQuery.setWhoContacted(ExceptionUtils.exceptionHandlerForRowMapper(row, submitQuery.resolveColumnNameForMapping("whoContacted"), String.class));

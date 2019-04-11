@@ -2,9 +2,9 @@
 <queryMapper namespace="admin-subscribedcustomer">
 	<query type="insert" id="insertSubscribedCustomer" paramClass="com.model.components.SubscribedCustomer">
 		INSERT INTO SUBSCRIBED_CUSTOMER
-			(CUSTOMER_SERIAL_ID, NAME, FIND_TUTOR_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
+			(CUSTOMER_SERIAL_ID, NAME, FIND_TUTOR_SERIAL_ID, STUDENT_GRADE, SUBJECTS, LOCATION, ADDRESS_DETAILS, ADDITIONAL_DETAILS, ENCRYPTED_PASSWORD, RECORD_LAST_UPDATED_MILLIS, UPDATED_BY, USER_ID, USER_TYPE) 
 		VALUES
-			(:customerSerialId, :name, :findTutorId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
+			(:customerSerialId, :name, :findTutorSerialId, :studentGrades, :interestedSubjects, :location, :addressDetails, :additionalDetails, :encryptedPassword, :recordLastUpdatedMillis, :updatedBy, :userId, 'Customer')
 	</query>
 	<query type="select" id="selectSubscribedCustomer">
 		SELECT
@@ -73,7 +73,7 @@
 		INSERT INTO SUBSCRIBED_CUSTOMER_CONTACT_NUMBER
 			(SUBSCRIBED_CUSTOMER_CONTACT_NUMBER_SERIAL_ID, CUSTOMER_SERIAL_ID, CONTACT_NUMBER, IS_PRIMARY) 
 		VALUES
-			(:setSubscribedCustomerContactNumberSerialId, :customerSerialId, :contactNumber, :isPrimary)
+			(:subscribedCustomerContactNumberSerialId, :customerSerialId, :contactNumber, :isPrimary)
 	</query>
 	<query type="select" id="selectSubscribedCustomerContactNumber">
 		SELECT
