@@ -187,7 +187,7 @@ public class MenuService implements MenuConstants {
 					final String url = parentURL + uipage.getUrl();
 					final String pageAccessType = uipage.getPageAccessType();
 					if (null != uiMenu) {
-						uiMenu.addUISubMenu(uipage.getItemHeader(), url, pageAccessType, uipage.getOrder(), uipage.getHidden());
+						uiMenu.addUISubMenu(uipage.getItemHeader(), url, pageAccessType, uipage.getOrder(), (null != uipage.getHidden() && uipage.getHidden()));
 					}
 					boUIPathUrlToPageAccessTypeMap.put(url.toUpperCase(), new MenuAttributes(pageAccessType, uipage.getAdditionalAccessFunction()));
 				}
