@@ -849,43 +849,109 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 		final String existingSorterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsExistingSorter");
 		final Map<String, Object> paramsMap = new HashMap<String, Object>();
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_FRESH);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsMultiApplicationStatusFilter");
 				paramsMap.put("applicationStatusList", Arrays.asList(new String[] {APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING, APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING}));
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_SUCCESSFUL);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_VERIFICATION_FAILED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_SELECTED);
 				break;
 			}
-			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST : {
 				existingFilterQueryString = queryMapperService.getQuerySQL("public-application", "subscribeWithUsApplicationStatusFilter");
 				paramsMap.put("applicationStatus", APPLICATION_STATUS_REJECTED);
 				break;
 			}
 		}
 		return applicationDao.findAll(GridQueryUtils.createGridQuery(baseQuery, existingFilterQueryString, existingSorterQueryString, gridComponent), paramsMap, new SubscribeWithUsRowMapper());
+	}
+	
+	public SubscribeWithUs getSubscribeWithUs(final String subscribeWithUsSerialId) throws Exception {
+		final Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("subscribeWithUsSerialId", subscribeWithUsSerialId);
+		return applicationDao.find(queryMapperService.getQuerySQL("public-application", "selectSubscribeWithUs")
+									+ queryMapperService.getQuerySQL("public-application", "subscribeWithUsSerialIdFilter"), paramsMap, new SubscribeWithUsRowMapper());
+	}
+	
+	public Map<String, Boolean> getSubscribeWithUsFormUpdateStatus(final SubscribeWithUs subscribeWithUs) throws Exception {
+		final Map<String, Boolean> securityAccess = new HashMap<String, Boolean>();
+		securityAccess.put("subscribeWithUsFormEditMandatoryDisbaled", true);
+		securityAccess.put("subscribeWithUsCanMakeContacted", false);
+		securityAccess.put("subscribeWithUsCanMakeToBeRecontact", false);
+		securityAccess.put("subscribeWithUsCanMakeVerified", false);
+		securityAccess.put("subscribeWithUsCanMakeReverified", false);
+		securityAccess.put("subscribeWithUsCanMakeRecontacted", false);
+		securityAccess.put("subscribeWithUsCanMakeSelected", false);
+		securityAccess.put("subscribeWithUsCanMakeFailVerified", false);
+		securityAccess.put("subscribeWithUsCanMakeRejected", false);
+		securityAccess.put("subscribeWithUsCanBlacklist", false);
+		if (!ValidationUtils.checkIfResponseIsStringYes(subscribeWithUs.getIsBlacklisted())) {
+			if (!APPLICATION_STATUS_SELECTED.equals(subscribeWithUs.getApplicationStatus())) {
+				securityAccess.put("subscribeWithUsFormEditMandatoryDisbaled", false);
+			}
+			securityAccess.put("subscribeWithUsCanBlacklist", true);
+			switch(subscribeWithUs.getApplicationStatus()) {
+				case APPLICATION_STATUS_FRESH : {
+					securityAccess.put("subscribeWithUsCanMakeContacted", true);
+					securityAccess.put("subscribeWithUsCanMakeToBeRecontact", true);
+					securityAccess.put("subscribeWithUsCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_CONTACTED_VERIFICATION_PENDING : 
+				case APPLICATION_STATUS_RECONTACTED_VERIFICATION_PENDING : {
+					securityAccess.put("subscribeWithUsCanMakeVerified", true);
+					securityAccess.put("subscribeWithUsCanMakeFailVerified", true);
+					securityAccess.put("subscribeWithUsCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_SUCCESSFUL : {
+					securityAccess.put("subscribeWithUsCanMakeSelected", true);
+					securityAccess.put("subscribeWithUsCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_VERIFICATION_FAILED : {
+					securityAccess.put("subscribeWithUsCanMakeReverified", true);
+					securityAccess.put("subscribeWithUsCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SUGGESTED_TO_BE_RECONTACTED : {
+					securityAccess.put("subscribeWithUsCanMakeRecontacted", true);
+					securityAccess.put("subscribeWithUsCanMakeRejected", true);
+					break;
+				}
+				case APPLICATION_STATUS_SELECTED : {
+					break;
+				}
+				case APPLICATION_STATUS_REJECTED : {
+					securityAccess.put("subscribeWithUsCanMakeRecontacted", true);
+					securityAccess.put("subscribeWithUsCanMakeSelected", true);
+					break;
+				}
+			}
+		}
+		return securityAccess;
 	}
 	
 	public ApplicationFile downloadAdminReportSubscribeWithUsList(final String grid, final GridComponent gridComponent) throws Exception {
@@ -896,25 +962,25 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	
 	private String getSubscribeWithUsReportSheetName(final String grid) {
 		switch(grid) {
-			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST : {
 				return "NON_CONTACTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST : {
 				return "NON_VERIFIED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST : {
 				return "VERIFIED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST : {
 				return "VERIFICATION_FAILED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST : {
 				return "TO_BE_RECONTACTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST : {
 				return "SELECTED";
 			}
-			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST : {
+			case RestMethodConstants.REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST : {
 				return "REJECTED";
 			}
 		}
@@ -922,7 +988,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	}
 	
 	@Transactional
-	public void blacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+	public void blacklistSubscribeWithUsList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
 		for (final String subscribeWithUsSerialId : idList) {
@@ -940,7 +1006,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	}
 	
 	@Transactional
-	public void unBlacklistSubscriptionList(final List<String> idList, final String comments, final User activeUser) throws Exception {
+	public void unBlacklistSubscribeWithUsList(final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		final List<SubscribeWithUs> paramObjectList = new LinkedList<SubscribeWithUs>();
 		for (final String subscribeWithUsSerialId : idList) {
@@ -958,7 +1024,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	}
 	
 	@Transactional
-	public void takeActionOnSubscription(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
+	public void takeActionOnSubscribeWithUs(final String button, final List<String> idList, final String comments, final User activeUser) throws Exception {
 		final Date currentTimestamp = new Date();
 		String queryId = EMPTY_STRING;
 		final SubscribeWithUs subscribeWithUsActionObject = new SubscribeWithUs();
@@ -1048,7 +1114,7 @@ public class AdminService implements AdminConstants, SupportConstants, PublicAcc
 	}
 	
 	@Transactional
-	public void updateSubscriptionRecord(final SubscribeWithUs subscription, final List<String> changedAttributes, final User activeUser) {
+	public void updateSubscribeWithUsRecord(final SubscribeWithUs subscription, final List<String> changedAttributes, final User activeUser) {
 		final Date currenTimestamp = new Date();
 		final String baseQuery = "UPDATE SUBSCRIBE_WITH_US SET";
 		final List<String> updateAttributesQuery = new ArrayList<String>();

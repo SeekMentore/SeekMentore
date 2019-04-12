@@ -35,7 +35,7 @@
             <menuitem id="support" url="/support" pageAccessType="support" itemHeader="Support" order="4" faClass="">
                 <uipage id="tutorregistration" url="/tutorregistration" urlActive="true" itemHeader="Become Tutor" order="1"></uipage>
                 <uipage id="enquiryregistration" url="/enquiryregistration" urlActive="true" itemHeader="Find Tutor" order="2"></uipage>
-                <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscribe With Us" order="3" hidden="true"></uipage>
+                <uipage id="subscriptionrequested" url="/subscriptionrequested" urlActive="true" itemHeader="Subscribe With Us" order="3"></uipage>
                 <uipage id="querysubmitted" url="/querysubmitted" urlActive="true" itemHeader="Query Submitted" order="4"></uipage>
                 <uipage id="complaints" url="/complaints" urlActive="true" itemHeader="User Complaints" order="5" hidden="true"></uipage>
             </menuitem>

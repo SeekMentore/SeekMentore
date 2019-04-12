@@ -168,18 +168,18 @@
 			<webservice id="takeActionOnFindTutor" url="/takeActionOnFindTutor"></webservice>
 			<webservice id="updateFindTutorRecord" url="/updateFindTutorRecord"></webservice>
 			<webservice id="downloadAdminReportSubscribeWithUsList" url="/downloadAdminReportSubscribeWithUsList"></webservice>
-			<webservice id="nonContactedSubscriptionsList" url="/nonContactedSubscriptionsList"></webservice>
-			<webservice id="nonVerifiedSubscriptionsList" url="/nonVerifiedSubscriptionsList"></webservice>
-			<webservice id="verifiedSubscriptionsList" url="/verifiedSubscriptionsList"></webservice>
-			<webservice id="verificationFailedSubscriptionsList" url="/verificationFailedSubscriptionsList"></webservice>
-			<webservice id="toBeReContactedSubscriptionsList" url="/toBeReContactedSubscriptionsList"></webservice>
-			<webservice id="selectedSubscriptionsList" url="/selectedSubscriptionsList"></webservice>
-			<webservice id="rejectedSubscriptionsList" url="/rejectedSubscriptionsList"></webservice>
-			<webservice id="subscriptionRequestCheckDataAccess" url="/subscriptionRequestCheckDataAccess"></webservice>	
-			<webservice id="blacklistSubscriptionRequestList" url="/blacklistSubscriptionRequestList"></webservice>
-			<webservice id="unBlacklistSubscriptionRequestList" url="/unBlacklistSubscriptionRequestList"></webservice>	
-			<webservice id="takeActionOnSubscription" url="/takeActionOnSubscription"></webservice>
-			<webservice id="updateSubscriptionRecord" url="/updateSubscriptionRecord"></webservice>
+			<webservice id="nonContactedSubscribeWithUsList" url="/nonContactedSubscribeWithUsList"></webservice>
+			<webservice id="nonVerifiedSubscribeWithUsList" url="/nonVerifiedSubscribeWithUsList"></webservice>
+			<webservice id="verifiedSubscribeWithUsList" url="/verifiedSubscribeWithUsList"></webservice>
+			<webservice id="verificationFailedSubscribeWithUsList" url="/verificationFailedSubscribeWithUsList"></webservice>
+			<webservice id="toBeReContactedSubscribeWithUsList" url="/toBeReContactedSubscribeWithUsList"></webservice>
+			<webservice id="selectedSubscribeWithUsList" url="/selectedSubscribeWithUsList"></webservice>
+			<webservice id="rejectedSubscribeWithUsList" url="/rejectedSubscribeWithUsList"></webservice>
+			<webservice id="subscribeWithUsCheckDataAccess" url="/subscribeWithUsCheckDataAccess"></webservice>	
+			<webservice id="blacklistSubscribeWithUsList" url="/blacklistSubscribeWithUsList"></webservice>
+			<webservice id="unBlacklistSubscribeWithUsList" url="/unBlacklistSubscribeWithUsList"></webservice>	
+			<webservice id="takeActionOnSubscribeWithUs" url="/takeActionOnSubscribeWithUs"></webservice>
+			<webservice id="updateSubscribeWithUsRecord" url="/updateSubscribeWithUsRecord"></webservice>
 			<webservice id="downloadAdminReportSubmitQueryList" url="/downloadAdminReportSubmitQueryList"></webservice>
 			<webservice id="nonContactedQueryList" url="/nonContactedQueryList"></webservice>
 			<webservice id="nonAnsweredQueryList" url="/nonAnsweredQueryList"></webservice>
@@ -196,6 +196,7 @@
 			<webservice id="updateComplaintRecord" url="/updateComplaintRecord"></webservice>
 			<webservice id="getBecomeTutorRecord" url="/getBecomeTutorRecord"></webservice>
 			<webservice id="getFindTutorRecord" url="/getFindTutorRecord"></webservice>
+			<webservice id="getSubscribeWithUsRecord" url="/getSubscribeWithUsRecord"></webservice>
 			<webservice id="getSubmitQueryRecord" url="/getSubmitQueryRecord"></webservice>
 		</page>
 	</pageList>

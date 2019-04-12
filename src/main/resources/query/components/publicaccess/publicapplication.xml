@@ -318,6 +318,9 @@
 	<query type="filter" id="subscribeWithUsMultiApplicationStatusFilter">
 		WHERE APPLICATION_STATUS IN (:applicationStatusList)
 	</query>
+	<query type="filter" id="subscribeWithUsSerialIdFilter">
+		WHERE SUBSCRIBE_WITH_US_SERIAL_ID = :subscribeWithUsSerialId
+	</query>
 	<query type="sorter" id="subscribeWithUsExistingSorter">
 		ORDER BY APPLICATION_DATE_MILLIS DESC
 	</query>

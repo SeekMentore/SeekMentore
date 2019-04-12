@@ -859,10 +859,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
     }
 	
-	@Path(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String nonContactedSubscriptionsList (
+	public String nonContactedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -871,14 +871,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -887,10 +887,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String nonVerifiedSubscriptionsList (
+	public String nonVerifiedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -899,14 +899,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -915,10 +915,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String verifiedSubscriptionsList (
+	public String verifiedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -927,14 +927,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -943,10 +943,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String verificationFailedSubscriptionsList (
+	public String verificationFailedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -955,14 +955,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -971,10 +971,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String toBeReContactedSubscriptionsList (
+	public String toBeReContactedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -983,14 +983,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -999,10 +999,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String selectedSubscriptionsList (
+	public String selectedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -1011,14 +1011,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1027,10 +1027,10 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}	
 	
-	@Path(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST)
+	@Path(REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String rejectedSubscriptionsList (
+	public String rejectedSubscribeWithUsList (
 			@FormParam(GRID_COMPONENT_START) final String start,
 			@FormParam(GRID_COMPONENT_LIMIT) final String limit,
 			@FormParam(GRID_COMPONENT_OTHER_PARAMS) final String otherParams,
@@ -1039,14 +1039,14 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST;
+		this.methodName = REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final GridComponent gridComponent =  new GridComponent(start, limit, otherParams, filters, sorters, SubscribeWithUs.class);
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			final List<SubscribeWithUs> subscriptionsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST, gridComponent);
-			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscriptionsList);
-			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscriptionsList, gridComponent));
+			final List<SubscribeWithUs> subscribeWithUsList = getAdminService().getSubscribeWithUsList(REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST, gridComponent);
+			restresponse.put(GRID_COMPONENT_RECORD_DATA, subscribeWithUsList);
+			restresponse.put(GRID_COMPONENT_TOTAL_RECORDS, GridComponentUtils.getTotalRecords(subscribeWithUsList, gridComponent));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1055,36 +1055,61 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path("/subscriptionRequestCheckDataAccess")
+	@Path("/subscribeWithUsCheckDataAccess")
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String subscriptionRequestCheckDataAccess (
+	public String subscribeWithUsCheckDataAccess (
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
 		Map<String, Object> restresponse = new HashMap<String, Object>();
 		restresponse.put("success", true);
-		restresponse.put("formDataEditAccess", true);
+		restresponse.put("subscribeWithUsFormDataEditAccess", true);
 		restresponse.put("message", "");
 		return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
 	}
 	
-	@Path(REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST)
+	@Path(REST_METHOD_NAME_GET_SUBSCRIBE_WITH_US_RECORD)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String blacklistSubscriptionRequestList (
+	public String getSubscribeWithUsRecord (
+			@FormParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
+			@Context final HttpServletRequest request,
+			@Context final HttpServletResponse response
+	) throws Exception {
+		this.methodName = REST_METHOD_NAME_GET_SUBSCRIBE_WITH_US_RECORD;
+		this.parentSerialId = parentSerialId;
+		this.subscribeWithUsSerialId = parentSerialId;
+		doSecurity(request, response);
+		if (this.securityPassed) {
+			final Map<String, Object> restresponse = new HashMap<String, Object>();
+			final SubscribeWithUs subscribeWithUs = getAdminService().getSubscribeWithUs(this.subscribeWithUsSerialId);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_RECORD_OBJECT, subscribeWithUs);
+			ApplicationUtils.copyAllPropertiesOfOneMapIntoAnother(getAdminService().getSubscribeWithUsFormUpdateStatus(subscribeWithUs), restresponse);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
+			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, EMPTY_STRING);
+			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		} else {
+			return JSONUtils.convertObjToJSONString(this.securityFailureResponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
+		}
+	}
+	
+	@Path(REST_METHOD_NAME_BLACKLIST_SUBSCRIBE_WITH_US_LIST)
+	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
+	@POST
+	public String blacklistSubscribeWithUsList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST;
+		this.methodName = REST_METHOD_NAME_BLACKLIST_SUBSCRIBE_WITH_US_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getAdminService().blacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			getAdminService().blacklistSubscribeWithUsList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1093,22 +1118,22 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST)
+	@Path(REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBE_WITH_US_LIST)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String unBlacklistSubscriptionRequestList (
+	public String unBlacklistSubscribeWithUsList (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST;
+		this.methodName = REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBE_WITH_US_LIST;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getAdminService().unBlacklistSubscriptionList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			getAdminService().unBlacklistSubscribeWithUsList(Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1117,24 +1142,24 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION)
+	@Path(REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIBE_WITH_US)
 	@Consumes(APPLICATION_X_WWW_FORM_URLENCODED)
 	@POST
-	public String takeActionOnSubscription (
+	public String takeActionOnSubscribeWithUs (
 			@FormParam(REQUEST_PARAM_ALL_IDS_LIST) final String allIdsList,
 			@FormParam(REQUEST_PARAM_COMMENTS) final String comments,
 			@FormParam(REQUEST_PARAM_BUTTON) final String button,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION;
+		this.methodName = REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIBE_WITH_US;
 		this.allIdsList = allIdsList;
 		this.comments = comments;
 		this.button = button;
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			getAdminService().takeActionOnSubscribeWithUs(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1143,16 +1168,16 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		}
 	}
 	
-	@Path(REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD)
+	@Path(REST_METHOD_NAME_UPDATE_SUBSCRIBE_WITH_US_RECORD)
 	@Consumes({MediaType.MULTIPART_FORM_DATA})
 	@POST
-	public String updateSubscriptionRecord (
+	public String updateSubscribeWithUsRecord (
 			@FormDataParam(REQUEST_PARAM_COMPLETE_UPDATED_RECORD) final String completeUpdatedRecord,
 			@FormDataParam(REQUEST_PARAM_PARENT_SERIAL_ID) final String parentSerialId,
 			@Context final HttpServletRequest request,
 			@Context final HttpServletResponse response
 	) throws Exception {
-		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD;
+		this.methodName = REST_METHOD_NAME_UPDATE_SUBSCRIBE_WITH_US_RECORD;
 		createSubscriptionObjectFromCompleteUpdatedRecordJSONObject(JSONUtils.getJSONObjectFromString(completeUpdatedRecord));
 		this.parentSerialId = parentSerialId;
 		this.subscribeWithUsSerialId = parentSerialId;
@@ -1160,7 +1185,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
 			this.subscriptionObject.setSubscribeWithUsSerialId(this.subscribeWithUsSerialId);
-			getAdminService().updateSubscriptionRecord(this.subscriptionObject, this.changedAttributes, getActiveUser(request));
+			getAdminService().updateSubscribeWithUsRecord(this.subscriptionObject, this.changedAttributes, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_UPDATED_RECORD);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1536,7 +1561,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 		doSecurity(request, response);
 		if (this.securityPassed) {
 			final Map<String, Object> restresponse = new HashMap<String, Object>();
-			getAdminService().takeActionOnSubscription(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
+			getAdminService().takeActionOnComplaint(button, Arrays.asList(allIdsList.split(SEMICOLON)), comments, getActiveUser(request));
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_SUCCESS, true);
 			restresponse.put(RESPONSE_MAP_ATTRIBUTE_MESSAGE, MESSAGE_ACTION_SUCCESSFUL);
 			return JSONUtils.convertObjToJSONString(restresponse, RESPONSE_MAP_ATTRIBUTE_RESPONSE_NAME);
@@ -1608,13 +1633,13 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			case REST_METHOD_NAME_TO_BE_RECONTACTED_FIND_TUTOR_LIST : 
 			case REST_METHOD_NAME_SELECTED_FIND_TUTOR_LIST : 
 			case REST_METHOD_NAME_REJECTED_FIND_TUTOR_LIST : 
-			case REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST : 
-			case REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST :
+			case REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST :
 			case REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST : 
 			case REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST : 
 			case REST_METHOD_NAME_ANSWERED_QUERY_LIST :
@@ -1630,15 +1655,15 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			case REST_METHOD_NAME_UN_BLACKLIST_BECOME_TUTOR_LIST :
 			case REST_METHOD_NAME_BLACKLIST_FIND_TUTOR_LIST : 
 			case REST_METHOD_NAME_UN_BLACKLIST_FIND_TUTOR_LIST : 
-			case REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST : 
-			case REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST : {
+			case REST_METHOD_NAME_BLACKLIST_SUBSCRIBE_WITH_US_LIST : 
+			case REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBE_WITH_US_LIST : {
 				handleAllIds();
 				handleComments();
 				break;
 			}
 			case REST_METHOD_NAME_TAKE_ACTION_ON_BECOME_TUTOR : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR : 
-			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION : 
+			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIBE_WITH_US : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_SUBMIT_QUERY : 
 			case REST_METHOD_NAME_TAKE_ACTION_ON_COMPLAINT : {
 				handleTakeAction();
@@ -1661,7 +1686,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 				handleFindTutorSecurity();
 				break;
 			}
-			case REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD : {
+			case REST_METHOD_NAME_UPDATE_SUBSCRIBE_WITH_US_RECORD : {
 				handleParentSerialId();
 				handleSubscribeWithUsSecurity();
 				break;
@@ -1676,6 +1701,7 @@ public class SupportRestService extends AbstractRestWebservice implements Suppor
 			}
 			case REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD : 
 			case REST_METHOD_NAME_GET_FIND_TUTOR_RECORD : 
+			case REST_METHOD_NAME_GET_SUBSCRIBE_WITH_US_RECORD :
 			case REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD : {
 				handleParentSerialId();
 				break;

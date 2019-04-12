@@ -144,17 +144,17 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_TAKE_ACTION_ON_FIND_TUTOR = "/takeActionOnFindTutor";
 	String REST_METHOD_NAME_UPDATE_FIND_TUTOR_RECORD = "/updateFindTutorRecord";
 	String REST_METHOD_NAME_DOWNLOAD_ADMIN_REPORT_SUBSCRIBE_WITH_US_LIST = "/downloadAdminReportSubscribeWithUsList";
-	String REST_METHOD_NAME_NON_CONTACTED_SUBSCRIPTIONS_LIST = "/nonContactedSubscriptionsList";
-	String REST_METHOD_NAME_NON_VERIFIED_SUBSCRIPTIONS_LIST = "/nonVerifiedSubscriptionsList";
-	String REST_METHOD_NAME_VERIFIED_SUBSCRIPTIONS_LIST = "/verifiedSubscriptionsList";
-	String REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIPTIONS_LIST = "/verificationFailedSubscriptionsList";
-	String REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIPTIONS_LIST = "/toBeReContactedSubscriptionsList";
-	String REST_METHOD_NAME_SELECTED_SUBSCRIPTIONS_LIST = "/selectedSubscriptionsList";
-	String REST_METHOD_NAME_REJECTED_SUBSCRIPTIONS_LIST = "/rejectedSubscriptionsList";
-	String REST_METHOD_NAME_BLACKLIST_SUBSCRIPTION_REQUEST_LIST = "/blacklistSubscriptionRequestList";
-	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIPTION_REQUEST_LIST = "/unBlacklistSubscriptionRequestList";
-	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIPTION = "/takeActionOnSubscription";
-	String REST_METHOD_NAME_UPDATE_SUBSCRIPTION_RECORD = "/updateSubscriptionRecord";
+	String REST_METHOD_NAME_NON_CONTACTED_SUBSCRIBE_WITH_US_LIST = "/nonContactedSubscribeWithUsList";
+	String REST_METHOD_NAME_NON_VERIFIED_SUBSCRIBE_WITH_US_LIST = "/nonVerifiedSubscribeWithUsList";
+	String REST_METHOD_NAME_VERIFIED_SUBSCRIBE_WITH_US_LIST = "/verifiedSubscribeWithUsList";
+	String REST_METHOD_NAME_VERIFICATION_FAILED_SUBSCRIBE_WITH_US_LIST = "/verificationFailedSubscribeWithUsList";
+	String REST_METHOD_NAME_TO_BE_RECONTACTED_SUBSCRIBE_WITH_US_LIST = "/toBeReContactedSubscribeWithUsList";
+	String REST_METHOD_NAME_SELECTED_SUBSCRIBE_WITH_US_LIST = "/selectedSubscribeWithUsList";
+	String REST_METHOD_NAME_REJECTED_SUBSCRIBE_WITH_US_LIST = "/rejectedSubscribeWithUsList";
+	String REST_METHOD_NAME_BLACKLIST_SUBSCRIBE_WITH_US_LIST = "/blacklistSubscribeWithUsList";
+	String REST_METHOD_NAME_UN_BLACKLIST_SUBSCRIBE_WITH_US_LIST = "/unBlacklistSubscribeWithUsList";
+	String REST_METHOD_NAME_TAKE_ACTION_ON_SUBSCRIBE_WITH_US = "/takeActionOnSubscribeWithUs";
+	String REST_METHOD_NAME_UPDATE_SUBSCRIBE_WITH_US_RECORD = "/updateSubscribeWithUsRecord";
 	String REST_METHOD_NAME_NON_CONTACTED_QUERY_LIST = "/nonContactedQueryList";
 	String REST_METHOD_NAME_NON_ANSWERED_QUERY_LIST = "/nonAnsweredQueryList";
 	String REST_METHOD_NAME_ANSWERED_QUERY_LIST = "/answeredQueryList";
@@ -170,5 +170,6 @@ public interface RestMethodConstants extends RestParamsConstants {
 	String REST_METHOD_NAME_UPDATE_COMPLAINT_RECORD = "/updateComplaintRecord";
 	String REST_METHOD_NAME_GET_BECOME_TUTOR_RECORD = "/getBecomeTutorRecord";
 	String REST_METHOD_NAME_GET_FIND_TUTOR_RECORD = "/getFindTutorRecord";
+	String REST_METHOD_NAME_GET_SUBSCRIBE_WITH_US_RECORD = "/getSubscribeWithUsRecord";
 	String REST_METHOD_NAME_GET_SUBMIT_QUERY_RECORD = "/getSubmitQueryRecord";
 }
