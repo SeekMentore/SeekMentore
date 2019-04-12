@@ -17,7 +17,6 @@ public class DBConnect {
 	private static final String DB_PASSWORD = "pass";
 	
 	/*
-		createTutorDocumentsInNewPath();
 	  	feedSubscribeWithUsSerialId();
 	 	feedSubmitQuerySerialId();	
 		feedFindTutorSerialId();
@@ -40,6 +39,7 @@ public class DBConnect {
 		feedEnquirySerialId();
 		feedTutorMapperSerialId();
 		feedDemoSerialId();
+		createTutorDocumentsInNewPath();
 	*/
 	public static void main(String args[]) throws IOException {
 	}
@@ -70,7 +70,7 @@ public class DBConnect {
 				System.out.println(tutorId + "   " + tutorSerialId + "  " + fsKey + "  " + filename);
 				final String newFsKey = "secured/tutor/documents/" + tutorSerialId + "/" + filename;
 				try {
-					transfer.moveFileToDifferentLocationInSameBucket("seekmentore-dev", fsKey, newFsKey);
+					transfer.moveFileToDifferentLocationInSameBucket("seekmentore-prod", fsKey, newFsKey);
 					dbUniqueIdList.add(documentSerialId);
 					fsKeyToDeleteList.add(fsKey);
 					newFsKeyList.add(newFsKey);
@@ -89,7 +89,7 @@ public class DBConnect {
 			con.close();
 			if (ValidationUtils.checkNonEmptyList(fsKeyToDeleteList) && ValidationUtils.checkNonEmptyList(fsKeyToDeleteList)) {
 				for (final String fsKeyToDelete : fsKeyToDeleteList) {
-					transfer.deleteFileInFolder("seekmentore-dev", fsKeyToDelete);
+					transfer.deleteFileInFolder("seekmentore-prod", fsKeyToDelete);
 				}
 			}
 		} catch (Exception e) {
@@ -655,7 +655,7 @@ public class DBConnect {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from DEMO");
 			while (rs.next()) {
-				System.out.println(rs.getString("DEMO_SERIAL_ID"));				
+				//System.out.println(rs.getString("DEMO_SERIAL_ID"));				
 				System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
 			}
 			con.close();

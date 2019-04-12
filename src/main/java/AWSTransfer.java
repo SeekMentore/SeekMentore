@@ -58,7 +58,7 @@ public class AWSTransfer {
 	}
 	
 	AWSTransfer() throws IOException {
-		connect();
+		//connect();
 		//processChangedFiles(createChangedFilesList());
 		//String bucketName = "seekmentore-dev";;
 		//deleteBucket("test-mashery");
@@ -67,8 +67,8 @@ public class AWSTransfer {
 		for (Bucket bucket : bList) {
 			System.out.println(bucket.getName());
 		}*/
-		//deleteAllContentFromBucket("test-mashery");
-		//copyBucket("seekmentore-dev", "seekmentore-dev2");
+		//deleteAllContentFromBucket("seekmentore-dev2");
+		//copyBucket("seekmentore-prod", "seekmentore-dev2");
 		//copyBucket("seekmentore-dev2", "seekmentore-dev");
 		//deleteBucket("seekmentore-dev2");
 		//deleteFolder("seekmentore-dev2", "recycle_bin");
@@ -210,8 +210,8 @@ public class AWSTransfer {
 		}
 	}
 	
-	public void copyBucket(String originalBucket, String copyBucket) throws IOException {
-		List<S3ObjectSummary> s3ObjectList = getFileListInBucket(originalBucket);
+	public void copyBucket(String fromBucket, String toBucket) throws IOException {
+		List<S3ObjectSummary> s3ObjectList = getFileListInBucket(fromBucket);
 		for (S3ObjectSummary s3Object : s3ObjectList) {
 			String key = s3Object.getKey();
 			System.out.print(key);
@@ -221,10 +221,10 @@ public class AWSTransfer {
 				for (S3ObjectSummary s3Object1 : s3ObjectList1) {
 					System.out.println("			"+s3Object1.getKey());
 				}*/
-				putObjectInS3Client(createPutObjectRequest(copyBucket, key, new byte[0], false));
+				putObjectInS3Client(createPutObjectRequest(toBucket, key, new byte[0], false));
 			} else {
 				System.out.println("-------This is File");
-				putObjectInS3Client(createPutObjectRequest(copyBucket, key, readContentFromFileInS3Client(originalBucket, key), false));
+				putObjectInS3Client(createPutObjectRequest(toBucket, key, readContentFromFileInS3Client(fromBucket, key), false));
 			}
 		}
 	}
