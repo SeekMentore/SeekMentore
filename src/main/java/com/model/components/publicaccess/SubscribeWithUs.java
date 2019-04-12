@@ -586,7 +586,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 				return new Object[] {
 						this.subscribeWithUsSerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.applicationDateMillis),
-						this.applicationStatus,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP, this.applicationStatus),
 						this.firstName,
 						this.lastName,
 						this.contactNumber,
@@ -706,7 +706,7 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		final StringBuilder subscribeWithUsApplication = new StringBuilder(EMPTY_STRING);
 		subscribeWithUsApplication.append(PrintFormatterUtils.startATable());
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBE_WITH_US_SERIAL_ID, this.subscribeWithUsSerialId));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, this.applicationStatus));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_APPLICATION_STATUS, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_PUBLIC_APPLICATION_STATUS_LOOKUP, this.applicationStatus)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_FIRST_NAME, this.firstName));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LAST_NAME, this.lastName));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_CONTACT_NUMBER, this.contactNumber));
@@ -716,8 +716,8 @@ public class SubscribeWithUs extends PublicApplication implements Serializable, 
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_PREFERRED_TIME_TO_CALL, ApplicationUtils.getSelectLookupItemListConcatenatedLabelString(SelectLookupConstants.SELECT_LOOKUP_TABLE_PREFERRED_TIME_LOOKUP, this.preferredTimeToCall, null, null)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_LOCATION, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_LOCATIONS_LOOKUP, this.location)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REFERENCE, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_REFERENCE_LOOKUP, this.reference)));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, this.addressDetails));
-		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, this.additionalDetails));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDRESS_DETAILS, ApplicationUtils.formatRemarksAndComments(this.addressDetails)));
+		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_ADDITIONAL_DETAILS, ApplicationUtils.formatRemarksAndComments(this.additionalDetails)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
 		subscribeWithUsApplication.append(PrintFormatterUtils.endATable());
 		return subscribeWithUsApplication.toString();

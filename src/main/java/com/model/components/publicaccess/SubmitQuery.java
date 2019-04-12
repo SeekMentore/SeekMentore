@@ -230,9 +230,9 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 		final StringBuilder submitQueryApplication = new StringBuilder(EMPTY_STRING);
 		submitQueryApplication.append(PrintFormatterUtils.startATable());
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_SERIAL_ID, this.querySerialId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, this.queryStatus));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_STATUS, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP, this.queryStatus)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_EMAIL_ID, this.emailId));
-		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, this.queryDetails));
+		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_QUERY_DETAILS, ApplicationUtils.formatRemarksAndComments(this.queryDetails)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_REGISTERED_TUTOR, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.registeredTutor)));
 		submitQueryApplication.append(PrintFormatterUtils.printALabelAndDataInRowWithTwoColumns(COLUMN_NAME_SUBSCRIBED_CUSTOMER, ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.subscribedCustomer)));
 		submitQueryApplication.append(PrintFormatterUtils.endATable());
@@ -275,7 +275,7 @@ public class SubmitQuery extends PublicApplication implements Serializable, Clon
 				return new Object[] {
 						this.querySerialId,
 						DateUtils.parseDateInIndianDTFormatAfterConvertingToIndianTimeZone(this.queryRequestedDateMillis),
-						this.queryStatus,
+						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_QUERY_STATUS_LOOKUP, this.queryStatus),
 						this.emailId,
 						this.queryDetails,
 						ApplicationUtils.getSelectLookupItemLabel(SelectLookupConstants.SELECT_LOOKUP_TABLE_YES_NO_LOOKUP, this.registeredTutor),
