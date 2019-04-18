@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import geneticAlgorithm.imporvised.v1.model.Gene;
+import geneticAlgorithm.imporvised.v1.model.Individual;
+
 public class TestGeneticProcessing {
 
 	public static void main(String[] args) throws Exception {
@@ -21,49 +24,51 @@ public class TestGeneticProcessing {
 					}
 					return individuals;
 				},
-				(Integer genome) -> {
-					// Fitness function which takes param as T (genome) and returns it's Fitness as an Empirical Integer
-					return ((genome == 1) ? 1 : 0);
+				(Gene<Integer> gene) -> {
+					// Fitness function which takes param as T (alleles) and returns it's Fitness as an Empirical Integer
+					return ((gene.getAlleles() == 1) ? 1 : 0);
+				}, 
+				null, // Selection Function -> For default leave NULL
+				null, // Crossover Function -> For default leave NULL
+				(Individual<Integer> individual) -> {
+					// Crossover Point Function which takes param as List<T> (individual) & fitnessFactor and returns the Crossover Mating Point for an Individual
+					return rn.nextInt(individual.getGenes().size());
 				},
-				(List<Integer> individual) -> {
-					// Crossover Point Function which takes param as List<T> (individual) and returns the Crossover Mating Point for an Individual
-					return rn.nextInt(individual.size());
-				},
-				(List<Integer> individual) -> {
-					// Mutable Check Function which takes param as List<T> (individual/offspring) to check if an Offspring should be Mutated
+				(Individual<Integer> individual) -> {
+					// Mutable Check Function which takes param as List<T> (individual/offspring) & fitnessFactor to check if an Offspring should be Mutated
 					return (rn.nextInt()%7 < 5);
 				},
-				(List<Integer> individual) -> {
-					// Mutation Point Function which takes param as List<T> (individual/offspring) and returns the Mutation Point for an Offspring
-					return rn.nextInt(individual.size());
+				(Individual<Integer> individual) -> {
+					// Mutation Point Function which takes param as List<T> (individual/offspring) & fitnessFactor and returns the Mutation Point for an Offspring
+					return rn.nextInt(individual.getGenes().size());
 				},
-				(Integer genome) -> {
-					// Mutation Function which takes param as T (genome) and Mutate the Offspring genome
-					if (genome == 0) {
+				(Gene<Integer> gene) -> {
+					// Mutation Function which takes param as T (alleles) & fitnessFactor and Mutate the Offspring alleles
+					if (gene.getAlleles() == 0) {
 						return 1;
 			        } else {
 			        	return 0;
 			        }
 				},
-				(List<Integer> currentBestCandidate, Integer bestCandidateFitnessFactor) -> {
+				(Individual<Integer> currentBestCandidate) -> {
 					// Convergence Check Function which takes param as List<T> (individual) to check if Convergence is achieved and Genetic Population Processing should be stopped
-					return (bestCandidateFitnessFactor >= 5);
+					return (currentBestCandidate.getFitnessFactor() >= 5);
 				},
-				(List<Integer> individual, Integer solutionGenerationRank) -> {
+				(Individual<Integer> currentBestCandidate, Integer currentGenerationRank) -> {
 					// Threshold Check Function which takes param as List<T> (individual) and Integer Generation-Number to check if Genetic Population Processing should be stopped if Convergence is not achieved
-					Boolean thersholdValue = solutionGenerationRank >= 50000;
+					Boolean thersholdValue = currentGenerationRank >= 50000;
 					if (thersholdValue) {
 						System.out.println("Threshold Limit Reached");
 					}
 					return thersholdValue;
 				}, true, 
-				(List<Integer> individual, Integer fitnessFactor) -> {
+				(Individual<Integer> individual) -> {
 					// Debug Individual Function which takes param as List<T> (individual/offspring) and returns the Mutation Point for an Offspring
-					return individual.toString() + " Fitness Quotient = " + fitnessFactor;
+					return individual.getGenes().toString() + " Fitness Quotient = " + individual.getFitnessFactor();
 				});
 		gp.start();
-		System.out.println(gp.generationNumber());
-		System.out.println(gp.bestSolution());
+		Individual<Integer> bestSolution = gp.bestSolution();
+		System.out.println("Best Solution Individual = " + bestSolution.getGenes() + " Fitness Quotient = " + bestSolution.getFitnessFactor());
+		System.out.println("Solution Found @ Generation = " + gp.generationNumber());
 	}
-
 }

@@ -1,4 +1,4 @@
-package geneticAlgorithm.imporvised.v1;
+package geneticAlgorithm.imporvised.v1.utils;
 
 import java.util.List;
 
