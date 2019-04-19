@@ -29,11 +29,11 @@ public class TestGeneticProcessing {
 					return ((gene.getAlleles() == 1) ? 1 : 0);
 				}, 
 				null, // Selection Function -> For default leave NULL
-				null, // Crossover Function -> For default leave NULL
 				(Individual<Integer> individual) -> {
 					// Crossover Point Function which takes param as List<T> (individual) & fitnessFactor and returns the Crossover Mating Point for an Individual
 					return rn.nextInt(individual.getGenes().size());
 				},
+				null, // Crossover Function -> For default leave NULL
 				(Individual<Integer> individual) -> {
 					// Mutable Check Function which takes param as List<T> (individual/offspring) & fitnessFactor to check if an Offspring should be Mutated
 					return (rn.nextInt()%7 < 5);
@@ -50,6 +50,7 @@ public class TestGeneticProcessing {
 			        	return 0;
 			        }
 				},
+				null, // Replacement Function -> For default leave NULL
 				(Individual<Integer> currentBestCandidate) -> {
 					// Convergence Check Function which takes param as List<T> (individual) to check if Convergence is achieved and Genetic Population Processing should be stopped
 					return (currentBestCandidate.getFitnessFactor() >= 5);

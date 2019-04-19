@@ -6,12 +6,14 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import geneticAlgorithm.imporvised.v1.functionalInterfaces.CrossoverFunction;
+import geneticAlgorithm.imporvised.v1.functionalInterfaces.ReplacementFunction;
 import geneticAlgorithm.imporvised.v1.functionalInterfaces.SelectionFunction;
 import geneticAlgorithm.imporvised.v1.model.Gene;
 import geneticAlgorithm.imporvised.v1.model.Individual;
 import geneticAlgorithm.imporvised.v1.model.Population;
 import geneticAlgorithm.imporvised.v1.model.SelectedIndividualPool;
 import geneticAlgorithm.imporvised.v1.model.YieldedOffspringPool;
+import geneticAlgorithm.imporvised.v1.utils.FunctionalUtil;
 import geneticAlgorithm.imporvised.v1.utils.Validator;
 
 public class GeneticProcessing<T> {
@@ -22,93 +24,99 @@ public class GeneticProcessing<T> {
 		Supplier<List<List<T>>> individualsSupplierFunction,
 		Function<Gene<T>, Integer> fitnessFunction,
 		SelectionFunction<T> selectionFunction,
-		CrossoverFunction<T> crossoverFunction,
 		Function<Individual<T>, Integer> crossoverPointFunction,
+		CrossoverFunction<T> crossoverFunction,
 		Function<Individual<T>, Boolean> mutableCheckFunction,
 		Function<Individual<T>, Integer> mutationPointFunction,
 		Function<Gene<T>, T> mutateFunction,
+		ReplacementFunction<T> replacementFunction,
 		Function<Individual<T>, Boolean> convergenceFunction,
 		BiFunction<Individual<T>, Integer, Boolean> thresholdExitFunction,
 		Boolean logIntermediateSteps,
 		Function<Individual<T>, String> debugIndividualFunction
 	) {
-		if (!Validator.checkObjectAvailability(individualsSupplierFunction)) {
-			System.out.println("Population Individual Supplier function cannot be NULL");
-			System.exit(0);
-		}
-		List<List<T>> individuals = individualsSupplierFunction.get();
-		if (!Validator.checkNonEmptyList(individuals)) {
-			System.out.println("Population Individual List Empty");
-			System.exit(0);
-		}
-		for (List<T> individual : individuals) {
-			if (!Validator.checkNonEmptyList(individual)) {
-				System.out.println("Individual cannot have NULL Alleles Set");
-				System.exit(0);
-			}
-		}
-		if (!Validator.checkObjectAvailability(fitnessFunction)) {
-			System.out.println("Fitness function cannot be NULL");
-			System.exit(0);
-		}
-		if (!Validator.checkObjectAvailability(selectionFunction)) {
-			System.out.println("Selection Function is NULL");
-			selectionFunction = getDefaultSelectionFunction();
-		}
-		if (!Validator.checkObjectAvailability(crossoverFunction)) {
-			System.out.println("Crossover Function is NULL");
-			crossoverFunction = getDefaultCrossoverFunction();
-		}
-		if (!Validator.checkObjectAvailability(crossoverPointFunction)) {
-			System.out.println("Mating crossover point function cannot be NULL");
-			System.exit(0);
-		}
-		if (!Validator.checkObjectAvailability(mutableCheckFunction)) {
-			System.out.println("Mutable function is NULL - Making it mutable false");
-			mutableCheckFunction = getDefaultMutableCheckFunction();
-			mutationPointFunction = getDefaultMutationPointFunction();
-			mutateFunction = getDefaultMutateFunction();
-		} else {
-			if (!Validator.checkObjectAvailability(mutationPointFunction) || !Validator.checkObjectAvailability(mutateFunction)) {
-				System.out.println("Offsprings can Mutate");
-				if (!Validator.checkObjectAvailability(mutationPointFunction)) {
-					System.out.println("Mutation point function cannot be NULL");
-					System.exit(0);
-				}
-				if (!Validator.checkObjectAvailability(mutateFunction)) {
-					System.out.println("Mutate function cannot be NULL");
-					System.exit(0);
-				}
-			}
-		}
-		if (!Validator.checkObjectAvailability(convergenceFunction)) {
-			System.out.println("Convergence function cannot be NULL");
-			System.exit(0);
-		}
-		if (!Validator.checkObjectAvailability(thresholdExitFunction)) {
-			System.out.println("Threshold Exit function is NULL - Making it false");
-			thresholdExitFunction = getDefaultThresholdExitFunction();
-		}
 		if (!Validator.checkObjectAvailability(logIntermediateSteps)) {
 			logIntermediateSteps = false;
 		}
 		if (logIntermediateSteps) {
 			if (!Validator.checkObjectAvailability(debugIndividualFunction)) {
-				System.out.println("Debugging is ON -> Individual Debug Individual function cannot be NULL");
+				FunctionalUtil.logStep(true, "Debugging is ON -> Individual Debug Individual function cannot be NULL");
 				System.exit(0);
 			}
 		} else {
-			debugIndividualFunction = getDefaultDebugIndividualFunction();
+			debugIndividualFunction = getDefaultDebugIndividualFunction(logIntermediateSteps);
+		}
+		if (!Validator.checkObjectAvailability(individualsSupplierFunction)) {
+			FunctionalUtil.logStep(true, "Population Individual Supplier function cannot be NULL");
+			System.exit(0);
+		}
+		List<List<T>> individuals = individualsSupplierFunction.get();
+		if (!Validator.checkNonEmptyList(individuals)) {
+			FunctionalUtil.logStep(true, "Population Individual List Empty");
+			System.exit(0);
+		}
+		for (List<T> individual : individuals) {
+			if (!Validator.checkNonEmptyList(individual)) {
+				FunctionalUtil.logStep(true, "Individual cannot have NULL Alleles Set");
+				System.exit(0);
+			}
+		}
+		if (!Validator.checkObjectAvailability(fitnessFunction)) {
+			FunctionalUtil.logStep(true, "Fitness function cannot be NULL");
+			System.exit(0);
+		}
+		if (!Validator.checkObjectAvailability(selectionFunction)) {
+			FunctionalUtil.logStep(logIntermediateSteps, "Selection Function is NULL");
+			selectionFunction = getDefaultSelectionFunction(logIntermediateSteps, debugIndividualFunction);
+		}
+		if (!Validator.checkObjectAvailability(crossoverPointFunction)) {
+			FunctionalUtil.logStep(true, "Crossover point function cannot be NULL");
+			System.exit(0);
+		}
+		if (!Validator.checkObjectAvailability(crossoverFunction)) {
+			FunctionalUtil.logStep(logIntermediateSteps, "Crossover Function is NULL");
+			crossoverFunction = getDefaultCrossoverFunction(logIntermediateSteps, debugIndividualFunction);
+		}
+		if (!Validator.checkObjectAvailability(mutableCheckFunction)) {
+			FunctionalUtil.logStep(logIntermediateSteps, "Mutable function is NULL - Making it mutable false");
+			mutableCheckFunction = getDefaultMutableCheckFunction(logIntermediateSteps, debugIndividualFunction);
+			mutationPointFunction = getDefaultMutationPointFunction(logIntermediateSteps, debugIndividualFunction);
+			mutateFunction = getDefaultMutateFunction(logIntermediateSteps, debugIndividualFunction);
+		} else {
+			if (!Validator.checkObjectAvailability(mutationPointFunction) || !Validator.checkObjectAvailability(mutateFunction)) {
+				FunctionalUtil.logStep(logIntermediateSteps, "Offsprings can Mutate");
+				if (!Validator.checkObjectAvailability(mutationPointFunction)) {
+					FunctionalUtil.logStep(true, "Mutation point function cannot be NULL");
+					System.exit(0);
+				}
+				if (!Validator.checkObjectAvailability(mutateFunction)) {
+					FunctionalUtil.logStep(true, "Mutate function cannot be NULL");
+					System.exit(0);
+				}
+			}
+		}
+		if (!Validator.checkObjectAvailability(replacementFunction)) {
+			FunctionalUtil.logStep(logIntermediateSteps, "Replacement Function is NULL");
+			replacementFunction = getDefaultReplacementFunction(logIntermediateSteps, debugIndividualFunction);
+		}
+		if (!Validator.checkObjectAvailability(convergenceFunction)) {
+			FunctionalUtil.logStep(true, "Convergence function cannot be NULL");
+			System.exit(0);
+		}
+		if (!Validator.checkObjectAvailability(thresholdExitFunction)) {
+			FunctionalUtil.logStep(logIntermediateSteps, "Threshold Exit function is NULL - Making it false");
+			thresholdExitFunction = getDefaultThresholdExitFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		this.population = new Population<T>(
 								individuals, 
 								fitnessFunction, 
 								selectionFunction, 
-								crossoverFunction,
 								crossoverPointFunction, 
+								crossoverFunction,
 								mutableCheckFunction, 
 								mutationPointFunction, 
 								mutateFunction, 
+								replacementFunction,
 								convergenceFunction, 
 								thresholdExitFunction, 
 								logIntermediateSteps, 
@@ -116,9 +124,16 @@ public class GeneticProcessing<T> {
 							);
 	}
 	
+	private Function<Individual<T>, String> getDefaultDebugIndividualFunction(Boolean logIntermediateSteps) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Debug Individual Function");
+		return (Individual<T> individual) -> {
+			return "";
+		};
+	}
+	
 	@SuppressWarnings("unchecked")
-	private SelectionFunction<T> getDefaultSelectionFunction() {
-		System.out.println("Getting Default Selection Function");
+	private SelectionFunction<T> getDefaultSelectionFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Selection Function");
 		return (List<Individual<T>> individuals) -> {
 			Individual<T> bestParent = null;
 			Integer bestParentIndex = -1;
@@ -163,20 +178,21 @@ public class GeneticProcessing<T> {
 			selectedIndividualPool.setTotalCandidatesSelected(3);
 			selectedIndividualPool.setSelectedCandidatesInDescendingOrderOfFitnessFactor(new Individual[] {bestParent, secondBestParent, worstParent});
 			selectedIndividualPool.setSelectedCandidatesIndexInDescendingOrderOfFitnessFactor(new Integer[] {bestParentIndex, secondBestParentIndex, worstParentIndex});
+			FunctionalUtil.logStep(logIntermediateSteps, "			Best Parent Individual >> " + debugIndividualFunction.apply(selectedIndividualPool.getBestCandidate()) + " @ Index = " + selectedIndividualPool.getBestCandidateIndex());
+			FunctionalUtil.logStep(logIntermediateSteps, "			Second Best Parent Individual >> " + debugIndividualFunction.apply(selectedIndividualPool.getSecondBestCandidate()) + " @ Index = " + selectedIndividualPool.getSecondBestCandidateIndex());
+			FunctionalUtil.logStep(logIntermediateSteps, "			Worst Parent Individual >> " + debugIndividualFunction.apply(selectedIndividualPool.getWorstCandidate()) + " @ Index = " + selectedIndividualPool.getWorstCandidateIndex());
 			return selectedIndividualPool;
 		};
 	}
 	
 	@SuppressWarnings("unchecked")
-	private CrossoverFunction<T> getDefaultCrossoverFunction() {
-		System.out.println("Getting Default Crossover Function");
+	private CrossoverFunction<T> getDefaultCrossoverFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Crossover Function");
 		return (SelectedIndividualPool<T> selectedIndividualPool, Function<Individual<T>, Integer> crossoverPointFunction) -> {
-			Individual<T> bestParent = selectedIndividualPool.getBestCandidate();
-			Individual<T> secondBestParent = selectedIndividualPool.getSecondBestCandidate();
-			Individual<T> offspringPrimary = bestParent.clone();
-			Individual<T> offspringSecondary = secondBestParent.clone();
-			Integer crossoverPoint = crossoverPointFunction.apply(bestParent);
-			for (int i = 0; i < crossoverPoint; i++) {
+			Individual<T> offspringPrimary = selectedIndividualPool.getBestCandidate().clone();
+			Individual<T> offspringSecondary = selectedIndividualPool.getSecondBestCandidate().clone();
+			Integer crossoverPoint = crossoverPointFunction.apply(selectedIndividualPool.getBestCandidate());
+			for (int i = 0; i <= crossoverPoint; i++) {
 				Gene<T> tempGene = offspringPrimary.getGenes().get(i);
 				offspringPrimary.getGenes().set(i, offspringSecondary.getGenes().get(i));
 				offspringSecondary.getGenes().set(i, tempGene);
@@ -188,42 +204,63 @@ public class GeneticProcessing<T> {
 			yieldedOffspringPool.setOffspringSecondary(offspringSecondary);
 			yieldedOffspringPool.setTotalOffspringYielded(2);
 			yieldedOffspringPool.setYieldedOffspring(new Individual[] {offspringPrimary, offspringSecondary});
+			FunctionalUtil.logStep(logIntermediateSteps, "			Crossover Point = " + crossoverPoint);
+			FunctionalUtil.logStep(logIntermediateSteps, "			Offspring Primary >> " + debugIndividualFunction.apply(yieldedOffspringPool.getOffspringPrimary()));
+			FunctionalUtil.logStep(logIntermediateSteps, "			Offspring Secondary >> " + debugIndividualFunction.apply(yieldedOffspringPool.getOffspringSecondary()));
 			return yieldedOffspringPool;
 		};
 	}
 	
-	private Function<Individual<T>, Boolean> getDefaultMutableCheckFunction() {
-		System.out.println("Getting Default Mutable Check Function");
+	private Function<Individual<T>, Boolean> getDefaultMutableCheckFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Mutable Check Function");
 		return (Individual<T> individual) -> {
 			return false;
 		};
 	}
 	
-	private Function<Individual<T>, Integer> getDefaultMutationPointFunction() {
-		System.out.println("Getting Default Mutation Point Function");
+	private Function<Individual<T>, Integer> getDefaultMutationPointFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Mutation Point Function");
 		return (Individual<T> individual) -> {
 			return -1;
 		};
 	}
 	
-	private Function<Gene<T>, T> getDefaultMutateFunction() {
-		System.out.println("Getting Default Mutate Function");
+	private Function<Gene<T>, T> getDefaultMutateFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Mutate Function");
 		return (Gene<T> gene) -> {
 			return gene.getAlleles();
 		};
 	}
 	
-	private BiFunction<Individual<T>, Integer, Boolean> getDefaultThresholdExitFunction() {
-		System.out.println("Getting Default Threshold Exit Function");
-		return (Individual<T> individual, Integer solutionGenerationRank) -> {
-			return false;
+	private ReplacementFunction<T> getDefaultReplacementFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Crossover Function");
+		return (List<Individual<T>> individuals, SelectedIndividualPool<T> selectedIndividualPool, YieldedOffspringPool<T> yieldedOffspringPool) -> {
+			individuals.set(selectedIndividualPool.getBestCandidateIndex(), yieldedOffspringPool.getOffspringPrimary());
+			FunctionalUtil.logStep(logIntermediateSteps, "		Replaced MaleParent >> " + debugIndividualFunction.apply(selectedIndividualPool.getBestCandidate()) + " @ Index = " + selectedIndividualPool.getBestCandidateIndex() + " with Offspring First >> " + debugIndividualFunction.apply(yieldedOffspringPool.getOffspringPrimary()));
+			if (yieldedOffspringPool.getOffspringPrimary().getFitnessFactor() < selectedIndividualPool.getWorstCandidate().getFitnessFactor()) {
+				selectedIndividualPool.setWorstCandidate(yieldedOffspringPool.getOffspringPrimary());
+				selectedIndividualPool.setWorstCandidateIndex(selectedIndividualPool.getBestCandidateIndex());
+			}
+			individuals.set(selectedIndividualPool.getSecondBestCandidateIndex(), yieldedOffspringPool.getOffspringSecondary());
+			FunctionalUtil.logStep(logIntermediateSteps, "		Replaced FemaleParent >> " + debugIndividualFunction.apply(selectedIndividualPool.getSecondBestCandidate()) + " @ Index = " + selectedIndividualPool.getSecondBestCandidateIndex() + " with Offspring Second >> " + debugIndividualFunction.apply(yieldedOffspringPool.getOffspringSecondary()));
+			if (yieldedOffspringPool.getOffspringSecondary().getFitnessFactor() < selectedIndividualPool.getWorstCandidate().getFitnessFactor()) {
+				selectedIndividualPool.setWorstCandidate(yieldedOffspringPool.getOffspringSecondary());
+				selectedIndividualPool.setWorstCandidateIndex(selectedIndividualPool.getSecondBestCandidateIndex());
+			}
+			FunctionalUtil.logStep(logIntermediateSteps, "		New WorstParent Individual >> " + debugIndividualFunction.apply(selectedIndividualPool.getWorstCandidate()) + " @ Index = " + selectedIndividualPool.getWorstCandidateIndex());
+			// Replace least fitness Individual with Best offspring
+			Individual<T> fittest = yieldedOffspringPool.getBestOffspring();
+			FunctionalUtil.logStep(logIntermediateSteps, "		Fittest Individual >> " + debugIndividualFunction.apply(fittest));
+			individuals.set(selectedIndividualPool.getWorstCandidateIndex(), fittest);
+			FunctionalUtil.logStep(logIntermediateSteps, "		Replaced WorstParent >> " + debugIndividualFunction.apply(selectedIndividualPool.getWorstCandidate()) + " @ Index = " + selectedIndividualPool.getWorstCandidateIndex() + " with Fittest Individual >> " + debugIndividualFunction.apply(fittest));
+			return fittest;
 		};
 	}
 	
-	private Function<Individual<T>, String> getDefaultDebugIndividualFunction() {
-		System.out.println("Getting Default Debug Individual Function");
-		return (Individual<T> individual) -> {
-			return "";
+	private BiFunction<Individual<T>, Integer, Boolean> getDefaultThresholdExitFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Threshold Exit Function");
+		return (Individual<T> individual, Integer solutionGenerationRank) -> {
+			return false;
 		};
 	}
 	

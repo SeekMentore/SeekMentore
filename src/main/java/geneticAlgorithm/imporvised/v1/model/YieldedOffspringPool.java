@@ -44,6 +44,14 @@ public class YieldedOffspringPool<T> implements Cloneable {
 		this.offspringSecondary = offspringSecondary;
 	}
 	
+	public Individual<T> getBestOffspring() {
+		return bestOffspring;
+	}
+
+	public void setBestOffspring(Individual<T> bestOffspring) {
+		this.bestOffspring = bestOffspring;
+	}
+	
 	public void computeBestOffspring() {
 		this.bestOffspring = null;
 		for (Individual<T> offspring : yieldedOffspring) {
