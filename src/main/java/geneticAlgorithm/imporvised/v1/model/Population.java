@@ -14,7 +14,8 @@ import geneticAlgorithm.imporvised.v1.utils.FunctionalUtil;
 public class Population<T> implements Cloneable {
 	
 	private List<Individual<T>> individuals;
-	private Individual<T> fittest;
+	private Integer fitnessFactor;
+	private Individual<T> fittestIndividual;
 	private Integer currentGeneration = 0;
 	
 	// Control Variables
@@ -70,7 +71,6 @@ public class Population<T> implements Cloneable {
 									return gene;
 								}).collect(Collectors.toList()));
 								Individual<T> individual = new Individual<T>(genes);
-								FunctionalUtil.logStep(this.logIntermediateSteps, "	Individual = " + this.debugIndividualFunction.apply(individual));
 								return individual;
 							}).collect(Collectors.toList()));
 	}
@@ -79,9 +79,21 @@ public class Population<T> implements Cloneable {
 		FunctionalUtil.logStep(this.logIntermediateSteps, "Starting Genetic Process");
 		Boolean canContinue = true;
 		do {
+			this.fitnessFactor = 0;
+			this.individuals.parallelStream().forEach((Individual<T> individual) -> {
+				this.fitnessFactor += individual.getFitnessFactor();
+			});
+			if (this.logIntermediateSteps) {
+				FunctionalUtil.logStep(this.logIntermediateSteps, "	Current Population");
+				for (int i = 0; i < this.individuals.size(); i++) {
+					Individual<T> individual = this.individuals.get(i);
+					FunctionalUtil.logStep(this.logIntermediateSteps, "		Index = " + i + " Individual = " + this.debugIndividualFunction.apply(individual));
+				}
+			}
+			FunctionalUtil.logStep(this.logIntermediateSteps, "	Overall Fitness Factor = " + this.fitnessFactor);
 			processGeneration();
-			Boolean thresholdExitClause = this.thresholdExitFunction.apply(this.fittest, this.currentGeneration);
-			Boolean convergenceAchieved = this.convergenceFunction.apply(this.fittest);
+			Boolean thresholdExitClause = this.thresholdExitFunction.apply(this.fittestIndividual, this.currentGeneration);
+			Boolean convergenceAchieved = this.convergenceFunction.apply(this.fittestIndividual);
 			FunctionalUtil.logStep(this.logIntermediateSteps, "	Threshold Exit Clause >> " + thresholdExitClause);
 			FunctionalUtil.logStep(this.logIntermediateSteps, "	Convergence Achieved >> " + convergenceAchieved);
 			canContinue = !thresholdExitClause && !convergenceAchieved;
@@ -119,12 +131,12 @@ public class Population<T> implements Cloneable {
 		FunctionalUtil.logStep(this.logIntermediateSteps, "		Mutation Ends");
 		yieldedOffspringPool.computeBestOffspring();
 		// Replacement
-		this.fittest = this.replacementFunction.replaceIndividuals(this.individuals, selectedIndividualPool, yieldedOffspringPool);
+		this.fittestIndividual = this.replacementFunction.replaceIndividuals(this.individuals, selectedIndividualPool, yieldedOffspringPool);
 		FunctionalUtil.logStep(this.logIntermediateSteps, "	Completed Generation >> " + this.currentGeneration);
 	}
 	
-	public Individual<T> getFittest() {
-		return fittest;
+	public Individual<T> getFittestIndividual() {
+		return fittestIndividual;
 	}
 
 	public Integer getCurrentGeneration() {

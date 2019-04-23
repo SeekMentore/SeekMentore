@@ -1,6 +1,7 @@
 package geneticAlgorithm.imporvised.v1;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -18,6 +19,7 @@ import geneticAlgorithm.imporvised.v1.utils.Validator;
 
 public class GeneticProcessing<T> {
 	
+	private Random random = new Random();
 	private Population<T> population;
 
 	public GeneticProcessing(
@@ -40,14 +42,14 @@ public class GeneticProcessing<T> {
 		}
 		if (logIntermediateSteps) {
 			if (!Validator.checkObjectAvailability(debugIndividualFunction)) {
-				FunctionalUtil.logStep(true, "Debugging is ON -> Individual Debug Individual function cannot be NULL");
-				System.exit(0);
+				FunctionalUtil.logStep(logIntermediateSteps, "Debug Individual Function is NULL");
+				debugIndividualFunction = getDefaultDebugIndividualFunction(logIntermediateSteps);
 			}
 		} else {
-			debugIndividualFunction = getDefaultDebugIndividualFunction(logIntermediateSteps);
+			debugIndividualFunction = getDefaultBlankDebugIndividualFunction(logIntermediateSteps);
 		}
 		if (!Validator.checkObjectAvailability(individualsSupplierFunction)) {
-			FunctionalUtil.logStep(true, "Population Individual Supplier function cannot be NULL");
+			FunctionalUtil.logStep(true, "Population Individual Supplier Function cannot be NULL");
 			System.exit(0);
 		}
 		List<List<T>> individuals = individualsSupplierFunction.get();
@@ -62,7 +64,7 @@ public class GeneticProcessing<T> {
 			}
 		}
 		if (!Validator.checkObjectAvailability(fitnessFunction)) {
-			FunctionalUtil.logStep(true, "Fitness function cannot be NULL");
+			FunctionalUtil.logStep(true, "Fitness Function cannot be NULL");
 			System.exit(0);
 		}
 		if (!Validator.checkObjectAvailability(selectionFunction)) {
@@ -70,15 +72,15 @@ public class GeneticProcessing<T> {
 			selectionFunction = getDefaultSelectionFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		if (!Validator.checkObjectAvailability(crossoverPointFunction)) {
-			FunctionalUtil.logStep(true, "Crossover point function cannot be NULL");
-			System.exit(0);
+			FunctionalUtil.logStep(logIntermediateSteps, "Crossover Point Function is NULL");
+			crossoverPointFunction = getDefaultCrossoverPointFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		if (!Validator.checkObjectAvailability(crossoverFunction)) {
 			FunctionalUtil.logStep(logIntermediateSteps, "Crossover Function is NULL");
 			crossoverFunction = getDefaultCrossoverFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		if (!Validator.checkObjectAvailability(mutableCheckFunction)) {
-			FunctionalUtil.logStep(logIntermediateSteps, "Mutable function is NULL - Making it mutable false");
+			FunctionalUtil.logStep(logIntermediateSteps, "Mutable Function is NULL - Making it mutable false");
 			mutableCheckFunction = getDefaultMutableCheckFunction(logIntermediateSteps, debugIndividualFunction);
 			mutationPointFunction = getDefaultMutationPointFunction(logIntermediateSteps, debugIndividualFunction);
 			mutateFunction = getDefaultMutateFunction(logIntermediateSteps, debugIndividualFunction);
@@ -86,11 +88,11 @@ public class GeneticProcessing<T> {
 			if (!Validator.checkObjectAvailability(mutationPointFunction) || !Validator.checkObjectAvailability(mutateFunction)) {
 				FunctionalUtil.logStep(logIntermediateSteps, "Offsprings can Mutate");
 				if (!Validator.checkObjectAvailability(mutationPointFunction)) {
-					FunctionalUtil.logStep(true, "Mutation point function cannot be NULL");
+					FunctionalUtil.logStep(true, "Mutation point Function cannot be NULL");
 					System.exit(0);
 				}
 				if (!Validator.checkObjectAvailability(mutateFunction)) {
-					FunctionalUtil.logStep(true, "Mutate function cannot be NULL");
+					FunctionalUtil.logStep(true, "Mutate Function cannot be NULL");
 					System.exit(0);
 				}
 			}
@@ -100,11 +102,11 @@ public class GeneticProcessing<T> {
 			replacementFunction = getDefaultReplacementFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		if (!Validator.checkObjectAvailability(convergenceFunction)) {
-			FunctionalUtil.logStep(true, "Convergence function cannot be NULL");
+			FunctionalUtil.logStep(true, "Convergence Function cannot be NULL");
 			System.exit(0);
 		}
 		if (!Validator.checkObjectAvailability(thresholdExitFunction)) {
-			FunctionalUtil.logStep(logIntermediateSteps, "Threshold Exit function is NULL - Making it false");
+			FunctionalUtil.logStep(logIntermediateSteps, "Threshold Exit Function is NULL - Making it false");
 			thresholdExitFunction = getDefaultThresholdExitFunction(logIntermediateSteps, debugIndividualFunction);
 		}
 		this.population = new Population<T>(
@@ -125,6 +127,13 @@ public class GeneticProcessing<T> {
 	}
 	
 	private Function<Individual<T>, String> getDefaultDebugIndividualFunction(Boolean logIntermediateSteps) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Debug Individual Function");
+		return (Individual<T> individual) -> {
+			return individual.getGenes().toString() + " Fitness Quotient = " + individual.getFitnessFactor();
+		};
+	}
+	
+	private Function<Individual<T>, String> getDefaultBlankDebugIndividualFunction(Boolean logIntermediateSteps) {
 		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Debug Individual Function");
 		return (Individual<T> individual) -> {
 			return "";
@@ -211,6 +220,13 @@ public class GeneticProcessing<T> {
 		};
 	}
 	
+	private Function<Individual<T>, Integer> getDefaultCrossoverPointFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Crossover Point Function");
+		return (Individual<T> individual) -> {
+			return random.nextInt(individual.getGenes().size());
+		};
+	}
+	
 	private Function<Individual<T>, Boolean> getDefaultMutableCheckFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
 		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Mutable Check Function");
 		return (Individual<T> individual) -> {
@@ -269,7 +285,7 @@ public class GeneticProcessing<T> {
 	}
 	
 	public Individual<T> bestSolution() {
-		return this.population.getFittest();
+		return this.population.getFittestIndividual();
 	}
 	
 	public Integer generationNumber() {

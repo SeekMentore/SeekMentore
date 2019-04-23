@@ -29,10 +29,7 @@ public class TestGeneticProcessing {
 					return ((gene.getAlleles() == 1) ? 1 : 0);
 				}, 
 				null, // Selection Function -> For default leave NULL
-				(Individual<Integer> individual) -> {
-					// Crossover Point Function which takes param as List<T> (individual) & fitnessFactor and returns the Crossover Mating Point for an Individual
-					return rn.nextInt(individual.getGenes().size());
-				},
+				null, // Crossover Point Function -> For default leave NULL
 				null, // Crossover Function -> For default leave NULL
 				(Individual<Integer> individual) -> {
 					// Mutable Check Function which takes param as List<T> (individual/offspring) & fitnessFactor to check if an Offspring should be Mutated
@@ -62,11 +59,10 @@ public class TestGeneticProcessing {
 						System.out.println("Threshold Limit Reached");
 					}
 					return thersholdValue;
-				}, true, 
-				(Individual<Integer> individual) -> {
-					// Debug Individual Function which takes param as List<T> (individual/offspring) and returns the Mutation Point for an Offspring
-					return individual.getGenes().toString() + " Fitness Quotient = " + individual.getFitnessFactor();
-				});
+				}, 
+				false, 
+				null // Debug Individual Function -> For default leave NULL
+				);
 		gp.start();
 		Individual<Integer> bestSolution = gp.bestSolution();
 		System.out.println("Best Solution Individual = " + bestSolution.getGenes() + " Fitness Quotient = " + bestSolution.getFitnessFactor());
