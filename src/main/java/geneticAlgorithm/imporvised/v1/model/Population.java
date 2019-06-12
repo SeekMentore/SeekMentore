@@ -27,7 +27,7 @@ public class Population<T> implements Cloneable {
 	private CrossoverFunction<T> crossoverFunction;
 	private Function<Individual<T>, Boolean> mutableCheckFunction;
 	private Function<Individual<T>, Integer> mutationPointFunction;
-	private Function<Gene<T>, T> mutateFunction;
+	private BiFunction<Gene<T>, Individual<T>, T> mutateFunction;
 	private ReplacementFunction<T> replacementFunction;
 	private Function<Individual<T>, String> debugIndividualFunction;
 	private Function<Individual<T>, Boolean> convergenceFunction;
@@ -41,7 +41,7 @@ public class Population<T> implements Cloneable {
 		CrossoverFunction<T> crossoverFunction,
 		Function<Individual<T>, Boolean> mutableCheckFunction,
 		Function<Individual<T>, Integer> mutationPointFunction,
-		Function<Gene<T>, T> mutateFunction,
+		BiFunction<Gene<T>, Individual<T>, T> mutateFunction,
 		ReplacementFunction<T> replacementFunction,
 		Function<Individual<T>, Boolean> convergenceFunction,
 		BiFunction<Individual<T>, Integer, Boolean> thresholdExitFunction,
@@ -122,7 +122,7 @@ public class Population<T> implements Cloneable {
 				Integer mutationPoint = this.mutationPointFunction.apply(offspring);
 				FunctionalUtil.logStep(this.logIntermediateSteps, "				Mutation Point >> " + mutationPoint);
 				Gene<T> gene = offspring.getGenes().get(mutationPoint);
-				gene.setAlleles(this.mutateFunction.apply(gene));
+				gene.setAlleles(this.mutateFunction.apply(gene, offspring));
 				gene.setFitnessFactor(this.fitnessFunction.apply(gene));
 				offspring.computeFitnessFactor();
 				FunctionalUtil.logStep(this.logIntermediateSteps, "				New Mutated Offspring >> " + debugIndividualFunction.apply(offspring));

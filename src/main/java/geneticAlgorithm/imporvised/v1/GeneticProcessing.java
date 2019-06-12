@@ -30,7 +30,7 @@ public class GeneticProcessing<T> {
 		CrossoverFunction<T> crossoverFunction,
 		Function<Individual<T>, Boolean> mutableCheckFunction,
 		Function<Individual<T>, Integer> mutationPointFunction,
-		Function<Gene<T>, T> mutateFunction,
+		BiFunction<Gene<T>, Individual<T>,T> mutateFunction,
 		ReplacementFunction<T> replacementFunction,
 		Function<Individual<T>, Boolean> convergenceFunction,
 		BiFunction<Individual<T>, Integer, Boolean> thresholdExitFunction,
@@ -241,9 +241,9 @@ public class GeneticProcessing<T> {
 		};
 	}
 	
-	private Function<Gene<T>, T> getDefaultMutateFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
+	private BiFunction<Gene<T>, Individual<T>, T> getDefaultMutateFunction(Boolean logIntermediateSteps, Function<Individual<T>, String> debugIndividualFunction) {
 		FunctionalUtil.logStep(logIntermediateSteps, "Getting Default Mutate Function");
-		return (Gene<T> gene) -> {
+		return (Gene<T> gene, Individual<T> individual) -> {
 			return gene.getAlleles();
 		};
 	}
