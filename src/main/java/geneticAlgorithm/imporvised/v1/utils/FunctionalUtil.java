@@ -36,6 +36,11 @@ public class FunctionalUtil {
         return binary;
 	}
 	
+	public static void main(String args[]) {
+		for (int i = 0;i< 64 ; i++)
+		System.out.println(i + "	" + decimalToBinary(i, 6));
+	}
+	
 	public static Boolean binaryToBoolean(Integer binary) {
 		return (binary == 1);
 	}

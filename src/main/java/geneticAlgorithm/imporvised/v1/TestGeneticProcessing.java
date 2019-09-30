@@ -330,6 +330,6 @@ public class TestGeneticProcessing {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		processKnapsack();
+		processIntegerCounter();
 	}
 }

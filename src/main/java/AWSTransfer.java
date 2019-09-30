@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.constants.ApplicationConstants;
 import com.utils.ExceptionUtils;
+import com.utils.FileUtils;
 import com.utils.JSONUtils;
 
 public class AWSTransfer {
@@ -58,22 +59,25 @@ public class AWSTransfer {
 	}
 	
 	AWSTransfer() throws IOException {
-		//connect();
+		connect();
 		//processChangedFiles(createChangedFilesList());
 		//String bucketName = "seekmentore-dev";;
 		//deleteBucket("test-mashery");
 		//createNewBucketInS3Client("test-mashery");
 		/*List<Bucket> bList = getAllBucketListForS3Client();
 		for (Bucket bucket : bList) {
-			System.out.println(bucket.getName());
+			//if ("s3-mashery-log-bkt".equals(bucket.getName()))
+				System.out.println(bucket.getName());
 		}*/
+		//System.out.println("List of objects in bucket");
+		//createFolderInBucket("s3-mashery-log-bkt", "DEV", false);
 		//deleteAllContentFromBucket("seekmentore-dev2");
 		//copyBucket("seekmentore-prod", "seekmentore-dev2");
 		//copyBucket("seekmentore-dev2", "seekmentore-dev");
 		//deleteBucket("seekmentore-dev2");
 		//deleteFolder("seekmentore-dev2", "recycle_bin");
 		//putObjectInS3Client(createPutObjectRequest("seekmentore-dev2", "recycle_bin/1(1).txt", "Hello New 1".getBytes(), false));
-		//readAllContentFromBucket("seekmentore-dev2");
+		//readAllContentFromBucket("s3-mashery-log-bkt");
 		//recycleBinComputation("seekmentore-dev2", "recycle_bin/");
 		/*for (final S3ObjectSummary objectSummary : getS3ObjectListInFolder("seekmentore-dev2", "recycle_bin")) {
 			deleteObjectFromS3Client("seekmentore-dev2", objectSummary.getKey());
@@ -81,6 +85,7 @@ public class AWSTransfer {
 			//break;
 		}*/
 		//deleteObjectFromS3Client("seekmentore-dev2", "secured/tutor/documents/21/PROFILE_PHOTO.jpg");
+		//FileUtils.generateArbitraryFile(readContentFromFileInS3Client("s3-mashery-log-bkt", "Omnitracs_20190501183000_20190501190000_20190501193438_e936c7b2-ee9e-49e2-bf49-08d052207cf4.csv.gz"), "C:/Users/smukherjee/Desktop/Meena/log.csv.gz");
 	}
 	
 	public String readChangedJSONStringFile(final String filePath) throws IOException {
@@ -150,6 +155,12 @@ public class AWSTransfer {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public PutObjectResult createFolderInBucket(final String bucketName, final String folderName, final boolean enablePublicAccess) {
+		final String key = folderName + ApplicationConstants.FORWARD_SLASH + ApplicationConstants.EMPTY_STRING;
+		return putObjectInS3Client(createPutObjectRequest(bucketName, key, new byte[0], false));
+	}
+	
 	public void moveFileToDifferentLocationInSameBucket(final String bucket, final String fromFsKey, final String toFsKey) throws IOException {
 		System.out.println("FROM >> [" + fromFsKey + "] : TO >> [" + toFsKey + "]");
 		putObjectInS3Client(createPutObjectRequest(bucket, toFsKey, readContentFromFileInS3Client(bucket, fromFsKey), false));
