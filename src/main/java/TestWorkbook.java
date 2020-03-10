@@ -18,8 +18,8 @@ public class TestWorkbook {
 		workbookReport.createSheet("Attendance", getWorkbookRecords());
 		workbookReport.setDefaultCellWidth(4500);
 		byte[] content =  WorkbookUtils.createWorkbook(workbookReport);
-		FileUtils.generateArbitraryFile(content, "C:\\Users\\shantanu\\Desktop\\attendance.xlsx");
-		//FileUtils.generateArbitraryFile(content, "C:\\Users\\smukherjee\\Desktop\\src\\attendance.xlsx");
+		//FileUtils.generateArbitraryFile(content, "C:\\Users\\shantanu\\Desktop\\new_attendance.xlsx");
+		FileUtils.generateArbitraryFile(content, "C:\\Users\\smukherjee\\Desktop\\src\\new_attendance.xlsx");
 	}
 	
 	/*public static void main(String args[]) throws IOException {
