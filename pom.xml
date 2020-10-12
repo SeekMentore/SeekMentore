@@ -20,7 +20,7 @@
 		<version.slf4j>1.7.2</version.slf4j>
 		<version.logger>1.2.16</version.logger>
 		<version.aspect>1.7.3</version.aspect>
-		<version.junit>4.8.2</version.junit>
+		<version.junit>4.13.1</version.junit>
 		<version.oracle>11.2.0.4</version.oracle>
 		<version.mysql>5.1.27</version.mysql>
 		<version.hibernate>4.3.11.Final</version.hibernate>
