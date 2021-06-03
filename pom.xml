@@ -34,7 +34,7 @@
 		<version.json>20090211</version.json>
 		<version.json.lib>2.3</version.json.lib>
 		<version.javax.servlet>3.1.0</version.javax.servlet>
-		<version.httpcomponents>4.3.6</version.httpcomponents>
+		<version.httpcomponents>4.5.13</version.httpcomponents>
 		<version.flying.saucer>9.1.9</version.flying.saucer>
 		<version.poi.ooxml>3.9</version.poi.ooxml>
 		<version.mybatis.spring>1.3.2-SNAPSHOT</version.mybatis.spring>
