@@ -23,7 +23,7 @@
 		<version.junit>4.8.2</version.junit>
 		<version.oracle>11.2.0.4</version.oracle>
 		<version.mysql>5.1.27</version.mysql>
-		<version.hibernate>4.3.11.Final</version.hibernate>
+		<version.hibernate>5.4.24.Final</version.hibernate>
 		<version.apache.commons>2.1.1</version.apache.commons>
 		<version.velocity>1.7</version.velocity>
 		<version.velocity.tools>2.0</version.velocity.tools>
