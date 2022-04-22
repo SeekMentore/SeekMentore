@@ -15,7 +15,7 @@
 		<version.mvn.compiler>3.2</version.mvn.compiler>
 		<version.mvn.war.plugin>2.6</version.mvn.war.plugin>
 		<version.jdk>1.8</version.jdk>
-		<version.spring>4.3.4.RELEASE</version.spring>
+		<version.spring>5.3.19</version.spring>
 		<version.jersey>2.15</version.jersey>
 		<version.slf4j>1.7.2</version.slf4j>
 		<version.logger>1.2.16</version.logger>
